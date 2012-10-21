@@ -127,7 +127,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 			}
 			if (send) {
 				if (inventId > 0) {
-					MapleInventoryType inv = MapleInventoryType.getByType(inventId);
+					MapleInventoryType inv = MapleInventoryType.fromByte(inventId);
 					IItem item = c.getPlayer().getInventory(inv).getItem((byte) itemPos);
 					if (item != null && c.getPlayer().getItemQuantity(item.getItemId(), false) > amount) {
 						if (ItemConstants.isRechargable(item.getItemId())) {

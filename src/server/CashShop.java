@@ -397,7 +397,7 @@ public class CashShop {
 				IItem item = cItem.toItem();
 				IEquip equip = null;
 				item.setGiftFrom(rs.getString("from"));
-				if (item.getType() == MapleInventoryType.EQUIP.getType()) {
+				if (item.getType() == MapleInventoryType.EQUIP.asByte()) {
 					equip = (IEquip) item;
 					equip.setRingId(rs.getInt("ringid"));
 					gifts.add(new GiftEntry(equip, rs.getString("message")));

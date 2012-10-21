@@ -411,7 +411,7 @@ public class MaplePacketCreator {
 
 	private static void addInventoryInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
 		for (byte i = 1; i <= 5; i++) {
-			mplew.write(chr.getInventory(MapleInventoryType.getByType(i)).getSlotLimit());
+			mplew.write(chr.getInventory(MapleInventoryType.fromByte(i)).getSlotLimit());
 		}
 		mplew.write(new byte[] {0, (byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
 		MapleInventory iv = chr.getInventory(MapleInventoryType.EQUIPPED);
@@ -2215,7 +2215,7 @@ public class MaplePacketCreator {
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(fromDrop ? 1 : 0);
 		mplew.writeShort(1); // add mode
-		mplew.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.getType()); // iv
+		mplew.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
 		mplew.writeShort(item.getPosition()); // slot id
 		addItemInfo(mplew, item, true);
@@ -2231,7 +2231,7 @@ public class MaplePacketCreator {
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(fromDrop ? 1 : 0);
 		mplew.writeShort(0x101); // update
-		mplew.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.getType()); // iv
+		mplew.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
 		mplew.writeShort(item.getPosition()); // slot id
 		mplew.writeShort(item.getQuantity());
@@ -2255,7 +2255,7 @@ public class MaplePacketCreator {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(new byte[] {1, 1, 2});
-		mplew.write(type.getType()); // iv type
+		mplew.write(type.asByte()); // iv type
 		mplew.writeShort(src);
 		mplew.writeShort(dst);
 		if (equipIndicator != -1) {
@@ -2268,10 +2268,10 @@ public class MaplePacketCreator {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(new byte[] {1, 2, 3});
-		mplew.write(type.getType()); // iv type
+		mplew.write(type.asByte()); // iv type
 		mplew.writeShort(src);
 		mplew.write(1); // merge mode?
-		mplew.write(type.getType());
+		mplew.write(type.asByte());
 		mplew.writeShort(dst);
 		mplew.writeShort(total);
 		return mplew.getPacket();
@@ -2281,11 +2281,11 @@ public class MaplePacketCreator {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(new byte[] {1, 2, 1});
-		mplew.write(type.getType()); // iv type
+		mplew.write(type.asByte()); // iv type
 		mplew.writeShort(src);
 		mplew.writeShort(srcQ);
 		mplew.write(1);
-		mplew.write(type.getType());
+		mplew.write(type.asByte());
 		mplew.writeShort(dst);
 		mplew.writeShort(dstQ);
 		return mplew.getPacket();
@@ -2296,7 +2296,7 @@ public class MaplePacketCreator {
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(fromDrop ? 1 : 0);
 		mplew.write(new byte[] {1, 3});
-		mplew.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.getType()); // iv
+		mplew.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
 		mplew.writeShort(slot);
 		if (!fromDrop) {
@@ -2311,18 +2311,18 @@ public class MaplePacketCreator {
 		mplew.write(1); // fromdrop always true
 		mplew.write(destroyed ? 2 : 3);
 		mplew.write(scroll.getQuantity() > 0 ? 1 : 3);
-		mplew.write(MapleInventoryType.USE.getType());
+		mplew.write(MapleInventoryType.USE.asByte());
 		mplew.writeShort(scroll.getPosition());
 		if (scroll.getQuantity() > 0) {
 			mplew.writeShort(scroll.getQuantity());
 		}
 		mplew.write(3);
 		if (!destroyed) {
-			mplew.write(MapleInventoryType.EQUIP.getType());
+			mplew.write(MapleInventoryType.EQUIP.asByte());
 			mplew.writeShort(item.getPosition());
 			mplew.write(0);
 		}
-		mplew.write(MapleInventoryType.EQUIP.getType());
+		mplew.write(MapleInventoryType.EQUIP.asByte());
 		mplew.writeShort(item.getPosition());
 		if (!destroyed) {
 			addItemInfo(mplew, item, true);
@@ -2423,7 +2423,7 @@ public class MaplePacketCreator {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(new byte[] {1, 1, 3});
-		mplew.write(type.getType());
+		mplew.write(type.asByte());
 		mplew.writeShort(src);
 		if (src < 0) {
 			mplew.write(1);
@@ -2435,7 +2435,7 @@ public class MaplePacketCreator {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		mplew.write(new byte[] {1, 1, 1});
-		mplew.write(type.getType());
+		mplew.write(type.asByte());
 		mplew.writeShort(item.getPosition());
 		mplew.writeShort(item.getQuantity());
 		return mplew.getPacket();
@@ -6066,7 +6066,7 @@ public class MaplePacketCreator {
 														// is the same...
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
-		byte type = ItemConstants.getInventoryType(item.getItemId()).getType();
+		byte type = ItemConstants.getInventoryType(item.getItemId()).asByte();
 		mplew.write(new byte[] {0, 2, 3});
 		mplew.write(type);
 		mplew.writeShort(item.getPosition());

@@ -45,7 +45,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 		if (mode == 4) { // take out
 			byte type = slea.readByte();
 			byte slot = slea.readByte();
-			slot = storage.getSlot(MapleInventoryType.getByType(type), slot);
+			slot = storage.getSlot(MapleInventoryType.fromByte(type), slot);
 			IItem item = storage.getItem(slot);
 			if (item != null) {
 				if (MapleItemInformationProvider.getInstance().isPickupRestricted(item.getItemId()) && chr.getItemQuantity(item.getItemId(), true) > 0) {

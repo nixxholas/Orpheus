@@ -123,7 +123,7 @@ public class MapleInventory implements Iterable<IItem> {
 			inventory.put(dSlot, source);
 			inventory.remove(sSlot);
 		} else if (target.getItemId() == source.getItemId() && !ItemConstants.isRechargable(source.getItemId())) {
-			if (type.getType() == MapleInventoryType.EQUIP.getType()) {
+			if (type.asByte() == MapleInventoryType.EQUIP.asByte()) {
 				swap(target, source);
 			}
 			if (source.getQuantity() + target.getQuantity() > slotMax) {

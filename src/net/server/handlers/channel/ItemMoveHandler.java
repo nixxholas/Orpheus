@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemMoveHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.skip(4);
-		MapleInventoryType type = MapleInventoryType.getByType(slea.readByte());
+		MapleInventoryType type = MapleInventoryType.fromByte(slea.readByte());
 		byte src = (byte) slea.readShort();
 		byte action = (byte) slea.readShort();
 		short quantity = slea.readShort();

@@ -22,13 +22,13 @@ package client;
  */
 public enum MapleInventoryType {
 	UNDEFINED(0), EQUIP(1), USE(2), SETUP(3), ETC(4), CASH(5), EQUIPPED(-1);
-	final byte type;
+	private final byte type;
 
 	private MapleInventoryType(int type) {
 		this.type = (byte) type;
 	}
 
-	public byte getType() {
+	public byte asByte() {
 		return type;
 	}
 
@@ -36,9 +36,9 @@ public enum MapleInventoryType {
 		return (short) (2 << type);
 	}
 
-	public static MapleInventoryType getByType(byte type) {
+	public static MapleInventoryType fromByte(byte type) {
 		for (MapleInventoryType l : MapleInventoryType.values()) {
-			if (l.getType() == type) {
+			if (l.asByte() == type) {
 				return l;
 			}
 		}
@@ -46,17 +46,19 @@ public enum MapleInventoryType {
 	}
 
 	public static MapleInventoryType getByWZName(String name) {
-		if (name.equals("Install")) {
+		switch(name) {
+		case "Install":
 			return SETUP;
-		} else if (name.equals("Consume")) {
+		case "Consume":
 			return USE;
-		} else if (name.equals("Etc")) {
+		case "Etc":
 			return ETC;
-		} else if (name.equals("Cash")) {
+		case "Cash":
 			return CASH;
-		} else if (name.equals("Pet")) {
+		case "Pet":
 			return CASH;
+		default:
+			return UNDEFINED;
 		}
-		return UNDEFINED;
 	}
 }

@@ -344,7 +344,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 			chr.getTrade().setMeso(slea.readInt());
 		} else if (mode == Action.SET_ITEMS.getCode()) {
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-			MapleInventoryType ivType = MapleInventoryType.getByType(slea.readByte());
+			MapleInventoryType ivType = MapleInventoryType.fromByte(slea.readByte());
 			IItem item = chr.getInventory(ivType).getItem((byte) slea.readShort());
 			short quantity = slea.readShort();
 			byte targetSlot = slea.readByte();
@@ -378,7 +378,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 		} else if (mode == Action.CONFIRM.getCode()) {
 			MapleTrade.completeTrade(c.getPlayer());
 		} else if (mode == Action.ADD_ITEM.getCode() || mode == Action.PUT_ITEM.getCode()) {
-			MapleInventoryType type = MapleInventoryType.getByType(slea.readByte());
+			MapleInventoryType type = MapleInventoryType.fromByte(slea.readByte());
 			byte slot = (byte) slea.readShort();
 			short bundles = slea.readShort();
 			if (chr.getItemQuantity(chr.getInventory(type).getItem(slot).getItemId(), false) < bundles || chr.getInventory(type).getItem(slot).getFlag() == ItemConstants.UNTRADEABLE) {

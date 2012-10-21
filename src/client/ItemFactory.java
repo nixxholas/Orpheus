@@ -54,14 +54,14 @@ public enum ItemFactory {
 		query.append(account ? "accountid" : "characterid").append("` = ?");
 
 		if (login)
-			query.append(" AND `inventorytype` = ").append(MapleInventoryType.EQUIPPED.getType());
+			query.append(" AND `inventorytype` = ").append(MapleInventoryType.EQUIPPED.asByte());
 
 		final String sql = query.toString();
 		try (PreparedStatement ps = getSelectItems(connection, sql, id);
 				ResultSet rs = ps.executeQuery();) {
 			
 			while (rs.next()) {
-				MapleInventoryType mit = MapleInventoryType.getByType(rs.getByte("inventorytype"));
+				MapleInventoryType mit = MapleInventoryType.fromByte(rs.getByte("inventorytype"));
 
 				if (mit.equals(MapleInventoryType.EQUIP) || mit.equals(MapleInventoryType.EQUIPPED)) {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"));
@@ -137,7 +137,7 @@ public enum ItemFactory {
 				ps.setString(2, account ? null : String.valueOf(id));
 				ps.setString(3, account ? String.valueOf(id) : null);
 				ps.setInt(4, item.getItemId());
-				ps.setInt(5, mit.getType());
+				ps.setInt(5, mit.asByte());
 				ps.setInt(6, item.getPosition());
 				ps.setInt(7, item.getQuantity());
 				ps.setString(8, item.getOwner());

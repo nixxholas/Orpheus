@@ -183,7 +183,7 @@ public class MapleStorage {
 		final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		Collections.sort(items, new Comparator<IItem>() {
 			public int compare(IItem o1, IItem o2) {
-				if (ii.getInventoryType(o1.getItemId()).getType() < ii.getInventoryType(o2.getItemId()).getType()) {
+				if (ii.getInventoryType(o1.getItemId()).asByte() < ii.getInventoryType(o2.getItemId()).asByte()) {
 					return -1;
 				} else if (ii.getInventoryType(o1.getItemId()) == ii.getInventoryType(o2.getItemId())) {
 					return 0;

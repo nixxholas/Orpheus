@@ -605,7 +605,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		Equip equip = (Equip) i;
 		pse = con.prepareStatement("INSERT INTO mts_items (tab, type, itemid, quantity, seller, price, upgradeslots, level, str, dex, `int`, luk, hp, mp, watk, matk, wdef, mdef, acc, avoid, hands, speed, jump, locked, owner, sellername, sell_ends, vicious, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		pse.setInt(1, 1);
-		pse.setInt(2, (int) type.getType());
+		pse.setInt(2, (int) type.asByte());
 		pse.setInt(3, equip.getItemId());
 		pse.setInt(4, quantity);
 		pse.setInt(5, playerId);
@@ -643,7 +643,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		Item item = (Item) i;
 		PreparedStatement pse = con.prepareStatement("INSERT INTO mts_items (tab, type, itemid, quantity, seller, price, owner, sellername, sell_ends) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		pse.setInt(1, 1);
-		pse.setInt(2, (int) type.getType());
+		pse.setInt(2, (int) type.asByte());
 		pse.setInt(3, item.getItemId());
 		pse.setInt(4, quantity);
 		pse.setInt(5, playerId);

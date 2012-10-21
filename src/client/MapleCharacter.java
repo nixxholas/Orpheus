@@ -4225,7 +4225,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public byte getSlots(int type) {
-		return type == MapleInventoryType.CASH.getType() ? 96 : inventory[type].getSlotLimit();
+		return type == MapleInventoryType.CASH.asByte() ? 96 : inventory[type].getSlotLimit();
 	}
 
 	public boolean gainSlots(int type, int slots) {

@@ -311,7 +311,7 @@ public class MapleItemInformationProvider {
 		if (item != null) {
 			MapleData smEntry = item.getChildByPath("info/slotMax");
 			if (smEntry == null) {
-				if (getInventoryType(itemId).getType() == MapleInventoryType.EQUIP.getType()) {
+				if (getInventoryType(itemId).asByte() == MapleInventoryType.EQUIP.asByte()) {
 					ret = 1;
 				} else {
 					ret = 100;

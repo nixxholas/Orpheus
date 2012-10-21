@@ -61,10 +61,10 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 				break;
 			case 0x01: { // /d (inv)
 				byte type = slea.readByte();
-				MapleInventory in = c.getPlayer().getInventory(MapleInventoryType.getByType(type));
+				MapleInventory in = c.getPlayer().getInventory(MapleInventoryType.fromByte(type));
 				for (byte i = 0; i < in.getSlotLimit(); i++) {
 					if (in.getItem(i) != null) {
-						MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.getByType(type), i, in.getItem(i).getQuantity(), false);
+						MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.fromByte(type), i, in.getItem(i).getQuantity(), false);
 					}
 					return;
 				}

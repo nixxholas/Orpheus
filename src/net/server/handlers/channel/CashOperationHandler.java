@@ -189,7 +189,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 		} else if (action == 0x0E) { // Put into Cash Inventory
 			int cashId = slea.readInt();
 			slea.skip(4);
-			MapleInventory mi = chr.getInventory(MapleInventoryType.getByType(slea.readByte()));
+			MapleInventory mi = chr.getInventory(MapleInventoryType.fromByte(slea.readByte()));
 			IItem item = mi.findByCashId(cashId);
 			if (item == null) {
 				return;

@@ -47,7 +47,7 @@ public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
 			c.disconnect();
 			return;
 		}
-		MapleInventory Inv = chr.getInventory(MapleInventoryType.getByType(inv));
+		MapleInventory Inv = chr.getInventory(MapleInventoryType.fromByte(inv));
 		ArrayList<Item> itemarray = new ArrayList<Item>();
 		for (Iterator<IItem> it = Inv.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
@@ -55,7 +55,7 @@ public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
 		}
 		Collections.sort(itemarray);
 		for (IItem item : itemarray) {
-			MapleInventoryManipulator.removeById(c, MapleInventoryType.getByType(inv), item.getItemId(), item.getQuantity(), false, false);
+			MapleInventoryManipulator.removeById(c, MapleInventoryType.fromByte(inv), item.getItemId(), item.getQuantity(), false, false);
 		}
 		for (IItem i : itemarray) {
 			MapleInventoryManipulator.addFromDrop(c, i, false);

@@ -35,7 +35,7 @@ public final class ItemSortHandler extends AbstractMaplePacketHandler {
 		chr.getAutobanManager().setTimestamp(2, slea.readInt());
 		byte inv = slea.readByte();
 		boolean sorted = false;
-		MapleInventoryType pInvType = MapleInventoryType.getByType(inv);
+		MapleInventoryType pInvType = MapleInventoryType.fromByte(inv);
 		MapleInventory pInv = chr.getInventory(pInvType);
 		while (!sorted) {
 			byte freeSlot = pInv.getNextFreeSlot();

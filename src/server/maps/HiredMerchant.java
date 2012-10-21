@@ -308,7 +308,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 				newItem.setQuantity(pItems.getItem().getQuantity());
 			}
 			if (pItems.getBundles() > 0) {
-				itemsWithType.add(new ItemInventoryEntry(newItem, MapleInventoryType.getByType(newItem.getType())));
+				itemsWithType.add(new ItemInventoryEntry(newItem, MapleInventoryType.fromByte(newItem.getType())));
 			}
 		}
 		ItemFactory.MERCHANT.saveItems(itemsWithType, this.ownerId);

@@ -77,6 +77,6 @@ public final class ItemConstants {
 		if (type < 1 || type > 5) {
 			return MapleInventoryType.UNDEFINED;
 		}
-		return MapleInventoryType.getByType(type);
+		return MapleInventoryType.fromByte(type);
 	}
 }
