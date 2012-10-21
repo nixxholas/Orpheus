@@ -31,8 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CharSelectedWithPicHandler extends AbstractMaplePacketHandler {
+	
 	private static Logger log = LoggerFactory.getLogger(CharSelectedWithPicHandler.class);
-
+	
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 

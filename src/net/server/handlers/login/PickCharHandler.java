@@ -30,6 +30,8 @@ import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PickCharHandler extends AbstractMaplePacketHandler {
+	
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int charId = slea.readInt();
 		byte world = (byte) slea.readInt();// Wuuu? ):

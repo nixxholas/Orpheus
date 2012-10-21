@@ -77,6 +77,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 				} else {
 					ceffect = combo.getEffect(player.getSkillLevel(combo));
 				}
+				
 				if (orbcount < ceffect.getX() + 1) {
 					int neworbcount = orbcount + 1;
 					if (advComboSkillLevel > 0 && ceffect.makeChanceResult()) {
@@ -98,38 +99,45 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 			}
 		}
 		if (attack.numAttacked > 0 && attack.skill == DragonKnight.SACRIFICE) {
-			int totDamageToOneMonster = 0; // sacrifice attacks only 1 mob with
-											// 1 attack
+			// sacrifice attacks only 1 mob with 1 attack
+			int totDamageToOneMonster = 0; 
 			final Iterator<List<Integer>> dmgIt = attack.allDamage.values().iterator();
 			if (dmgIt.hasNext()) {
 				totDamageToOneMonster = dmgIt.next().get(0).intValue();
 			}
+			
 			int remainingHP = player.getHp() - totDamageToOneMonster * attack.getAttackEffect(player, null).getX() / 100;
 			if (remainingHP > 1) {
 				player.setHp(remainingHP);
 			} else {
 				player.setHp(1);
 			}
+			
 			player.updateSingleStat(MapleStat.HP, player.getHp());
 			player.checkBerserk();
 		}
+		
 		if (attack.numAttacked > 0 && attack.skill == 1211002) {
 			boolean advcharge_prob = false;
 			int advcharge_level = player.getSkillLevel(SkillFactory.getSkill(1220010));
 			if (advcharge_level > 0) {
 				advcharge_prob = SkillFactory.getSkill(1220010).getEffect(advcharge_level).makeChanceResult();
 			}
+			
 			if (!advcharge_prob) {
 				player.cancelEffectFromBuffStat(MapleBuffStat.WK_CHARGE);
 			}
 		}
+		
 		int attackCount = 1;
 		if (attack.skill != 0) {
 			attackCount = attack.getAttackEffect(player, null).getAttackCount();
 		}
+		
 		if (numFinisherOrbs == 0 && isFinisher(attack.skill)) {
 			return;
 		}
+		
 		if (attack.skill > 0) {
 			ISkill skill = SkillFactory.getSkill(attack.skill);
 			MapleStatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
@@ -142,10 +150,12 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 				}
 			}
 		}
-		if ((player.getSkillLevel(SkillFactory.getSkill(NightWalker.VANISH)) > 0 || player.getSkillLevel(SkillFactory.getSkill(WindArcher.WIND_WALK)) > 0 || player.getSkillLevel(SkillFactory.getSkill(Rogue.DARK_SIGHT)) > 0) && player.getBuffedValue(MapleBuffStat.DARKSIGHT) != null) {// &&
-																																																																							// player.getBuffSource(MapleBuffStat.DARKSIGHT)
-																																																																							// !=
-																																																																							// 9101004
+		if ((player.getSkillLevel(SkillFactory.getSkill(NightWalker.VANISH)) > 0 
+				|| player.getSkillLevel(SkillFactory.getSkill(WindArcher.WIND_WALK)) > 0 
+				|| player.getSkillLevel(SkillFactory.getSkill(Rogue.DARK_SIGHT)) > 0)
+				
+				&& player.getBuffedValue(MapleBuffStat.DARKSIGHT) != null) {
+			// && player.getBuffSource(MapleBuffStat.DARKSIGHT) != 9101004
 			player.cancelEffectFromBuffStat(MapleBuffStat.DARKSIGHT);
 			player.cancelBuffStats(MapleBuffStat.DARKSIGHT);
 		}

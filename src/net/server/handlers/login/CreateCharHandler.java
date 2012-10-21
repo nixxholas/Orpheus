@@ -35,6 +35,8 @@ import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CreateCharHandler extends AbstractMaplePacketHandler {
+	
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		String name = slea.readMapleAsciiString();
 		if (!MapleCharacter.canCreateChar(name)) {

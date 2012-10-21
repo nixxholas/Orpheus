@@ -31,12 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.Randomizer;
 
-public final class ViewAllPicRegisterHandler extends AbstractMaplePacketHandler { // Gey
-																					// class
-																					// name
-																					// lol
-	private static Logger log = LoggerFactory.getLogger(ViewAllPicRegisterHandler.class);
+public final class ViewAllPicRegisterHandler extends AbstractMaplePacketHandler { 
 
+	private static Logger log = LoggerFactory.getLogger(ViewAllPicRegisterHandler.class);
+	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.readByte();

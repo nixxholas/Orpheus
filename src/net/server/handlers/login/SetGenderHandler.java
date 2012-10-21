@@ -31,11 +31,13 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author kevintjuh93
  */
 public class SetGenderHandler extends AbstractMaplePacketHandler {
+	
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		byte type = slea.readByte(); // ?
-		if (type == 0x01 && c.getGender() == 10) { // Packet shouldn't come if
-													// Gender isn't 10.
+		
+		if (type == 0x01 && c.getGender() == 10) { 
+			// Packet shouldn't come if Gender isn't 10.
 			c.setGender(slea.readByte());
 			c.announce(MaplePacketCreator.getAuthSuccess(c));
 			final MapleClient client = c;

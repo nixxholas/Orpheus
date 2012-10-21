@@ -32,8 +32,9 @@ import org.slf4j.LoggerFactory;
 import tools.Randomizer;
 
 public class ViewAllCharSelectedWithPicHandler extends AbstractMaplePacketHandler {
+	
 	private static Logger log = LoggerFactory.getLogger(ViewAllCharSelectedWithPicHandler.class);
-
+	
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 

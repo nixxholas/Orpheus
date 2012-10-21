@@ -29,8 +29,9 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ServerlistRequestHandler extends AbstractMaplePacketHandler {
-	private static final String[] names = ServerConstants.WORLD_NAMES;
 
+	private static final String[] names = ServerConstants.WORLD_NAMES;
+	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		Server server = Server.getInstance();

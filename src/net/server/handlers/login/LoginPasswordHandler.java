@@ -31,6 +31,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class LoginPasswordHandler implements MaplePacketHandler {
+	
 	@Override
 	public boolean validateState(MapleClient c) {
 		return !c.isLoggedIn();

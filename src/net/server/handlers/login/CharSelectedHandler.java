@@ -28,6 +28,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CharSelectedHandler extends AbstractMaplePacketHandler {
+	
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int charId = slea.readInt();
 		String macs = slea.readMapleAsciiString();
