@@ -45,13 +45,11 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
 		
 		if (AutoRegister.getAccountExists(login)) {
 			loginok = c.login(login, pwd);
-		} else if (!AutoRegister.wasSuccessful()) {
-			AutoRegister.createAccount(login, pwd, c.getSession().getRemoteAddress().toString());
-			if (AutoRegister.wasSuccessful()) {
+		} else {
+			final boolean autoRegisterSuccess = AutoRegister.createAccount(login, pwd, c.getSession().getRemoteAddress().toString());
+			if (autoRegisterSuccess) {
 				loginok = c.login(login, pwd);
 			}
-		} else {
-			loginok = c.login(login, pwd);
 		}
 
 		if (c.hasBannedIP() || c.hasBannedMac()) {
