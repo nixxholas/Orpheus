@@ -39,6 +39,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
+
 	private static class CharacterIdNameBuddyCapacity extends CharacterNameAndId {
 		public final int buddyCapacity;
 

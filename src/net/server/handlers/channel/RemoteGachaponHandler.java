@@ -31,6 +31,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Generic
  */
 public final class RemoteGachaponHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int type = slea.readInt();
 		if (c.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(type)).countById(type) < 1) {

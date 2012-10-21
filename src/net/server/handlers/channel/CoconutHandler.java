@@ -33,6 +33,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author kevintjuh93
  */
 public final class CoconutHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		/*
 		 * CB 00 A6 00 06 01 A6 00 = coconut id 06 01 = ?

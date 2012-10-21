@@ -32,6 +32,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MagicDamageHandler extends AbstractDealDamageHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
@@ -52,12 +54,9 @@ public final class MagicDamageHandler extends AbstractDealDamageHandler {
 			}
 		}
 		applyAttack(attack, player, effect.getAttackCount());
-		ISkill eaterSkill = SkillFactory.getSkill((player.getJob().getId() - (player.getJob().getId() % 10)) * 10000);// MP
-																														// Eater,
-																														// works
-																														// with
-																														// right
-																														// job
+
+		// MP Eater, works with right job
+		ISkill eaterSkill = SkillFactory.getSkill((player.getJob().getId() - (player.getJob().getId() % 10)) * 10000);
 		int eaterLevel = player.getSkillLevel(eaterSkill);
 		if (eaterLevel > 0) {
 			for (Integer singleDamage : attack.allDamage.keySet()) {

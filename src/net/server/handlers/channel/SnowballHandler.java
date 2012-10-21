@@ -33,6 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  */
 public final class SnowballHandler extends AbstractMaplePacketHandler {
 
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		// D3 00 02 00 00 A5 01
 		MapleCharacter chr = c.getPlayer();

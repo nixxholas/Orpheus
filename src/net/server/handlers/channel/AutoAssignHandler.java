@@ -33,6 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  */
 public class AutoAssignHandler extends AbstractMaplePacketHandler {
 
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		slea.skip(8);

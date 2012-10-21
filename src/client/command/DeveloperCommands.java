@@ -50,7 +50,6 @@ public class DeveloperCommands extends EnumeratedCommands {
 	private static final int gmLevel = 4;
 	private static final char heading = '!';
 	
-	@SuppressWarnings("unused")
 	public static boolean execute(MapleClient c, String[] sub, char heading) {
 		MapleCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();

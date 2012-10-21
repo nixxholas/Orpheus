@@ -43,6 +43,8 @@ import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SkillEffectHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int skillId = slea.readInt();
 		int level = slea.readByte();

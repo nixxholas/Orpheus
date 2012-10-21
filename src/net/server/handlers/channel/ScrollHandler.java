@@ -40,6 +40,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Frz
  */
 public final class ScrollHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.readInt(); // whatever...
 		byte slot = (byte) slea.readShort();

@@ -34,6 +34,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author BubblesDev
  */
 public final class ReportHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int type = slea.readByte(); // 01 = Conversation claim 00 = illegal
 									// program

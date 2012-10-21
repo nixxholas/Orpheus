@@ -39,6 +39,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
+
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		byte channel = (byte) (slea.readByte() + 1);

@@ -32,7 +32,6 @@ public abstract class Commands {
 	private static final int gmLevel = 0;
 	private static final char heading = '@';
 
-	@SuppressWarnings("unused")
 	public static boolean execute(MapleClient c, String[] sub, char heading) {
 		if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_COMMAND_LOGGER && ParanoiaConstants.LOG_INVALID_COMMANDS) {
 			MapleLogger.printFormatted(MapleLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Attempted " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));

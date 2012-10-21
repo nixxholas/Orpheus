@@ -39,6 +39,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author BubblesDev
  */
 public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		chr.getAutobanManager().setTimestamp(4, slea.readInt());

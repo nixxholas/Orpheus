@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PartyChatHandler extends AbstractMaplePacketHandler {
 	
-	@SuppressWarnings("unused")
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter player = c.getPlayer();
 		int type = slea.readByte(); // 0 for buddys, 1 for partys

@@ -36,6 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  */
 public class WeddingHandler extends AbstractMaplePacketHandler {
 
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		Output.print("Wedding Packet: " + slea);
 		MapleCharacter chr = c.getPlayer();

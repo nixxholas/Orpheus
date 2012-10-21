@@ -42,6 +42,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 	private static MapleDataProvider dataRoot = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
 
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		slea.readInt();

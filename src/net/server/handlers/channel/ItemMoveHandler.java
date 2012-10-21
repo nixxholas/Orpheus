@@ -31,6 +31,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class ItemMoveHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.skip(4);
 		MapleInventoryType type = MapleInventoryType.fromByte(slea.readByte());

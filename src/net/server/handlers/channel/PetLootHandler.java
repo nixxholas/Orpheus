@@ -39,6 +39,8 @@ import server.MapleItemInformationProvider.scriptedItem;
  * @author TheRamon
  */
 public final class PetLootHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		MaplePet pet = chr.getPet(chr.getPetIndex(slea.readInt()));// why would

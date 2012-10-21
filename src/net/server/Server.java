@@ -130,7 +130,6 @@ public class Server implements Runnable {
 		return channels.get(world).get(channel);
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void run() {
 		long loadingStartTime = System.currentTimeMillis();

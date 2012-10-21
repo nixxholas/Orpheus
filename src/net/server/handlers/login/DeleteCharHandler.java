@@ -27,7 +27,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DeleteCharHandler extends AbstractMaplePacketHandler {
-	@SuppressWarnings("unused")
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		String pic = slea.readMapleAsciiString();
 		int cid = slea.readInt();

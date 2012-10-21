@@ -43,7 +43,7 @@ import client.command.external.CommandLoader;
  */
 public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
 
-	@SuppressWarnings("unused")
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		String s = slea.readMapleAsciiString();
 		MapleCharacter chr = c.getPlayer();

@@ -37,6 +37,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class StorageHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
@@ -61,18 +63,9 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 				if (MapleInventoryManipulator.checkSpace(c, item.getItemId(), item.getQuantity(), item.getOwner())) {
 					item = storage.takeOut(slot);// actually the same but idc
 					if ((item.getFlag() & ItemConstants.KARMA) == ItemConstants.KARMA)
-						item.setFlag((byte) (item.getFlag() ^ ItemConstants.KARMA)); // items
-																						// with
-																						// scissors
-																						// of
-																						// karma
-																						// used
-																						// on
-																						// them
-																						// are
-																						// reset
-																						// once
-																						// traded
+						// items with scissors of karma used on them are reset once traded
+						item.setFlag((byte) (item.getFlag() ^ ItemConstants.KARMA)); 
+					
 					else if (item.getType() == IItem.ITEM && (item.getFlag() & ItemConstants.SPIKES) == ItemConstants.SPIKES)
 						item.setFlag((byte) (item.getFlag() ^ ItemConstants.SPIKES));
 

@@ -48,8 +48,7 @@ import client.MapleStock;
  */
 public class PlayerCommands extends EnumeratedCommands {
 	private static final char heading = '@';
-	
-	@SuppressWarnings("unused")
+
 	public static boolean execute(MapleClient c, String[] sub, char heading) {
 		MapleCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();

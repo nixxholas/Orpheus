@@ -37,6 +37,8 @@ import client.MapleJob;
  * @author BubblesDev
  */
 public class PartySearchStartHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int min = slea.readInt();
 		int max = slea.readInt();

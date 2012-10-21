@@ -43,14 +43,19 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DueyHandler extends AbstractMaplePacketHandler {
+	
 	private enum Actions {
-		TOSERVER_SEND_ITEM(0x02), TOSERVER_CLAIM_PACKAGE(0x04), TOSERVER_REMOVE_PACKAGE(0x05), TOSERVER_CLOSE_DUEY(0x07), TOCLIENT_OPEN_DUEY(0x08), TOCLIENT_NOT_ENOUGH_MESOS(0x0A), TOCLIENT_NAME_DOES_NOT_EXIST(0x0C), TOCLIENT_SAMEACC_ERROR(0x0D), TOCLIENT_SUCCESSFULLY_SENT(0x12), TOCLIENT_SUCCESSFUL_MSG(0x17), TOCLIENT_PACKAGE_MSG(0x1B); // Ending
-																																																																																					// byte;
-																																																																																					// 4
-																																																																																					// if
-																																																																																					// recieved.
-																																																																																					// 3
-																																																																																					// if
+		TOSERVER_SEND_ITEM(0x02), 
+		TOSERVER_CLAIM_PACKAGE(0x04), 
+		TOSERVER_REMOVE_PACKAGE(0x05), 
+		TOSERVER_CLOSE_DUEY(0x07), 
+		TOCLIENT_OPEN_DUEY(0x08), 
+		TOCLIENT_NOT_ENOUGH_MESOS(0x0A), 
+		TOCLIENT_NAME_DOES_NOT_EXIST(0x0C), 
+		TOCLIENT_SAMEACC_ERROR(0x0D), 
+		TOCLIENT_SUCCESSFULLY_SENT(0x12), 
+		TOCLIENT_SUCCESSFUL_MSG(0x17), 
+		TOCLIENT_PACKAGE_MSG(0x1B); // Ending
 																																																																																					// delete.
 		final byte code;
 
@@ -87,6 +92,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 		return -1;
 	}
 
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		byte operation = slea.readByte();
 		if (operation == Actions.TOSERVER_SEND_ITEM.getCode()) {

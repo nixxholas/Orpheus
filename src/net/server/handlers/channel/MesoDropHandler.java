@@ -31,6 +31,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class MesoDropHandler extends AbstractMaplePacketHandler {// FIX
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		if (!chr.isAlive()) {

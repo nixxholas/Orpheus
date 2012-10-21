@@ -36,6 +36,8 @@ import tools.data.output.MaplePacketLittleEndianWriter;
  * @author XoticStory
  */
 public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
+	
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleAlliance alliance = null;
 		if (c.getPlayer().getGuild() != null && c.getPlayer().getGuild().getAllianceId() > 0) {

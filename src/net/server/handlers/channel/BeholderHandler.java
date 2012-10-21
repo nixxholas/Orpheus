@@ -33,6 +33,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author BubblesDev
  */
 public final class BeholderHandler extends AbstractMaplePacketHandler {// broken
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		Output.print("[BH] " + slea.toString());
 		Collection<MapleSummon> summons = c.getPlayer().getSummons().values();

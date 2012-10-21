@@ -26,6 +26,8 @@ import server.life.MapleMonster;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class AutoAggroHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int oid = slea.readInt();
 		MapleMonster monster = c.getPlayer().getMap().getMonsterByOid(oid);

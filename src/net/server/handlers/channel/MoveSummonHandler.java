@@ -31,6 +31,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MoveSummonHandler extends AbstractMovementPacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int oid = slea.readInt();
 		Point startPos = new Point(slea.readShort(), slea.readShort());

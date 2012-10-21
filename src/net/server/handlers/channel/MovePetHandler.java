@@ -28,6 +28,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MovePetHandler extends AbstractMovementPacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int petId = slea.readInt();
 		slea.readLong();

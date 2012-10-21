@@ -29,6 +29,8 @@ import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SpouseChatHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		Output.print(slea.toString());
 		// slea.readMapleAsciiString();//recipient

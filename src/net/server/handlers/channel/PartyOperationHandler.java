@@ -32,6 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int operation = slea.readByte();
 		MapleCharacter player = c.getPlayer();

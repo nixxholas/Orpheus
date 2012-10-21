@@ -30,6 +30,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class NPCShopHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		byte bmode = slea.readByte();
 		if (bmode == 0) { // mode 0 = buy :)

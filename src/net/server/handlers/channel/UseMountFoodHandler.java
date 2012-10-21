@@ -32,6 +32,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author PurpleMadness
  */
 public final class UseMountFoodHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.skip(6);
 		int itemid = slea.readInt();

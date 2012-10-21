@@ -34,6 +34,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author kevintjuh93 :3
  */
 public class RemoteStoreHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();
 		HiredMerchant hm = getMerchant(c);

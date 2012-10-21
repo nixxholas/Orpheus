@@ -36,6 +36,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author AngelSL
  */
 public final class UseSummonBag extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		// [4A 00][6C 4C F2 02][02 00][63 0B 20 00]
 		if (!c.getPlayer().isAlive()) {

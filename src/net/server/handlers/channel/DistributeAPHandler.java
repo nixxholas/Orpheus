@@ -31,6 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 	private static final int max = Short.MAX_VALUE;
 
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.readInt();
 		int num = slea.readInt();

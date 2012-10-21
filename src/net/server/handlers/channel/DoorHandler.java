@@ -31,6 +31,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class DoorHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int oid = slea.readInt();
 		boolean mode = (slea.readByte() == 0); // specifies if backwarp or not,

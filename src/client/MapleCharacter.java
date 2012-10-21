@@ -3895,7 +3895,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		this.dojoFinish = System.currentTimeMillis() + (stage > 36 ? 15 : stage / 6 + 5) * 60000;
 	}
 
-	@SuppressWarnings("unused")
 	public void setRates() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("GMT-8"));

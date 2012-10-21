@@ -35,6 +35,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MoveLifeHandler extends AbstractMovementPacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int objectid = slea.readInt();
 		short moveid = slea.readShort();

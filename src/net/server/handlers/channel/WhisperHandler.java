@@ -40,7 +40,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class WhisperHandler extends AbstractMaplePacketHandler {
-	@SuppressWarnings("unused")
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		byte mode = slea.readByte();
 		if (mode == 6) { // whisper

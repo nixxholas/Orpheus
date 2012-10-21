@@ -28,6 +28,7 @@ import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class KeymapChangeHandler extends AbstractMaplePacketHandler {
+
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		if (slea.available() != 8) {

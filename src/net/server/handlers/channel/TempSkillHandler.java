@@ -31,6 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  */
 public final class TempSkillHandler extends AbstractMaplePacketHandler {
 
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		c.announce(MaplePacketCreator.temporarySkills());
 	}

@@ -33,10 +33,12 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class BBSOperationHandler extends AbstractMaplePacketHandler {
+
 	private String correctLength(String in, int maxSize) {
 		return in.length() > maxSize ? in.substring(0, maxSize) : in;
 	}
 
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		if (c.getPlayer().getGuildId() < 1) {
 			return;

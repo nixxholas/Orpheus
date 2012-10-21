@@ -27,6 +27,8 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MovePlayerHandler extends AbstractMovementPacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		slea.skip(9);
 		final List<LifeMovementFragment> res = parseMovement(slea);

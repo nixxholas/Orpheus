@@ -40,6 +40,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class ItemPickupHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(final SeekableLittleEndianAccessor slea, final MapleClient c) {
 		slea.readInt(); // Timestamp
 		slea.readByte();

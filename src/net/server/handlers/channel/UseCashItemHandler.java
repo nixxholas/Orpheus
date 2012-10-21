@@ -53,6 +53,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter player = c.getPlayer();
 		if (System.currentTimeMillis() - player.getLastUsedCashItem() < 3000) {

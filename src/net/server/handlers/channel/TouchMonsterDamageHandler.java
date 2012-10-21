@@ -25,6 +25,7 @@ import client.MapleClient;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class TouchMonsterDamageHandler extends AbstractDealDamageHandler {
+
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		if (c.getPlayer().getEnergyBar() == 15000 || c.getPlayer().getBuffedValue(MapleBuffStat.BODY_PRESSURE) != null) {

@@ -46,6 +46,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
+
 	private boolean isFinisher(int skillId) {
 		return skillId > 1111002 && skillId < 1111007 || skillId == 11111002 || skillId == 11111003;
 	}

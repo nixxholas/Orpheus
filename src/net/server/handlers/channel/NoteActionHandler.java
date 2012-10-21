@@ -30,6 +30,8 @@ import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 
 public final class NoteActionHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		int action = slea.readByte();
 		if (action == 0 && c.getPlayer().getCashShop().getAvailableNotes() > 0) {

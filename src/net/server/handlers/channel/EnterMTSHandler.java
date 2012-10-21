@@ -36,6 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import tools.DatabaseConnection;
 
 public final class EnterMTSHandler extends AbstractMaplePacketHandler {
+
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		MapleCharacter chr = c.getPlayer();

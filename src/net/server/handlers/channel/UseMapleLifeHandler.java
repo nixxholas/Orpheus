@@ -30,6 +30,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Jay Estrella
  */
 public class UseMapleLifeHandler extends AbstractMaplePacketHandler {
+
+	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		c.announce(MaplePacketCreator.charNameResponse(slea.readMapleAsciiString(), false));
 	}

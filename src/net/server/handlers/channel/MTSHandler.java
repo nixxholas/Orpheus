@@ -110,6 +110,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		}
 	}
 	
+	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		if (!c.getPlayer().getCashShop().isOpened()) {
 			return;
