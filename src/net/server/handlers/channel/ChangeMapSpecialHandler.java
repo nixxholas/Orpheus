@@ -20,6 +20,7 @@
  */
 package net.server.handlers.channel;
 
+import client.MapleCharacter;
 import client.MapleClient;
 import net.AbstractMaplePacketHandler;
 import server.MaplePortal;
@@ -30,18 +31,18 @@ public final class ChangeMapSpecialHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+		
 		slea.readByte();
-		String startwp = slea.readMapleAsciiString();
+		final String startwp = slea.readMapleAsciiString();
 		slea.readShort();
-		MaplePortal portal = c.getPlayer().getMap().getPortal(startwp);
-		if ((c.getPlayer().portalDelay() > System.currentTimeMillis()) || c.getPlayer().getBlockedPortals().contains(portal.getScriptName())) {
+		
+		final MapleCharacter player = c.getPlayer();
+		final MaplePortal portal = player.getMap().getPortal(startwp);
+		if (player.portalDelay() > System.currentTimeMillis()
+				|| player.getBlockedPortals().contains(portal.getScriptName())) {
 			c.announce(MaplePacketCreator.enableActions());
-			return;
-		}
-		if (portal != null) {
+		} else if (portal != null) {
 			portal.enterPortal(c);
-		} else {
-			c.announce(MaplePacketCreator.enableActions());
-		}
+		} 
 	}
 }

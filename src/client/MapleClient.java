@@ -129,7 +129,7 @@ public class MapleClient {
 	public List<MapleCharacter> loadCharacters(int serverId) {
 		List<MapleCharacter> chars = new ArrayList<MapleCharacter>(15);
 		try {
-			for (CharNameAndId cni : loadCharactersInternal(serverId)) {
+			for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
 				chars.add(MapleCharacter.loadCharFromDB(cni.id, this, false));
 			}
 		} catch (Exception e) {
@@ -139,7 +139,7 @@ public class MapleClient {
 
 	public List<String> loadCharacterNames(int serverId) {
 		List<String> chars = new ArrayList<String>(15);
-		for (CharNameAndId cni : loadCharactersInternal(serverId)) {
+		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
 			chars.add(cni.name);
 		}
 		return chars;
@@ -148,7 +148,7 @@ public class MapleClient {
 	public String getFormattedCharacterList(int serverId) {
 		StringBuilder sb = new StringBuilder();
 		int n = 0;
-		for (CharNameAndId cni : loadCharactersInternal(serverId)) {
+		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
 			sb.append("#L").append(n).append("#").append(cni.name).append("#l\r\n");
 			n++;
 		}
@@ -157,7 +157,7 @@ public class MapleClient {
 	
 	public String getCharacterName(int n, int serverId) {
 		int k = 0;
-		for (CharNameAndId cni : loadCharactersInternal(serverId)) {
+		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
 			if (k == n) {
 				return cni.name;
 			}
@@ -168,7 +168,7 @@ public class MapleClient {
 	
 	public int getCharacterId(int n, int serverId) {
 		int k = 0;
-		for (CharNameAndId cni : loadCharactersInternal(serverId)) {
+		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
 			if (k == n) {
 				return cni.id;
 			}
@@ -181,9 +181,9 @@ public class MapleClient {
 		return (MapleCharacter.getGuildIdById(cid) != 0);
 	}
 	
-	private List<CharNameAndId> loadCharactersInternal(int serverId) {
+	private List<CharacterNameAndId> loadCharactersInternal(int serverId) {
 		PreparedStatement ps;
-		List<CharNameAndId> chars = new ArrayList<CharNameAndId>(15);
+		List<CharacterNameAndId> chars = new ArrayList<CharacterNameAndId>(15);
 		try {
 			if (ServerConstants.ENABLE_HARDCORE_MODE) {
 				ps = DatabaseConnection.getConnection().prepareStatement("SELECT id, name FROM characters WHERE accountid = ? AND world = ? AND dead != 1");
@@ -194,7 +194,7 @@ public class MapleClient {
 			ps.setInt(2, serverId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				chars.add(new CharNameAndId(rs.getString("name"), rs.getInt("id")));
+				chars.add(new CharacterNameAndId(rs.getInt("id"), rs.getString("name")));
 			}
 			rs.close();
 			ps.close();
@@ -259,10 +259,13 @@ public class MapleClient {
 	}
 
 	private void loadMacsIfNescessary() throws SQLException {
-		if (macs.isEmpty()) {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT macs FROM accounts WHERE id = ?");
-			ps.setInt(1, accId);
-			ResultSet rs = ps.executeQuery();
+		if (!this.macs.isEmpty()) {
+			return;
+		}
+
+		final Connection connection = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getSelectMacsByAccountId(connection);
+				ResultSet rs = ps.executeQuery()) {
 			if (rs.next()) {
 				for (String mac : rs.getString("macs").split(", ")) {
 					if (!mac.equals("")) {
@@ -270,9 +273,14 @@ public class MapleClient {
 					}
 				}
 			}
-			rs.close();
-			ps.close();
 		}
+	}
+
+	private PreparedStatement getSelectMacsByAccountId(
+			final Connection connection) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT macs FROM accounts WHERE id = ?");
+		ps.setInt(1, accId);
+		return ps;
 	}
 
 	public void banMacs() {
@@ -635,7 +643,10 @@ public class MapleClient {
 	}
 
 	public boolean checkBirthDate(Calendar date) {
-		return date.get(Calendar.YEAR) == birthday.get(Calendar.YEAR) && date.get(Calendar.MONTH) == birthday.get(Calendar.MONTH) && date.get(Calendar.DAY_OF_MONTH) == birthday.get(Calendar.DAY_OF_MONTH);
+		return 
+				date.get(Calendar.YEAR) == birthday.get(Calendar.YEAR) 
+				&& date.get(Calendar.MONTH) == birthday.get(Calendar.MONTH) 
+				&& date.get(Calendar.DAY_OF_MONTH) == birthday.get(Calendar.DAY_OF_MONTH);
 	}
 
 	private void removePlayer() {
@@ -918,18 +929,6 @@ public class MapleClient {
 		} catch (SQLException e) {
 		}
 		return disconnectForBeingAFaggot;
-	}
-
-	private static class CharNameAndId {
-
-		public String name;
-		public int id;
-
-		public CharNameAndId(String name, int id) {
-			super();
-			this.name = name;
-			this.id = id;
-		}
 	}
 
 	public static boolean checkHash(String hash, String type, String password) {
