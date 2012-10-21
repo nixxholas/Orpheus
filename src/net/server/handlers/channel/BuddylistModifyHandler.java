@@ -40,22 +40,18 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 	private static class CharacterIdNameBuddyCapacity extends CharacterNameAndId {
-		private int buddyCapacity;
+		public final int buddyCapacity;
 
 		public CharacterIdNameBuddyCapacity(int id, String name, int buddyCapacity) {
 			super(id, name);
 			this.buddyCapacity = buddyCapacity;
-		}
-
-		public int getBuddyCapacity() {
-			return buddyCapacity;
 		}
 	}
 
 	private void nextPendingRequest(MapleClient c) {
 		CharacterNameAndId pendingBuddyRequest = c.getPlayer().getBuddylist().pollPendingRequest();
 		if (pendingBuddyRequest != null) {
-			c.announce(MaplePacketCreator.requestBuddylistAdd(pendingBuddyRequest.getId(), c.getPlayer().getId(), pendingBuddyRequest.getName()));
+			c.announce(MaplePacketCreator.requestBuddylistAdd(pendingBuddyRequest.id, c.getPlayer().getId(), pendingBuddyRequest.name));
 		}
 	}
 
@@ -109,17 +105,17 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 						} else {
 							Connection con = DatabaseConnection.getConnection();
 							PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) as buddyCount FROM buddies WHERE characterid = ? AND pending = 0");
-							ps.setInt(1, charWithId.getId());
+							ps.setInt(1, charWithId.id);
 							ResultSet rs = ps.executeQuery();
 							if (!rs.next()) {
 								throw new RuntimeException("Result set expected");
-							} else if (rs.getInt("buddyCount") >= charWithId.getBuddyCapacity()) {
+							} else if (rs.getInt("buddyCount") >= charWithId.buddyCapacity) {
 								buddyAddResult = BuddyAddResult.BUDDYLIST_FULL;
 							}
 							rs.close();
 							ps.close();
 							ps = con.prepareStatement("SELECT pending FROM buddies WHERE characterid = ? AND buddyid = ?");
-							ps.setInt(1, charWithId.getId());
+							ps.setInt(1, charWithId.id);
 							ps.setInt(2, player.getId());
 							rs = ps.executeQuery();
 							if (rs.next()) {
@@ -132,19 +128,19 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 							c.announce(MaplePacketCreator.serverNotice(1, "\"" + addName + "\"'s Buddylist is full"));
 						} else {
 							byte displayChannel = -1;
-							int otherCid = charWithId.getId();
+							int otherCid = charWithId.id;
 							if (buddyAddResult == BuddyAddResult.ALREADY_ON_LIST && channel != -1) {
 								displayChannel = channel;
 								notifyRemoteChannel(c, channel, otherCid, ADDED);
 							} else if (buddyAddResult != BuddyAddResult.ALREADY_ON_LIST && channel == -1) {
 								Connection con = DatabaseConnection.getConnection();
 								PreparedStatement ps = con.prepareStatement("INSERT INTO buddies (characterid, `buddyid`, `pending`) VALUES (?, ?, 1)");
-								ps.setInt(1, charWithId.getId());
+								ps.setInt(1, charWithId.id);
 								ps.setInt(2, player.getId());
 								ps.executeUpdate();
 								ps.close();
 							}
-							buddylist.put(new BuddylistEntry(charWithId.getName(), group, otherCid, displayChannel, true));
+							buddylist.put(new BuddylistEntry(charWithId.name, group, otherCid, displayChannel, true));
 							c.announce(MaplePacketCreator.updateBuddylist(buddylist.getBuddies()));
 						}
 					} else {
