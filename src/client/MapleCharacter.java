@@ -477,16 +477,21 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void ban(String reason) {
-		try {
-			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("UPDATE accounts SET banned = 1, banreason = ? WHERE id = ?");
-			ps.setString(1, reason);
-			ps.setInt(2, accountid);
+		Connection con = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getUpdateBanData(con, reason)) {
 			ps.executeUpdate();
-			ps.close();
-		} catch (Exception e) {
+		} catch (SQLException ex) {
+			Output.print("An error has occurred while writing ban data.");
+			ex.printStackTrace();		
 		}
+	}
 
+	private PreparedStatement getUpdateBanData(Connection connection,
+			String reason) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("UPDATE accounts SET banned = 1, banreason = ? WHERE id = ?");
+		ps.setString(1, reason);
+		ps.setInt(2, accountid);
+		return ps;
 	}
 
 	public static boolean ban(String id, String reason, boolean accountId) {
@@ -4629,14 +4634,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 	public void addAreaData(int quest, String data) {
 		if (!this.area_data.contains(data)) {
 			this.area_data.add(data);
-			try {
-				Connection con = DatabaseConnection.getConnection();
-				PreparedStatement ps = con.prepareStatement("INSERT INTO char_area_info VALUES (DEFAULT, ?, ?, ?)");
-				ps.setInt(1, getId());
-				ps.setInt(2, quest);
-				ps.setString(3, data);
+			
+			Connection con = DatabaseConnection.getConnection();
+
+			try (PreparedStatement ps = getInsertAreaData(con, data, quest)) {
 				ps.executeUpdate();
-				ps.close();
 			} catch (SQLException ex) {
 				Output.print("An error has occurred with area data.");
 				ex.printStackTrace();
@@ -4644,35 +4646,58 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		}
 	}
 
+	private PreparedStatement getInsertAreaData(Connection connection,
+			String data, int quest) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO char_area_info VALUES (DEFAULT, ?, ?, ?)");
+		ps.setInt(1, getId());
+		ps.setInt(2, quest);
+		ps.setString(3, data);
+		return ps;
+	}
+
 	public void removeAreaData() {
 		this.area_data.clear();
-		try {
-			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("DELETE FROM char_area_info WHERE charid = ?");
-			ps.setInt(1, getId());
+		
+		Connection con = DatabaseConnection.getConnection();
+		
+		try (PreparedStatement ps = getDeleteAreaData(con)) {
 			ps.executeUpdate();
-			ps.close();
 		} catch (SQLException ex) {
 			Output.print("An error has occurred with area data.");
 			ex.printStackTrace();
 		}
 	}
 
+	private PreparedStatement getDeleteAreaData(Connection connection)
+			throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("DELETE FROM char_area_info WHERE charid = ?");
+		ps.setInt(1, getId());
+		return ps;
+	}
+
 	public void autoban(String reason, int greason) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
-		Timestamp TS = new Timestamp(cal.getTimeInMillis());
-		try {
-			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("UPDATE accounts SET banreason = ?, tempban = ?, greason = ? WHERE id = ?");
-			ps.setString(1, reason);
-			ps.setTimestamp(2, TS);
-			ps.setInt(3, greason);
-			ps.setInt(4, accountid);
+		Timestamp timestamp = new Timestamp(cal.getTimeInMillis());
+		
+		Connection con = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getUpdateBanData(con, timestamp, reason, greason);) {
 			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException e) {
+		} catch (SQLException ex) {
+			Output.print("An error has occurred while writing autoban data.");
+			ex.printStackTrace();
 		}
+	}
+
+	private PreparedStatement getUpdateBanData(Connection connection,
+			Timestamp timestamp, String reason, int reasonId)
+			throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("UPDATE accounts SET banreason = ?, tempban = ?, greason = ? WHERE id = ?");
+		ps.setString(1, reason);
+		ps.setTimestamp(2, timestamp);
+		ps.setInt(3, reasonId);
+		ps.setInt(4, accountid);
+		return ps;
 	}
 
 	public boolean isBanned() {
