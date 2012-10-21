@@ -38,29 +38,28 @@ import tools.Output;
 public class BlacklistHandler {
 	public static final String BLACKLIST = "blacklist.csv";
 	private static ArrayList<Integer> cache;
-	
+
 	public static void printBlacklistLog(String s, Integer accountId) {
 		MapleLogger.printFormatted(MapleLogger.PARANOIA_BLACKLIST + MapleClient.getAccountNameById(accountId) + ".log", s);
 	}
-	
+
 	public static void addToBlacklist(Integer accountId) {
 		cache.add(accountId);
-		try {
-			FileOutputStream out = new FileOutputStream(BlacklistHandler.BLACKLIST, true);
+		try (FileOutputStream out = new FileOutputStream(BlacklistHandler.BLACKLIST, true);) {			
 			out.write(accountId.byteValue());
 		} catch (IOException e) {
 			Output.print("Something went wrong while updating the blacklist.");
 			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
 		}
 	}
-	
+
 	public static boolean isBlacklisted(int accountId) {
 		if (cache == null) {
 			loadFromCsv(BlacklistHandler.BLACKLIST);
 		}
 		return cache.contains(accountId);
 	}
-	
+
 	public static Integer[] getBlacklistedAccountIds() {
 		if (cache != null) {
 			return (Integer[]) cache.toArray();
@@ -68,17 +67,20 @@ public class BlacklistHandler {
 			return loadFromCsv(BlacklistHandler.BLACKLIST);
 		}
 	}
-	
+
 	public static void reloadBlacklist() {
 		loadFromCsv(BlacklistHandler.BLACKLIST);
 	}
-	
+
 	protected static Integer[] loadFromCsv(final String csv) {
 		cache = new ArrayList<Integer>();
-		System.gc(); // garbage collect, to make sure we clean up the old cache object.
-		try {
-			FileInputStream in = new FileInputStream(csv);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+		// garbage collect, to make sure we clean up the old cache object.
+		System.gc(); 
+		try (
+				FileInputStream in = new FileInputStream(csv);
+				InputStreamReader stream = new InputStreamReader(in, Charset.forName("UTF-8"));
+				BufferedReader br = new BufferedReader(stream);) {
+
 			while (br.ready()) {
 				String line = br.readLine();
 				String[] sp = line.split(",");

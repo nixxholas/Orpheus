@@ -97,8 +97,7 @@ public class CommandLoader {
     		}
     	} else if (file.isFile()) {
     		if (file.getName().endsWith("jar")) {
-				try {
-					JarFile jf = new JarFile(file);
+				try (JarFile jf = new JarFile(file);) {
 					if (loadType == 0) {
 						initialized = (loadCommands(jf) && loadCommandProcessor(jf)) || initialized;
 						return initialized;
