@@ -60,10 +60,12 @@ public class MapleQuestAction {
 				int mesos = MapleDataTool.getInt(data);
 				if (c.getMeso() < mesos) {
 					return false;
+				} else {
+					return true;
 				}
-				break;
+			default:
+				return true;
 		}
-		return true;
 	}
 
 	private boolean canGetItem(MapleData item, MapleCharacter c) {

@@ -889,7 +889,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {
-		}
+		}  
 		return MaplePacketCreator.sendMTS(items, tab, type, page, pages); // resniff
 	}
 

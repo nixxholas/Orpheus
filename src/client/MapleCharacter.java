@@ -4271,6 +4271,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 			case LUK:
 				setLuk(value);
 				break;
+			default:
+				break;
 		}
 		this.updateSingleStat(stat, value);
 	}

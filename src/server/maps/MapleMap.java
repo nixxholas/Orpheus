@@ -1470,8 +1470,9 @@ public class MapleMap {
 			case PLAYER_NPC:
 			case MIST:
 				return true;
+			default:
+				return false;
 		}
-		return false;
 	}
 
 	private void sendObjectPlacement(MapleClient mapleClient) {

@@ -129,6 +129,8 @@ public class XMLDomMapleData implements MapleData {
 					case STRING:
 					case UOL:
 						return value;
+					default:
+						return null;
 				}
 			}
 			case VECTOR: {
@@ -141,8 +143,9 @@ public class XMLDomMapleData implements MapleData {
 				String height = attributes.getNamedItem("height").getNodeValue();
 				return new FileStoredPngMapleCanvas(Integer.parseInt(width), Integer.parseInt(height), new File(imageDataDir, getName() + ".png"));
 			}
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
