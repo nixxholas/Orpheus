@@ -47,22 +47,19 @@ public enum ItemFactory {
 
 	public List<ItemInventoryEntry> loadItems(int id, boolean login) throws SQLException {
 		List<ItemInventoryEntry> items = new ArrayList<ItemInventoryEntry>();
+		final Connection connection = DatabaseConnection.getConnection();
 
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			StringBuilder query = new StringBuilder();
-			query.append("SELECT * FROM `inventoryitems` LEFT JOIN `inventoryequipment` USING(`inventoryitemid`) WHERE `type` = ? AND `");
-			query.append(account ? "accountid" : "characterid").append("` = ?");
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT * FROM `inventoryitems` LEFT JOIN `inventoryequipment` USING(`inventoryitemid`) WHERE `type` = ? AND `");
+		query.append(account ? "accountid" : "characterid").append("` = ?");
 
-			if (login)
-				query.append(" AND `inventorytype` = ").append(MapleInventoryType.EQUIPPED.getType());
+		if (login)
+			query.append(" AND `inventorytype` = ").append(MapleInventoryType.EQUIPPED.getType());
 
-			ps = DatabaseConnection.getConnection().prepareStatement(query.toString());
-			ps.setInt(1, value);
-			ps.setInt(2, id);
-			rs = ps.executeQuery();
-
+		final String sql = query.toString();
+		try (PreparedStatement ps = getSelectItems(connection, sql, id);
+				ResultSet rs = ps.executeQuery();) {
+			
 			while (rs.next()) {
 				MapleInventoryType mit = MapleInventoryType.getByType(rs.getByte("inventorytype"));
 
@@ -104,16 +101,17 @@ public enum ItemFactory {
 					items.add(new ItemInventoryEntry(item, mit));
 				}
 			}
-
-			rs.close();
-			ps.close();
-		} finally {
-			if (rs != null)
-				rs.close();
-			if (ps != null)
-				ps.close();
 		}
+		
 		return items;
+	}
+
+	private PreparedStatement getSelectItems(final Connection connection,
+			final String sql, int id) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setInt(1, value);
+		ps.setInt(2, id);
+		return ps;
 	}
 
 	public synchronized void saveItems(List<ItemInventoryEntry> entries, int id) throws SQLException {

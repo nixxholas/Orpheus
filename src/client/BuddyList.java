@@ -17,6 +17,7 @@
  */
 package client;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -104,11 +105,11 @@ public class BuddyList {
 		return buddyIds;
 	}
 
-	public void loadFromDb(int characterId) {
-		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT b.buddyid, b.pending, b.group, c.name as buddyname FROM buddies as b, characters as c WHERE c.id = b.buddyid AND b.characterid = ?");
-			ps.setInt(1, characterId);
-			ResultSet rs = ps.executeQuery();
+	public void loadFromDb(int characterId) throws SQLException {
+		final Connection connection = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getSelectBuddiesByCharacterId(connection, characterId);
+			ResultSet rs = ps.executeQuery();) {
+		
 			while (rs.next()) {
 				if (rs.getInt("pending") == 1) {
 					pendingRequests.push(new CharacterNameAndId(rs.getInt("buddyid"), rs.getString("buddyname")));
@@ -116,15 +117,26 @@ public class BuddyList {
 					put(new BuddylistEntry(rs.getString("buddyname"), rs.getString("group"), rs.getInt("buddyid"), (byte) -1, true));
 				}
 			}
-			rs.close();
-			ps.close();
-			ps = DatabaseConnection.getConnection().prepareStatement("DELETE FROM buddies WHERE pending = 1 AND characterid = ?");
-			ps.setInt(1, characterId);
-			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+			
 		}
+		
+		try (PreparedStatement ps = getSelectPendingBuddyRequests(connection, characterId)) {
+			ps.executeUpdate();
+		}
+	}
+
+	private PreparedStatement getSelectPendingBuddyRequests(final Connection connection,
+			int characterId) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("DELETE FROM buddies WHERE pending = 1 AND characterid = ?");
+		ps.setInt(1, characterId);
+		return ps;
+	}
+
+	private PreparedStatement getSelectBuddiesByCharacterId(final Connection connection,
+			int characterId) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT b.buddyid, b.pending, b.group, c.name as buddyname FROM buddies as b, characters as c WHERE c.id = b.buddyid AND b.characterid = ?");
+		ps.setInt(1, characterId);
+		return ps;
 	}
 
 	public CharacterNameAndId pollPendingRequest() {
