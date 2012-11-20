@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class PartySearchRegisterHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		int min = slea.readInt();
 		int max = slea.readInt();

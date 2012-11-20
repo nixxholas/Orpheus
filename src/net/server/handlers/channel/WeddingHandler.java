@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
@@ -37,7 +37,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class WeddingHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Output.print("Wedding Packet: " + slea);
 		MapleCharacter chr = c.getPlayer();
 		byte operation = slea.readByte();

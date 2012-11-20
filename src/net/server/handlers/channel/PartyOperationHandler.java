@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.MapleParty;
 import net.server.MaplePartyCharacter;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int operation = slea.readByte();
 		MapleCharacter player = c.getPlayer();
 		World world = c.getWorldServer();

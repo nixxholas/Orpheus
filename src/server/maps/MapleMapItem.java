@@ -23,7 +23,7 @@ package server.maps;
 import java.awt.Point;
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import java.util.concurrent.locks.ReentrantLock;
 import tools.MaplePacketCreator;
 
@@ -116,14 +116,14 @@ public class MapleMapItem extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendSpawnData(final MapleClient client) {
+	public void sendSpawnData(final GameClient client) {
 		if (questid <= 0 || (client.getPlayer().getQuestStatus(questid) == 1 && client.getPlayer().needQuestItem(questid, item.getItemId()))) {
 			client.announce(MaplePacketCreator.dropItemFromMapObject(this, null, getPosition(), (byte) 2));
 		}
 	}
 
 	@Override
-	public void sendDestroyData(final MapleClient client) {
+	public void sendDestroyData(final GameClient client) {
 		client.announce(MaplePacketCreator.removeItemFromMap(getObjectId(), 1, 0));
 	}
 }

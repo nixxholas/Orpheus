@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import constants.ServerConstants;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ViewCharHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		try {
 			PreparedStatement ps;
 			if (ServerConstants.ENABLE_HARDCORE_MODE) {

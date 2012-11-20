@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import java.awt.Point;
 import java.util.List;
-import client.MapleClient;
+import client.GameClient;
 import tools.Randomizer;
 import server.life.MapleMonster;
 import server.life.MobSkill;
@@ -37,7 +37,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MoveLifeHandler extends AbstractMovementPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int objectid = slea.readInt();
 		short moveid = slea.readShort();
 		MapleMapObject mmo = c.getPlayer().getMap().getMapObject(objectid);

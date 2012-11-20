@@ -21,7 +21,7 @@
 package server.maps;
 
 import java.awt.Point;
-import client.MapleClient;
+import client.GameClient;
 import scripting.portal.PortalScriptManager;
 import server.MaplePortal;
 import server.FourthJobQuestsPortalHandler;
@@ -114,7 +114,7 @@ public class MapleGenericPortal implements MaplePortal {
 	}
 
 	@Override
-	public void enterPortal(MapleClient c) {
+	public void enterPortal(GameClient c) {
 		boolean changed = false;
 		if (getScriptName() != null) {
 			if (!FourthJobQuestsPortalHandler.handlePortal(getScriptName(), c.getPlayer())) {

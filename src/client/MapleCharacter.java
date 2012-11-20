@@ -180,7 +180,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 	private BuddyList buddylist;
 	private EventInstanceManager eventInstance = null;
 	private HiredMerchant hiredMerchant = null;
-	private MapleClient client;
+	private GameClient client;
 	private MapleGuildCharacter mgc = null;
 	private MaplePartyCharacter mpc = null;
 	private MapleInventory[] inventory;
@@ -263,7 +263,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		setPosition(new Point(0, 0));
 	}
 
-	public static MapleCharacter getDefault(MapleClient c) {
+	public static MapleCharacter getDefault(GameClient c) {
 		MapleCharacter ret = new MapleCharacter();
 		ret.client = c;
 		ret.gmLevel = c.gmLevel();
@@ -411,7 +411,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		}
 	}
 
-	public int addHP(MapleClient c) {
+	public int addHP(GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		MapleJob jobtype = player.getJob();
 		int MaxHP = player.getMaxHp();
@@ -442,7 +442,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		return MaxHP;
 	}
 
-	public int addMP(MapleClient c) {
+	public int addMP(GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		int MaxMP = player.getMaxMp();
 		if (player.getHpMpApUsed() > 9999 || player.getMaxMp() >= 30000) {
@@ -613,7 +613,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		lastmobcount = count;
 	}
 
-	public void newClient(MapleClient c) {
+	public void newClient(GameClient c) {
 		c.setAccountName(this.client.getAccountName());// No null's for
 														// accountName
 		this.client = c;
@@ -1563,7 +1563,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		return this.chalktext;
 	}
 
-	public MapleClient getClient() {
+	public GameClient getClient() {
 		return client;
 	}
 
@@ -2584,7 +2584,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 		// saveToDB(true); NAH!
 	}
 
-	public static MapleCharacter loadCharFromDB(int charid, MapleClient client, boolean channelserver) throws SQLException {
+	public static MapleCharacter loadCharFromDB(int charid, GameClient client, boolean channelserver) throws SQLException {
 		try {
 			MapleCharacter ret = new MapleCharacter();
 			ret.client = client;
@@ -4541,12 +4541,12 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		client.announce(MaplePacketCreator.removePlayerFromMap(this.getObjectId()));
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		if (!this.isHidden() || client.getPlayer().gmLevel() > 0) {
 			client.announce(MaplePacketCreator.spawnPlayerMapobject(this));
 		}

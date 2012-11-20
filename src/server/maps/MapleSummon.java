@@ -22,7 +22,7 @@ package server.maps;
 
 import java.awt.Point;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.SkillFactory;
 import tools.MaplePacketCreator;
 
@@ -47,13 +47,13 @@ public class MapleSummon extends AbstractAnimatedMapleMapObject {
 		setPosition(pos);
 	}
 
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		if (this != null)
 			client.getSession().write(MaplePacketCreator.spawnSummon(this, false));
 
 	}
 
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		client.getSession().write(MaplePacketCreator.removeSummon(this, true));
 	}
 

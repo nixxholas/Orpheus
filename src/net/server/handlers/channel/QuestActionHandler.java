@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import scripting.quest.QuestScriptManager;
 import server.quest.MapleQuest;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class QuestActionHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte action = slea.readByte();
 		short questid = slea.readShort();
 		MapleCharacter player = c.getPlayer();

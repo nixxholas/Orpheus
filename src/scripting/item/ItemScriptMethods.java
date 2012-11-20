@@ -20,7 +20,7 @@
  */
 package scripting.item;
 
-import client.MapleClient;
+import client.GameClient;
 import scripting.AbstractPlayerInteraction;
 
 /**
@@ -28,7 +28,7 @@ import scripting.AbstractPlayerInteraction;
  * @author kevintjuh93
  */
 public class ItemScriptMethods extends AbstractPlayerInteraction {
-	public ItemScriptMethods(MapleClient c) {
+	public ItemScriptMethods(GameClient c) {
 		super(c);
 	}
 }

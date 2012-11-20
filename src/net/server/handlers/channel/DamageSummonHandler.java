@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.MapleBuffStat;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.SkillFactory;
 import net.AbstractMaplePacketHandler;
 import server.maps.MapleSummon;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DamageSummonHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int skillid = slea.readInt(); // Bugged? might not be skillid.
 		int unkByte = slea.readByte();
 		int damage = slea.readInt();

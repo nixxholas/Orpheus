@@ -47,7 +47,7 @@ import client.IItem;
 import client.ISkill;
 import client.Item;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.MapleStat;
@@ -61,7 +61,7 @@ public class GMCommands extends EnumeratedCommands {
 	private static final char heading = '!';
 	
 	@SuppressWarnings("unused")
-	public static boolean execute(MapleClient c, String[] sub, char heading) {
+	public static boolean execute(GameClient c, String[] sub, char heading) {
 		MapleCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
 		Server serv = Server.getInstance();

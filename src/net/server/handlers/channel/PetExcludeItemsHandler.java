@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetExcludeItemsHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readLong();
 		byte amount = slea.readByte();
 		for (int i = 0; i < amount; i++) {

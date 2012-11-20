@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 //import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 //import client.command.CommandProcessor;
 import net.AbstractMaplePacketHandler;
 //import tools.MaplePacketCreator;
@@ -31,7 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SpouseChatHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Output.print(slea.toString());
 		// slea.readMapleAsciiString();//recipient
 		// String msg = slea.readMapleAsciiString();

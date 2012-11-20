@@ -41,7 +41,7 @@ import client.IItem;
 import client.Item;
 import client.MapleBuffStat;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MaplePet;
 import client.status.MonsterStatus;
@@ -431,7 +431,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(mdrop, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				if (questid <= 0 || (c.getPlayer().getQuestStatus(questid) == 1 && c.getPlayer().needQuestItem(questid, idrop.getItemId()))) {
 					c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, mob.getPosition(), dropPos, (byte) 1));
 				}
@@ -449,7 +449,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(mdrop, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.getSession().write(MaplePacketCreator.dropItemFromMapObject(mdrop, dropper.getPosition(), droppos, (byte) 1));
 			}
 		}, null);
@@ -931,7 +931,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(monster, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.announce(MaplePacketCreator.spawnMonster(monster, false));
 			}
 		});
@@ -947,7 +947,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(monster, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.announce(MaplePacketCreator.spawnMonster(monster, true));
 			}
 		}, null);
@@ -1007,7 +1007,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(monster, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.announce(MaplePacketCreator.spawnMonster(monster, true, effect));
 			}
 		});
@@ -1025,7 +1025,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(monster, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.announce(MaplePacketCreator.spawnFakeMonster(monster, 0));
 			}
 		});
@@ -1044,7 +1044,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(reactor, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.announce(reactor.makeSpawnData());
 			}
 		});
@@ -1061,7 +1061,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(door, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.announce(MaplePacketCreator.spawnDoor(door.getOwner().getId(), door.getTargetPosition(), false));
 				if (door.getOwner().getParty() != null && (door.getOwner() == c.getPlayer() || door.getOwner().getParty().containsMembers(c.getPlayer().getMPC()))) {
 					c.announce(MaplePacketCreator.partyPortal(door.getTown().getId(), door.getTarget().getId(), door.getTargetPosition()));
@@ -1100,7 +1100,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(summon, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				if (summon != null) {
 					c.announce(MaplePacketCreator.spawnSummon(summon, true));
 				}
@@ -1151,7 +1151,7 @@ public class MapleMap {
 		spawnAndAddRangedMapObject(drop, new DelayedPacketCreation() {
 
 			@Override
-			public void sendPackets(MapleClient c) {
+			public void sendPackets(GameClient c) {
 				c.getSession().write(MaplePacketCreator.dropItemFromMapObject(drop, dropper.getPosition(), droppos, (byte) 1));
 			}
 		}, null);
@@ -1163,7 +1163,7 @@ public class MapleMap {
 		}
 	}
 
-	private void activateItemReactors(final MapleMapItem drop, final MapleClient c) {
+	private void activateItemReactors(final MapleMapItem drop, final GameClient c) {
 		final IItem item = drop.getItem();
 
 		for (final MapleMapObject o : getAllReactor()) {
@@ -1475,7 +1475,7 @@ public class MapleMap {
 		}
 	}
 
-	private void sendObjectPlacement(MapleClient mapleClient) {
+	private void sendObjectPlacement(GameClient mapleClient) {
 		MapleCharacter chr = mapleClient.getPlayer();
 		objectRLock.lock();
 		try {
@@ -1781,9 +1781,9 @@ public class MapleMap {
 
 		private MapleMapItem mapitem;
 		private MapleReactor reactor;
-		private MapleClient c;
+		private GameClient c;
 
-		public ActivateItemReactor(MapleMapItem mapitem, MapleReactor reactor, MapleClient c) {
+		public ActivateItemReactor(MapleMapItem mapitem, MapleReactor reactor, GameClient c) {
 			this.mapitem = mapitem;
 			this.reactor = reactor;
 			this.c = c;
@@ -1844,7 +1844,7 @@ public class MapleMap {
 
 	private static interface DelayedPacketCreation {
 
-		void sendPackets(MapleClient c);
+		void sendPackets(GameClient c);
 	}
 
 	private static interface SpawnCondition {

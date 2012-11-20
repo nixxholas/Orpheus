@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class NPCShopHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte bmode = slea.readByte();
 		if (bmode == 0) { // mode 0 = buy :)
 			short slot = slea.readShort();// slot

@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import java.util.List;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import server.movement.LifeMovementFragment;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MovePetHandler extends AbstractMovementPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int petId = slea.readInt();
 		slea.readLong();
 		// Point startPos = StreamUtil.readShortPoint(slea);

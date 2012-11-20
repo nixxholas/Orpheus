@@ -20,7 +20,7 @@
  */
 package net.mina;
 
-import client.MapleClient;
+import client.GameClient;
 import tools.MapleAESOFB;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -36,7 +36,7 @@ public class MaplePacketDecoder extends CumulativeProtocolDecoder {
 
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-		final MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+		final GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
 		DecoderState decoderState = (DecoderState) session.getAttribute(DECODER_STATE_KEY);
 		if (decoderState == null) {
 			decoderState = new DecoderState();

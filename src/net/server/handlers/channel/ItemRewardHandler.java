@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
 import java.util.List;
@@ -41,7 +41,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt(); // will load from xml I don't care.
 		if (c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(MapleInventoryType.USE).countById(itemId) < 1)

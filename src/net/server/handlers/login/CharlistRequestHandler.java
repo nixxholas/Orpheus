@@ -20,14 +20,14 @@
  */
 package net.server.handlers.login;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CharlistRequestHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readByte();
 		byte world = slea.readByte();
 		c.setWorld(world);

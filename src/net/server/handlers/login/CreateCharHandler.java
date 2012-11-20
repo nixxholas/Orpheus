@@ -23,7 +23,7 @@ package net.server.handlers.login;
 import client.IItem;
 import client.Item;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleJob;
@@ -37,7 +37,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CreateCharHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String name = slea.readMapleAsciiString();
 		if (!MapleCharacter.canCreateChar(name)) {
 			return;

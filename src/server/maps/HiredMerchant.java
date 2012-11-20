@@ -29,7 +29,7 @@ import client.IItem;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import com.mysql.jdbc.Statement;
 import constants.ItemConstants;
@@ -130,7 +130,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		}
 	}
 
-	public void buy(MapleClient c, int item, short quantity) {
+	public void buy(GameClient c, int item, short quantity) {
 		MaplePlayerShopItem pItem = items.get(item);
 		synchronized (items) {
 			IItem newItem = pItem.getItem().copy();
@@ -202,7 +202,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		schedule = null;
 	}
 
-	public void closeShop(MapleClient c, boolean timeout) {
+	public void closeShop(GameClient c, boolean timeout) {
 		map.removeMapObject(this);
 		map.broadcastMessage(MaplePacketCreator.destroyHiredMerchant(ownerId));
 		c.getChannelServer().removeHiredMerchant(ownerId);
@@ -385,7 +385,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		return;
 	}
 
@@ -395,7 +395,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		client.getSession().write(MaplePacketCreator.spawnHiredMerchant(this));
 	}
 

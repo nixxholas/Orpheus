@@ -20,7 +20,7 @@
  */
 package scripting.item;
 
-import client.MapleClient;
+import client.GameClient;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class ItemScriptManager {
 		return scriptFile.exists();
 	}
 
-	public void getItemScript(MapleClient c, String scriptName) {
+	public void getItemScript(GameClient c, String scriptName) {
 		if (scripts.containsKey(scriptName)) {
 			scripts.get(scriptName).start(new ItemScriptMethods(c));
 			return;

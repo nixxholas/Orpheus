@@ -20,11 +20,11 @@
  */
 package client.command.external;
 
-import client.MapleClient;
+import client.GameClient;
 
 /**
  * @author Aaron Weiss
  */
 public abstract class AbstractCommandProcessor {
-	public abstract void execute(MapleClient c, String[] sub, char heading);
+	public abstract void execute(GameClient c, String[] sub, char heading);
 }

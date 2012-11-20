@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
 import net.AbstractMaplePacketHandler;
@@ -39,7 +39,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class StorageHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		byte mode = slea.readByte();

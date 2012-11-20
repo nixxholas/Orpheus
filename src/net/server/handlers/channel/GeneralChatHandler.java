@@ -28,7 +28,7 @@ import tools.MapleLogger;
 import tools.MaplePacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
-import client.MapleClient;
+import client.GameClient;
 import client.command.AdminCommands;
 import client.command.DeveloperCommands;
 import client.command.DonorCommands;
@@ -44,7 +44,7 @@ import client.command.external.CommandLoader;
 public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String s = slea.readMapleAsciiString();
 		MapleCharacter chr = c.getPlayer();
 		char heading = s.charAt(0);

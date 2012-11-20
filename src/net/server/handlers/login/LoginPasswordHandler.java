@@ -21,7 +21,7 @@
 package net.server.handlers.login;
 
 import client.AutoRegister;
-import client.MapleClient;
+import client.GameClient;
 import java.util.Calendar;
 import net.MaplePacketHandler;
 import net.server.Server;
@@ -33,12 +33,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class LoginPasswordHandler implements MaplePacketHandler {
 	
 	@Override
-	public boolean validateState(MapleClient c) {
+	public boolean validateState(GameClient c) {
 		return !c.isLoggedIn();
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int loginok = 0;
 		String login = slea.readMapleAsciiString();
 		String pwd = slea.readMapleAsciiString();
@@ -76,7 +76,7 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
 		}
 		if (c.finishLogin() == 0) {
 			c.announce(MaplePacketCreator.getAuthSuccess(c));
-			final MapleClient client = c;
+			final GameClient client = c;
 			client.saveLastKnownIP();
 			c.setIdleTask(TimerManager.getInstance().schedule(new Runnable() {
 				@Override

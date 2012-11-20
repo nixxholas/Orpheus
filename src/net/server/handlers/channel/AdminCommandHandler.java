@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import tools.Output;
@@ -43,7 +43,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		final MapleCharacter player = c.getPlayer();
 		if (!player.isGM()) {
 			return;

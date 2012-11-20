@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import client.MapleInventoryType;
 import client.MapleInventory;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemSortHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		chr.getAutobanManager().setTimestamp(2, slea.readInt());
 		byte inv = slea.readByte();

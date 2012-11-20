@@ -20,7 +20,7 @@
  */
 package net.server.handlers.login;
 
-import client.MapleClient;
+import client.GameClient;
 import constants.ServerConstants;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ServerStatusRequestHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte world = (byte) slea.readShort();// Wuuu? ):
 		int status;
 		int num = 0;

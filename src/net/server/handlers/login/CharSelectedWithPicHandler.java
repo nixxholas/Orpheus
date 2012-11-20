@@ -22,7 +22,7 @@ package net.server.handlers.login;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
 import tools.MaplePacketCreator;
@@ -35,7 +35,7 @@ public class CharSelectedWithPicHandler extends AbstractMaplePacketHandler {
 	private static Logger log = LoggerFactory.getLogger(CharSelectedWithPicHandler.class);
 	
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 
 		String pic = slea.readMapleAsciiString();
 		int charId = slea.readInt();
@@ -51,8 +51,8 @@ public class CharSelectedWithPicHandler extends AbstractMaplePacketHandler {
 				if (c.getIdleTask() != null) {
 					c.getIdleTask().cancel(true);
 				}
-				c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
-				String channelServerIP = MapleClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
+				c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+				String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
 
 				if (channelServerIP.equals("0.0.0.0")) {
 					String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");

@@ -25,7 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import tools.DatabaseConnection;
 import tools.Output;
 import net.AbstractMaplePacketHandler;
@@ -39,7 +39,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (c.getPlayer().getGuildId() < 1) {
 			return;
 		}
@@ -95,7 +95,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private static void listBBSThreads(MapleClient c, int start) {
+	private static void listBBSThreads(GameClient c, int start) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM bbs_threads WHERE guildid = ? ORDER BY localthreadid DESC");
 			ps.setInt(1, c.getPlayer().getGuildId());
@@ -108,7 +108,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private static void newBBSReply(MapleClient c, int localthreadid, String text) {
+	private static void newBBSReply(GameClient c, int localthreadid, String text) {
 		if (c.getPlayer().getGuildId() <= 0) {
 			return;
 		}
@@ -143,7 +143,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private static void editBBSThread(MapleClient client, String title, String text, int icon, int localthreadid) {
+	private static void editBBSThread(GameClient client, String title, String text, int icon, int localthreadid) {
 		MapleCharacter c = client.getPlayer();
 		if (c.getGuildId() < 1) {
 			return;
@@ -166,7 +166,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private static void newBBSThread(MapleClient client, String title, String text, int icon, boolean bNotice) {
+	private static void newBBSThread(GameClient client, String title, String text, int icon, boolean bNotice) {
 		MapleCharacter c = client.getPlayer();
 		if (c.getGuildId() <= 0) {
 			return;
@@ -201,7 +201,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 
 	}
 
-	public static void deleteBBSThread(MapleClient client, int localthreadid) {
+	public static void deleteBBSThread(GameClient client, int localthreadid) {
 		MapleCharacter mc = client.getPlayer();
 		if (mc.getGuildId() <= 0) {
 			return;
@@ -238,7 +238,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	public static void deleteBBSReply(MapleClient client, int replyid) {
+	public static void deleteBBSReply(GameClient client, int replyid) {
 		MapleCharacter mc = client.getPlayer();
 		if (mc.getGuildId() <= 0) {
 			return;
@@ -276,11 +276,11 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	public static void displayThread(MapleClient client, int threadid) {
+	public static void displayThread(GameClient client, int threadid) {
 		displayThread(client, threadid, true);
 	}
 
-	public static void displayThread(MapleClient client, int threadid, boolean bIsThreadIdLocal) {
+	public static void displayThread(GameClient client, int threadid, boolean bIsThreadIdLocal) {
 		MapleCharacter mc = client.getPlayer();
 		if (mc.getGuildId() <= 0) {
 			return;

@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
 import tools.MaplePacketCreator;
@@ -29,7 +29,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class FaceExpressionHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int emote = slea.readInt();
 		if (emote > 7) {
 			int emoteid = 5159992 + emote;

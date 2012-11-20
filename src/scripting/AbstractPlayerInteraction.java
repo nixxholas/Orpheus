@@ -26,7 +26,7 @@ import client.Equip;
 import client.IItem;
 import client.ISkill;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MaplePet;
@@ -53,13 +53,13 @@ import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
 
 public class AbstractPlayerInteraction {
-	public MapleClient c;
+	public GameClient c;
 
-	public AbstractPlayerInteraction(MapleClient c) {
+	public AbstractPlayerInteraction(GameClient c) {
 		this.c = c;
 	}
 
-	public MapleClient getClient() {
+	public GameClient getClient() {
 		return c;
 	}
 
@@ -239,7 +239,7 @@ public class AbstractPlayerInteraction {
 
 	public void givePartyItems(int id, short quantity, List<MapleCharacter> party) {
 		for (MapleCharacter chr : party) {
-			MapleClient cl = chr.getClient();
+			GameClient cl = chr.getClient();
 			if (quantity >= 0) {
 				MapleInventoryManipulator.addById(cl, id, quantity);
 			} else {
@@ -257,7 +257,7 @@ public class AbstractPlayerInteraction {
 
 	public void removeFromParty(int id, List<MapleCharacter> party) {
 		for (MapleCharacter chr : party) {
-			MapleClient cl = chr.getClient();
+			GameClient cl = chr.getClient();
 			MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(id);
 			MapleInventory iv = cl.getPlayer().getInventory(type);
 			int possesed = iv.countById(id);
@@ -272,7 +272,7 @@ public class AbstractPlayerInteraction {
 		removeAll(id, c);
 	}
 
-	public void removeAll(int id, MapleClient cl) {
+	public void removeAll(int id, GameClient cl) {
 		int possessed = cl.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(id)).countById(id);
 		if (possessed > 0) {
 			MapleInventoryManipulator.removeById(cl, MapleItemInformationProvider.getInstance().getInventoryType(id), id, possessed, true, false);
@@ -306,7 +306,7 @@ public class AbstractPlayerInteraction {
 		}
 	}
 
-	public void sendClock(MapleClient d, int time) {
+	public void sendClock(GameClient d, int time) {
 		d.announce(MaplePacketCreator.getClock((int) (time - System.currentTimeMillis()) / 1000));
 	}
 

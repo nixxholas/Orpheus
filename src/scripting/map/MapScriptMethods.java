@@ -23,13 +23,13 @@ package scripting.map;
 import scripting.AbstractPlayerInteraction;
 import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleQuestStatus;
 import client.SkillFactory;
 
 public class MapScriptMethods extends AbstractPlayerInteraction {
 
-	public MapScriptMethods(MapleClient c) {
+	public MapScriptMethods(GameClient c) {
 		super(c);
 	}
 

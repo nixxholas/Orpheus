@@ -20,11 +20,11 @@
  */
 package net;
 
-import client.MapleClient;
+import client.GameClient;
 
 public abstract class AbstractMaplePacketHandler implements MaplePacketHandler {
 	@Override
-	public boolean validateState(MapleClient c) {
+	public boolean validateState(GameClient c) {
 		return c.isLoggedIn();
 	}
 }

@@ -20,7 +20,7 @@
  */
 package net.mina;
 
-import client.MapleClient;
+import client.GameClient;
 import net.MaplePacket;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -29,7 +29,7 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
 public class MaplePacketEncoder implements ProtocolEncoder {
 	public synchronized void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-		final MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+		final GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
 		if (client != null) {
 			final byte[] input = ((MaplePacket) message).getBytes();
 			final byte[] unencrypted = new byte[input.length];

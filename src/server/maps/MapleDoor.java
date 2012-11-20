@@ -28,7 +28,7 @@ import java.util.List;
 import server.MaplePortal;
 import tools.MaplePacketCreator;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 
 /**
  * 
@@ -91,7 +91,7 @@ public class MapleDoor extends AbstractMapleMapObject {
 		return freePortals.iterator().next();
 	}
 
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		if (target.getId() == client.getPlayer().getMapId() || owner == client.getPlayer() && owner.getParty() == null) {
 			client.getSession().write(MaplePacketCreator.spawnDoor(owner.getId(), town.getId() == client.getPlayer().getMapId() ? townPortal.getPosition() : targetPosition, true));
 			if (owner.getParty() != null && (owner == client.getPlayer() || owner.getParty().containsMembers(client.getPlayer().getMPC()))) {
@@ -101,7 +101,7 @@ public class MapleDoor extends AbstractMapleMapObject {
 		}
 	}
 
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		if (target.getId() == client.getPlayer().getMapId() || owner == client.getPlayer() || owner.getParty() != null && owner.getParty().containsMembers(client.getPlayer().getMPC())) {
 			if (owner.getParty() != null && (owner == client.getPlayer() || owner.getParty().containsMembers(client.getPlayer().getMPC()))) {
 				client.getSession().write(MaplePacketCreator.partyPortal(999999999, 999999999, new Point(-1, -1)));

@@ -29,7 +29,7 @@ import java.sql.ResultSet;
 import constants.ExpTable;
 import constants.ServerConstants;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleJob;
@@ -74,7 +74,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	private int npc;
 	private String getText;
 
-	public NPCConversationManager(MapleClient c, int npc) {
+	public NPCConversationManager(GameClient c, int npc) {
 		super(c);
 		this.npc = npc;
 	}
@@ -322,7 +322,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		}
 	}
 
-	public void disbandAlliance(MapleClient c, int allianceId) {
+	public void disbandAlliance(GameClient c, int allianceId) {
 		PreparedStatement ps = null;
 		try {
 			ps = DatabaseConnection.getConnection().prepareStatement("DELETE FROM `alliance` WHERE id = ?");

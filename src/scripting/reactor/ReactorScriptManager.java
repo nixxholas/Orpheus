@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.script.Invocable;
-import client.MapleClient;
+import client.GameClient;
 import tools.DatabaseConnection;
 import scripting.AbstractScriptManager;
 import server.maps.MapleReactor;
@@ -44,7 +44,7 @@ public class ReactorScriptManager extends AbstractScriptManager {
 		return instance;
 	}
 
-	public void act(MapleClient c, MapleReactor reactor) {
+	public void act(GameClient c, MapleReactor reactor) {
 		try {
 			ReactorActionManager rm = new ReactorActionManager(c, reactor);
 			Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
@@ -85,15 +85,15 @@ public class ReactorScriptManager extends AbstractScriptManager {
 		drops.clear();
 	}
 
-	public void touch(MapleClient c, MapleReactor reactor) {
+	public void touch(GameClient c, MapleReactor reactor) {
 		touching(c, reactor, true);
 	}
 
-	public void untouch(MapleClient c, MapleReactor reactor) {
+	public void untouch(GameClient c, MapleReactor reactor) {
 		touching(c, reactor, false);
 	}
 
-	public void touching(MapleClient c, MapleReactor reactor, boolean touching) {
+	public void touching(GameClient c, MapleReactor reactor, boolean touching) {
 		try {
 			ReactorActionManager rm = new ReactorActionManager(c, reactor);
 			Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);

@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 
 		if (chr.isBanned()) {
@@ -47,7 +47,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 			chr.saveToDB(true);
 			chr.getCashShop().open(false);
 			c.getChannelServer().removePlayer(chr);
-			c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
+			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
 			try {
 				c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
 			} catch (UnknownHostException ex) {

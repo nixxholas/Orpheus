@@ -20,7 +20,7 @@
  */
 package scripting.map;
 
-import client.MapleClient;
+import client.GameClient;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class MapScriptManager {
 		return scriptFile.exists();
 	}
 
-	public void getMapScript(MapleClient c, String scriptName, boolean firstUser) {
+	public void getMapScript(GameClient c, String scriptName, boolean firstUser) {
 		if (scripts.containsKey(scriptName)) {
 			scripts.get(scriptName).start(new MapScriptMethods(c));
 			return;

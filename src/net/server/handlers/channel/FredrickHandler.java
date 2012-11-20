@@ -24,7 +24,7 @@ import client.IItem;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class FredrickHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		byte operation = slea.readByte();
 

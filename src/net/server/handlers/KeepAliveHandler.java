@@ -20,16 +20,16 @@
  */
 package net.server.handlers;
 
-import client.MapleClient;
+import client.GameClient;
 import net.MaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class KeepAliveHandler implements MaplePacketHandler {
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		c.pongReceived();
 	}
 
-	public boolean validateState(MapleClient c) {
+	public boolean validateState(GameClient c) {
 		return true;
 	}
 }

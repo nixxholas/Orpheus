@@ -21,7 +21,7 @@
 package net.server.handlers.login;
 
 import java.net.InetAddress;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
 import tools.MaplePacketCreator;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CharSelectedHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int charId = slea.readInt();
 		String macs = slea.readMapleAsciiString();
 		c.updateMacs(macs);
@@ -42,8 +42,8 @@ public final class CharSelectedHandler extends AbstractMaplePacketHandler {
 			if (c.getIdleTask() != null) {
 				c.getIdleTask().cancel(true);
 			}
-			c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
-			String channelServerIP = MapleClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
+			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
 			if (channelServerIP.equals("0.0.0.0")) {
 				String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
 				c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));

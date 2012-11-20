@@ -21,7 +21,7 @@
 package server.maps;
 
 import java.awt.Rectangle;
-import client.MapleClient;
+import client.GameClient;
 import java.util.List;
 import net.MaplePacket;
 import scripting.reactor.ReactorScriptManager;
@@ -106,7 +106,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		client.getSession().write(makeDestroyData());
 	}
 
@@ -115,7 +115,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		client.getSession().write(makeSpawnData());
 	}
 
@@ -123,7 +123,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 		return MaplePacketCreator.spawnReactor(this);
 	}
 
-	public void delayedHitReactor(final MapleClient c, long delay) {
+	public void delayedHitReactor(final GameClient c, long delay) {
 		TimerManager.getInstance().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -132,11 +132,11 @@ public class MapleReactor extends AbstractMapleMapObject {
 		}, delay);
 	}
 
-	public void hitReactor(MapleClient c) {
+	public void hitReactor(GameClient c) {
 		hitReactor(0, (short) 0, 0, c);
 	}
 
-	public void hitReactor(int charPos, short stance, int skillid, MapleClient c) {
+	public void hitReactor(int charPos, short stance, int skillid, GameClient c) {
 		try {
 			if (stats.getType(state) < 999 && stats.getType(state) != -1) {// type
 																			// 2

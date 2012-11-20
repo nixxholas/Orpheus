@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import java.awt.Point;
 import net.AbstractMaplePacketHandler;
 import server.partyquest.MonsterCarnival;
@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MonsterCarnivalHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		MonsterCarnival carnival = chr.getCarnival();
 		int tab = slea.readByte();

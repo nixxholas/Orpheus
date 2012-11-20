@@ -28,7 +28,7 @@ import client.IItem;
 import client.Item;
 import client.MapleBuffStat;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
 import constants.ServerConstants;
@@ -52,23 +52,23 @@ public class MapleInventoryManipulator {
 		return true;
 	}
 
-	public static boolean addById(MapleClient c, int itemId, short quantity) {
+	public static boolean addById(GameClient c, int itemId, short quantity) {
 		return addById(c, itemId, quantity, null, -1, -1);
 	}
 
-	public static boolean addById(MapleClient c, int itemId, short quantity, long expiration) {
+	public static boolean addById(GameClient c, int itemId, short quantity, long expiration) {
 		return addById(c, itemId, quantity, null, -1, (byte) 0, expiration);
 	}
 
-	public static boolean addById(MapleClient c, int itemId, short quantity, String owner, int petid) {
+	public static boolean addById(GameClient c, int itemId, short quantity, String owner, int petid) {
 		return addById(c, itemId, quantity, owner, petid, -1);
 	}
 
-	public static boolean addById(MapleClient c, int itemId, short quantity, String owner, int petid, long expiration) {
+	public static boolean addById(GameClient c, int itemId, short quantity, String owner, int petid, long expiration) {
 		return addById(c, itemId, quantity, owner, petid, (byte) 0, expiration);
 	}
 
-	public static boolean addById(MapleClient c, int itemId, short quantity, String owner, int petid, byte flag, long expiration) {
+	public static boolean addById(GameClient c, int itemId, short quantity, String owner, int petid, byte flag, long expiration) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		MapleInventoryType type = ii.getInventoryType(itemId);
 		if (!type.equals(MapleInventoryType.EQUIP)) {
@@ -152,7 +152,7 @@ public class MapleInventoryManipulator {
 		return true;
 	}
 
-	public static boolean addFromDrop(MapleClient c, IItem item, boolean show) {
+	public static boolean addFromDrop(GameClient c, IItem item, boolean show) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		MapleInventoryType type = ii.getInventoryType(item.getItemId());
 		if (ii.isPickupRestricted(item.getItemId()) && c.getPlayer().getItemQuantity(item.getItemId(), true) > 0) {
@@ -229,7 +229,7 @@ public class MapleInventoryManipulator {
 		return true;
 	}
 
-	public static boolean checkSpace(MapleClient c, int itemid, int quantity, String owner) {
+	public static boolean checkSpace(GameClient c, int itemid, int quantity, String owner) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		MapleInventoryType type = ii.getInventoryType(itemid);
 		if (!type.equals(MapleInventoryType.EQUIP)) {
@@ -266,11 +266,11 @@ public class MapleInventoryManipulator {
 		}
 	}
 
-	public static void removeFromSlot(MapleClient c, MapleInventoryType type, byte slot, short quantity, boolean fromDrop) {
+	public static void removeFromSlot(GameClient c, MapleInventoryType type, byte slot, short quantity, boolean fromDrop) {
 		removeFromSlot(c, type, slot, quantity, fromDrop, false);
 	}
 
-	public static void removeFromSlot(MapleClient c, MapleInventoryType type, byte slot, short quantity, boolean fromDrop, boolean consume) {
+	public static void removeFromSlot(GameClient c, MapleInventoryType type, byte slot, short quantity, boolean fromDrop, boolean consume) {
 		IItem item = c.getPlayer().getInventory(type).getItem(slot);
 		boolean allowZero = consume && ItemConstants.isRechargable(item.getItemId());
 		c.getPlayer().getInventory(type).removeItem(slot, quantity, allowZero);
@@ -281,7 +281,7 @@ public class MapleInventoryManipulator {
 		}
 	}
 
-	public static void removeById(MapleClient c, MapleInventoryType type, int itemId, int quantity, boolean fromDrop, boolean consume) {
+	public static void removeById(GameClient c, MapleInventoryType type, int itemId, int quantity, boolean fromDrop, boolean consume) {
 		List<IItem> items = c.getPlayer().getInventory(type).listById(itemId);
 		int remremove = quantity;
 		for (IItem item : items) {
@@ -299,7 +299,7 @@ public class MapleInventoryManipulator {
 		}
 	}
 
-	public static void move(MapleClient c, MapleInventoryType type, byte src, byte dst) {
+	public static void move(GameClient c, MapleInventoryType type, byte src, byte dst) {
 		if (src < 0 || dst < 0) {
 			return;
 		}
@@ -327,7 +327,7 @@ public class MapleInventoryManipulator {
 		}
 	}
 
-	public static void equip(MapleClient c, byte src, byte dst) {
+	public static void equip(GameClient c, byte src, byte dst) {
 		Equip source = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIP).getItem(src);
 		Equip target = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem(dst);
 		if (source == null || !MapleItemInformationProvider.getInstance().canWearEquipment(c.getPlayer(), source)) {
@@ -414,7 +414,7 @@ public class MapleInventoryManipulator {
 		c.getPlayer().equipChanged();
 	}
 
-	public static void unequip(MapleClient c, byte src, byte dst) {
+	public static void unequip(GameClient c, byte src, byte dst) {
 		Equip source = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem(src);
 		Equip target = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIP).getItem(dst);
 		if (dst < 0) {
@@ -447,7 +447,7 @@ public class MapleInventoryManipulator {
 		c.getPlayer().equipChanged();
 	}
 
-	public static void drop(MapleClient c, MapleInventoryType type, byte src, short quantity) {
+	public static void drop(GameClient c, MapleInventoryType type, byte src, short quantity) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		if (src < 0) {
 			type = MapleInventoryType.EQUIPPED;

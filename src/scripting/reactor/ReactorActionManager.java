@@ -27,7 +27,7 @@ import java.util.List;
 import client.Equip;
 import client.IItem;
 import client.Item;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import scripting.AbstractPlayerInteraction;
 import server.MapleItemInformationProvider;
@@ -43,9 +43,9 @@ import server.maps.ReactorDropEntry;
  */
 public class ReactorActionManager extends AbstractPlayerInteraction {
 	private MapleReactor reactor;
-	private MapleClient client;
+	private GameClient client;
 
-	public ReactorActionManager(MapleClient c, MapleReactor reactor) {
+	public ReactorActionManager(GameClient c, MapleReactor reactor) {
 		super(c);
 		this.reactor = reactor;
 		this.client = c;

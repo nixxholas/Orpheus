@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import client.MapleClient;
+import client.GameClient;
 import tools.MapleLogger;
 import tools.Output;
 
@@ -40,7 +40,7 @@ public class BlacklistHandler {
 	private static ArrayList<Integer> cache;
 
 	public static void printBlacklistLog(String s, Integer accountId) {
-		MapleLogger.printFormatted(MapleLogger.PARANOIA_BLACKLIST + MapleClient.getAccountNameById(accountId) + ".log", s);
+		MapleLogger.printFormatted(MapleLogger.PARANOIA_BLACKLIST + GameClient.getAccountNameById(accountId) + ".log", s);
 	}
 
 	public static void addToBlacklist(Integer accountId) {

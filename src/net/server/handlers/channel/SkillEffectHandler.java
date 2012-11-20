@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import constants.skills.Bishop;
 import constants.skills.Bowmaster;
 import constants.skills.Brawler;
@@ -45,7 +45,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SkillEffectHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int skillId = slea.readInt();
 		int level = slea.readByte();
 		byte flags = slea.readByte();

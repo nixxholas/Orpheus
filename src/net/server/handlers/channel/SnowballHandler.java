@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.events.gm.MapleSnowball;
 import server.maps.MapleMap;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SnowballHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		// D3 00 02 00 00 A5 01
 		MapleCharacter chr = c.getPlayer();
 		MapleMap map = chr.getMap();

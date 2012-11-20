@@ -238,7 +238,7 @@ public class Equip extends Item implements IEquip {
 		this.level = level;
 	}
 
-	public void gainLevel(MapleClient c, boolean timeless) {
+	public void gainLevel(GameClient c, boolean timeless) {
 		List<EquipLevelUpStat> stats = MapleItemInformationProvider.getInstance().getItemLevelupStats(getItemId(), itemLevel, timeless);
 		for (EquipLevelUpStat stat : stats) {
 			if (stat.name.equals("incDEX"))
@@ -288,7 +288,7 @@ public class Equip extends Item implements IEquip {
 		return (int) itemExp;
 	}
 
-	public void gainItemExp(MapleClient c, int gain, boolean timeless) {
+	public void gainItemExp(GameClient c, int gain, boolean timeless) {
 		int expneeded = timeless ? (10 * itemLevel + 70) : (5 * itemLevel + 65);
 		float modifier = 364 / expneeded;
 		float exp = (expneeded / (1000000 * modifier * modifier)) * gain;

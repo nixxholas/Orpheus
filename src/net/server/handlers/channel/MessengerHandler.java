@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.MapleMessenger;
 import net.server.MapleMessengerCharacter;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MessengerHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String input;
 		byte mode = slea.readByte();
 		MapleCharacter player = c.getPlayer();

@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MobDamageMobFriendlyHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int attacker = slea.readInt();
 		slea.readInt(); // charId
 		int damaged = slea.readInt();

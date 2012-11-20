@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import client.MapleCharacter;
 import net.AbstractMaplePacketHandler;
 import net.MaplePacket;
@@ -35,7 +35,7 @@ import tools.data.output.MaplePacketLittleEndianWriter;
 public final class FamilyUseHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int[] repCost = {3, 5, 7, 8, 10, 12, 15, 20, 25, 40, 50};
 		final int type = slea.readInt();
 		MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());

@@ -38,7 +38,7 @@ import tools.DatabaseConnection;
 public final class EnterMTSHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		if (!chr.isAlive()) {
 			c.announce(MaplePacketCreator.enableActions());

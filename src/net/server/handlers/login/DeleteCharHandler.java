@@ -21,7 +21,7 @@
 package net.server.handlers.login;
 
 import constants.ServerConstants;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -29,7 +29,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DeleteCharHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String pic = slea.readMapleAsciiString();
 		int cid = slea.readInt();
 		if (c.checkPic(pic) || !ServerConstants.ENABLE_PIC) {

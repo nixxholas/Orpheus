@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import java.sql.SQLException;
-import client.MapleClient;
+import client.GameClient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CouponCodeHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.skip(2);
 		String code = slea.readMapleAsciiString();
 		boolean validcode = false;

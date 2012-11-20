@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.maps.MapleDoor;
 import server.maps.MapleMapObject;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DoorHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int oid = slea.readInt();
 		boolean mode = (slea.readByte() == 0); // specifies if backwarp or not,
 												// 1 town to target, 0 target to

@@ -24,7 +24,7 @@ import client.ISkill;
 import client.Item;
 import client.MapleBuffStat;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.SkillFactory;
 import client.status.MonsterStatus;
@@ -48,7 +48,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		slea.readInt();
 		byte damagefrom = slea.readByte();

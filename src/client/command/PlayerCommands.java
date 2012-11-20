@@ -36,7 +36,7 @@ import tools.MaplePacketCreator;
 import tools.Output;
 import tools.Pair;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.MapleRank;
@@ -49,7 +49,7 @@ import client.MapleStock;
 public class PlayerCommands extends EnumeratedCommands {
 	private static final char heading = '@';
 
-	public static boolean execute(MapleClient c, String[] sub, char heading) {
+	public static boolean execute(GameClient c, String[] sub, char heading) {
 		MapleCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
 		MapleCharacter victim; // For commands with targets.

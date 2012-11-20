@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetAutoPotHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
 			c.announce(MaplePacketCreator.enableActions());
 			return;

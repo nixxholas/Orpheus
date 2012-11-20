@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import java.util.LinkedList;
 import tools.DatabaseConnection;
 import tools.Output;
@@ -507,7 +507,7 @@ public class MapleGuild {
 		this.guildMessage(MaplePacketCreator.updateGP(this.id, this.gp));
 	}
 
-	public static MapleGuildResponse sendInvite(MapleClient c, String targetName) {
+	public static MapleGuildResponse sendInvite(GameClient c, String targetName) {
 		MapleCharacter mc = c.getChannelServer().getPlayerStorage().getCharacterByName(targetName);
 		if (mc == null) {
 			return MapleGuildResponse.NOT_IN_CHANNEL;
@@ -519,7 +519,7 @@ public class MapleGuild {
 		return null;
 	}
 
-	public static void displayGuildRanks(MapleClient c, int npcid) {
+	public static void displayGuildRanks(GameClient c, int npcid) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `name`, `GP`, `logoBG`, `logoBGColor`, " + "`logo`, `logoColor` FROM `guilds` ORDER BY `GP` DESC LIMIT 50");
 			ResultSet rs = ps.executeQuery();

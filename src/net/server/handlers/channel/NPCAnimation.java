@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.SendOpcode;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -29,7 +29,7 @@ import tools.data.output.MaplePacketLittleEndianWriter;
 public final class NPCAnimation extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		int length = (int) slea.available();
 		if (length == 6) { // NPC Talk

@@ -22,12 +22,12 @@ package net.server.handlers.channel;
 
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
-import client.MapleClient;
+import client.GameClient;
 
 public class AranComboHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		/*
 		 * MapleCharacter player = c.getPlayer(); if
 		 * (player.getJob().equals(MapleJob.LEGEND) ||

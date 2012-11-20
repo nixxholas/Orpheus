@@ -28,7 +28,7 @@ import client.IEquip;
 import client.IItem;
 import client.ISkill;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.MaplePet;
@@ -54,7 +54,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		if (System.currentTimeMillis() - player.getLastUsedCashItem() < 3000) {
 			return;
@@ -538,11 +538,11 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private static void remove(MapleClient c, int itemId) {
+	private static void remove(GameClient c, int itemId) {
 		MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, itemId, 1, true, false);
 	}
 
-	private static boolean getIncubatedItem(MapleClient c, int id) {
+	private static boolean getIncubatedItem(GameClient c, int id) {
 		final int[] ids = {1012070, 1302049, 1302063, 1322027, 2000004, 2000005, 2020013, 2020015, 2040307, 2040509, 2040519, 2040521, 2040533, 2040715, 2040717, 2040810, 2040811, 2070005, 2070006, 4020009,};
 		final int[] quantitys = {1, 1, 1, 1, 240, 200, 200, 200, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3};
 		int amount = 0;

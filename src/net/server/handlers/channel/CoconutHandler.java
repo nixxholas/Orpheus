@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.events.gm.MapleCoconut;
 import server.events.gm.MapleCoconuts;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CoconutHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		/*
 		 * CB 00 A6 00 06 01 A6 00 = coconut id 06 01 = ?
 		 */

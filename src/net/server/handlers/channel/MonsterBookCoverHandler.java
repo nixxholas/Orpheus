@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.MaplePacketCreator;
@@ -28,7 +28,7 @@ import tools.MaplePacketCreator;
 public final class MonsterBookCoverHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int id = slea.readInt();
 		if (id == 0 || id / 10000 == 238) {
 			c.getPlayer().setMonsterBookCover(id);

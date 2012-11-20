@@ -24,7 +24,7 @@ import client.Equip;
 import client.IItem;
 import client.Item;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
 import java.sql.Connection;
@@ -93,7 +93,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte operation = slea.readByte();
 		if (operation == Actions.TOSERVER_SEND_ITEM.getCode()) {
 			final int fee = 5000;
@@ -124,7 +124,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 				c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_NOT_ENOUGH_MESOS.getCode()));
 			}
 			boolean recipientOn = false;
-			MapleClient rClient = null;
+			GameClient rClient = null;
 			byte channel = c.getWorldServer().find(recipient);
 			if (channel > -1) {
 				recipientOn = true;

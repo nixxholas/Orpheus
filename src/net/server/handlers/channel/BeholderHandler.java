@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import constants.skills.DarkKnight;
 import java.util.Collection;
 import net.AbstractMaplePacketHandler;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class BeholderHandler extends AbstractMaplePacketHandler {// broken
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Output.print("[BH] " + slea.toString());
 		Collection<MapleSummon> summons = c.getPlayer().getSummons().values();
 		int oid = slea.readInt();

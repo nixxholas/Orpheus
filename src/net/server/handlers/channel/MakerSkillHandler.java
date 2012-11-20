@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -37,7 +37,7 @@ public final class MakerSkillHandler extends AbstractMaplePacketHandler {
 	private MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readInt();
 		int toCreate = slea.readInt();
 		MakerItemCreateEntry recipe = MakerItemFactory.getItemCreateEntry(toCreate);
@@ -50,11 +50,11 @@ public final class MakerSkillHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private boolean canCreate(MapleClient c, MakerItemCreateEntry recipe) {
+	private boolean canCreate(GameClient c, MakerItemCreateEntry recipe) {
 		return hasItems(c, recipe) && c.getPlayer().getMeso() >= recipe.getCost() && c.getPlayer().getLevel() >= recipe.getReqLevel() && c.getPlayer().getSkillLevel(c.getPlayer().getJob().getId() / 1000 * 1000 + 1007) >= recipe.getReqSkillLevel();
 	}
 
-	private boolean hasItems(MapleClient c, MakerItemCreateEntry recipe) {
+	private boolean hasItems(GameClient c, MakerItemCreateEntry recipe) {
 		for (Pair<Integer, Integer> p : recipe.getReqItems()) {
 			int itemId = p.getLeft();
 			if (c.getPlayer().getInventory(ii.getInventoryType(itemId)).countById(itemId) < p.getRight()) {

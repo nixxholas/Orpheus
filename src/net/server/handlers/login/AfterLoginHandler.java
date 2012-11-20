@@ -20,7 +20,7 @@
  */
 package net.server.handlers.login;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -28,7 +28,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AfterLoginHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte c2 = slea.readByte();
 		byte c3 = 5;
 		if (slea.available() > 0) {
@@ -55,7 +55,7 @@ public final class AfterLoginHandler extends AbstractMaplePacketHandler {
 				c.announce(MaplePacketCreator.requestPinAfterFailure());
 			}
 		} else if (c2 == 0 && c3 == 5) {
-			c.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN);
+			c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
 		}
 	}
 }

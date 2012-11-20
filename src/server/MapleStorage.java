@@ -34,7 +34,7 @@ import java.util.Map;
 import client.IItem;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
@@ -179,7 +179,7 @@ public class MapleStorage {
 		return -1;
 	}
 
-	public void sendStorage(MapleClient c, int npcId) {
+	public void sendStorage(GameClient c, int npcId) {
 		final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		Collections.sort(items, new Comparator<IItem>() {
 			public int compare(IItem o1, IItem o2) {
@@ -197,11 +197,11 @@ public class MapleStorage {
 		c.getSession().write(MaplePacketCreator.getStorage(npcId, slots, items, meso));
 	}
 
-	public void sendStored(MapleClient c, MapleInventoryType type) {
+	public void sendStored(GameClient c, MapleInventoryType type) {
 		c.getSession().write(MaplePacketCreator.storeStorage(slots, type, typeItems.get(type)));
 	}
 
-	public void sendTakenOut(MapleClient c, MapleInventoryType type) {
+	public void sendTakenOut(GameClient c, MapleInventoryType type) {
 		c.getSession().write(MaplePacketCreator.takeOutStorage(slots, type, typeItems.get(type)));
 	}
 
@@ -216,7 +216,7 @@ public class MapleStorage {
 		this.meso = meso;
 	}
 
-	public void sendMeso(MapleClient c) {
+	public void sendMeso(GameClient c) {
 		c.getSession().write(MaplePacketCreator.mesoStorage(slots, meso));
 	}
 

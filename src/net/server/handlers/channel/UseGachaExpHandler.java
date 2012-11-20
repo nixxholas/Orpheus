@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import client.autoban.AutobanFactory;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class UseGachaExpHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (c.getPlayer().getGachaExp() == 0) {
 			c.getPlayer().dropMessage(1, "Packet editing is for faggots like you.");
 			AutobanFactory.GACHA_EXP.autoban(c.getPlayer(), "Packet editing is for faggots like this nib.");

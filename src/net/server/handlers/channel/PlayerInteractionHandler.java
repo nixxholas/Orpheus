@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
 import java.util.Arrays;
@@ -61,7 +61,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte mode = slea.readByte();
 		MapleCharacter chr = c.getPlayer();
 		if (mode == Action.CREATE.getCode()) {

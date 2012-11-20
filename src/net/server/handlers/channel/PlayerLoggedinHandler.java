@@ -25,7 +25,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleFamily;
 import client.MapleInventoryType;
 import client.SkillFactory;
@@ -53,12 +53,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final boolean validateState(MapleClient c) {
+	public final boolean validateState(GameClient c) {
 		return !c.isLoggedIn();
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		final int cid = slea.readInt();
 		final Server server = Server.getInstance();
 		MapleCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(cid);
@@ -81,7 +81,7 @@ public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
 		Channel cserv = c.getChannelServer();
 
 		synchronized (this) {
-			if (state == MapleClient.LOGIN_SERVER_TRANSITION) {
+			if (state == GameClient.LOGIN_SERVER_TRANSITION) {
 				for (String charName : c.loadCharacterNames(c.getWorld())) {
 					for (Channel ch : c.getWorldServer().getChannels()) {
 						if (ch.isConnected(charName)) {
@@ -100,12 +100,12 @@ public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
 				}
 			}
 
-			if (state != MapleClient.LOGIN_SERVER_TRANSITION || !allowLogin) {
+			if (state != GameClient.LOGIN_SERVER_TRANSITION || !allowLogin) {
 				c.setPlayer(null);
 				c.announce(MaplePacketCreator.getAfterLoginError(7));
 				return;
 			}
-			c.updateLoginState(MapleClient.LOGIN_LOGGEDIN);
+			c.updateLoginState(GameClient.LOGIN_LOGGEDIN);
 		}
 		cserv.addPlayer(player);
 		List<PlayerBuffValueHolder> buffs = server.getPlayerBuffStorage().getBuffsFromStorage(cid);

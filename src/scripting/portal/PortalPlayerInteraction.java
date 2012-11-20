@@ -20,7 +20,7 @@
  */
 package scripting.portal;
 
-import client.MapleClient;
+import client.GameClient;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +32,7 @@ public class PortalPlayerInteraction extends AbstractPlayerInteraction {
 
 	private MaplePortal portal;
 
-	public PortalPlayerInteraction(MapleClient c, MaplePortal portal) {
+	public PortalPlayerInteraction(GameClient c, MaplePortal portal) {
 		super(c);
 		this.portal = portal;
 	}

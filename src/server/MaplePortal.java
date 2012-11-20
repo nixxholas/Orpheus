@@ -21,7 +21,7 @@
 package server;
 
 import java.awt.Point;
-import client.MapleClient;
+import client.GameClient;
 
 public interface MaplePortal {
 	public final int MAP_PORTAL = 2;
@@ -49,7 +49,7 @@ public interface MaplePortal {
 
 	int getTargetMapId();
 
-	void enterPortal(MapleClient c);
+	void enterPortal(GameClient c);
 
 	void setPortalState(boolean state);
 

@@ -20,7 +20,7 @@
  */
 package net.server.handlers;
 
-import client.MapleClient;
+import client.GameClient;
 import net.MaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -31,10 +31,10 @@ public final class LoginRequiringNoOpHandler implements MaplePacketHandler {
 		return instance;
 	}
 
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 	}
 
-	public boolean validateState(MapleClient c) {
+	public boolean validateState(GameClient c) {
 		return c.isLoggedIn();
 	}
 }

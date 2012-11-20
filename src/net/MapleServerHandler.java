@@ -20,7 +20,7 @@
  */
 package net;
 
-import client.MapleClient;
+import client.GameClient;
 import constants.ServerConstants;
 import net.server.Server;
 import tools.MapleAESOFB;
@@ -92,22 +92,22 @@ public class MapleServerHandler extends IoHandlerAdapter {
 		ivSend[3] = (byte) (Math.random() * 255);
 		MapleAESOFB sendCypher = new MapleAESOFB(key, ivSend, (short) (0xFFFF - ServerConstants.VERSION));
 		MapleAESOFB recvCypher = new MapleAESOFB(key, ivRecv, (short) ServerConstants.VERSION);
-		MapleClient client = new MapleClient(sendCypher, recvCypher, session);
+		GameClient client = new GameClient(sendCypher, recvCypher, session);
 		client.setWorld(world);
 		client.setChannel(channel);
 		session.write(MaplePacketCreator.getHello(ServerConstants.VERSION, ivSend, ivRecv));
-		session.setAttribute(MapleClient.CLIENT_KEY, client);
+		session.setAttribute(GameClient.CLIENT_KEY, client);
 	}
 
 	@Override
 	public void sessionClosed(IoSession session) throws Exception {
 		synchronized (session) {
-			MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+			GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
 			if (client != null) {
 				try {
 					client.disconnect();
 				} finally {
-					session.removeAttribute(MapleClient.CLIENT_KEY);
+					session.removeAttribute(GameClient.CLIENT_KEY);
 					client.empty();
 				}
 			}
@@ -120,7 +120,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
 		byte[] content = (byte[]) message;
 		SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
 		short packetId = slea.readShort();
-		MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+		GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
 		MaplePacketHandler packetHandler = processor.getHandler(packetId);
 
 		if (packetHandler != null && packetHandler.validateState(client)) {
@@ -133,7 +133,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
 
 	@Override
 	public void sessionIdle(final IoSession session, final IdleStatus status) throws Exception {
-		MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
+		GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
 		if (client != null) {
 			client.sendPing();
 		}

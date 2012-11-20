@@ -26,7 +26,7 @@ import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import net.server.Channel;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 
 /**
  * @author Aaron Weiss
@@ -36,7 +36,7 @@ public class AdminCommands extends EnumeratedCommands {
 	private static final char heading = '!';
 	
 	@SuppressWarnings("unused")
-	public static boolean execute(MapleClient c, String[] sub, char heading) {
+	public static boolean execute(GameClient c, String[] sub, char heading) {
 		MapleCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
 		MapleCharacter victim; // For commands with targets.

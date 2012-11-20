@@ -23,7 +23,7 @@ package scripting.quest;
 import java.util.HashMap;
 import java.util.Map;
 import javax.script.Invocable;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleQuestStatus;
 import java.lang.reflect.UndeclaredThrowableException;
 import scripting.AbstractScriptManager;
@@ -35,15 +35,15 @@ import tools.Output;
  * @author RMZero213
  */
 public class QuestScriptManager extends AbstractScriptManager {
-	private Map<MapleClient, QuestActionManager> qms = new HashMap<MapleClient, QuestActionManager>();
-	private Map<MapleClient, QuestScript> scripts = new HashMap<MapleClient, QuestScript>();
+	private Map<GameClient, QuestActionManager> qms = new HashMap<GameClient, QuestActionManager>();
+	private Map<GameClient, QuestScript> scripts = new HashMap<GameClient, QuestScript>();
 	private static QuestScriptManager instance = new QuestScriptManager();
 
 	public synchronized static QuestScriptManager getInstance() {
 		return instance;
 	}
 
-	public void start(MapleClient c, short questid, int npc) {
+	public void start(GameClient c, short questid, int npc) {
 		MapleQuest quest = MapleQuest.getInstance(questid);
 		if (!c.getPlayer().getQuest(quest).getStatus().equals(MapleQuestStatus.Status.NOT_STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
 			dispose(c);
@@ -71,7 +71,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public void start(MapleClient c, byte mode, byte type, int selection) {
+	public void start(GameClient c, byte mode, byte type, int selection) {
 		QuestScript qs = scripts.get(c);
 		if (qs != null) {
 			try {
@@ -83,7 +83,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public void end(MapleClient c, short questid, int npc) {
+	public void end(GameClient c, short questid, int npc) {
 		MapleQuest quest = MapleQuest.getInstance(questid);
 		if (!c.getPlayer().getQuest(quest).getStatus().equals(MapleQuestStatus.Status.STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
 			dispose(c);
@@ -110,7 +110,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public void end(MapleClient c, byte mode, byte type, int selection) {
+	public void end(GameClient c, byte mode, byte type, int selection) {
 		QuestScript qs = scripts.get(c);
 		if (qs != null) {
 			try {
@@ -122,20 +122,20 @@ public class QuestScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public void dispose(QuestActionManager qm, MapleClient c) {
+	public void dispose(QuestActionManager qm, GameClient c) {
 		qms.remove(c);
 		scripts.remove(c);
 		resetContext("quest/" + qm.getQuest() + ".js", c);
 	}
 
-	public void dispose(MapleClient c) {
+	public void dispose(GameClient c) {
 		QuestActionManager qm = qms.get(c);
 		if (qm != null) {
 			dispose(qm, c);
 		}
 	}
 
-	public QuestActionManager getQM(MapleClient c) {
+	public QuestActionManager getQM(GameClient c) {
 		return qms.get(c);
 	}
 }

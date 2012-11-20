@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.maps.MapleReactor;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -31,7 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ReactorHitHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		// CD 00 6B 00 00 00 01 00 00 00 03 00 00 00 20 03 F7 03 00 00
 		int oid = slea.readInt();
 		int charPos = slea.readInt();

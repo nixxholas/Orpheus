@@ -33,7 +33,7 @@ public final class MonsterBook {
 	private int bookLevel = 1;
 	private Map<Integer, Integer> cards = new LinkedHashMap<Integer, Integer>();
 
-	public void addCard(final MapleClient c, final int cardid) {
+	public void addCard(final GameClient c, final int cardid) {
 		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showForeginCardEffect(c.getPlayer().getId()), false);
 		for (Entry<Integer, Integer> all : cards.entrySet()) {
 			if (all.getKey() == cardid) {

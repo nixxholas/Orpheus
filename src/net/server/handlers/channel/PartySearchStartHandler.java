@@ -28,7 +28,7 @@ import server.maps.MapleMapObject;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleJob;
 
 /**
@@ -39,7 +39,7 @@ import client.MapleJob;
 public class PartySearchStartHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int min = slea.readInt();
 		int max = slea.readInt();
 		slea.readInt(); // members

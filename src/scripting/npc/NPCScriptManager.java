@@ -23,7 +23,7 @@ package scripting.npc;
 import java.util.HashMap;
 import java.util.Map;
 import javax.script.Invocable;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleCharacter;
 import java.lang.reflect.UndeclaredThrowableException;
 import scripting.AbstractScriptManager;
@@ -34,15 +34,15 @@ import tools.Output;
  * @author Matze
  */
 public class NPCScriptManager extends AbstractScriptManager {
-	private Map<MapleClient, NPCConversationManager> cms = new HashMap<MapleClient, NPCConversationManager>();
-	private Map<MapleClient, NPCScript> scripts = new HashMap<MapleClient, NPCScript>();
+	private Map<GameClient, NPCConversationManager> cms = new HashMap<GameClient, NPCConversationManager>();
+	private Map<GameClient, NPCScript> scripts = new HashMap<GameClient, NPCScript>();
 	private static NPCScriptManager instance = new NPCScriptManager();
 
 	public synchronized static NPCScriptManager getInstance() {
 		return instance;
 	}
 
-	public void start(MapleClient c, int npc, String filename, MapleCharacter chr) {
+	public void start(GameClient c, int npc, String filename, MapleCharacter chr) {
 		try {
 			NPCConversationManager cm = new NPCConversationManager(c, npc);
 			if (cms.containsKey(c)) {
@@ -84,7 +84,7 @@ public class NPCScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public void action(MapleClient c, byte mode, byte type, int selection) {
+	public void action(GameClient c, byte mode, byte type, int selection) {
 		NPCScript ns = scripts.get(c);
 		if (ns != null) {
 			try {
@@ -103,23 +103,23 @@ public class NPCScriptManager extends AbstractScriptManager {
 	}
 
 	public void dispose(NPCConversationManager cm) {
-		MapleClient c = cm.getClient();
+		GameClient c = cm.getClient();
 		cms.remove(c);
 		scripts.remove(c);
 		resetContext("npc/world" + c.getWorld() + "/" + cm.getNpc() + ".js", c);
 	}
 
-	public void dispose(MapleClient c) {
+	public void dispose(GameClient c) {
 		if (cms.get(c) != null) {
 			dispose(cms.get(c));
 		}
 	}
 
-	public NPCConversationManager getCM(MapleClient c) {
+	public NPCConversationManager getCM(GameClient c) {
 		return cms.get(c);
 	}
 
-	private void notice(MapleClient c, int id) {
+	private void notice(GameClient c, int id) {
 		c.getPlayer().dropMessage(1, "This NPC is not working properly. Please report it. NPCID: " + id);
 	}
 }

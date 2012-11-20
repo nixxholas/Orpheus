@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.IEquip;
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleRing;
@@ -44,7 +44,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CashOperationHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		CashShop cs = chr.getCashShop();
 		if (!cs.isOpened()) {
@@ -278,7 +278,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private boolean checkBirthday(MapleClient c, int idate) {
+	private boolean checkBirthday(GameClient c, int idate) {
 		int year = idate / 10000;
 		int month = (idate - year * 10000) / 100;
 		int day = idate - year * 10000 - month * 100;

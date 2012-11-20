@@ -20,7 +20,7 @@
  */
 package net.server.handlers.login;
 
-import client.MapleClient;
+import client.GameClient;
 import constants.ServerConstants;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
@@ -33,7 +33,7 @@ public final class ServerlistRequestHandler extends AbstractMaplePacketHandler {
 	private static final String[] names = ServerConstants.WORLD_NAMES;
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Server server = Server.getInstance();
 		World world;
 		for (byte i = 0; i < Math.min(server.getLoad().size(), names.length); i++) {

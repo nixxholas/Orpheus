@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import client.SkillMacro;
 import tools.data.input.SeekableLittleEndianAccessor;
 import net.AbstractMaplePacketHandler;
@@ -28,7 +28,7 @@ import net.AbstractMaplePacketHandler;
 public final class SkillMacroHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int num = slea.readByte();
 		for (int i = 0; i < num; i++) {
 			String name = slea.readMapleAsciiString();

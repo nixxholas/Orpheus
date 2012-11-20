@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.MapleBuffStat;
 import client.MapleCharacter;
 import java.net.InetAddress;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import java.io.IOException;
 import net.AbstractMaplePacketHandler;
@@ -41,7 +41,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte channel = (byte) (slea.readByte() + 1);
 		MapleCharacter chr = c.getPlayer();
 		Server server = Server.getInstance();
@@ -82,7 +82,7 @@ public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
 		chr.getClient().getChannelServer().removePlayer(chr);
 		chr.saveToDB(true);
 		server.getLoad(c.getWorld()).get(c.getChannel()).decrementAndGet();
-		chr.getClient().updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
+		chr.getClient().updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
 		try {
 			c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
 		} catch (IOException e) {

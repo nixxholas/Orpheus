@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import constants.ExpTable;
 import net.AbstractMaplePacketHandler;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseMountFoodHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.skip(6);
 		int itemid = slea.readInt();
 		if (c.getPlayer().getInventory(MapleInventoryType.USE).findById(itemid) != null) {

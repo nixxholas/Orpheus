@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.MapleCharacter;
 import net.server.MaplePartyCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.autoban.AutobanFactory;
 import java.awt.Point;
 import net.AbstractMaplePacketHandler;
@@ -42,7 +42,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(final SeekableLittleEndianAccessor slea, final MapleClient c) {
+	public final void handlePacket(final SeekableLittleEndianAccessor slea, final GameClient c) {
 		slea.readInt(); // Timestamp
 		slea.readByte();
 		Point cpos = slea.readPos();
@@ -154,7 +154,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.enableActions());
 	}
 
-	static boolean useItem(final MapleClient c, final int id) {
+	static boolean useItem(final GameClient c, final int id) {
 		if (id / 1000000 == 2) {
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 			if (ii.isConsumeOnPickup(id)) {

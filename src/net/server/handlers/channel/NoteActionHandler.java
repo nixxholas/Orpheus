@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import java.sql.PreparedStatement;
-import client.MapleClient;
+import client.GameClient;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
@@ -32,7 +32,7 @@ import tools.MaplePacketCreator;
 public final class NoteActionHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int action = slea.readByte();
 		if (action == 0 && c.getPlayer().getCashShop().getAvailableNotes() > 0) {
 			String charname = slea.readMapleAsciiString();

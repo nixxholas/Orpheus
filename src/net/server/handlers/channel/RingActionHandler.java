@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 //import java.sql.Connection;
 //import java.sql.PreparedStatement;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleCharacter;
 //import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
@@ -37,7 +37,7 @@ import tools.Output;
 public final class RingActionHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte mode = slea.readByte();
 		MapleCharacter player = c.getPlayer();
 		switch (mode) {

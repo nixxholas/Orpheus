@@ -20,14 +20,14 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CancelDebuffHandler extends AbstractMaplePacketHandler {// TIP: BAD STUFF LOL
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		/*
 		 * List<MapleDisease> diseases = c.getPlayer().getDiseases();
 		 * List<MapleDisease> diseases_ = new ArrayList<MapleDisease>(); for

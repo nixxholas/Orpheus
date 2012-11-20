@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleJob;
 import client.MapleStat;
 import net.AbstractMaplePacketHandler;
@@ -32,7 +32,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 	private static final int max = Short.MAX_VALUE;
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readInt();
 		int num = slea.readInt();
 		if (c.getPlayer().getRemainingAp() > 0) {
@@ -44,7 +44,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.enableActions());
 	}
 
-	static boolean addStat(MapleClient c, int id) {
+	static boolean addStat(GameClient c, int id) {
 		switch (id) {
 			case 64: // Str
 				if (c.getPlayer().getStr() >= max) {
@@ -83,7 +83,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 		return true;
 	}
 
-	static int addHP(MapleClient c) {
+	static int addHP(GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		MapleJob job = player.getJob();
 		int MaxHP = player.getMaxHp();
@@ -104,7 +104,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 		return MaxHP;
 	}
 
-	static int addMP(MapleClient c) {
+	static int addMP(GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		int MaxMP = player.getMaxMp();
 		MapleJob job = player.getJob();

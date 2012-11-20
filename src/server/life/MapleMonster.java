@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import client.MapleBuffStat;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleJob;
 import client.SkillFactory;
 import client.status.MonsterStatus;
@@ -433,7 +433,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient c) {
+	public void sendSpawnData(GameClient c) {
 		if (!isAlive()) {
 			return;
 		}
@@ -457,7 +457,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		client.getSession().write(MaplePacketCreator.killMonster(getObjectId(), false));
 	}
 

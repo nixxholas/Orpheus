@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.MaplePacket;
 import net.SendOpcode;
 import server.maps.AbstractMapleMapObject;
@@ -116,7 +116,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 	 * @param item
 	 * @param quantity
 	 */
-	public void buy(MapleClient c, int item, short quantity) {
+	public void buy(GameClient c, int item, short quantity) {
 		if (isVisitor(c.getPlayer())) {
 			MaplePlayerShopItem pItem = items.get(item);
 			IItem newItem = pItem.getItem().copy();
@@ -189,7 +189,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		broadcastToVisitors(packet);
 	}
 
-	public void chat(MapleClient c, String chat) {
+	public void chat(GameClient c, String chat) {
 		byte s = 0;
 		for (MapleCharacter mc : getVisitors()) {
 			s++;
@@ -204,7 +204,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		broadcast(MaplePacketCreator.getPlayerShopChat(c.getPlayer(), chat, s));
 	}
 
-	public void sendShop(MapleClient c) {
+	public void sendShop(GameClient c) {
 		c.getSession().write(MaplePacketCreator.getPlayerShop(c, this, isOwner(c.getPlayer())));
 	}
 
@@ -258,12 +258,12 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		client.getSession().write(MaplePacketCreator.removeCharBox(this.getOwner()));
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		client.getSession().write(MaplePacketCreator.addCharBox(this.getOwner(), 4));
 	}
 

@@ -25,7 +25,7 @@ import client.ISkill;
 import client.MapleBuffStat;
 import client.MapleCharacter;
 import client.MapleCharacter.CancelCooldownAction;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleWeaponType;
@@ -51,7 +51,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class RangedAttackHandler extends AbstractDealDamageHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, true);
 		if (attack.skill == Buccaneer.ENERGY_ORB || attack.skill == ThunderBreaker.SPARK || attack.skill == Shadower.TAUNT || attack.skill == NightLord.TAUNT) {

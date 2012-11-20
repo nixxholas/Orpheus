@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import net.server.guild.MapleGuildResponse;
 import net.server.guild.MapleGuild;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import java.util.Iterator;
@@ -82,7 +82,7 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 	private long nextPruneTime = System.currentTimeMillis() + 20 * 60 * 1000;
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (System.currentTimeMillis() >= nextPruneTime) {
 			Iterator<Invited> itr = invited.iterator();
 			Invited inv;

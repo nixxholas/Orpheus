@@ -23,7 +23,7 @@ package net.server.handlers.login;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import net.server.Server;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -36,7 +36,7 @@ public final class ViewAllPicRegisterHandler extends AbstractMaplePacketHandler 
 	private static Logger log = LoggerFactory.getLogger(ViewAllPicRegisterHandler.class);
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readByte();
 		int charId = slea.readInt();
 		byte world = (byte) slea.readInt(); // world
@@ -54,8 +54,8 @@ public final class ViewAllPicRegisterHandler extends AbstractMaplePacketHandler 
 			if (c.getIdleTask() != null) {
 				c.getIdleTask().cancel(true);
 			}
-			c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
-			String channelServerIP = MapleClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], channel);
+			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], channel);
 
 			if (channelServerIP.equals("0.0.0.0")) {
 				String[] socket = Server.getInstance().getIP(world, channel).split(":");

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.MaplePacket;
 import server.maps.AbstractMapleMapObject;
 import server.maps.MapleMapObjectType;
@@ -215,15 +215,15 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		broadcastToVisitor(packet);
 	}
 
-	public void chat(MapleClient c, String chat) {
+	public void chat(GameClient c, String chat) {
 		broadcast(MaplePacketCreator.getPlayerShopChat(c.getPlayer(), chat, isOwner(c.getPlayer())));
 	}
 
-	public void sendOmok(MapleClient c, int type) {
+	public void sendOmok(GameClient c, int type) {
 		c.announce(MaplePacketCreator.getMiniGame(c, this, isOwner(c.getPlayer()), type));
 	}
 
-	public void sendMatchCard(MapleClient c, int type) {
+	public void sendMatchCard(GameClient c, int type) {
 		c.announce(MaplePacketCreator.getMatchCard(c, this, isOwner(c.getPlayer()), type));
 	}
 
@@ -327,12 +327,12 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		return;
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		return;
 	}
 

@@ -29,7 +29,7 @@ import client.BuddyList;
 import client.BuddylistEntry;
 import client.CharacterNameAndId;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.BuddyList.BuddyAddResult;
 import client.BuddyList.BuddyOperation;
 import tools.DatabaseConnection;
@@ -49,7 +49,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private void nextPendingRequest(MapleClient c) {
+	private void nextPendingRequest(GameClient c) {
 		CharacterNameAndId pendingBuddyRequest = c.getPlayer().getBuddylist().pollPendingRequest();
 		if (pendingBuddyRequest != null) {
 			c.announce(MaplePacketCreator.requestBuddylistAdd(pendingBuddyRequest.id, c.getPlayer().getId(), pendingBuddyRequest.name));
@@ -79,7 +79,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 	}
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int mode = slea.readByte();
 		MapleCharacter player = c.getPlayer();
 		BuddyList buddylist = player.getBuddylist();
@@ -230,7 +230,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 		return ps;
 	}
 
-	private void notifyRemoteChannel(MapleClient c, int remoteChannel, int otherCid, BuddyOperation operation) {
+	private void notifyRemoteChannel(GameClient c, int remoteChannel, int otherCid, BuddyOperation operation) {
 		MapleCharacter player = c.getPlayer();
 		if (remoteChannel != -1) {
 			c.getWorldServer().buddyChanged(otherCid, player.getId(), player.getName(), c.getChannel(), operation);

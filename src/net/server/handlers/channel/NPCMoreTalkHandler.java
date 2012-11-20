@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import scripting.npc.NPCScriptManager;
 import scripting.quest.QuestScriptManager;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class NPCMoreTalkHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte lastMsg = slea.readByte(); // 00 (last msg type I think)
 		byte action = slea.readByte(); // 00 = end chat, 01 == follow
 		if (lastMsg == 2) {

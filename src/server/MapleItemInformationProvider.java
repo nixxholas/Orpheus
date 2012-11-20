@@ -31,7 +31,7 @@ import client.Equip;
 import client.IEquip;
 import client.IItem;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleJob;
@@ -302,7 +302,7 @@ public class MapleItemInformationProvider {
 		return ret;
 	}
 
-	public short getSlotMax(MapleClient c, int itemId) {
+	public short getSlotMax(GameClient c, int itemId) {
 		if (slotMaxCache.containsKey(itemId)) {
 			return slotMaxCache.get(itemId);
 		}

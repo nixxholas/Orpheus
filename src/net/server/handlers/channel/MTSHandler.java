@@ -24,7 +24,7 @@ import client.Equip;
 import client.IItem;
 import client.Item;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
@@ -111,7 +111,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().getCashShop().isOpened()) {
 			return;
 		}
@@ -167,7 +167,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 
 	private void doBuyItemFromCart(SeekableLittleEndianAccessor slea,
-			MapleClient c) {
+			GameClient c) {
 		int id = slea.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
@@ -226,7 +226,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 
 	private void doBuyItem(SeekableLittleEndianAccessor slea,
-			MapleClient c) {
+			GameClient c) {
 		int id = slea.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
@@ -289,7 +289,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 
 	private void doRemoveFromCart(SeekableLittleEndianAccessor slea,
-			MapleClient c) {
+			GameClient c) {
 		int id = slea.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		try {
@@ -307,7 +307,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doAddToCart(SeekableLittleEndianAccessor slea, MapleClient c) {
+	private void doAddToCart(SeekableLittleEndianAccessor slea, GameClient c) {
 		int id = slea.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		try {
@@ -341,7 +341,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doTransferItem(SeekableLittleEndianAccessor slea, MapleClient c) {
+	private void doTransferItem(SeekableLittleEndianAccessor slea, GameClient c) {
 		int id = slea.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
@@ -403,7 +403,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private void doCancelSale(SeekableLittleEndianAccessor slea, MapleClient c) {
+	private void doCancelSale(SeekableLittleEndianAccessor slea, GameClient c) {
 		int id = slea.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		try {
@@ -425,7 +425,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 	}
 
-	private void doSearch(SeekableLittleEndianAccessor slea, MapleClient c) {
+	private void doSearch(SeekableLittleEndianAccessor slea, GameClient c) {
 		int tab = slea.readInt();
 		int type = slea.readInt();
 		slea.readInt();
@@ -443,7 +443,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doChangePage(SeekableLittleEndianAccessor slea, MapleClient c) {
+	private void doChangePage(SeekableLittleEndianAccessor slea, GameClient c) {
 		int tab = slea.readInt();
 		int type = slea.readInt();
 		int page = slea.readInt();
@@ -471,7 +471,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		slea.readMapleAsciiString();
 	}
 
-	private void doInitiateSale(SeekableLittleEndianAccessor slea, MapleClient c) {
+	private void doInitiateSale(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte itemtype = slea.readByte();
 		int itemid = slea.readInt();
 		slea.readShort();
@@ -589,7 +589,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private PreparedStatement getInsertStatement(MapleClient c, short quantity, int price,
+	private PreparedStatement getInsertStatement(GameClient c, short quantity, int price,
 			MapleInventoryType type, IItem i, Connection con,
 			final int playerId, String date) throws SQLException {
 		if (i.getType() == 2) {
@@ -599,7 +599,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private PreparedStatement getInsertMtsEquip(MapleClient c, short quantity,
+	private PreparedStatement getInsertMtsEquip(GameClient c, short quantity,
 			int price, MapleInventoryType type, IItem i, Connection con,
 			final int playerId, String date) throws SQLException {
 		PreparedStatement pse;
@@ -637,7 +637,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		return pse;
 	}
 
-	private PreparedStatement getInsertMtsItem(MapleClient c, short quantity, int price,
+	private PreparedStatement getInsertMtsItem(GameClient c, short quantity, int price,
 			MapleInventoryType type, IItem i, Connection con,
 			final int playerId, String date) throws SQLException {
 		

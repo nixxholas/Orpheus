@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleDisease;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
@@ -36,7 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseItemHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
 			c.announce(MaplePacketCreator.enableActions());
 			return;
@@ -69,7 +69,7 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private void remove(MapleClient c, byte slot) {
+	private void remove(GameClient c, byte slot) {
 		MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, slot, (short) 1, false);
 		c.announce(MaplePacketCreator.enableActions());
 	}

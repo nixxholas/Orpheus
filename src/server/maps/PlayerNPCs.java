@@ -25,7 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-import client.MapleClient;
+import client.GameClient;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
@@ -106,7 +106,7 @@ public class PlayerNPCs extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendDestroyData(MapleClient client) {
+	public void sendDestroyData(GameClient client) {
 		return;
 	}
 
@@ -116,7 +116,7 @@ public class PlayerNPCs extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public void sendSpawnData(MapleClient client) {
+	public void sendSpawnData(GameClient client) {
 		client.getSession().write(MaplePacketCreator.spawnPlayerNPC(this));
 		client.getSession().write(MaplePacketCreator.getPlayerNPC(this));
 	}

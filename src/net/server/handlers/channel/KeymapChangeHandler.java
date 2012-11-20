@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.ISkill;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleKeyBinding;
 import client.SkillFactory;
 import net.AbstractMaplePacketHandler;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class KeymapChangeHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (slea.available() != 8) {
 			slea.readInt();
 			int numChanges = slea.readInt();

@@ -24,7 +24,7 @@ import java.util.List;
 import client.IEquip;
 import client.IItem;
 import client.Item;
-import client.MapleClient;
+import client.GameClient;
 import client.SkillFactory;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -42,7 +42,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ScrollHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readInt(); // whatever...
 		byte slot = (byte) slea.readShort();
 		byte dst = (byte) slea.readShort();

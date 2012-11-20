@@ -24,7 +24,7 @@ import client.MapleCharacter;
 import java.awt.Point;
 import java.io.File;
 import java.sql.PreparedStatement;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MaplePet;
 import client.PetDataFactory;
@@ -43,7 +43,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 	private static MapleDataProvider dataRoot = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		slea.readInt();
 		byte slot = slea.readByte();

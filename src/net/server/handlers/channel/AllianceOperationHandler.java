@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.MaplePacket;
 import net.SendOpcode;
@@ -38,7 +38,7 @@ import tools.data.output.MaplePacketLittleEndianWriter;
 public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleAlliance alliance = null;
 		if (c.getPlayer().getGuild() != null && c.getPlayer().getGuild().getAllianceId() > 0) {
 			alliance = Server.getInstance().getAlliance(c.getPlayer().getGuild().getAllianceId());

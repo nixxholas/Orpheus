@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseSummonBag extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		// [4A 00][6C 4C F2 02][02 00][63 0B 20 00]
 		if (!c.getPlayer().isAlive()) {
 			c.announce(MaplePacketCreator.enableActions());

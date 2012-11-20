@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import client.SkillFactory;
 import constants.skills.Bishop;
 import constants.skills.Bowmaster;
@@ -37,7 +37,7 @@ import tools.MaplePacketCreator;
 public final class CancelBuffHandler extends AbstractMaplePacketHandler implements MaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int sourceid = slea.readInt();
 		switch (sourceid) {
 			case FPArchMage.BIG_BANG:

@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.ISkill;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleStat;
 import client.SkillFactory;
 import constants.skills.Aran;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DistributeSPHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readInt();
 		int skillid = slea.readInt();
 		MapleCharacter player = c.getPlayer();

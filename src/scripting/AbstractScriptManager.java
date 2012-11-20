@@ -25,7 +25,7 @@ import java.io.FileReader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import client.MapleClient;
+import client.GameClient;
 
 /**
  * 
@@ -39,7 +39,7 @@ public abstract class AbstractScriptManager {
 		sem = new ScriptEngineManager();
 	}
 
-	protected Invocable getInvocable(String path, MapleClient c) {
+	protected Invocable getInvocable(String path, GameClient c) {
 		try {
 			path = "scripts/" + path;
 			engine = null;
@@ -66,7 +66,7 @@ public abstract class AbstractScriptManager {
 		}
 	}
 
-	protected void resetContext(String path, MapleClient c) {
+	protected void resetContext(String path, GameClient c) {
 		c.removeScriptEngine("scripts/" + path);
 	}
 }

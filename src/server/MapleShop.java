@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 import client.IItem;
 import client.Item;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MaplePet;
 import constants.ItemConstants;
@@ -73,12 +73,12 @@ public class MapleShop {
 		items.add(item);
 	}
 
-	public void sendShop(MapleClient c) {
+	public void sendShop(GameClient c) {
 		c.getPlayer().setShop(this);
 		c.getSession().write(MaplePacketCreator.getNPCShop(c, getNpcId(), items));
 	}
 
-	public void buy(MapleClient c, short slot, int itemId, short quantity) {
+	public void buy(GameClient c, short slot, int itemId, short quantity) {
 		MapleShopItem item = findBySlot(slot);
 		if (item != null) {
 			if (item.getItemId() != itemId) {
@@ -151,7 +151,7 @@ public class MapleShop {
 		}
 	}
 
-	public void sell(MapleClient c, MapleInventoryType type, short slot, short quantity) {
+	public void sell(GameClient c, MapleInventoryType type, short slot, short quantity) {
 		if (quantity == 0xFFFF || quantity == 0) {
 			quantity = 1;
 		}
@@ -183,7 +183,7 @@ public class MapleShop {
 		}
 	}
 
-	public void recharge(MapleClient c, byte slot) {
+	public void recharge(GameClient c, byte slot) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		IItem item = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
 		if (item == null || !ItemConstants.isRechargable(item.getItemId())) {

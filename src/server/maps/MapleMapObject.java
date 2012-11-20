@@ -21,7 +21,7 @@
 package server.maps;
 
 import java.awt.Point;
-import client.MapleClient;
+import client.GameClient;
 
 public interface MapleMapObject {
 	public int getObjectId();
@@ -34,9 +34,9 @@ public interface MapleMapObject {
 
 	public void setPosition(Point position);
 
-	public void sendSpawnData(MapleClient client);
+	public void sendSpawnData(GameClient client);
 
-	public void sendDestroyData(MapleClient client);
+	public void sendDestroyData(GameClient client);
 
 	public void nullifyPosition();
 }

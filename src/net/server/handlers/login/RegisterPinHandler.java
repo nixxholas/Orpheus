@@ -20,7 +20,7 @@
  */
 package net.server.handlers.login;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -31,16 +31,16 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class RegisterPinHandler extends AbstractMaplePacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte c2 = slea.readByte();
 		if (c2 == 0) {
-			c.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN);
+			c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
 		} else {
 			String pin = slea.readMapleAsciiString();
 			if (pin != null) {
 				c.setPin(pin);
 				c.announce(MaplePacketCreator.pinRegistered());
-				c.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN);
+				c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
 			}
 		}
 	}

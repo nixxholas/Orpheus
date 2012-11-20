@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.ISkill;
 import client.MapleCharacter;
 import client.MapleCharacter.CancelCooldownAction;
-import client.MapleClient;
+import client.GameClient;
 import client.SkillFactory;
 import net.MaplePacket;
 import server.MapleStatEffect;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MagicDamageHandler extends AbstractDealDamageHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
 		MaplePacket packet = MaplePacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);

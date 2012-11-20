@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleClient;
+import client.GameClient;
 import client.MapleJob;
 import net.AbstractMaplePacketHandler;
 import scripting.npc.NPCScriptManager;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class ClickGuideHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (c.getPlayer().getJob().equals(MapleJob.NOBLESSE)) {
 			NPCScriptManager.getInstance().start(c, 1101008, null, null);
 		} else {

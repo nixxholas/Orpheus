@@ -20,7 +20,7 @@
  */
 package server.maps;
 
-import client.MapleClient;
+import client.GameClient;
 import net.MaplePacket;
 import tools.MaplePacketCreator;
 
@@ -42,7 +42,7 @@ public class MapleMapEffect {
 		return MaplePacketCreator.startMapEffect(msg, itemId, active);
 	}
 
-	public void sendStartData(MapleClient client) {
+	public void sendStartData(GameClient client) {
 		client.announce(makeStartData());
 	}
 }

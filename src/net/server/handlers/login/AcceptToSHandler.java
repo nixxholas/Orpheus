@@ -20,7 +20,7 @@
  */
 package net.server.handlers.login;
 
-import client.MapleClient;
+import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -32,12 +32,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AcceptToSHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public boolean validateState(MapleClient c) {
+	public boolean validateState(GameClient c) {
 		return !c.isLoggedIn();
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (slea.available() == 0 || slea.readByte() != 1 || c.acceptToS()) {
 			// Client dc's but just because I am cool I do this (:
 			c.disconnect();

@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseItemEffectHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		IItem toUse;
 		int itemId = slea.readInt();
 		if (itemId == 4290001 || itemId == 4290000) {

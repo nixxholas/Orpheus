@@ -40,7 +40,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import net.server.Channel;
 import net.server.Server;
 import client.MapleCharacter;
-import client.MapleClient;
+import client.GameClient;
 
 /**
  * @author Aaron Weiss
@@ -50,7 +50,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 	private static final int gmLevel = 4;
 	private static final char heading = '!';
 	
-	public static boolean execute(MapleClient c, String[] sub, char heading) {
+	public static boolean execute(GameClient c, String[] sub, char heading) {
 		MapleCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
 		MapleCharacter victim; // For commands with targets.

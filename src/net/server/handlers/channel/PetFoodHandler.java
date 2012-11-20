@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.MapleCharacter;
 import constants.ExpTable;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import client.MaplePet;
 import client.autoban.AutobanManager;
@@ -36,7 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetFoodHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		MapleCharacter chr = c.getPlayer();
 		AutobanManager abm = chr.getAutobanManager();
 		if (abm.getLastSpam(2) + 500 > System.currentTimeMillis()) {

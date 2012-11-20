@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import java.util.Map;
 import client.IItem;
-import client.MapleClient;
+import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
@@ -37,7 +37,7 @@ import tools.Randomizer;
 public final class SkillBookHandler extends AbstractMaplePacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
 			c.announce(MaplePacketCreator.enableActions());
 			return;
