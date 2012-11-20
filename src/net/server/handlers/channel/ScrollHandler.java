@@ -31,7 +31,7 @@ import client.InventoryType;
 import client.IEquip.ScrollResult;
 import client.ISkill;
 import net.AbstractPacketHandler;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -52,7 +52,7 @@ public final class ScrollHandler extends AbstractPacketHandler {
 		if ((ws & 2) == 2) {
 			whiteScroll = true;
 		}
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		IEquip toScroll = (IEquip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(dst);
 		ISkill LegendarySpirit = SkillFactory.getSkill(1003);
 		if (c.getPlayer().getSkillLevel(LegendarySpirit) > 0 && dst >= 0) {

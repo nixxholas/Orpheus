@@ -34,7 +34,7 @@ import constants.ServerConstants;
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.Randomizer;
 
@@ -103,7 +103,7 @@ public class QuestAction {
 				}
 				break;
 			case ITEM:
-				MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+				ItemInfoProvider ii = ItemInfoProvider.getInstance();
 				Map<Integer, Integer> props = new HashMap<Integer, Integer>();
 				for (MapleData iEntry : data.getChildren()) {
 					if (iEntry.getChildByPath("prop") != null && MapleDataTool.getInt(iEntry.getChildByPath("prop")) != -1 && canGetItem(iEntry, c)) {
@@ -140,7 +140,7 @@ public class QuestAction {
 					} else { // add items
 						int itemId = MapleDataTool.getInt(iEntry.getChildByPath("id"));
 						short quantity = (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0);
-						if (c.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(itemId)).getNextFreeSlot() > -1) {
+						if (c.getInventory(ItemInfoProvider.getInstance().getInventoryType(itemId)).getNextFreeSlot() > -1) {
 							InventoryManipulator.addById(c.getClient(), itemId, quantity);
 							c.getClient().getSession().write(PacketCreator.getShowItemGain(itemId, quantity, true));
 						} else {
@@ -211,7 +211,7 @@ public class QuestAction {
 				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
-				MapleItemInformationProvider.getInstance().getItemEffect(MapleDataTool.getInt(data)).applyTo(c);
+				ItemInfoProvider.getInstance().getItemEffect(MapleDataTool.getInt(data)).applyTo(c);
 				break;
 			case PETSKILL:
 				status = c.getQuest(quest);

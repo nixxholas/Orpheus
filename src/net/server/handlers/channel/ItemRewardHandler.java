@@ -28,8 +28,8 @@ import java.util.List;
 import net.AbstractPacketHandler;
 import net.server.Server;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleItemInformationProvider.RewardItem;
+import server.ItemInfoProvider;
+import server.ItemInfoProvider.RewardItem;
 import tools.PacketCreator;
 import tools.Pair;
 import tools.Randomizer;
@@ -46,7 +46,7 @@ public final class ItemRewardHandler extends AbstractPacketHandler {
 		int itemId = slea.readInt(); // will load from xml I don't care.
 		if (c.getPlayer().getInventory(InventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(InventoryType.USE).countById(itemId) < 1)
 			return;
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		Pair<Integer, List<RewardItem>> rewards = ii.getItemReward(itemId);
 		for (RewardItem reward : rewards.getRight()) {
 			if (!InventoryManipulator.checkSpace(c, reward.itemid, reward.quantity, "")) {

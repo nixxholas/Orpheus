@@ -18,35 +18,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
-
-import client.GameClient;
-import net.AbstractPacketHandler;
-import scripting.npc.NPCScriptManager;
-import server.ItemInfoProvider;
-import tools.data.input.SeekableLittleEndianAccessor;
+package server;
 
 /**
  * 
- * @author Generic
+ * @author Leifde
  */
-public final class RemoteGachaponHandler extends AbstractPacketHandler {
+public enum SquadType {
+	ZAKUM(0), HORNTAIL(1), PINK_BEAN(2), UNKNOWN(-1);
+	final byte type;
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int type = slea.readInt();
-		if (c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(type)).countById(type) < 1) {
-			return;
-		}
-		int mode = slea.readInt();
-		if (type == 5451000) {
-			int npcId = 9100100;
-			if (mode != 8 && mode != 9) {
-				npcId += mode;
-			} else {
-				npcId = mode == 8 ? 9100109 : 9100117;
-			}
-			NPCScriptManager.getInstance().start(c, npcId, null, null);
-		}
+	private SquadType(int type) {
+		this.type = (byte) type;
 	}
 }

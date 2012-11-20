@@ -30,7 +30,7 @@ import client.Item;
 import client.GameClient;
 import client.InventoryType;
 import scripting.AbstractPlayerInteraction;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
 import server.maps.Reactor;
@@ -89,7 +89,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 				reactor.getMap().spawnMesoDrop(mesoDrop, dropPos, reactor, client.getPlayer(), false, (byte) 0);
 			} else {
 				IItem drop;
-				MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+				ItemInfoProvider ii = ItemInfoProvider.getInstance();
 				if (ii.getInventoryType(d.itemId) != InventoryType.EQUIP) {
 					drop = new Item(d.itemId, (byte) 0, (short) 1);
 				} else {

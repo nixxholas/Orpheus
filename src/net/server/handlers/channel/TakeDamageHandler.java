@@ -33,7 +33,7 @@ import java.awt.Point;
 import java.util.List;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.life.MapleLifeFactory.loseItem;
 import server.life.MapleMonster;
 import server.life.MobAttackInfo;
@@ -77,7 +77,7 @@ public final class TakeDamageHandler extends AbstractPacketHandler {
 						byte d = 1;
 						Point pos = new Point(0, player.getPosition().y);
 						for (loseItem loseItem : loseItems) {
-							type = MapleItemInformationProvider.getInstance().getInventoryType(loseItem.getId());
+							type = ItemInfoProvider.getInstance().getInventoryType(loseItem.getId());
 							for (byte b = 0; b < loseItem.getX(); b++) {// LOL?
 								if (Randomizer.nextInt(101) >= loseItem.getChance()) {
 									if (player.haveItem(loseItem.getId())) {

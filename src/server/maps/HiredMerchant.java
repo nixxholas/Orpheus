@@ -39,8 +39,8 @@ import tools.DatabaseConnection;
 import net.GamePacket;
 import net.server.Server;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MaplePlayerShopItem;
+import server.ItemInfoProvider;
+import server.PlayerShopItem;
 import server.TimerManager;
 import tools.PacketCreator;
 
@@ -56,7 +56,7 @@ public class HiredMerchant extends AbstractGameMapObject {
 	private String ownerName = "";
 	private String description = "";
 	private GameCharacter[] visitors = new GameCharacter[3];
-	private List<MaplePlayerShopItem> items = new LinkedList<MaplePlayerShopItem>();
+	private List<PlayerShopItem> items = new LinkedList<PlayerShopItem>();
 	private List<HiredMerchantMessage> messages = new LinkedList<HiredMerchantMessage>();
 	private List<SoldItem> sold = new LinkedList<SoldItem>();
 	private boolean open;
@@ -131,7 +131,7 @@ public class HiredMerchant extends AbstractGameMapObject {
 	}
 
 	public void buy(GameClient c, int item, short quantity) {
-		MaplePlayerShopItem pItem = items.get(item);
+		PlayerShopItem pItem = items.get(item);
 		synchronized (items) {
 			IItem newItem = pItem.getItem().copy();
 			newItem.setQuantity((short) ((pItem.getItem().getQuantity() * quantity)));
@@ -212,7 +212,7 @@ public class HiredMerchant extends AbstractGameMapObject {
 			ps.executeUpdate();
 			ps.close();
 			if (check(c.getPlayer(), getItems()) && !timeout) {
-				for (MaplePlayerShopItem mpsi : getItems()) {
+				for (PlayerShopItem mpsi : getItems()) {
 					if (mpsi.isExist() && (mpsi.getItem().getType() == IItem.EQUIP)) {
 						InventoryManipulator.addFromDrop(c, mpsi.getItem(), false);
 					} else if (mpsi.isExist()) {
@@ -248,11 +248,11 @@ public class HiredMerchant extends AbstractGameMapObject {
 		return visitors;
 	}
 
-	public List<MaplePlayerShopItem> getItems() {
+	public List<PlayerShopItem> getItems() {
 		return Collections.unmodifiableList(items);
 	}
 
-	public void addItem(MaplePlayerShopItem item) {
+	public void addItem(PlayerShopItem item) {
 		items.add(item);
 		try {
 			this.saveItems(false);
@@ -300,7 +300,7 @@ public class HiredMerchant extends AbstractGameMapObject {
 	public void saveItems(boolean shutdown) throws SQLException {
 		List<ItemInventoryEntry> itemsWithType = new ArrayList<ItemInventoryEntry>();
 
-		for (MaplePlayerShopItem pItems : items) {
+		for (PlayerShopItem pItems : items) {
 			IItem newItem = pItems.getItem();
 			if (shutdown) {
 				newItem.setQuantity((short) (pItems.getItem().getQuantity() * pItems.getBundles()));
@@ -314,11 +314,11 @@ public class HiredMerchant extends AbstractGameMapObject {
 		ItemFactory.MERCHANT.saveItems(itemsWithType, this.ownerId);
 	}
 
-	private static boolean check(GameCharacter chr, List<MaplePlayerShopItem> items) {
+	private static boolean check(GameCharacter chr, List<PlayerShopItem> items) {
 		byte eq = 0, use = 0, setup = 0, etc = 0, cash = 0;
 		List<InventoryType> li = new LinkedList<InventoryType>();
-		for (MaplePlayerShopItem item : items) {
-			final InventoryType invtype = MapleItemInformationProvider.getInstance().getInventoryType(item.getItem().getItemId());
+		for (PlayerShopItem item : items) {
+			final InventoryType invtype = ItemInfoProvider.getInstance().getInventoryType(item.getItem().getItemId());
 			if (!li.contains(invtype)) {
 				li.add(invtype);
 			}

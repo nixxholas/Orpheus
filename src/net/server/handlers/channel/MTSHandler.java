@@ -32,7 +32,7 @@ import net.GamePacket;
 import net.server.Channel;
 import server.ItemNameEntry;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.MTSItemInfo;
 import tools.PacketCreator;
 import tools.Output;
@@ -356,7 +356,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 				if (rs.getInt("type") != 1) {
 					Item ii = new Item(rs.getInt("itemid"), (byte) 0, (short) rs.getInt("quantity"));
 					ii.setOwner(rs.getString("owner"));
-					ii.setPosition(c.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
+					ii.setPosition(c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
 					i = ii.copy();
 				} else {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"), -1);
@@ -381,7 +381,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 					equip.setLevel((byte) rs.getInt("level"));
 					equip.setVicious((byte) rs.getInt("vicious"));
 					equip.setFlag((byte) rs.getInt("flag"));
-					equip.setPosition(c.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
+					equip.setPosition(c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
 					i = equip.copy();
 				}
 				PreparedStatement pse = con.prepareStatement("DELETE FROM mts_items WHERE id = ? AND seller = ? AND transfer = 1");
@@ -515,7 +515,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 		if (quantity < 0 || price < 110 || c.getPlayer().getItemQuantity(itemid, false) < quantity) {
 			return;
 		}
-		InventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(itemid);
+		InventoryType type = ItemInfoProvider.getInstance().getInventoryType(itemid);
 		IItem i = c.getPlayer().getInventory(type).getItem(slot).copy();
 		if (i != null && c.getPlayer().getMeso() >= 5000) {
 			Connection con = DatabaseConnection.getConnection();
@@ -898,7 +898,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 
 	public GamePacket getMTSSearch(int tab, int type, int cOi, String search, int page) {
 		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		String listaitems = "";
 		if (cOi != 0) {
 			List<String> retItems = new ArrayList<String>();

@@ -27,8 +27,8 @@ import client.InventoryType;
 import constants.ItemConstants;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleStorage;
+import server.ItemInfoProvider;
+import server.Storage;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -41,16 +41,16 @@ public final class StorageHandler extends AbstractPacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		byte mode = slea.readByte();
-		final MapleStorage storage = chr.getStorage();
+		final Storage storage = chr.getStorage();
 		if (mode == 4) { // take out
 			byte type = slea.readByte();
 			byte slot = slea.readByte();
 			slot = storage.getSlot(InventoryType.fromByte(type), slot);
 			IItem item = storage.getItem(slot);
 			if (item != null) {
-				if (MapleItemInformationProvider.getInstance().isPickupRestricted(item.getItemId()) && chr.getItemQuantity(item.getItemId(), true) > 0) {
+				if (ItemInfoProvider.getInstance().isPickupRestricted(item.getItemId()) && chr.getItemQuantity(item.getItemId(), true) > 0) {
 					c.announce(PacketCreator.getStorageError((byte) 0x0C));
 				}
 				if (chr.getMap().getId() == 910000000) {

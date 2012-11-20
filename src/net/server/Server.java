@@ -58,7 +58,7 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import paranoia.BlacklistHandler;
 import server.CashShop.CashItemFactory;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.MapleStocks;
 import server.WorldRecommendation;
 import tools.GameLogger;
@@ -213,7 +213,7 @@ public class Server implements Runnable {
 		Output.print("Loading items.");
 		startTime = System.currentTimeMillis();
 		CashItemFactory.getSpecialCashItems();// just load who cares o.o
-		MapleItemInformationProvider.getInstance().getAllItems();
+		ItemInfoProvider.getInstance().getAllItems();
 		Output.print("Loading completed in " + ((System.currentTimeMillis() - startTime)) + "ms.");
 		if (isGMServerEnabled()) {
 			GMServer.getInstance();

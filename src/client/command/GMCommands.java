@@ -33,8 +33,8 @@ import provider.MapleDataProviderFactory;
 import net.server.Channel;
 import net.server.Server;
 import scripting.npc.NPCScriptManager;
-import server.MapleItemInformationProvider;
-import server.MapleShopFactory;
+import server.ItemInfoProvider;
+import server.ShopFactory;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.maps.GameMap;
@@ -166,8 +166,8 @@ public class GMCommands extends EnumeratedCommands {
 					} catch (Exception e) {
 					}
 					IItem toDrop;
-					if (MapleItemInformationProvider.getInstance().getInventoryType(itemId) == InventoryType.EQUIP) {
-						toDrop = MapleItemInformationProvider.getInstance().getEquipById(itemId);
+					if (ItemInfoProvider.getInstance().getInventoryType(itemId) == InventoryType.EQUIP) {
+						toDrop = ItemInfoProvider.getInstance().getEquipById(itemId);
 					} else {
 						toDrop = new Item(itemId, (byte) 0, quantity);
 					}
@@ -186,7 +186,7 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					break;
 				case gmshop:
-					MapleShopFactory.getInstance().getShop(1337).sendShop(c);
+					ShopFactory.getInstance().getShop(1337).sendShop(c);
 					break;
 				case heal:
 					if (sub.length == 2) {
@@ -400,7 +400,7 @@ public class GMCommands extends EnumeratedCommands {
 					break;
 				case shop:
 					if (sub.length == 2) {
-						MapleShopFactory.getInstance().getShop(Integer.parseInt(sub[1])).sendShop(c);
+						ShopFactory.getInstance().getShop(Integer.parseInt(sub[1])).sendShop(c);
 					} else {
 						chr.message("Usage: !shop number");
 					}

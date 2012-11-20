@@ -24,8 +24,8 @@ import client.GameClient;
 import client.IItem;
 import net.AbstractPacketHandler;
 import scripting.item.ItemScriptManager;
-import server.MapleItemInformationProvider;
-import server.MapleItemInformationProvider.scriptedItem;
+import server.ItemInfoProvider;
+import server.ItemInfoProvider.scriptedItem;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -36,7 +36,7 @@ public final class ScriptedItemHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		slea.readInt(); // trash stamp (thx rmzero)
 		byte itemSlot = (byte) slea.readShort(); // item sl0t (thx rmzero)
 		int itemId = slea.readInt(); // itemId

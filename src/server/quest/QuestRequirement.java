@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import provider.MapleData;
 import provider.MapleDataTool;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 
 /**
  * 
@@ -65,7 +65,7 @@ public class QuestRequirement {
 			case INTERVAL:
 				return !c.getQuest(quest).getStatus().equals(QuestStatus.Status.COMPLETED) || c.getQuest(quest).getCompletionTime() <= System.currentTimeMillis() - MapleDataTool.getInt(getData()) * 60 * 1000;
 			case ITEM:
-				MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+				ItemInfoProvider ii = ItemInfoProvider.getInstance();
 				for (MapleData itemEntry : getData().getChildren()) {
 					int itemId = MapleDataTool.getInt(itemEntry.getChildByPath("id"));
 					short quantity = 0;
@@ -149,7 +149,7 @@ public class QuestRequirement {
 		if (type != QuestRequirementType.ITEM) {
 			return null;
 		}
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		List<Integer> delta = new ArrayList<Integer>();
 		for (MapleData itemEntry : getData().getChildren()) {
 			int itemId = MapleDataTool.getInt(itemEntry.getChildByPath("id"));

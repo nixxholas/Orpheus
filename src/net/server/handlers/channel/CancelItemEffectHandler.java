@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CancelItemEffectHandler extends AbstractPacketHandler {
@@ -30,7 +30,7 @@ public final class CancelItemEffectHandler extends AbstractPacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int itemId = -slea.readInt();
-		if (MapleItemInformationProvider.getInstance().noCancelMouse(itemId))
+		if (ItemInfoProvider.getInstance().noCancelMouse(itemId))
 			return;
 		c.getPlayer().cancelEffect(itemId);
 	}

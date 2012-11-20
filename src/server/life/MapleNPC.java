@@ -21,7 +21,7 @@
 package server.life;
 
 import client.GameClient;
-import server.MapleShopFactory;
+import server.ShopFactory;
 import server.maps.GameMapObjectType;
 import tools.PacketCreator;
 
@@ -34,11 +34,11 @@ public class MapleNPC extends AbstractLoadedMapleLife {
 	}
 
 	public boolean hasShop() {
-		return MapleShopFactory.getInstance().getShopForNPC(getId()) != null;
+		return ShopFactory.getInstance().getShopForNPC(getId()) != null;
 	}
 
 	public void sendShop(GameClient c) {
-		MapleShopFactory.getInstance().getShopForNPC(getId()).sendShop(c);
+		ShopFactory.getInstance().getShopForNPC(getId()).sendShop(c);
 	}
 
 	@Override

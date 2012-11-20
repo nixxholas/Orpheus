@@ -53,8 +53,8 @@ import provider.MapleData;
 import provider.MapleDataProviderFactory;
 import scripting.AbstractPlayerInteraction;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleShopFactory;
+import server.ItemInfoProvider;
+import server.ShopFactory;
 import server.MapleStatEffect;
 import server.events.gm.MapleEvent;
 import server.expeditions.MapleExpedition;
@@ -232,7 +232,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public int itemQuantity(int itemid) {
-		return getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(itemid)).countById(itemid);
+		return getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(itemid)).countById(itemid);
 	}
 
 	public void displayGuildRanks() {
@@ -280,7 +280,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void addRandomItem(int id) {
-		MapleItemInformationProvider i = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider i = ItemInfoProvider.getInstance();
 		InventoryManipulator.addFromDrop(getClient(), i.randomizeStats((Equip) i.getEquipById(id)), true);
 	}
 
@@ -289,7 +289,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public MapleStatEffect getItemEffect(int itemId) {
-		return MapleItemInformationProvider.getInstance().getItemEffect(itemId);
+		return ItemInfoProvider.getInstance().getItemEffect(itemId);
 	}
 
 	public void resetStats() {
@@ -514,7 +514,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	
 	public void openShop(int id) {
 		dispose();
-		MapleShopFactory.getInstance().getShop(id).sendShop(c);
+		ShopFactory.getInstance().getShop(id).sendShop(c);
 	}
 	
 	public void warp(int id) {

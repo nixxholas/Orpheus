@@ -32,8 +32,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import client.InventoryType;
 import net.server.MaplePartyCharacter;
 import scripting.item.ItemScriptManager;
-import server.MapleItemInformationProvider;
-import server.MapleItemInformationProvider.scriptedItem;
+import server.ItemInfoProvider;
+import server.ItemInfoProvider.scriptedItem;
 
 /**
  * @author TheRamon
@@ -121,7 +121,7 @@ public final class PetLootHandler extends AbstractPacketHandler {
 						return;
 					}
 				} else if (mapitem.getItem().getItemId() / 10000 == 243) {
-					MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+					ItemInfoProvider ii = ItemInfoProvider.getInstance();
 					scriptedItem info = ii.getScriptedItemInfo(mapitem.getItem().getItemId());
 					if (info.runOnPickup()) {
 						ItemScriptManager ism = ItemScriptManager.getInstance();

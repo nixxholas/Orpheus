@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -43,7 +43,7 @@ public final class NPCShopHandler extends AbstractPacketHandler {
 			short slot = slea.readShort();
 			int itemId = slea.readInt();
 			short quantity = slea.readShort();
-			c.getPlayer().getShop().sell(c, MapleItemInformationProvider.getInstance().getInventoryType(itemId), slot, quantity);
+			c.getPlayer().getShop().sell(c, ItemInfoProvider.getInstance().getInventoryType(itemId), slot, quantity);
 		} else if (bmode == 2) { // recharge ;)
 			byte slot = (byte) slea.readShort();
 			c.getPlayer().getShop().recharge(c, slot);

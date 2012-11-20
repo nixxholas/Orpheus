@@ -28,7 +28,7 @@ import client.InventoryType;
 import java.io.IOException;
 import net.AbstractPacketHandler;
 import net.server.Server;
-import server.MapleTrade;
+import server.Trade;
 import server.maps.FieldLimit;
 import server.maps.HiredMerchant;
 import tools.PacketCreator;
@@ -55,7 +55,7 @@ public final class ChangeChannelHandler extends AbstractPacketHandler {
 		}
 		String[] socket = Server.getInstance().getIP(c.getWorld(), channel).split(":");
 		if (chr.getTrade() != null) {
-			MapleTrade.cancelTrade(c.getPlayer());
+			Trade.cancelTrade(c.getPlayer());
 		}
 
 		HiredMerchant merchant = chr.getHiredMerchant();

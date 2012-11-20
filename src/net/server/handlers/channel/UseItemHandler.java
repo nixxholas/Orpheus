@@ -26,7 +26,7 @@ import client.MapleDisease;
 import client.InventoryType;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -41,7 +41,7 @@ public final class UseItemHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		slea.readInt();
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt();

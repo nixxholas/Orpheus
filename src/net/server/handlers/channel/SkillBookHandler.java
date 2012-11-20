@@ -26,7 +26,7 @@ import client.GameClient;
 import client.InventoryType;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameCharacter;
@@ -51,7 +51,7 @@ public final class SkillBookHandler extends AbstractPacketHandler {
 			if (toUse.getItemId() != itemId) {
 				return;
 			}
-			Map<String, Integer> skilldata = MapleItemInformationProvider.getInstance().getSkillStats(toUse.getItemId(), c.getPlayer().getJob().getId());
+			Map<String, Integer> skilldata = ItemInfoProvider.getInstance().getSkillStats(toUse.getItemId(), c.getPlayer().getJob().getId());
 			boolean canuse = false;
 			boolean success = false;
 			int skill = 0;

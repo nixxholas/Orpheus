@@ -72,7 +72,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import server.MapleBuffStatDelta;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.MapleStatEffect;
 import server.TimerManager;
 import server.life.Element;
@@ -237,7 +237,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                             List<MonsterDropEntry> toSteals = MapleMonsterInformationProvider.getInstance().retrieveDrop(monster.getId());
                             Collections.shuffle(toSteals);
                             int toSteal = toSteals.get(rand(0, (toSteals.size() - 1))).itemId;
-                            MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+                            ItemInfoProvider ii = ItemInfoProvider.getInstance();
                             IItem item = null;
                             if (ItemConstants.getInventoryType(toSteal).equals(InventoryType.EQUIP)) {
                                 item = ii.randomizeStats((Equip) ii.getEquipById(toSteal));

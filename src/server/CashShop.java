@@ -84,7 +84,7 @@ public class CashShop {
 		}
 
 		public IItem toItem() {
-			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+			ItemInfoProvider ii = ItemInfoProvider.getInstance();
 			IItem item;
 
 			int petid = -1;
@@ -450,7 +450,7 @@ public class CashShop {
 		List<ItemInventoryEntry> itemsWithType = new ArrayList<ItemInventoryEntry>();
 
 		for (IItem item : inventory) {
-			itemsWithType.add(new ItemInventoryEntry(item, MapleItemInformationProvider.getInstance().getInventoryType(item.getItemId())));
+			itemsWithType.add(new ItemInventoryEntry(item, ItemInfoProvider.getInstance().getInventoryType(item.getItemId())));
 		}
 
 		factory.saveItems(itemsWithType, accountId);

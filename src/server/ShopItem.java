@@ -18,35 +18,38 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
-
-import client.GameClient;
-import net.AbstractPacketHandler;
-import scripting.npc.NPCScriptManager;
-import server.ItemInfoProvider;
-import tools.data.input.SeekableLittleEndianAccessor;
+package server;
 
 /**
  * 
- * @author Generic
+ * @author Matze
  */
-public final class RemoteGachaponHandler extends AbstractPacketHandler {
+public class ShopItem {
+	private short buyable;
+	private int itemId;
+	private int price;
+	private int pitch;
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int type = slea.readInt();
-		if (c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(type)).countById(type) < 1) {
-			return;
-		}
-		int mode = slea.readInt();
-		if (type == 5451000) {
-			int npcId = 9100100;
-			if (mode != 8 && mode != 9) {
-				npcId += mode;
-			} else {
-				npcId = mode == 8 ? 9100109 : 9100117;
-			}
-			NPCScriptManager.getInstance().start(c, npcId, null, null);
-		}
+	public ShopItem(short buyable, int itemId, int price, int pitch) {
+		this.buyable = buyable;
+		this.itemId = itemId;
+		this.price = price;
+		this.pitch = pitch;
+	}
+
+	public short getBuyable() {
+		return buyable;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public int getPitch() {
+		return pitch;
 	}
 }

@@ -25,7 +25,7 @@ import client.GameClient;
 import client.InventoryType;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -40,7 +40,7 @@ public final class UseSolomonHandler extends AbstractPacketHandler {
 		slea.readInt();
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt();
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		IItem slotItem = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		int gachaexp = ii.getExpById(itemId);
 		if (c.getPlayer().getInventory(InventoryType.USE).countById(itemId) <= 0 || slotItem.getItemId() != itemId || c.getPlayer().getLevel() > ii.getMaxLevelById(itemId)) {

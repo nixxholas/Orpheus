@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import server.EquipLevelUpStat;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 
 public class Equip extends Item implements IEquip {
@@ -239,7 +239,7 @@ public class Equip extends Item implements IEquip {
 	}
 
 	public void gainLevel(GameClient c, boolean timeless) {
-		List<EquipLevelUpStat> stats = MapleItemInformationProvider.getInstance().getItemLevelupStats(getItemId(), itemLevel, timeless);
+		List<EquipLevelUpStat> stats = ItemInfoProvider.getInstance().getItemLevelupStats(getItemId(), itemLevel, timeless);
 		for (EquipLevelUpStat stat : stats) {
 			if (stat.name.equals("incDEX"))
 				dex += stat.amount;

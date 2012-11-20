@@ -56,7 +56,7 @@ import net.GamePacket;
 import net.server.Channel;
 import net.server.Server;
 import scripting.map.MapScriptManager;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.Portal;
 import server.MapleStatEffect;
 import server.TimerManager;
@@ -358,7 +358,7 @@ public class GameMap {
 		if (mob.dropsDisabled() || !dropsOn) {
 			return;
 		}
-		final MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		final ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		final byte droptype = (byte) (mob.getStats().isExplosiveReward() ? 3 : mob.getStats().isFfaLoot() ? 2 : chr.getParty() != null ? 1 : 0);
 		final int mobpos = mob.getPosition().x;
 		int chServerrate = chr.getDropRate();
@@ -590,7 +590,7 @@ public class GameMap {
 		 */
 		int buff = monster.getBuffToGive();
 		if (buff > -1) {
-			MapleItemInformationProvider mii = MapleItemInformationProvider.getInstance();
+			ItemInfoProvider mii = ItemInfoProvider.getInstance();
 			for (GameMapObject mmo : this.getAllPlayer()) {
 				GameCharacter character = (GameCharacter) mmo;
 				if (character.isAlive()) {

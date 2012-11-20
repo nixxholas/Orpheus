@@ -40,7 +40,7 @@ import net.server.guild.MapleGuild;
 import scripting.event.EventManager;
 import scripting.npc.NPCScriptManager;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.MobSkill;
@@ -112,7 +112,7 @@ public class AbstractPlayerInteraction {
 	}
 
 	public boolean canHold(int itemid) {
-		return getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(itemid)).getNextFreeSlot() > -1;
+		return getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(itemid)).getNextFreeSlot() > -1;
 	}
 
 	public void openNpc(int npcid) {
@@ -161,7 +161,7 @@ public class AbstractPlayerInteraction {
 			InventoryManipulator.addById(c, id, (short) 1, null, Pet.createPet(id), -1);
 		}
 		if (quantity >= 0) {
-			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+			ItemInfoProvider ii = ItemInfoProvider.getInstance();
 			IItem item = ii.getEquipById(id);
 			if (!InventoryManipulator.checkSpace(c, id, quantity, "")) {
 				c.getPlayer().dropMessage(1, "Your inventory is full. Please remove an item from your " + ii.getInventoryType(id).name() + " inventory.");
@@ -177,7 +177,7 @@ public class AbstractPlayerInteraction {
 				InventoryManipulator.addById(c, id, quantity);
 			}
 		} else {
-			InventoryManipulator.removeById(c, MapleItemInformationProvider.getInstance().getInventoryType(id), id, -quantity, true, false);
+			InventoryManipulator.removeById(c, ItemInfoProvider.getInstance().getInventoryType(id), id, -quantity, true, false);
 		}
 		c.announce(PacketCreator.getShowItemGain(id, quantity, true));
 	}
@@ -243,7 +243,7 @@ public class AbstractPlayerInteraction {
 			if (quantity >= 0) {
 				InventoryManipulator.addById(cl, id, quantity);
 			} else {
-				InventoryManipulator.removeById(cl, MapleItemInformationProvider.getInstance().getInventoryType(id), id, -quantity, true, false);
+				InventoryManipulator.removeById(cl, ItemInfoProvider.getInstance().getInventoryType(id), id, -quantity, true, false);
 			}
 			cl.announce(PacketCreator.getShowItemGain(id, quantity, true));
 		}
@@ -258,11 +258,11 @@ public class AbstractPlayerInteraction {
 	public void removeFromParty(int id, List<GameCharacter> party) {
 		for (GameCharacter chr : party) {
 			GameClient cl = chr.getClient();
-			InventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(id);
+			InventoryType type = ItemInfoProvider.getInstance().getInventoryType(id);
 			Inventory iv = cl.getPlayer().getInventory(type);
 			int possesed = iv.countById(id);
 			if (possesed > 0) {
-				InventoryManipulator.removeById(c, MapleItemInformationProvider.getInstance().getInventoryType(id), id, possesed, true, false);
+				InventoryManipulator.removeById(c, ItemInfoProvider.getInstance().getInventoryType(id), id, possesed, true, false);
 				cl.announce(PacketCreator.getShowItemGain(id, (short) -possesed, true));
 			}
 		}
@@ -273,9 +273,9 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void removeAll(int id, GameClient cl) {
-		int possessed = cl.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(id)).countById(id);
+		int possessed = cl.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(id)).countById(id);
 		if (possessed > 0) {
-			InventoryManipulator.removeById(cl, MapleItemInformationProvider.getInstance().getInventoryType(id), id, possessed, true, false);
+			InventoryManipulator.removeById(cl, ItemInfoProvider.getInstance().getInventoryType(id), id, possessed, true, false);
 			cl.announce(PacketCreator.getShowItemGain(id, (short) -possessed, true));
 		}
 	}
@@ -311,7 +311,7 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void useItem(int id) {
-		MapleItemInformationProvider.getInstance().getItemEffect(id).applyTo(c.getPlayer());
+		ItemInfoProvider.getInstance().getItemEffect(id).applyTo(c.getPlayer());
 		c.announce(PacketCreator.getItemMessage(id));// Useful shet :3
 	}
 

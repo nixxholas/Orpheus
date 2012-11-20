@@ -42,7 +42,7 @@ import constants.skills.WindArcher;
 import tools.Randomizer;
 import net.GamePacket;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.MapleStatEffect;
 import server.TimerManager;
 import tools.PacketCreator;
@@ -68,7 +68,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 			}
 		} else {
 			IItem weapon = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
-			MapleWeaponType type = MapleItemInformationProvider.getInstance().getWeaponType(weapon.getItemId());
+			MapleWeaponType type = ItemInfoProvider.getInstance().getWeaponType(weapon.getItemId());
 			if (type == MapleWeaponType.NOT_A_WEAPON) {
 				return;
 			}

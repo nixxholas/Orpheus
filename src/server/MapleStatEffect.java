@@ -620,7 +620,7 @@ public class MapleStatEffect {
 		int mpchange = calcMPChange(applyfrom, primary);
 		if (primary) {
 			if (itemConNo != 0) {
-				InventoryManipulator.removeById(applyto.getClient(), MapleItemInformationProvider.getInstance().getInventoryType(itemCon), itemCon, itemConNo, false, true);
+				InventoryManipulator.removeById(applyto.getClient(), ItemInfoProvider.getInstance().getInventoryType(itemCon), itemCon, itemConNo, false, true);
 			}
 		}
 		List<MapleStatDelta> hpmpupdate = new ArrayList<MapleStatDelta>(2);

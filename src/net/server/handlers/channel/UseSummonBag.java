@@ -26,7 +26,7 @@ import client.InventoryType;
 import tools.Randomizer;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.life.MapleLifeFactory;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -50,7 +50,7 @@ public final class UseSummonBag extends AbstractPacketHandler {
 		IItem toUse = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() > 0 && toUse.getItemId() == itemId) {
 			InventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
-			int[][] toSpawn = MapleItemInformationProvider.getInstance().getSummonMobs(itemId);
+			int[][] toSpawn = ItemInfoProvider.getInstance().getSummonMobs(itemId);
 			for (int z = 0; z < toSpawn.length; z++) {
 				int[] toSpawnChild = toSpawn[z];
 				if (Randomizer.nextInt(101) <= toSpawnChild[1]) {

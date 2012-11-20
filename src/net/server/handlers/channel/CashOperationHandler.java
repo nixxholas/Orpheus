@@ -36,7 +36,7 @@ import server.CashShop;
 import server.CashShop.CashItem;
 import server.CashShop.CashItemFactory;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -183,7 +183,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			if (item == null) {
 				return;
 			}
-			if (chr.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(item.getItemId())).addItem(item) != -1) {
+			if (chr.getInventory(ItemInfoProvider.getInstance().getInventoryType(item.getItemId())).addItem(item) != -1) {
 				cs.removeFromInventory(item);
 				c.announce(PacketCreator.takeFromCashInventory(item));
 			}

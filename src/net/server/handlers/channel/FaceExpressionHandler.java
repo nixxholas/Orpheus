@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -33,7 +33,7 @@ public final class FaceExpressionHandler extends AbstractPacketHandler {
 		int emote = slea.readInt();
 		if (emote > 7) {
 			int emoteid = 5159992 + emote;
-			if (c.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(emoteid)).findById(emoteid) == null) {
+			if (c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(emoteid)).findById(emoteid) == null) {
 				return;
 			}
 		}

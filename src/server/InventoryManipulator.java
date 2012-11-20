@@ -41,7 +41,7 @@ import tools.Output;
  */
 public class InventoryManipulator {
 	public static boolean addRing(GameCharacter chr, int itemId, int ringId) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		InventoryType type = ii.getInventoryType(itemId);
 		IItem nEquip = ii.getEquipById(itemId, ringId);
 		byte newSlot = chr.getInventory(type).addItem(nEquip);
@@ -69,7 +69,7 @@ public class InventoryManipulator {
 	}
 
 	public static boolean addById(GameClient c, int itemId, short quantity, String owner, int petid, byte flag, long expiration) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		InventoryType type = ii.getInventoryType(itemId);
 		if (!type.equals(InventoryType.EQUIP)) {
 			short slotMax = ii.getSlotMax(c, itemId);
@@ -153,7 +153,7 @@ public class InventoryManipulator {
 	}
 
 	public static boolean addFromDrop(GameClient c, IItem item, boolean show) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		InventoryType type = ii.getInventoryType(item.getItemId());
 		if (ii.isPickupRestricted(item.getItemId()) && c.getPlayer().getItemQuantity(item.getItemId(), true) > 0) {
 			c.announce(PacketCreator.getInventoryFull());
@@ -230,7 +230,7 @@ public class InventoryManipulator {
 	}
 
 	public static boolean checkSpace(GameClient c, int itemid, int quantity, String owner) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		InventoryType type = ii.getInventoryType(itemid);
 		if (!type.equals(InventoryType.EQUIP)) {
 			short slotMax = ii.getSlotMax(c, itemid);
@@ -303,7 +303,7 @@ public class InventoryManipulator {
 		if (src < 0 || dst < 0) {
 			return;
 		}
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		IItem source = c.getPlayer().getInventory(type).getItem(src);
 		IItem initialTarget = c.getPlayer().getInventory(type).getItem(dst);
 		if (source == null) {
@@ -330,7 +330,7 @@ public class InventoryManipulator {
 	public static void equip(GameClient c, byte src, byte dst) {
 		Equip source = (Equip) c.getPlayer().getInventory(InventoryType.EQUIP).getItem(src);
 		Equip target = (Equip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(dst);
-		if (source == null || !MapleItemInformationProvider.getInstance().canWearEquipment(c.getPlayer(), source)) {
+		if (source == null || !ItemInfoProvider.getInstance().canWearEquipment(c.getPlayer(), source)) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		} else if ((((source.getItemId() >= 1902000 && source.getItemId() <= 1902002) || source.getItemId() == 1912000) && c.getPlayer().isCygnus()) || ((source.getItemId() >= 1902005 && source.getItemId() <= 1902007) || source.getItemId() == 1912005) && !c.getPlayer().isCygnus()) {// Adventurer
@@ -338,7 +338,7 @@ public class InventoryManipulator {
 																																																																							// equipment
 			return;
 		}
-		if (MapleItemInformationProvider.getInstance().isUntradeableOnEquip(source.getItemId())) {
+		if (ItemInfoProvider.getInstance().isUntradeableOnEquip(source.getItemId())) {
 			source.setFlag((byte) ItemConstants.UNTRADEABLE);
 		}
 		if (source.getRingId() > -1) {
@@ -366,7 +366,7 @@ public class InventoryManipulator {
 			}
 		} else if (dst == -10) {// check if weapon is two-handed
 			IItem weapon = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
-			if (weapon != null && MapleItemInformationProvider.getInstance().isTwoHanded(weapon.getItemId())) {
+			if (weapon != null && ItemInfoProvider.getInstance().isTwoHanded(weapon.getItemId())) {
 				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
@@ -376,7 +376,7 @@ public class InventoryManipulator {
 			}
 		} else if (dst == -11) {
 			IItem shield = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -10);
-			if (shield != null && MapleItemInformationProvider.getInstance().isTwoHanded(source.getItemId())) {
+			if (shield != null && ItemInfoProvider.getInstance().isTwoHanded(source.getItemId())) {
 				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
@@ -448,7 +448,7 @@ public class InventoryManipulator {
 	}
 
 	public static void drop(GameClient c, InventoryType type, byte src, short quantity) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		if (src < 0) {
 			type = InventoryType.EQUIPPED;
 		}
@@ -481,12 +481,12 @@ public class InventoryManipulator {
 			if (weddingRing) {
 				c.getPlayer().getMap().disappearingItemDrop(c.getPlayer(), c.getPlayer(), target, dropPos);
 			} else if (c.getPlayer().getMap().getEverlast()) {
-				if ((ii.isDropRestricted(target.getItemId()) && !ServerConstants.DROP_UNTRADEABLE_ITEMS) || MapleItemInformationProvider.getInstance().isCash(target.getItemId())) {
+				if ((ii.isDropRestricted(target.getItemId()) && !ServerConstants.DROP_UNTRADEABLE_ITEMS) || ItemInfoProvider.getInstance().isCash(target.getItemId())) {
 					c.getPlayer().getMap().disappearingItemDrop(c.getPlayer(), c.getPlayer(), target, dropPos);
 				} else {
 					c.getPlayer().getMap().spawnItemDrop(c.getPlayer(), c.getPlayer(), target, dropPos, true, false);
 				}
-			} else if ((ii.isDropRestricted(target.getItemId()) && !ServerConstants.DROP_UNTRADEABLE_ITEMS) || MapleItemInformationProvider.getInstance().isCash(target.getItemId())) {
+			} else if ((ii.isDropRestricted(target.getItemId()) && !ServerConstants.DROP_UNTRADEABLE_ITEMS) || ItemInfoProvider.getInstance().isCash(target.getItemId())) {
 				c.getPlayer().getMap().disappearingItemDrop(c.getPlayer(), c.getPlayer(), target, dropPos);
 			} else {
 				c.getPlayer().getMap().spawnItemDrop(c.getPlayer(), c.getPlayer(), target, dropPos, true, true);

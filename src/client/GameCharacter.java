@@ -63,15 +63,15 @@ import scripting.event.EventInstanceManager;
 import server.CashShop;
 import server.MapleBuffStatDelta;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleMiniGame;
-import server.MaplePlayerShop;
+import server.ItemInfoProvider;
+import server.Minigame;
+import server.PlayerShop;
 import server.Portal;
-import server.MapleShop;
+import server.Shop;
 import server.MapleStatEffect;
 import server.MapleStocks;
-import server.MapleStorage;
-import server.MapleTrade;
+import server.Storage;
+import server.Trade;
 import server.TimerManager;
 import server.events.MapleEvents;
 import server.events.RescueGaga;
@@ -187,15 +187,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private MapleJob job = MapleJob.BEGINNER;
 	private GameMap map, dojoMap;// Make a Dojo pq instance
 	private MapleMessenger messenger = null;
-	private MapleMiniGame miniGame;
+	private Minigame miniGame;
 	private MapleMount maplemount;
 	private MapleParty party;
 	private Pet[] pets = new Pet[3];
-	private MaplePlayerShop playerShop = null;
-	private MapleShop shop = null;
+	private PlayerShop playerShop = null;
+	private Shop shop = null;
 	private MapleSkinColor skinColor = MapleSkinColor.NORMAL;
-	private MapleStorage storage = null;
-	private MapleTrade trade = null;
+	private Storage storage = null;
+	private Trade trade = null;
 	private SavedLocation savedLocations[];
 	private SkillMacro[] skillMacros = new SkillMacro[5];
 	private List<Integer> lastmonthfameids;
@@ -544,7 +544,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		} else {
 			IItem weapon_item = getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
 			if (weapon_item != null) {
-				MapleWeaponType weapon = MapleItemInformationProvider.getInstance().getWeaponType(weapon_item.getItemId());
+				MapleWeaponType weapon = ItemInfoProvider.getInstance().getWeaponType(weapon_item.getItemId());
 				int mainstat;
 				int secondarystat;
 				if (weapon == MapleWeaponType.BOW || weapon == MapleWeaponType.CROSSBOW) {
@@ -654,7 +654,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void cancelEffect(int itemId) {
-		cancelEffect(MapleItemInformationProvider.getInstance().getItemEffect(itemId), false, -1);
+		cancelEffect(ItemInfoProvider.getInstance().getItemEffect(itemId), false, -1);
 	}
 
 	public void cancelEffect(MapleStatEffect effect, boolean overwrite, long startTime) {
@@ -1017,7 +1017,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int countItem(int itemid) {
-		return inventory[MapleItemInformationProvider.getInstance().getInventoryType(itemid).ordinal()].countById(itemid);
+		return inventory[ItemInfoProvider.getInstance().getInventoryType(itemid).ordinal()].countById(itemid);
 	}
 
 	public void decreaseBattleshipHp(int decrease) {
@@ -1813,7 +1813,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int getItemQuantity(int itemid, boolean checkEquipped) {
-		int possesed = inventory[MapleItemInformationProvider.getInstance().getInventoryType(itemid).ordinal()].countById(itemid);
+		int possesed = inventory[ItemInfoProvider.getInstance().getInventoryType(itemid).ordinal()].countById(itemid);
 		if (checkEquipped) {
 			possesed += inventory[InventoryType.EQUIPPED.ordinal()].countById(itemid);
 		}
@@ -1939,7 +1939,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.mpc = mpc;
 	}
 
-	public MapleMiniGame getMiniGame() {
+	public Minigame getMiniGame() {
 		return miniGame;
 	}
 
@@ -2018,7 +2018,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return (party != null ? party.getId() : -1);
 	}
 
-	public MaplePlayerShop getPlayerShop() {
+	public PlayerShop getPlayerShop() {
 		return playerShop;
 	}
 
@@ -2112,7 +2112,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return search;
 	}
 
-	public MapleShop getShop() {
+	public Shop getShop() {
 		return shop;
 	}
 
@@ -2233,7 +2233,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return stockPortfolio.hasStock(MapleStocks.getInstance().getStock(ticker), amount);
 	}
 	
-	public MapleStorage getStorage() {
+	public Storage getStorage() {
 		return storage;
 	}
 
@@ -2257,7 +2257,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return watk;
 	}
 
-	public MapleTrade getTrade() {
+	public Trade getTrade() {
 		return trade;
 	}
 
@@ -2897,7 +2897,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				rs.close();
 				ps.close();
 				ret.buddylist.loadFromDb(charid);
-				ret.storage = MapleStorage.loadOrCreateFromDB(ret.accountid, ret.world);
+				ret.storage = Storage.loadOrCreateFromDB(ret.accountid, ret.world);
 				ret.recalcLocalStats();
 				// ret.resetBattleshipHp();
 				ret.silentEnforceMaxHpMp();
@@ -3063,7 +3063,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 		if (possesed > 0) {
 			message("You have used a safety charm, so your EXP points have not been decreased.");
-			InventoryManipulator.removeById(client, MapleItemInformationProvider.getInstance().getInventoryType(charmID[i]), charmID[i], 1, true, false);
+			InventoryManipulator.removeById(client, ItemInfoProvider.getInstance().getInventoryType(charmID[i]), charmID[i], 1, true, false);
 		} else if (mapid > 925020000 && mapid < 925030000) {
 			this.dojoStage = 0;
 		} else if (mapid > 980000100 && mapid < 980000700) {
@@ -4146,7 +4146,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.messengerposition = position;
 	}
 
-	public void setMiniGame(MapleMiniGame miniGame) {
+	public void setMiniGame(Minigame miniGame) {
 		this.miniGame = miniGame;
 	}
 
@@ -4202,7 +4202,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.party = party;
 	}
 
-	public void setPlayerShop(MaplePlayerShop playerShop) {
+	public void setPlayerShop(PlayerShop playerShop) {
 		this.playerShop = playerShop;
 	}
 
@@ -4246,7 +4246,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return false;
 	}
 
-	public void setShop(MapleShop shop) {
+	public void setShop(Shop shop) {
 		this.shop = shop;
 	}
 
@@ -4280,7 +4280,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 	}
 
-	public void setTrade(MapleTrade trade) {
+	public void setTrade(Trade trade) {
 		this.trade = trade;
 	}
 
@@ -4899,7 +4899,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void increaseEquipExp(int mobexp) {
-		MapleItemInformationProvider mii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider mii = ItemInfoProvider.getInstance();
 		for (IItem item : getInventory(InventoryType.EQUIPPED).list()) {
 			Equip nEquip = (Equip) item;
 			String itemName = mii.getName(nEquip.getItemId());

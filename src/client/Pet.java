@@ -24,7 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import tools.DatabaseConnection;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.movement.AbsoluteLifeMovement;
 import server.movement.LifeMovement;
 import server.movement.LifeMovementFragment;
@@ -89,7 +89,7 @@ public class Pet extends Item {
 	public static int createPet(int itemid) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO `pets` (`name`, `level`, `closeness`, `fullness`, `summoned`) VALUES (?, 1, 0, 100, 0)", Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, MapleItemInformationProvider.getInstance().getName(itemid));
+			ps.setString(1, ItemInfoProvider.getInstance().getName(itemid));
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			int ret = -1;
@@ -107,7 +107,7 @@ public class Pet extends Item {
 	public static int createPet(int itemid, byte level, int closeness, int fullness) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO `pets` (`name`, `level`, `closeness`, `fullness`, `summoned`) VALUES (?, ?, ?, ?, 0)", Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, MapleItemInformationProvider.getInstance().getName(itemid));
+			ps.setString(1, ItemInfoProvider.getInstance().getName(itemid));
 			ps.setByte(2, level);
 			ps.setInt(3, closeness);
 			ps.setInt(4, fullness);
@@ -202,7 +202,7 @@ public class Pet extends Item {
 	}
 
 	public boolean canConsume(int itemId) {
-		for (int petId : MapleItemInformationProvider.getInstance().petsCanConsume(itemId)) {
+		for (int petId : ItemInfoProvider.getInstance().petsCanConsume(itemId)) {
 			if (petId == this.getItemId()) {
 				return true;
 			}

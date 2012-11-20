@@ -28,8 +28,8 @@ import java.awt.Point;
 import net.AbstractPacketHandler;
 import scripting.item.ItemScriptManager;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleItemInformationProvider.scriptedItem;
+import server.ItemInfoProvider;
+import server.ItemInfoProvider.scriptedItem;
 import server.maps.GameMapItem;
 import server.maps.GameMapObject;
 import tools.PacketCreator;
@@ -49,7 +49,7 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 		int oid = slea.readInt();
 		GameCharacter chr = c.getPlayer();
 		GameMapObject ob = chr.getMap().getMapObject(oid);
-		if (chr.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(ob.getObjectId())).getNextFreeSlot() > -1) {
+		if (chr.getInventory(ItemInfoProvider.getInstance().getInventoryType(ob.getObjectId())).getNextFreeSlot() > -1) {
 			if (chr.getMapId() > 209000000 && chr.getMapId() < 209000016) {// happyville
 																			// trees
 				GameMapItem mapitem = (GameMapItem) ob;
@@ -120,7 +120,7 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 							chr.gainMeso(mapitem.getMeso(), true, true, false);
 						}
 					} else if (mapitem.getItem().getItemId() / 10000 == 243) {
-						MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+						ItemInfoProvider ii = ItemInfoProvider.getInstance();
 						scriptedItem info = ii.getScriptedItemInfo(mapitem.getItem().getItemId());
 						if (info.runOnPickup()) {
 							ItemScriptManager ism = ItemScriptManager.getInstance();
@@ -156,7 +156,7 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 
 	static boolean useItem(final GameClient c, final int id) {
 		if (id / 1000000 == 2) {
-			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+			ItemInfoProvider ii = ItemInfoProvider.getInstance();
 			if (ii.isConsumeOnPickup(id)) {
 				if (id > 2022430 && id < 2022434) {
 					for (GameCharacter player : c.getPlayer().getMap().getCharacters()) {

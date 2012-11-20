@@ -82,12 +82,12 @@ import server.DueyPackages;
 import server.GiftEntry;
 import server.MTSItemInfo;
 import server.MapleBuffStatDelta;
-import server.MapleItemInformationProvider;
-import server.MapleMiniGame;
-import server.MaplePlayerShop;
-import server.MaplePlayerShopItem;
-import server.MapleShopItem;
-import server.MapleTrade;
+import server.ItemInfoProvider;
+import server.Minigame;
+import server.PlayerShop;
+import server.PlayerShopItem;
+import server.ShopItem;
+import server.Trade;
 import server.WorldRecommendation;
 import server.events.gm.MapleSnowball;
 import server.partyquest.MonsterCarnivalParty;
@@ -220,7 +220,7 @@ public class PacketCreator {
 
 	private static void addCharEquips(PacketWriter w, GameCharacter chr) {
 		Inventory equip = chr.getInventory(InventoryType.EQUIPPED);
-		Collection<IItem> ii = MapleItemInformationProvider.getInstance().canWearEquipment(chr, equip.list());
+		Collection<IItem> ii = ItemInfoProvider.getInstance().canWearEquipment(chr, equip.list());
 		Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
 		Map<Byte, Integer> maskedEquip = new LinkedHashMap<Byte, Integer>();
 		for (IItem item : ii) {
@@ -319,7 +319,7 @@ public class PacketCreator {
 	}
 
 	private static void addItemInfo(PacketWriter w, IItem item, boolean zeroPosition) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		boolean isCash = ii.isCash(item.getItemId());
 		boolean isPet = item.getPetId() > -1;
 		boolean isRing = false;
@@ -2017,7 +2017,7 @@ public class PacketCreator {
 	 * @param shop
 	 *            The shop to announce.
 	 */
-	private static void addAnnounceBox(PacketWriter w, MaplePlayerShop shop, int availability) {
+	private static void addAnnounceBox(PacketWriter w, PlayerShop shop, int availability) {
 		w.write(4);
 		w.writeInt(shop.getObjectId());
 		w.writeMapleAsciiString(shop.getDescription());
@@ -2028,7 +2028,7 @@ public class PacketCreator {
 		w.write(0);
 	}
 
-	private static void addAnnounceBox(PacketWriter w, MapleMiniGame game, int gametype, int type, int ammount, int joinable) {
+	private static void addAnnounceBox(PacketWriter w, Minigame game, int gametype, int type, int ammount, int joinable) {
 		w.write(gametype);
 		w.writeInt(game.getObjectId()); // gameid/shopid
 		w.writeMapleAsciiString(game.getDescription()); // desc
@@ -2164,13 +2164,13 @@ public class PacketCreator {
 		return (int) (Double.doubleToLongBits(d) >> 48);
 	}
 
-	public static GamePacket getNPCShop(GameClient c, int sid, List<MapleShopItem> items) {
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+	public static GamePacket getNPCShop(GameClient c, int sid, List<ShopItem> items) {
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.OPEN_NPC_SHOP.getValue());
 		w.writeInt(sid);
 		w.writeShort(items.size()); // item count
-		for (MapleShopItem item : items) {
+		for (ShopItem item : items) {
 			w.writeInt(item.getItemId());
 			w.writeInt(item.getPrice());
 			w.writeInt(item.getPrice() == 0 ? item.getPitch() : 0); // Perfect
@@ -2575,7 +2575,7 @@ public class PacketCreator {
 		w.writeInt(chr.getMonsterBook().getNormalCard());
 		w.writeInt(chr.getMonsterBook().getSpecialCard());
 		w.writeInt(chr.getMonsterBook().getTotalCards());
-		w.writeInt(chr.getMonsterBookCover() > 0 ? MapleItemInformationProvider.getInstance().getCardMobId(chr.getMonsterBookCover()) : 0);
+		w.writeInt(chr.getMonsterBookCover() > 0 ? ItemInfoProvider.getInstance().getCardMobId(chr.getMonsterBookCover()) : 0);
 		IItem medal = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -49);
 		if (medal != null) {
 			w.writeInt(medal.getItemId());
@@ -2924,12 +2924,12 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getPlayerShopItemUpdate(MaplePlayerShop shop) {
+	public static GamePacket getPlayerShopItemUpdate(PlayerShop shop) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.UPDATE_MERCHANT.getCode());
 		w.write(shop.getItems().size());
-		for (MaplePlayerShopItem item : shop.getItems()) {
+		for (PlayerShopItem item : shop.getItems()) {
 			w.writeShort(item.getBundles());
 			w.writeShort(item.getItem().getQuantity());
 			w.writeInt(item.getPrice());
@@ -2945,7 +2945,7 @@ public class PacketCreator {
 	 * @param owner
 	 * @return
 	 */
-	public static GamePacket getPlayerShop(GameClient c, MaplePlayerShop shop, boolean owner) {
+	public static GamePacket getPlayerShop(GameClient c, PlayerShop shop, boolean owner) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.ROOM.getCode());
@@ -2960,10 +2960,10 @@ public class PacketCreator {
 		w.writeMapleAsciiString(shop.getOwner().getName());
 		w.write(0xFF);
 		w.writeMapleAsciiString(shop.getDescription());
-		List<MaplePlayerShopItem> items = shop.getItems();
+		List<PlayerShopItem> items = shop.getItems();
 		w.write(0x10);
 		w.write(items.size());
-		for (MaplePlayerShopItem item : items) {
+		for (PlayerShopItem item : items) {
 			w.writeShort(item.getBundles());
 			w.writeShort(item.getItem().getQuantity());
 			w.writeInt(item.getPrice());
@@ -2972,7 +2972,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getTradeStart(GameClient c, MapleTrade trade, byte number) {
+	public static GamePacket getTradeStart(GameClient c, Trade trade, byte number) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.ROOM.getCode());
@@ -4592,7 +4592,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGame(GameClient c, MapleMiniGame minigame, boolean owner, int piece) {
+	public static GamePacket getMiniGame(GameClient c, Minigame minigame, boolean owner, int piece) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.ROOM.getCode());
@@ -4631,21 +4631,21 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameReady(MapleMiniGame game) {
+	public static GamePacket getMiniGameReady(Minigame game) {
 		PacketWriter w = new PacketWriter(3);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.READY.getCode());
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameUnReady(MapleMiniGame game) {
+	public static GamePacket getMiniGameUnReady(Minigame game) {
 		PacketWriter w = new PacketWriter(3);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.UN_READY.getCode());
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameStart(MapleMiniGame game, int loser) {
+	public static GamePacket getMiniGameStart(Minigame game, int loser) {
 		PacketWriter w = new PacketWriter(4);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.START.getCode());
@@ -4653,7 +4653,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameSkipOwner(MapleMiniGame game) {
+	public static GamePacket getMiniGameSkipOwner(Minigame game) {
 		PacketWriter w = new PacketWriter(4);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.SKIP.getCode());
@@ -4661,14 +4661,14 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameRequestTie(MapleMiniGame game) {
+	public static GamePacket getMiniGameRequestTie(Minigame game) {
 		PacketWriter w = new PacketWriter(3);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.REQUEST_TIE.getCode());
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameDenyTie(MapleMiniGame game) {
+	public static GamePacket getMiniGameDenyTie(Minigame game) {
 		PacketWriter w = new PacketWriter(3);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.ANSWER_TIE.getCode());
@@ -4684,14 +4684,14 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameSkipVisitor(MapleMiniGame game) {
+	public static GamePacket getMiniGameSkipVisitor(Minigame game) {
 		PacketWriter w = new PacketWriter(4);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.writeShort(PlayerInteractionHandler.Action.SKIP.getCode());
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameMoveOmok(MapleMiniGame game, int move1, int move2, int move3) {
+	public static GamePacket getMiniGameMoveOmok(Minigame game, int move1, int move2, int move3) {
 		PacketWriter w = new PacketWriter(12);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.MOVE_OMOK.getCode());
@@ -4724,7 +4724,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	private static GamePacket getMiniGameResult(MapleMiniGame game, int win, int lose, int tie, int result, int forfeit, boolean omok) {
+	private static GamePacket getMiniGameResult(Minigame game, int win, int lose, int tie, int result, int forfeit, boolean omok) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.GET_RESULT.getCode());
@@ -4750,23 +4750,23 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameOwnerWin(MapleMiniGame game) {
+	public static GamePacket getMiniGameOwnerWin(Minigame game) {
 		return getMiniGameResult(game, 0, 1, 0, 1, 0, true);
 	}
 
-	public static GamePacket getMiniGameVisitorWin(MapleMiniGame game) {
+	public static GamePacket getMiniGameVisitorWin(Minigame game) {
 		return getMiniGameResult(game, 1, 0, 0, 2, 0, true);
 	}
 
-	public static GamePacket getMiniGameTie(MapleMiniGame game) {
+	public static GamePacket getMiniGameTie(Minigame game) {
 		return getMiniGameResult(game, 0, 0, 1, 3, 0, true);
 	}
 
-	public static GamePacket getMiniGameOwnerForfeit(MapleMiniGame game) {
+	public static GamePacket getMiniGameOwnerForfeit(Minigame game) {
 		return getMiniGameResult(game, 0, 1, 0, 2, 1, true);
 	}
 
-	public static GamePacket getMiniGameVisitorForfeit(MapleMiniGame game) {
+	public static GamePacket getMiniGameVisitorForfeit(Minigame game) {
 		return getMiniGameResult(game, 1, 0, 0, 1, 1, true);
 	}
 
@@ -4779,7 +4779,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMatchCard(GameClient c, MapleMiniGame minigame, boolean owner, int piece) {
+	public static GamePacket getMatchCard(GameClient c, Minigame minigame, boolean owner, int piece) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.ROOM.getCode());
@@ -4818,7 +4818,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMatchCardStart(MapleMiniGame game, int loser) {
+	public static GamePacket getMatchCardStart(Minigame game, int loser) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.START.getCode());
@@ -4851,7 +4851,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMatchCardSelect(MapleMiniGame game, int turn, int slot, int firstslot, int type) {
+	public static GamePacket getMatchCardSelect(Minigame game, int turn, int slot, int firstslot, int type) {
 		PacketWriter w = new PacketWriter(6);
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.SELECT_CARD.getCode());
@@ -4866,15 +4866,15 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMatchCardOwnerWin(MapleMiniGame game) {
+	public static GamePacket getMatchCardOwnerWin(Minigame game) {
 		return getMiniGameResult(game, 1, 0, 0, 1, 0, false);
 	}
 
-	public static GamePacket getMatchCardVisitorWin(MapleMiniGame game) {
+	public static GamePacket getMatchCardVisitorWin(Minigame game) {
 		return getMiniGameResult(game, 0, 1, 0, 2, 0, false);
 	}
 
-	public static GamePacket getMatchCardTie(MapleMiniGame game) {
+	public static GamePacket getMatchCardTie(Minigame game) {
 		return getMiniGameResult(game, 0, 0, 1, 3, 0, false);
 	}
 
@@ -4983,7 +4983,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket owlOfMinerva(GameClient c, int itemid, List<HiredMerchant> hms, List<MaplePlayerShopItem> items) { 
+	public static GamePacket owlOfMinerva(GameClient c, int itemid, List<HiredMerchant> hms, List<PlayerShopItem> items) { 
 		// Thanks moongra, you save me some time :)
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.OWL_OF_MINERVA.getValue());
@@ -4992,7 +4992,7 @@ public class PacketCreator {
 		w.writeInt(itemid);
 		w.writeInt(hms.size());
 		for (HiredMerchant hm : hms) {
-			for (MaplePlayerShopItem item : items) {
+			for (PlayerShopItem item : items) {
 				w.writeMapleAsciiString(hm.getOwner());
 				w.writeInt(hm.getMapId());
 				w.writeMapleAsciiString(hm.getDescription());
@@ -5086,7 +5086,7 @@ public class PacketCreator {
 		if (hm.getItems().isEmpty()) {
 			w.write(0);// Hmm??
 		} else {
-			for (MaplePlayerShopItem item : hm.getItems()) {
+			for (PlayerShopItem item : hm.getItems()) {
 				w.writeShort(item.getBundles());
 				w.writeShort(item.getItem().getQuantity());
 				w.writeInt(item.getPrice());
@@ -5102,7 +5102,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.UPDATE_MERCHANT.getCode());
 		w.writeInt(chr.getMeso());
 		w.write(hm.getItems().size());
-		for (MaplePlayerShopItem item : hm.getItems()) {
+		for (PlayerShopItem item : hm.getItems()) {
 			w.writeShort(item.getBundles());
 			w.writeShort(item.getItem().getQuantity());
 			w.writeInt(item.getPrice());

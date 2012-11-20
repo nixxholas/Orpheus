@@ -26,7 +26,7 @@ import client.InventoryType;
 import client.autoban.AutobanManager;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.life.MapleMonster;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -47,7 +47,7 @@ public final class UseCatchItemHandler extends AbstractPacketHandler {
 		int monsterid = slea.readInt();
 
 		MapleMonster mob = chr.getMap().getMonsterByOid(monsterid);
-		if (chr.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(itemId)).countById(itemId) <= 0) {
+		if (chr.getInventory(ItemInfoProvider.getInstance().getInventoryType(itemId)).countById(itemId) <= 0) {
 			return;
 		}
 		if (mob == null) {

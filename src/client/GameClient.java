@@ -52,7 +52,7 @@ import scripting.npc.NPCConversationManager;
 import scripting.npc.NPCScriptManager;
 import scripting.quest.QuestActionManager;
 import scripting.quest.QuestScriptManager;
-import server.MapleTrade;
+import server.Trade;
 import server.TimerManager;
 import server.maps.HiredMerchant;
 import tools.HashCreator;
@@ -62,7 +62,7 @@ import tools.HexTool;
 import tools.Output;
 import org.apache.mina.core.session.IoSession;
 import constants.ServerConstants;
-import server.MapleMiniGame;
+import server.Minigame;
 import server.quest.Quest;
 import tools.GameLogger;
 
@@ -657,7 +657,7 @@ public class GameClient {
 				player.getMap().removePlayer(player);
 			}
 			if (player.getTrade() != null) {
-				MapleTrade.cancelTrade(player);
+				Trade.cancelTrade(player);
 			}
 			if (gmlevel > 0) {
 				GMServer.getInstance().removeInGame(player.getName());
@@ -681,7 +681,7 @@ public class GameClient {
 				World worlda = getWorldServer();
 				player.saveCooldowns();
 				player.unequipPendantOfSpirit();
-				MapleMiniGame game = player.getMiniGame();
+				Minigame game = player.getMiniGame();
 				if (game != null) {
 					player.setMiniGame(null);
 					if (game.isOwner(player)) {

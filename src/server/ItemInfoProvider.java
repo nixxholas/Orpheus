@@ -58,8 +58,8 @@ import tools.Pair;
  * @author Matze
  * 
  */
-public class MapleItemInformationProvider {
-	private static MapleItemInformationProvider instance = null;
+public class ItemInfoProvider {
+	private static ItemInfoProvider instance = null;
 	protected MapleDataProvider itemData;
 	protected MapleDataProvider equipData;
 	protected MapleDataProvider stringData;
@@ -95,7 +95,7 @@ public class MapleItemInformationProvider {
 	protected Map<Integer, Boolean> consumeOnPickupCache = new HashMap<Integer, Boolean>();
 	protected Map<Integer, Boolean> isQuestItemCache = new HashMap<Integer, Boolean>();
 
-	private MapleItemInformationProvider() {
+	private ItemInfoProvider() {
 		loadCardIdData();
 		itemData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
 		equipData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Character.wz"));
@@ -108,9 +108,9 @@ public class MapleItemInformationProvider {
 		petStringData = stringData.getData("Pet.img");
 	}
 
-	public static MapleItemInformationProvider getInstance() {
+	public static ItemInfoProvider getInstance() {
 		if (instance == null) {
-			instance = new MapleItemInformationProvider();
+			instance = new ItemInfoProvider();
 		}
 		return instance;
 	}

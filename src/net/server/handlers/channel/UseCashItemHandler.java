@@ -42,9 +42,9 @@ import net.AbstractPacketHandler;
 import net.server.Server;
 import scripting.npc.NPCScriptManager;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
-import server.MapleShop;
-import server.MapleShopFactory;
+import server.ItemInfoProvider;
+import server.Shop;
+import server.ShopFactory;
 import server.maps.GameMap;
 import server.maps.TVEffect;
 import tools.PacketCreator;
@@ -60,7 +60,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			return;
 		}
 		player.setLastUsedCashItem(System.currentTimeMillis());
-		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		slea.readShort();
 		int itemId = slea.readInt();
 		int itemType = itemId / 10000;
@@ -487,7 +487,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			remove(c, itemId);
 		} else if (itemType == 545) { // MiuMiu's travel store
 			if (player.getShop() == null) {
-				MapleShop shop = MapleShopFactory.getInstance().getShop(1338);
+				Shop shop = ShopFactory.getInstance().getShop(1338);
 				if (shop != null) {
 					shop.sendShop(c);
 					remove(c, itemId);

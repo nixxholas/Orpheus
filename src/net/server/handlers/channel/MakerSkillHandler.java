@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
-import server.MapleItemInformationProvider;
+import server.ItemInfoProvider;
 import server.MakerItemFactory;
 import server.MakerItemFactory.MakerItemCreateEntry;
 import tools.Pair;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Jay Estrella
  */
 public final class MakerSkillHandler extends AbstractPacketHandler {
-	private MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+	private ItemInfoProvider ii = ItemInfoProvider.getInstance();
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

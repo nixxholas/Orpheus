@@ -30,14 +30,14 @@ import tools.PacketCreator;
  * 
  * @author Danny
  */
-public class MapleSquad {
+public class Squad {
 	private GameCharacter leader;
 	private List<GameCharacter> members = new LinkedList<GameCharacter>();
 	private List<GameCharacter> bannedMembers = new LinkedList<GameCharacter>();
 	private int ch;
 	private int status = 0;
 
-	public MapleSquad(int ch, GameCharacter leader) {
+	public Squad(int ch, GameCharacter leader) {
 		this.leader = leader;
 		this.members.add(leader);
 		this.ch = ch;
@@ -106,7 +106,7 @@ public class MapleSquad {
 		return status;
 	}
 
-	public boolean equals(MapleSquad other) {
+	public boolean equals(Squad other) {
 		if (other.ch == ch) {
 			if (other.leader.getId() == leader.getId()) {
 				return true;
