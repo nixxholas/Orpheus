@@ -24,7 +24,7 @@ import client.GameClient;
 import client.InventoryType;
 import constants.ExpTable;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -47,7 +47,7 @@ public final class UseMountFoodHandler extends AbstractMaplePacketHandler {
 					c.getPlayer().getMount().setLevel(level + 1);
 				}
 				c.getPlayer().getMap().broadcastMessage(PacketCreator.updateMount(c.getPlayer().getId(), c.getPlayer().getMount(), levelup));
-				MapleInventoryManipulator.removeById(c, InventoryType.USE, itemid, 1, true, false);
+				InventoryManipulator.removeById(c, InventoryType.USE, itemid, 1, true, false);
 			}
 		}
 	}

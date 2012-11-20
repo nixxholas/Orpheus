@@ -30,7 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -63,7 +63,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 					chr.setMerchantMeso(0);
 					if (deleteItems(chr)) {
 						for (int i = 0; i < items.size(); i++) {
-							MapleInventoryManipulator.addFromDrop(c, items.get(i).item, false);
+							InventoryManipulator.addFromDrop(c, items.get(i).item, false);
 						}
 						c.announce(PacketCreator.fredrickMessage((byte) 0x1E));
 					} else {
@@ -88,7 +88,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 		}
 		for (ItemInventoryEntry entry : entries) {
 			final IItem item = entry.item;
-			if (!MapleInventoryManipulator.checkSpace(chr.getClient(), item.getItemId(), item.getQuantity(), item.getOwner()))
+			if (!InventoryManipulator.checkSpace(chr.getClient(), item.getItemId(), item.getQuantity(), item.getOwner()))
 				return false;
 		}
 

@@ -26,7 +26,7 @@ import client.InventoryType;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MaplePortal;
 import server.maps.MapleMap;
 import tools.PacketCreator;
@@ -68,7 +68,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 					if (executeStandardPath) {
 						MapleMap to = chr.getMap();
 						if (wheel && chr.getItemQuantity(5510000, false) > 0) {
-							MapleInventoryManipulator.removeById(c, InventoryType.CASH, 5510000, 1, true, false);
+							InventoryManipulator.removeById(c, InventoryType.CASH, 5510000, 1, true, false);
 							chr.announce(PacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
 						} else {
 							chr.cancelAllBuffs(false);

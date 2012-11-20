@@ -25,7 +25,7 @@ import client.IItem;
 import client.GameClient;
 import client.InventoryType;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -71,7 +71,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
 					success = false;
 					player.dropMessage("The skill book lights up, but the skill winds up as if nothing happened.");
 				}
-				MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
+				InventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
 			} else {
 				canuse = false;
 			}

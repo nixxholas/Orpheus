@@ -26,7 +26,7 @@ import client.IItem;
 import client.Item;
 import client.GameClient;
 import client.SkillFactory;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.IEquip.ScrollResult;
 import client.ISkill;
@@ -64,7 +64,7 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
 			c.announce(PacketCreator.getInventoryFull());
 			return;
 		}
-		MapleInventory useInventory = c.getPlayer().getInventory(InventoryType.USE);
+		Inventory useInventory = c.getPlayer().getInventory(InventoryType.USE);
 		IItem scroll = useInventory.getItem(slot);
 		IItem wscroll = null;
 		List<Integer> scrollReqs = ii.getScrollReqs(scroll.getItemId());

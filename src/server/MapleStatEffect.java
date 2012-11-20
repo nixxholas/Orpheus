@@ -34,7 +34,7 @@ import client.ISkill;
 import client.MapleBuffStat;
 import client.GameCharacter;
 import client.MapleDisease;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.MapleJob;
 import client.MapleMount;
@@ -620,7 +620,7 @@ public class MapleStatEffect {
 		int mpchange = calcMPChange(applyfrom, primary);
 		if (primary) {
 			if (itemConNo != 0) {
-				MapleInventoryManipulator.removeById(applyto.getClient(), MapleItemInformationProvider.getInstance().getInventoryType(itemCon), itemCon, itemConNo, false, true);
+				InventoryManipulator.removeById(applyto.getClient(), MapleItemInformationProvider.getInstance().getInventoryType(itemCon), itemCon, itemConNo, false, true);
 			}
 		}
 		List<MapleStatDelta> hpmpupdate = new ArrayList<MapleStatDelta>(2);
@@ -683,7 +683,7 @@ public class MapleStatEffect {
 		}
 		if (isShadowClaw()) {
 			int projectile = 0;
-			MapleInventory use = applyto.getInventory(InventoryType.USE);
+			Inventory use = applyto.getInventory(InventoryType.USE);
 			for (int i = 0; i < 97; i++) { // impose order...
 				IItem item = use.getItem((byte) i);
 				if (item != null) {
@@ -696,7 +696,7 @@ public class MapleStatEffect {
 			if (projectile == 0)
 				return false;
 			else
-				MapleInventoryManipulator.removeById(applyto.getClient(), InventoryType.USE, projectile, 200, false, true);
+				InventoryManipulator.removeById(applyto.getClient(), InventoryType.USE, projectile, 200, false, true);
 
 		}
 		SummonMovementType summonMovementType = getSummonMovementType();

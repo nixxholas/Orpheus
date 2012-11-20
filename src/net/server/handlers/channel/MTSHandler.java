@@ -31,7 +31,7 @@ import net.AbstractMaplePacketHandler;
 import net.GamePacket;
 import net.server.Channel;
 import server.ItemNameEntry;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MTSItemInfo;
 import tools.PacketCreator;
@@ -389,7 +389,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 				pse.setInt(2, c.getPlayer().getId());
 				pse.executeUpdate();
 				pse.close();
-				MapleInventoryManipulator.addFromDrop(c, i, false);
+				InventoryManipulator.addFromDrop(c, i, false);
 				c.announce(PacketCreator.enableCSUse());
 				c.announce(getCart(c.getPlayer().getId()));
 				c.announce(getMTS(c.getPlayer().getCurrentTab(), c.getPlayer().getCurrentType(), c.getPlayer().getCurrentPage()));
@@ -575,7 +575,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 			try(PreparedStatement ps = getInsertStatement(c, quantity, price, type, i, con, playerId, date);) {
 				
 				ps.executeUpdate();
-				MapleInventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
+				InventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
 				
 			} catch (SQLException e) {
 			}

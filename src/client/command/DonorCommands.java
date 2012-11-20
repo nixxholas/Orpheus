@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
@@ -93,7 +93,7 @@ public class DonorCommands extends EnumeratedCommands {
 					List<MapleMapObject> items = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.ITEM));
 					for (MapleMapObject item : items) {
 						MapleMapItem mapitem = (MapleMapItem) item;
-						if (!MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
+						if (!InventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
 							continue;
 						}
 						mapitem.setPickedUp(true);

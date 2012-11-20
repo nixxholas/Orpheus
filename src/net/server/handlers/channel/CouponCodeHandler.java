@@ -26,7 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -73,7 +73,7 @@ public final class CouponCodeHandler extends AbstractMaplePacketHandler {
 					c.getPlayer().getCashShop().gainCash(2, (item / 5000));
 					break;
 				case 4:
-					MapleInventoryManipulator.addById(c, item, (short) 1, null, -1, -1);
+					InventoryManipulator.addById(c, item, (short) 1, null, -1, -1);
 					c.announce(PacketCreator.showCouponRedeemedItem(item));
 					break;
 				case 5:

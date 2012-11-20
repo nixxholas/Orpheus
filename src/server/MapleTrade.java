@@ -88,7 +88,7 @@ public class MapleTrade {
 			else if (item.getType() == IItem.ITEM && (item.getFlag() & ItemConstants.SPIKES) == ItemConstants.SPIKES)
 				item.setFlag((byte) (item.getFlag() ^ ItemConstants.SPIKES));
 
-			MapleInventoryManipulator.addFromDrop(chr.getClient(), item, true);
+			InventoryManipulator.addFromDrop(chr.getClient(), item, true);
 		}
 		if (exchangeMeso > 0) {
 			chr.gainMeso(exchangeMeso - getFee(exchangeMeso), true, true, true);
@@ -102,7 +102,7 @@ public class MapleTrade {
 
 	private void cancel() {
 		for (IItem item : items) {
-			MapleInventoryManipulator.addFromDrop(chr.getClient(), item, true);
+			InventoryManipulator.addFromDrop(chr.getClient(), item, true);
 		}
 		if (meso > 0) {
 			chr.gainMeso(meso, true, true, true);

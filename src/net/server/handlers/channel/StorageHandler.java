@@ -26,7 +26,7 @@ import client.GameClient;
 import client.InventoryType;
 import constants.ItemConstants;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStorage;
 import tools.PacketCreator;
@@ -60,7 +60,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 					} else
 						chr.gainMeso(-1000, false);
 				}
-				if (MapleInventoryManipulator.checkSpace(c, item.getItemId(), item.getQuantity(), item.getOwner())) {
+				if (InventoryManipulator.checkSpace(c, item.getItemId(), item.getQuantity(), item.getOwner())) {
 					item = storage.takeOut(slot);// actually the same but idc
 					if ((item.getFlag() & ItemConstants.KARMA) == ItemConstants.KARMA)
 						// items with scissors of karma used on them are reset once traded
@@ -69,7 +69,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 					else if (item.getType() == IItem.ITEM && (item.getFlag() & ItemConstants.SPIKES) == ItemConstants.SPIKES)
 						item.setFlag((byte) (item.getFlag() ^ ItemConstants.SPIKES));
 
-					MapleInventoryManipulator.addFromDrop(c, item, false);
+					InventoryManipulator.addFromDrop(c, item, false);
 					storage.sendTakenOut(c, ii.getInventoryType(item.getItemId()));
 				} else
 					c.announce(PacketCreator.getStorageError((byte) 0x0A));
@@ -96,7 +96,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 						quantity = item.getQuantity();
 					}
 					chr.gainMeso(meso, false, true, false);
-					MapleInventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
+					InventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
 					item.setQuantity(quantity);
 					storage.store(item);
 					storage.sendStored(c, ii.getInventoryType(itemId));

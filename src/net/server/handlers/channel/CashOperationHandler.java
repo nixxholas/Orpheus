@@ -24,7 +24,7 @@ import client.IEquip;
 import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.MapleRing;
 import java.sql.SQLException;
@@ -35,7 +35,7 @@ import net.AbstractMaplePacketHandler;
 import server.CashShop;
 import server.CashShop.CashItem;
 import server.CashShop.CashItemFactory;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.Output;
@@ -190,7 +190,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 		} else if (action == 0x0E) { // Put into Cash Inventory
 			int cashId = slea.readInt();
 			slea.skip(4);
-			MapleInventory mi = chr.getInventory(InventoryType.fromByte(slea.readByte()));
+			Inventory mi = chr.getInventory(InventoryType.fromByte(slea.readByte()));
 			IItem item = mi.findByCashId(cashId);
 			if (item == null) {
 				return;
@@ -236,7 +236,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 			if (chr.getMeso() > 0) {
 				if (itemId == 4031180 || itemId == 4031192 || itemId == 4031191) {
 					chr.gainMeso(-1, false);
-					MapleInventoryManipulator.addById(c, itemId, (short) 1);
+					InventoryManipulator.addById(c, itemId, (short) 1);
 					c.announce(PacketCreator.showBoughtQuestItem(itemId));
 				}
 			}

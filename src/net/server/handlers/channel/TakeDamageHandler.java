@@ -32,7 +32,7 @@ import constants.skills.Corsair;
 import java.awt.Point;
 import java.util.List;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory.loseItem;
 import server.life.MapleMonster;
@@ -82,7 +82,7 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 								if (Randomizer.nextInt(101) >= loseItem.getChance()) {
 									if (player.haveItem(loseItem.getId())) {
 										pos.x = (int) (playerpos + ((d % 2 == 0) ? (25 * (d + 1) / 2) : -(25 * (d / 2))));
-										MapleInventoryManipulator.removeById(c, type, loseItem.getId(), 1, false, false);
+										InventoryManipulator.removeById(c, type, loseItem.getId(), 1, false, false);
 										map.spawnItemDrop(c.getPlayer(), c.getPlayer(), new Item(loseItem.getId(), (byte) 0, (short) 1), map.calcDropPos(pos, player.getPosition()), true, true);
 										d++;
 									} else {

@@ -24,13 +24,13 @@ import client.IItem;
 import client.Item;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -49,7 +49,7 @@ public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
 			c.disconnect();
 			return;
 		}
-		MapleInventory Inv = chr.getInventory(InventoryType.fromByte(inv));
+		Inventory Inv = chr.getInventory(InventoryType.fromByte(inv));
 		ArrayList<Item> itemarray = new ArrayList<Item>();
 		for (Iterator<IItem> it = Inv.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
@@ -57,10 +57,10 @@ public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
 		}
 		Collections.sort(itemarray);
 		for (IItem item : itemarray) {
-			MapleInventoryManipulator.removeById(c, InventoryType.fromByte(inv), item.getItemId(), item.getQuantity(), false, false);
+			InventoryManipulator.removeById(c, InventoryType.fromByte(inv), item.getItemId(), item.getQuantity(), false, false);
 		}
 		for (IItem i : itemarray) {
-			MapleInventoryManipulator.addFromDrop(c, i, false);
+			InventoryManipulator.addFromDrop(c, i, false);
 		}
 		c.announce(PacketCreator.finishedSort2(inv));
 	}

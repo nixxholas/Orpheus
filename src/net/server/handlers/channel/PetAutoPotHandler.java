@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameClient;
 import client.InventoryType;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import tools.PacketCreator;
@@ -49,7 +49,7 @@ public final class PetAutoPotHandler extends AbstractMaplePacketHandler {
 				c.announce(PacketCreator.enableActions());
 				return;
 			}
-			MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
+			InventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
 			MapleStatEffect stat = MapleItemInformationProvider.getInstance().getItemEffect(toUse.getItemId());
 			stat.applyTo(c.getPlayer());
 			if (stat.getMp() > 0) {

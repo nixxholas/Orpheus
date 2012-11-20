@@ -62,7 +62,7 @@ import net.server.guild.MapleGuildCharacter;
 import scripting.event.EventInstanceManager;
 import server.CashShop;
 import server.MapleBuffStatDelta;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleMiniGame;
 import server.MaplePlayerShop;
@@ -183,7 +183,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	private GameClient client;
 	private MapleGuildCharacter mgc = null;
 	private MaplePartyCharacter mpc = null;
-	private MapleInventory[] inventory;
+	private Inventory[] inventory;
 	private MapleJob job = MapleJob.BEGINNER;
 	private MapleMap map, dojoMap;// Make a Dojo pq instance
 	private MapleMessenger messenger = null;
@@ -246,7 +246,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 	private GameCharacter() {
 		setStance(0);
-		inventory = new MapleInventory[InventoryType.values().length];
+		inventory = new Inventory[InventoryType.values().length];
 		savedLocations = new SavedLocation[SavedLocationType.values().length];
 
 		for (InventoryType type : InventoryType.values()) {
@@ -254,7 +254,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			if (type == InventoryType.CASH) {
 				b = 96;
 			}
-			inventory[type.ordinal()] = new MapleInventory(type, (byte) b);
+			inventory[type.ordinal()] = new Inventory(type, (byte) b);
 		}
 		for (int i = 0; i < SavedLocationType.values().length; i++) {
 			savedLocations[i] = null;
@@ -1332,7 +1332,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					}
 
 					List<IItem> toberemove = new ArrayList<IItem>();
-					for (MapleInventory inv : inventory) {
+					for (Inventory inv : inventory) {
 						for (IItem item : inv.list()) {
 							expiration = item.getExpiration();
 							if (expiration != -1 && (expiration < currenttime) && ((item.getFlag() & ItemConstants.LOCK) == ItemConstants.LOCK)) {
@@ -1348,7 +1348,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 							}
 						}
 						for (IItem item : toberemove) {
-							MapleInventoryManipulator.removeFromSlot(client, inv.getType(), item.getPosition(), item.getQuantity(), true);
+							InventoryManipulator.removeFromSlot(client, inv.getType(), item.getPosition(), item.getQuantity(), true);
 						}
 						toberemove.clear();
 					}
@@ -1804,7 +1804,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return int_;
 	}
 
-	public MapleInventory getInventory(InventoryType type) {
+	public Inventory getInventory(InventoryType type) {
 		return inventory[type.ordinal()];
 	}
 
@@ -2576,8 +2576,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		}
 		if (ServerConstants.PERFECT_PITCH) {
 			// milestones?
-			if (MapleInventoryManipulator.checkSpace(client, 4310000, (short) 1, "")) {
-				MapleInventoryManipulator.addById(client, 4310000, (short) 1);
+			if (InventoryManipulator.checkSpace(client, 4310000, (short) 1, "")) {
+				InventoryManipulator.addById(client, 4310000, (short) 1);
 			}
 		}
 		guildUpdate();
@@ -3063,7 +3063,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		}
 		if (possesed > 0) {
 			message("You have used a safety charm, so your EXP points have not been decreased.");
-			MapleInventoryManipulator.removeById(client, MapleItemInformationProvider.getInstance().getInventoryType(charmID[i]), charmID[i], 1, true, false);
+			InventoryManipulator.removeById(client, MapleItemInformationProvider.getInstance().getInventoryType(charmID[i]), charmID[i], 1, true, false);
 		} else if (mapid > 925020000 && mapid < 925030000) {
 			this.dojoStage = 0;
 		} else if (mapid > 980000100 && mapid < 980000700) {
@@ -3649,7 +3649,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			ps.executeBatch();
 			List<ItemInventoryEntry> itemsWithType = new ArrayList<ItemInventoryEntry>();
 
-			for (MapleInventory iv : inventory) {
+			for (Inventory iv : inventory) {
 				for (IItem item : iv.list()) {
 					itemsWithType.add(new ItemInventoryEntry(item, iv.getType()));
 				}
@@ -4069,7 +4069,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		recalcLocalStats();
 	}
 
-	public void setInventory(InventoryType type, MapleInventory inv) {
+	public void setInventory(InventoryType type, Inventory inv) {
 		inventory[type.ordinal()] = inv;
 	}
 

@@ -24,7 +24,7 @@ import client.IItem;
 import client.Item;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.MapleJob;
 import client.MapleSkinColor;
@@ -75,7 +75,7 @@ public final class CreateCharHandler extends AbstractMaplePacketHandler {
 			}
 		}
 		// CHECK FOR EQUIPS
-		MapleInventory equip = newchar.getInventory(InventoryType.EQUIPPED);
+		Inventory equip = newchar.getInventory(InventoryType.EQUIPPED);
 		if (newchar.isGM()) {
 			IItem eq_hat = MapleItemInformationProvider.getInstance().getEquipById(1002140);
 			eq_hat.setPosition((byte) -1);

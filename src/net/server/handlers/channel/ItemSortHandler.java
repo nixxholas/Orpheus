@@ -24,8 +24,8 @@ import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import client.InventoryType;
-import client.MapleInventory;
-import server.MapleInventoryManipulator;
+import client.Inventory;
+import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -38,7 +38,7 @@ public final class ItemSortHandler extends AbstractMaplePacketHandler {
 		byte inv = slea.readByte();
 		boolean sorted = false;
 		InventoryType pInvType = InventoryType.fromByte(inv);
-		MapleInventory pInv = chr.getInventory(pInvType);
+		Inventory pInv = chr.getInventory(pInvType);
 		while (!sorted) {
 			byte freeSlot = pInv.getNextFreeSlot();
 			if (freeSlot != -1) {
@@ -50,7 +50,7 @@ public final class ItemSortHandler extends AbstractMaplePacketHandler {
 					}
 				}
 				if (itemSlot <= 100 && itemSlot > 0) {
-					MapleInventoryManipulator.move(c, pInvType, itemSlot, freeSlot);
+					InventoryManipulator.move(c, pInvType, itemSlot, freeSlot);
 				} else {
 					sorted = true;
 				}

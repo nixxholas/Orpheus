@@ -37,7 +37,7 @@ import java.util.List;
 import net.AbstractMaplePacketHandler;
 import net.server.Channel;
 import server.DueyPackages;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -137,9 +137,9 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 					IItem item = c.getPlayer().getInventory(inv).getItem((byte) itemPos);
 					if (item != null && c.getPlayer().getItemQuantity(item.getItemId(), false) > amount) {
 						if (ItemConstants.isRechargable(item.getItemId())) {
-							MapleInventoryManipulator.removeFromSlot(c, inv, (byte) itemPos, item.getQuantity(), true);
+							InventoryManipulator.removeFromSlot(c, inv, (byte) itemPos, item.getQuantity(), true);
 						} else {
-							MapleInventoryManipulator.removeFromSlot(c, inv, (byte) itemPos, amount, true, false);
+							InventoryManipulator.removeFromSlot(c, inv, (byte) itemPos, amount, true, false);
 						}
 						addItemToDB(item, amount, mesos, c.getPlayer().getName(), getAccIdFromCNAME(recipient, false));
 					} else {
@@ -182,12 +182,12 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 			} catch (SQLException e) {
 			}
 			if (dp.getItem() != null) {
-				if (!MapleInventoryManipulator.checkSpace(c, dp.getItem().getItemId(), dp.getItem().getQuantity(), dp.getItem().getOwner())) {
+				if (!InventoryManipulator.checkSpace(c, dp.getItem().getItemId(), dp.getItem().getQuantity(), dp.getItem().getOwner())) {
 					c.getPlayer().dropMessage(1, "Your inventory is full");
 					c.announce(PacketCreator.enableActions());
 					return;
 				} else {
-					MapleInventoryManipulator.addFromDrop(c, dp.getItem(), false);
+					InventoryManipulator.addFromDrop(c, dp.getItem(), false);
 				}
 			}
 			int gainmesos = 0;

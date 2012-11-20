@@ -33,7 +33,7 @@ import constants.ItemConstants;
 import constants.ServerConstants;
 import provider.MapleData;
 import provider.MapleDataTool;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.Randomizer;
@@ -135,13 +135,13 @@ public class MapleQuestAction {
 						int itemId = MapleDataTool.getInt(iEntry.getChildByPath("id"));
 						InventoryType iType = ii.getInventoryType(itemId);
 						short quantity = (short) (MapleDataTool.getInt(iEntry.getChildByPath("count"), 0) * -1);
-						MapleInventoryManipulator.removeById(c.getClient(), iType, itemId, quantity, true, false);
+						InventoryManipulator.removeById(c.getClient(), iType, itemId, quantity, true, false);
 						c.getClient().getSession().write(PacketCreator.getShowItemGain(itemId, (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0), true));
 					} else { // add items
 						int itemId = MapleDataTool.getInt(iEntry.getChildByPath("id"));
 						short quantity = (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0);
 						if (c.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(itemId)).getNextFreeSlot() > -1) {
-							MapleInventoryManipulator.addById(c.getClient(), itemId, quantity);
+							InventoryManipulator.addById(c.getClient(), itemId, quantity);
 							c.getClient().getSession().write(PacketCreator.getShowItemGain(itemId, quantity, true));
 						} else {
 							c.dropMessage(1, "Inventory Full");

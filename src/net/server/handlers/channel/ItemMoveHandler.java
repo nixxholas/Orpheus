@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import client.InventoryType;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -40,13 +40,13 @@ public final class ItemMoveHandler extends AbstractMaplePacketHandler {
 		byte action = (byte) slea.readShort();
 		short quantity = slea.readShort();
 		if (src < 0 && action > 0) {
-			MapleInventoryManipulator.unequip(c, src, action);
+			InventoryManipulator.unequip(c, src, action);
 		} else if (action < 0) {
-			MapleInventoryManipulator.equip(c, src, action);
+			InventoryManipulator.equip(c, src, action);
 		} else if (action == 0) {
-			MapleInventoryManipulator.drop(c, type, src, quantity);
+			InventoryManipulator.drop(c, type, src, quantity);
 		} else {
-			MapleInventoryManipulator.move(c, type, src, action);
+			InventoryManipulator.move(c, type, src, action);
 		}
 	}
 }

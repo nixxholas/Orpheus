@@ -23,14 +23,14 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import tools.Output;
 import tools.Randomizer;
 import java.util.Arrays;
 import java.util.List;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
@@ -65,11 +65,11 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 			case 0x01: { // /d (inv)
 				final byte typeByte = slea.readByte();
 				final InventoryType type = InventoryType.fromByte(typeByte);
-				final MapleInventory in = player.getInventory(type);
+				final Inventory in = player.getInventory(type);
 				for (byte i = 0; i < in.getSlotLimit(); i++) {
 					final IItem item = in.getItem(i);
 					if (item != null) {
-						MapleInventoryManipulator.removeFromSlot(c, type, i, item.getQuantity(), false);
+						InventoryManipulator.removeFromSlot(c, type, i, item.getQuantity(), false);
 					}
 					return;
 				}

@@ -24,7 +24,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.ResultSet;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.MapleLogger;
 import tools.PacketCreator;
 import constants.ItemConstants;
@@ -95,7 +95,7 @@ public class SupportCommands extends EnumeratedCommands {
 					if (ItemConstants.isPet(itemId)) {
 						petid = Pet.createPet(itemId);
 					}
-					MapleInventoryManipulator.addById(c, itemId, quantity, chr.getName(), petid, -1);
+					InventoryManipulator.addById(c, itemId, quantity, chr.getName(), petid, -1);
 					break;
 				case job:
 					if (sub.length >= 2) {

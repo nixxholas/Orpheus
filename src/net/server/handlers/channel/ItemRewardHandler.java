@@ -27,7 +27,7 @@ import constants.ItemConstants;
 import java.util.List;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleItemInformationProvider.RewardItem;
 import tools.PacketCreator;
@@ -49,7 +49,7 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		Pair<Integer, List<RewardItem>> rewards = ii.getItemReward(itemId);
 		for (RewardItem reward : rewards.getRight()) {
-			if (!MapleInventoryManipulator.checkSpace(c, reward.itemid, reward.quantity, "")) {
+			if (!InventoryManipulator.checkSpace(c, reward.itemid, reward.quantity, "")) {
 				c.announce(PacketCreator.showInventoryFull());
 				break;
 			}
@@ -60,11 +60,11 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 					if (reward.period != -1) {
 						item.setExpiration(System.currentTimeMillis() + (reward.period * 60 * 60 * 10));
 					}
-					MapleInventoryManipulator.addFromDrop(c, item, false);
+					InventoryManipulator.addFromDrop(c, item, false);
 				} else {
-					MapleInventoryManipulator.addById(c, reward.itemid, reward.quantity);
+					InventoryManipulator.addById(c, reward.itemid, reward.quantity);
 				}
-				MapleInventoryManipulator.removeById(c, InventoryType.USE, itemId, 1, false, false);
+				InventoryManipulator.removeById(c, InventoryType.USE, itemId, 1, false, false);
 				if (reward.worldmsg != null) {
 					String msg = reward.worldmsg;
 					msg.replaceAll("/name", c.getPlayer().getName());

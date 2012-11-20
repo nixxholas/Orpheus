@@ -29,7 +29,7 @@ import client.Pet;
 import client.autoban.AutobanManager;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -101,7 +101,7 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 			}
 			chr.getMap().broadcastMessage(PacketCreator.commandResponse(chr.getId(), slot, 0, false));
 		}
-		MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, pos, (short) 1, false);
+		InventoryManipulator.removeFromSlot(c, InventoryType.USE, pos, (short) 1, false);
 		IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getPosition());
 		c.announce(PacketCreator.updateSlot(petz));
 		c.announce(PacketCreator.enableActions());

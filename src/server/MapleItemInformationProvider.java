@@ -32,7 +32,7 @@ import client.IEquip;
 import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.MapleJob;
 import client.MapleWeaponType;
@@ -971,7 +971,7 @@ public class MapleItemInformationProvider {
 	}
 
 	public Collection<IItem> canWearEquipment(GameCharacter chr, Collection<IItem> items) {
-		MapleInventory inv = chr.getInventory(InventoryType.EQUIPPED);
+		Inventory inv = chr.getInventory(InventoryType.EQUIPPED);
 		if (inv.checked())
 			return items;
 		Collection<IItem> itemz = new LinkedList<IItem>();

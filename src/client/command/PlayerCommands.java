@@ -28,7 +28,7 @@ import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import net.server.Channel;
 import scripting.npc.NPCScriptManager;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleStocks;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
@@ -100,7 +100,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					if (chr.getMeso() > 999999999) { // Has 999,999,999 mesos.
 						chr.gainMeso(-1000000000, false); // Lose 1,000,000,000
 															// mesos.
-						MapleInventoryManipulator.addById(c, 4001101, (short) 1, chr.getName(), -1, -1);
+						InventoryManipulator.addById(c, 4001101, (short) 1, chr.getName(), -1, -1);
 						chr.message("You've lost 1,000,000,000 mesos.");
 						chr.message("You now have " + chr.getItemQuantity(4001101, true) + " rice cakes.");
 						chr.saveToDB(true);
@@ -303,7 +303,7 @@ public class PlayerCommands extends EnumeratedCommands {
 				case sell:
 					if (chr.haveItem(4001101)) {
 						if (chr.getMeso() <= (Integer.MAX_VALUE - 1000000000)) { // Has less than 1,147,483,647 mesos.
-							MapleInventoryManipulator.removeById(c, InventoryType.ETC, 4001101, 1, true, true);
+							InventoryManipulator.removeById(c, InventoryType.ETC, 4001101, 1, true, true);
 							chr.gainMeso(1000000000, false); // Gains 1,000,000,000 mesos.
 							chr.message("You've gained 1,000,000,000 mesos.");
 							chr.message("You now have " + chr.getItemQuantity(4001101, true) + " rice cakes.");

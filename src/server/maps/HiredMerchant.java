@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import tools.DatabaseConnection;
 import net.GamePacket;
 import net.server.Server;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MaplePlayerShopItem;
 import server.TimerManager;
@@ -153,7 +153,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 			}
 			int price = pItem.getPrice() * quantity;
 			if (c.getPlayer().getMeso() >= price) {
-				if (MapleInventoryManipulator.addFromDrop(c, newItem, true)) {
+				if (InventoryManipulator.addFromDrop(c, newItem, true)) {
 					c.getPlayer().gainMeso(-price, false);
 					sold.add(new SoldItem(c.getPlayer().getName(), pItem.getItem().getItemId(), quantity, price));
 					pItem.setBundles((short) (pItem.getBundles() - quantity));
@@ -214,9 +214,9 @@ public class HiredMerchant extends AbstractMapleMapObject {
 			if (check(c.getPlayer(), getItems()) && !timeout) {
 				for (MaplePlayerShopItem mpsi : getItems()) {
 					if (mpsi.isExist() && (mpsi.getItem().getType() == IItem.EQUIP)) {
-						MapleInventoryManipulator.addFromDrop(c, mpsi.getItem(), false);
+						InventoryManipulator.addFromDrop(c, mpsi.getItem(), false);
 					} else if (mpsi.isExist()) {
-						MapleInventoryManipulator.addById(c, mpsi.getItem().getItemId(), (short) (mpsi.getBundles() * mpsi.getItem().getQuantity()), null, -1, mpsi.getItem().getExpiration());
+						InventoryManipulator.addById(c, mpsi.getItem().getItemId(), (short) (mpsi.getBundles() * mpsi.getItem().getQuantity()), null, -1, mpsi.getItem().getExpiration());
 					}
 				}
 				items.clear();

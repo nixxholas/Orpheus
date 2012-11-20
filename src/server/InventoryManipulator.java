@@ -39,7 +39,7 @@ import tools.Output;
  * 
  * @author Matze
  */
-public class MapleInventoryManipulator {
+public class InventoryManipulator {
 	public static boolean addRing(GameCharacter chr, int itemId, int ringId) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		InventoryType type = ii.getInventoryType(itemId);

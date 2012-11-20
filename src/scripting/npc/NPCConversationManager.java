@@ -30,7 +30,7 @@ import constants.ExpTable;
 import constants.ServerConstants;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.MapleJob;
 import client.Pet;
@@ -52,7 +52,7 @@ import net.server.guild.MapleGuild;
 import provider.MapleData;
 import provider.MapleDataProviderFactory;
 import scripting.AbstractPlayerInteraction;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleShopFactory;
 import server.MapleStatEffect;
@@ -281,7 +281,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
 	public void addRandomItem(int id) {
 		MapleItemInformationProvider i = MapleItemInformationProvider.getInstance();
-		MapleInventoryManipulator.addFromDrop(getClient(), i.randomizeStats((Equip) i.getEquipById(id)), true);
+		InventoryManipulator.addFromDrop(getClient(), i.randomizeStats((Equip) i.getEquipById(id)), true);
 	}
 
 	public MapleJob getJobName(int id) {
@@ -537,7 +537,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	
 	public String listEquips() {
 		StringBuilder sb = new StringBuilder();
-		MapleInventory mi = getPlayer().getInventory(InventoryType.EQUIP);
+		Inventory mi = getPlayer().getInventory(InventoryType.EQUIP);
 		for (IItem i : mi.list()) {
 			sb.append("#L" + i.getPosition() + "##v" + i.getItemId() + "##l");
 		}
@@ -557,13 +557,13 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 	
 	public void setItemOwner(byte slot) {
-		MapleInventory equip = getPlayer().getInventory(InventoryType.EQUIP);
+		Inventory equip = getPlayer().getInventory(InventoryType.EQUIP);
         Equip eu = (Equip) equip.getItem(slot);
         eu.setOwner(getName());
 	}
 	
 	public void makeItemEpic(byte slot) {
-		MapleInventory equip = getPlayer().getInventory(InventoryType.EQUIP);
+		Inventory equip = getPlayer().getInventory(InventoryType.EQUIP);
         Equip eu = (Equip) equip.getItem(slot);
 		eu.setStr(Short.MAX_VALUE);
 		eu.setDex(Short.MAX_VALUE);
@@ -584,7 +584,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 	
 	public void modifyItem(byte slot, String stat, short value) {
-		MapleInventory equip = getPlayer().getInventory(InventoryType.EQUIP);
+		Inventory equip = getPlayer().getInventory(InventoryType.EQUIP);
         Equip eu = (Equip) equip.getItem(slot);
 		if (stat.equalsIgnoreCase("str") || stat.equalsIgnoreCase("strength")) {
 	        eu.setStr(value);

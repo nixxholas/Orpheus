@@ -44,7 +44,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.MapleDiseaseEntry;
 import client.MapleFamilyEntry;
-import client.MapleInventory;
+import client.Inventory;
 import client.InventoryType;
 import client.MapleKeyBinding;
 import client.MapleMount;
@@ -219,7 +219,7 @@ public class PacketCreator {
 	}
 
 	private static void addCharEquips(PacketWriter w, GameCharacter chr) {
-		MapleInventory equip = chr.getInventory(InventoryType.EQUIPPED);
+		Inventory equip = chr.getInventory(InventoryType.EQUIPPED);
 		Collection<IItem> ii = MapleItemInformationProvider.getInstance().canWearEquipment(chr, equip.list());
 		Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
 		Map<Byte, Integer> maskedEquip = new LinkedHashMap<Byte, Integer>();
@@ -412,7 +412,7 @@ public class PacketCreator {
 			w.write(chr.getInventory(InventoryType.fromByte(i)).getSlotLimit());
 		}
 		w.write(new byte[] {0, (byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
-		MapleInventory iv = chr.getInventory(InventoryType.EQUIPPED);
+		Inventory iv = chr.getInventory(InventoryType.EQUIPPED);
 		Collection<IItem> equippedC = iv.list();
 		List<Item> equipped = new ArrayList<Item>(equippedC.size());
 		List<Item> equippedCash = new ArrayList<Item>(equippedC.size());

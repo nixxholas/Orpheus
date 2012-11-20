@@ -27,7 +27,7 @@ import client.InventoryType;
 import constants.ItemConstants;
 import java.util.Arrays;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleMiniGame;
 import server.MaplePlayerShop;
@@ -216,9 +216,9 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 							if (mpsi.getBundles() > 2) {
 								IItem iItem = mpsi.getItem().copy();
 								iItem.setQuantity((short) (mpsi.getBundles() * iItem.getQuantity()));
-								MapleInventoryManipulator.addFromDrop(c, iItem, false);
+								InventoryManipulator.addFromDrop(c, iItem, false);
 							} else if (mpsi.isExist()) {
-								MapleInventoryManipulator.addFromDrop(c, mpsi.getItem(), true);
+								InventoryManipulator.addFromDrop(c, mpsi.getItem(), true);
 							}
 						}
 						chr.getMap().broadcastMessage(PacketCreator.removeCharBox(c.getPlayer()));
@@ -367,10 +367,10 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 					IItem tradeItem = item.copy();
 					if (ItemConstants.isRechargable(item.getItemId())) {
 						tradeItem.setQuantity(item.getQuantity());
-						MapleInventoryManipulator.removeFromSlot(c, ivType, item.getPosition(), item.getQuantity(), true);
+						InventoryManipulator.removeFromSlot(c, ivType, item.getPosition(), item.getQuantity(), true);
 					} else {
 						tradeItem.setQuantity(quantity);
-						MapleInventoryManipulator.removeFromSlot(c, ivType, item.getPosition(), quantity, true);
+						InventoryManipulator.removeFromSlot(c, ivType, item.getPosition(), quantity, true);
 					}
 					tradeItem.setPosition(targetSlot);
 					chr.getTrade().addItem(tradeItem);
@@ -410,9 +410,9 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 				c.announce(PacketCreator.updateHiredMerchant(merchant, c.getPlayer()));
 			}
 			if (ItemConstants.isRechargable(ivItem.getItemId())) {
-				MapleInventoryManipulator.removeFromSlot(c, type, slot, ivItem.getQuantity(), true);
+				InventoryManipulator.removeFromSlot(c, type, slot, ivItem.getQuantity(), true);
 			} else {
-				MapleInventoryManipulator.removeFromSlot(c, type, slot, (short) (bundles * perBundle), true);
+				InventoryManipulator.removeFromSlot(c, type, slot, (short) (bundles * perBundle), true);
 			}
 		} else if (mode == Action.REMOVE_ITEM.getCode()) {
 			MaplePlayerShop shop = chr.getPlayerShop();
@@ -422,7 +422,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 				IItem ivItem = item.getItem().copy();
 				shop.removeItem(slot);
 				ivItem.setQuantity(item.getBundles());
-				MapleInventoryManipulator.addFromDrop(c, ivItem, false);
+				InventoryManipulator.addFromDrop(c, ivItem, false);
 				c.announce(PacketCreator.getPlayerShopItemUpdate(shop));
 			}
 		} else if (mode == Action.MERCHANT_MESO.getCode()) {// Hmmmm
@@ -490,7 +490,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 				if (item.getBundles() > 0) {
 					IItem iitem = item.getItem();
 					iitem.setQuantity((short) (item.getItem().getQuantity() * item.getBundles()));
-					MapleInventoryManipulator.addFromDrop(c, iitem, true);
+					InventoryManipulator.addFromDrop(c, iitem, true);
 				}
 				merchant.removeFromSlot(slot);
 				c.announce(PacketCreator.updateHiredMerchant(merchant, c.getPlayer()));

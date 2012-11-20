@@ -41,7 +41,7 @@ import java.sql.SQLException;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
 import scripting.npc.NPCScriptManager;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleShop;
 import server.MapleShopFactory;
@@ -263,7 +263,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 					return;
 				}
 				if (getIncubatedItem(c, itemId)) {
-					MapleInventoryManipulator.removeFromSlot(c, InventoryType.fromByte(inventory2), slot2, (short) 1, false);
+					InventoryManipulator.removeFromSlot(c, InventoryType.fromByte(inventory2), slot2, (short) 1, false);
 					remove(c, itemId);
 				}
 				return;
@@ -401,7 +401,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 				if (c.getChannelServer().getMapFactory().getMap(mapId).getForcedReturnId() == 999999999) {
 					player.changeMap(c.getChannelServer().getMapFactory().getMap(mapId));
 				} else {
-					MapleInventoryManipulator.addById(c, itemId, (short) 1);
+					InventoryManipulator.addById(c, itemId, (short) 1);
 					c.getPlayer().dropMessage(1, error1);
 					c.announce(PacketCreator.enableActions());
 				}
@@ -432,7 +432,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 					player.dropMessage(1, "Player could not be found in this channel.");
 				}
 				if (!success) {
-					MapleInventoryManipulator.addById(c, itemId, (short) 1);
+					InventoryManipulator.addById(c, itemId, (short) 1);
 					c.announce(PacketCreator.enableActions());
 				}
 			}
@@ -539,7 +539,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 	}
 
 	private static void remove(GameClient c, int itemId) {
-		MapleInventoryManipulator.removeById(c, InventoryType.CASH, itemId, 1, true, false);
+		InventoryManipulator.removeById(c, InventoryType.CASH, itemId, 1, true, false);
 	}
 
 	private static boolean getIncubatedItem(GameClient c, int id) {
@@ -554,7 +554,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 		if (c.getPlayer().getInventory(InventoryType.fromByte((byte) (id / 1000000))).isFull()) {
 			return false;
 		}
-		MapleInventoryManipulator.addById(c, id, (short) amount);
+		InventoryManipulator.addById(c, id, (short) amount);
 		return true;
 	}
 }

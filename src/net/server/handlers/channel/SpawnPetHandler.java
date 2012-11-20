@@ -35,7 +35,7 @@ import net.AbstractMaplePacketHandler;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -73,8 +73,8 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 				} catch (SQLException ex) {
 				}
 				long expiration = chr.getInventory(InventoryType.CASH).getItem(slot).getExpiration();
-				MapleInventoryManipulator.removeById(c, InventoryType.CASH, petid, (short) 1, false, false);
-				MapleInventoryManipulator.addById(c, evolveid, (short) 1, null, petId, expiration);
+				InventoryManipulator.removeById(c, InventoryType.CASH, petid, (short) 1, false, false);
+				InventoryManipulator.addById(c, evolveid, (short) 1, null, petId, expiration);
 				c.getSession().write(PacketCreator.enableActions());
 				return;
 			}

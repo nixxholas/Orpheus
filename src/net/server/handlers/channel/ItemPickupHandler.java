@@ -27,7 +27,7 @@ import client.autoban.AutobanFactory;
 import java.awt.Point;
 import net.AbstractMaplePacketHandler;
 import scripting.item.ItemScriptManager;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleItemInformationProvider.scriptedItem;
 import server.maps.MapleMapItem;
@@ -54,7 +54,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 																			// trees
 				MapleMapItem mapitem = (MapleMapItem) ob;
 				if (mapitem.getDropper().getObjectId() == c.getPlayer().getObjectId()) {
-					if (MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), false)) {
+					if (InventoryManipulator.addFromDrop(c, mapitem.getItem(), false)) {
 						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
 						chr.getMap().removeMapObject(ob);
 					} else {
@@ -129,7 +129,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 								ism.getItemScript(c, scriptName);
 
 						} else {
-							if (!MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
+							if (!InventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
 								c.announce(PacketCreator.enableActions());
 								return;
 							}
@@ -138,7 +138,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 						if (mapitem.getItem().getItemId() / 10000 == 238) {
 							chr.getMonsterBook().addCard(c, mapitem.getItem().getItemId());
 						}
-					} else if (MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
+					} else if (InventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
 					} else if (mapitem.getItem().getItemId() == 4031868) {
 						chr.getMap().broadcastMessage(PacketCreator.updateAriantPQRanking(chr.getName(), chr.getItemQuantity(4031868, false), false));
 					} else {

@@ -91,16 +91,16 @@ public class MapleShop {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		if (item != null && item.getPrice() > 0) {
 			if (c.getPlayer().getMeso() >= (long) item.getPrice() * quantity) {
-				if (MapleInventoryManipulator.checkSpace(c, itemId, quantity, "")) {
+				if (InventoryManipulator.checkSpace(c, itemId, quantity, "")) {
 					if (!ItemConstants.isRechargable(itemId)) { // Pets can't be
 																// bought from
 																// shops
-						MapleInventoryManipulator.addById(c, itemId, quantity);
+						InventoryManipulator.addById(c, itemId, quantity);
 						c.getPlayer().gainMeso(-(item.getPrice() * quantity), false);
 					} else {
 						short slotMax = ii.getSlotMax(c, item.getItemId());
 						quantity = slotMax;
-						MapleInventoryManipulator.addById(c, itemId, quantity);
+						InventoryManipulator.addById(c, itemId, quantity);
 						c.getPlayer().gainMeso(-item.getPrice(), false);
 					}
 					c.getSession().write(PacketCreator.shopTransaction((byte) 0));
@@ -112,15 +112,15 @@ public class MapleShop {
 
 		} else if (item != null && item.getPitch() > 0) {
 			if (c.getPlayer().getInventory(InventoryType.ETC).countById(4310000) >= (long) item.getPitch() * quantity) {
-				if (MapleInventoryManipulator.checkSpace(c, itemId, quantity, "")) {
+				if (InventoryManipulator.checkSpace(c, itemId, quantity, "")) {
 					if (!ItemConstants.isRechargable(itemId)) {
-						MapleInventoryManipulator.addById(c, itemId, quantity);
-						MapleInventoryManipulator.removeById(c, InventoryType.ETC, 4310000, item.getPitch() * quantity, false, false);
+						InventoryManipulator.addById(c, itemId, quantity);
+						InventoryManipulator.removeById(c, InventoryType.ETC, 4310000, item.getPitch() * quantity, false, false);
 					} else {
 						short slotMax = ii.getSlotMax(c, item.getItemId());
 						quantity = slotMax;
-						MapleInventoryManipulator.addById(c, itemId, quantity);
-						MapleInventoryManipulator.removeById(c, InventoryType.ETC, 4310000, item.getPitch() * quantity, false, false);
+						InventoryManipulator.addById(c, itemId, quantity);
+						InventoryManipulator.removeById(c, InventoryType.ETC, 4310000, item.getPitch() * quantity, false, false);
 					}
 					c.getSession().write(PacketCreator.shopTransaction((byte) 0));
 				} else
@@ -134,12 +134,12 @@ public class MapleShop {
 			if (c.getPlayer().getMeso() + value >= cost) {
 				int cardreduce = value - cost;
 				int diff = cardreduce + c.getPlayer().getMeso();
-				if (MapleInventoryManipulator.checkSpace(c, itemId, quantity, "")) {
+				if (InventoryManipulator.checkSpace(c, itemId, quantity, "")) {
 					if (itemId >= 5000000 && itemId <= 5000100) {
 						int petid = Pet.createPet(itemId);
-						MapleInventoryManipulator.addById(c, itemId, quantity, null, petid, -1);
+						InventoryManipulator.addById(c, itemId, quantity, null, petid, -1);
 					} else {
-						MapleInventoryManipulator.addById(c, itemId, quantity);
+						InventoryManipulator.addById(c, itemId, quantity);
 					}
 					c.getPlayer().gainMeso(diff, false);
 				} else {
@@ -168,7 +168,7 @@ public class MapleShop {
 			iQuant = 1;
 		}
 		if (quantity <= iQuant && iQuant > 0) {
-			MapleInventoryManipulator.removeFromSlot(c, type, (byte) slot, quantity, false);
+			InventoryManipulator.removeFromSlot(c, type, (byte) slot, quantity, false);
 			double price;
 			if (ItemConstants.isRechargable(item.getItemId())) {
 				price = ii.getWholePrice(item.getItemId()) / (double) ii.getSlotMax(c, item.getItemId());

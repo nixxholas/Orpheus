@@ -24,7 +24,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Pet;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
 import tools.PacketCreator;
@@ -114,7 +114,7 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 								return;
 							}
 						}
-					} else if (MapleInventoryManipulator.addById(c, mapitem.getItem().getItemId(), mapitem.getItem().getQuantity(), null, -1, mapitem.getItem().getExpiration())) {
+					} else if (InventoryManipulator.addById(c, mapitem.getItem().getItemId(), mapitem.getItem().getQuantity(), null, -1, mapitem.getItem().getExpiration())) {
 						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 5, chr.getId(), true, chr.getPetIndex(pet)), mapitem.getPosition());
 						chr.getMap().removeMapObject(ob);
 					} else {
@@ -130,11 +130,11 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 							ism.getItemScript(c, scriptName);
 
 					} else {
-						MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true);
+						InventoryManipulator.addFromDrop(c, mapitem.getItem(), true);
 					}
 					chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 5, chr.getId(), true, chr.getPetIndex(pet)), mapitem.getPosition());
 					chr.getMap().removeMapObject(ob);
-				} else if (MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
+				} else if (InventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
 					chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 5, chr.getId(), true, chr.getPetIndex(pet)), mapitem.getPosition());
 					chr.getMap().removeMapObject(ob);
 				} else {

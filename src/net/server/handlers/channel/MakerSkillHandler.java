@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import server.MapleInventoryManipulator;
+import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MakerItemFactory;
 import server.MakerItemFactory.MakerItemCreateEntry;
@@ -44,9 +44,9 @@ public final class MakerSkillHandler extends AbstractMaplePacketHandler {
 		if (canCreate(c, recipe) && !c.getPlayer().getInventory(ii.getInventoryType(toCreate)).isFull()) {
 			for (Pair<Integer, Integer> p : recipe.getReqItems()) {
 				int toRemove = p.getLeft();
-				MapleInventoryManipulator.removeById(c, ii.getInventoryType(toRemove), toRemove, p.getRight(), false, false);
+				InventoryManipulator.removeById(c, ii.getInventoryType(toRemove), toRemove, p.getRight(), false, false);
 			}
-			MapleInventoryManipulator.addById(c, toCreate, (short) recipe.getRewardAmount());
+			InventoryManipulator.addById(c, toCreate, (short) recipe.getRewardAmount());
 		}
 	}
 
