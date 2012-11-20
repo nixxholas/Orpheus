@@ -62,7 +62,7 @@ import server.maps.GameMap;
 import server.maps.GameMapFactory;
 import server.partyquest.Pyramid;
 import server.partyquest.Pyramid.PyramidMode;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.PacketCreator;
 
 /**
@@ -177,14 +177,14 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
 	public void startQuest(short id) {
 		try {
-			MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
+			Quest.getInstance(id).forceStart(getPlayer(), npc);
 		} catch (NullPointerException ex) {
 		}
 	}
 
 	public void completeQuest(short id) {
 		try {
-			MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
+			Quest.getInstance(id).forceComplete(getPlayer(), npc);
 		} catch (NullPointerException ex) {
 		}
 	}

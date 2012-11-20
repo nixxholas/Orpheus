@@ -22,7 +22,7 @@ package scripting.quest;
 
 import client.GameClient;
 import scripting.npc.NPCConversationManager;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 
 /**
  * 
@@ -56,7 +56,7 @@ public class QuestActionManager extends NPCConversationManager {
 	}
 
 	public boolean forceStartQuest(int id) {
-		return MapleQuest.getInstance(id).forceStart(getPlayer(), getNpc());
+		return Quest.getInstance(id).forceStart(getPlayer(), getNpc());
 	}
 
 	public boolean forceCompleteQuest() {
@@ -64,6 +64,6 @@ public class QuestActionManager extends NPCConversationManager {
 	}
 
 	public boolean forceCompleteQuest(int id) {
-		return MapleQuest.getInstance(id).forceComplete(getPlayer(), getNpc());
+		return Quest.getInstance(id).forceComplete(getPlayer(), getNpc());
 	}
 }

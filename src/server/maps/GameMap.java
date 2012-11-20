@@ -583,8 +583,8 @@ public class GameMap {
 			return;
 		}
 		/*
-		 * if (chr.getQuest(MapleQuest.getInstance(29400)).getStatus().equals(
-		 * MapleQuestStatus.Status.STARTED)) { if (chr.getLevel() >= 120 &&
+		 * if (chr.getQuest(Quest.getInstance(29400)).getStatus().equals(
+		 * QuestStatus.Status.STARTED)) { if (chr.getLevel() >= 120 &&
 		 * monster.getStats().getLevel() >= 120) { //FIX MEDAL SHET } else if
 		 * (monster.getStats().getLevel() >= chr.getLevel()) { } }
 		 */

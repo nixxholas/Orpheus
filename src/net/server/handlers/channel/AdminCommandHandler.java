@@ -36,7 +36,7 @@ import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -144,7 +144,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				}
 				break;
 			case 0x16: // Questreset
-				MapleQuest.getInstance(slea.readShort()).reset(player);
+				Quest.getInstance(slea.readShort()).reset(player);
 				break;
 			case 0x17: // Summon
 				int mobId = slea.readInt();

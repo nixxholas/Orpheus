@@ -24,7 +24,7 @@ import client.GameCharacter;
 import client.GameClient;
 import net.AbstractPacketHandler;
 import scripting.quest.QuestScriptManager;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -38,7 +38,7 @@ public final class QuestActionHandler extends AbstractPacketHandler {
 		byte action = slea.readByte();
 		short questid = slea.readShort();
 		GameCharacter player = c.getPlayer();
-		MapleQuest quest = MapleQuest.getInstance(questid);
+		Quest quest = Quest.getInstance(questid);
 		if (action == 1) { // Start Quest
 			int npc = slea.readInt();
 			if (slea.available() >= 4) {

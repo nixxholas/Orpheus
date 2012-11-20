@@ -21,10 +21,10 @@
 package scripting.map;
 
 import scripting.AbstractPlayerInteraction;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.PacketCreator;
 import client.GameClient;
-import client.MapleQuestStatus;
+import client.QuestStatus;
 import client.SkillFactory;
 
 public class MapScriptMethods extends AbstractPlayerInteraction {
@@ -106,13 +106,13 @@ public class MapScriptMethods extends AbstractPlayerInteraction {
 	}
 
 	public void explorerQuest(short questid, String questName) {
-		MapleQuest quest = MapleQuest.getInstance(questid);
+		Quest quest = Quest.getInstance(questid);
 		if (!isQuestStarted(questid)) {
 			if (!quest.forceStart(getPlayer(), 9000066)) {
 				return;
 			}
 		}
-		MapleQuestStatus q = getPlayer().getQuest(quest);
+		QuestStatus q = getPlayer().getQuest(quest);
 		if (!q.addMedalMap(getPlayer().getMapId())) {
 			return;
 		}
@@ -135,13 +135,13 @@ public class MapScriptMethods extends AbstractPlayerInteraction {
 	}
 
 	public void touchTheSky() { // 29004
-		MapleQuest quest = MapleQuest.getInstance(29004);
+		Quest quest = Quest.getInstance(29004);
 		if (!isQuestStarted(29004)) {
 			if (!quest.forceStart(getPlayer(), 9000066)) {
 				return;
 			}
 		}
-		MapleQuestStatus q = getPlayer().getQuest(quest);
+		QuestStatus q = getPlayer().getQuest(quest);
 		if (!q.addMedalMap(getPlayer().getMapId())) {
 			return;
 		}

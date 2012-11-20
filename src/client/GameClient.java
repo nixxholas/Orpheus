@@ -63,7 +63,7 @@ import tools.Output;
 import org.apache.mina.core.session.IoSession;
 import constants.ServerConstants;
 import server.MapleMiniGame;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.MapleLogger;
 
 public class GameClient {
@@ -718,10 +718,10 @@ public class GameClient {
 					player.setHp(50, true);
 				}
 
-				for (MapleQuestStatus status : player.getStartedQuests()) {
-					MapleQuest quest = status.getQuest();
+				for (QuestStatus status : player.getStartedQuests()) {
+					Quest quest = status.getQuest();
 					if (quest.getTimeLimit() > 0) {
-						MapleQuestStatus newStatus = new MapleQuestStatus(quest, MapleQuestStatus.Status.NOT_STARTED);
+						QuestStatus newStatus = new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
 						newStatus.setForfeited(player.getQuest(quest).getForfeited() + 1);
 						player.updateQuest(newStatus);
 					}

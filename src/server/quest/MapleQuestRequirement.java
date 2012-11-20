@@ -26,7 +26,7 @@ import client.GameCharacter;
 import client.InventoryType;
 import client.MapleJob;
 import client.Pet;
-import client.MapleQuestStatus;
+import client.QuestStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,9 +41,9 @@ import server.MapleItemInformationProvider;
 public class MapleQuestRequirement {
 	private MapleQuestRequirementType type;
 	private MapleData data;
-	private MapleQuest quest;
+	private Quest quest;
 
-	public MapleQuestRequirement(MapleQuest quest, MapleQuestRequirementType type, MapleData data) {
+	public MapleQuestRequirement(Quest quest, MapleQuestRequirementType type, MapleData data) {
 		this.type = type;
 		this.data = data;
 		this.quest = quest;
@@ -63,7 +63,7 @@ public class MapleQuestRequirement {
 				}
 				return false;
 			case INTERVAL:
-				return !c.getQuest(quest).getStatus().equals(MapleQuestStatus.Status.COMPLETED) || c.getQuest(quest).getCompletionTime() <= System.currentTimeMillis() - MapleDataTool.getInt(getData()) * 60 * 1000;
+				return !c.getQuest(quest).getStatus().equals(QuestStatus.Status.COMPLETED) || c.getQuest(quest).getCompletionTime() <= System.currentTimeMillis() - MapleDataTool.getInt(getData()) * 60 * 1000;
 			case ITEM:
 				MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 				for (MapleData itemEntry : getData().getChildren()) {
@@ -97,11 +97,11 @@ public class MapleQuestRequirement {
 				return false;
 			case QUEST:
 				for (MapleData questEntry : getData().getChildren()) {
-					MapleQuestStatus q = c.getQuest(MapleQuest.getInstance(MapleDataTool.getInt(questEntry.getChildByPath("id"))));
-					if (q == null && MapleQuestStatus.Status.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))).equals(MapleQuestStatus.Status.NOT_STARTED)) {
+					QuestStatus q = c.getQuest(Quest.getInstance(MapleDataTool.getInt(questEntry.getChildByPath("id"))));
+					if (q == null && QuestStatus.Status.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))).equals(QuestStatus.Status.NOT_STARTED)) {
 						continue;
 					}
-					if (q == null || !q.getStatus().equals(MapleQuestStatus.Status.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))))) {
+					if (q == null || !q.getStatus().equals(QuestStatus.Status.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))))) {
 						return false;
 					}
 				}

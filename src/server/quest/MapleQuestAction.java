@@ -26,7 +26,7 @@ import client.ISkill;
 import client.GameCharacter;
 import client.InventoryType;
 import client.MapleJob;
-import client.MapleQuestStatus;
+import client.QuestStatus;
 import client.MapleStat;
 import client.SkillFactory;
 import constants.ItemConstants;
@@ -46,9 +46,9 @@ public class MapleQuestAction {
 
 	private MapleQuestActionType type;
 	private MapleData data;
-	private MapleQuest quest;
+	private Quest quest;
 
-	public MapleQuestAction(MapleQuestActionType type, MapleData data, MapleQuest quest) {
+	public MapleQuestAction(MapleQuestActionType type, MapleData data, Quest quest) {
 		this.type = type;
 		this.data = data;
 		this.quest = quest;
@@ -89,11 +89,11 @@ public class MapleQuestAction {
 	}
 
 	public void run(GameCharacter c, Integer extSelection) {
-		MapleQuestStatus status;
+		QuestStatus status;
 		switch (type) {
 			case EXP:
 				status = c.getQuest(quest);
-				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
+				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
 				if (c.isBeginnerJob()) {
@@ -152,14 +152,14 @@ public class MapleQuestAction {
 			case NEXTQUEST:
 				status = c.getQuest(quest);
 				int nextQuest = MapleDataTool.getInt(data);
-				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
+				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
 				c.getClient().getSession().write(PacketCreator.updateQuestFinish((short) quest.getId(), status.getNpc(), (short) nextQuest));
 				break;
 			case MESO:
 				status = c.getQuest(quest);
-				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
+				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
 				c.gainMeso(MapleDataTool.getInt(data) * ServerConstants.QUEST_MESO_RATE, true, false, true);
@@ -168,7 +168,7 @@ public class MapleQuestAction {
 				for (MapleData qEntry : data) {
 					int questid = MapleDataTool.getInt(qEntry.getChildByPath("id"));
 					int stat = MapleDataTool.getInt(qEntry.getChildByPath("state"));
-					c.updateQuest(new MapleQuestStatus(MapleQuest.getInstance(questid), MapleQuestStatus.Status.getById(stat)));
+					c.updateQuest(new QuestStatus(Quest.getInstance(questid), QuestStatus.Status.getById(stat)));
 				}
 				break;
 			case SKILL:
@@ -198,7 +198,7 @@ public class MapleQuestAction {
 				break;
 			case FAME:
 				status = c.getQuest(quest);
-				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
+				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
 				c.addFame(MapleDataTool.getInt(data));
@@ -208,14 +208,14 @@ public class MapleQuestAction {
 				break;
 			case BUFF:
 				status = c.getQuest(quest);
-				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
+				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
 				MapleItemInformationProvider.getInstance().getItemEffect(MapleDataTool.getInt(data)).applyTo(c);
 				break;
 			case PETSKILL:
 				status = c.getQuest(quest);
-				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
+				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
 				int flag = MapleDataTool.getInt("petskill", data);

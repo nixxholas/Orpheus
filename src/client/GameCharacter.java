@@ -94,7 +94,7 @@ import server.maps.SavedLocationType;
 import server.partyquest.MonsterCarnival;
 import server.partyquest.MonsterCarnivalParty;
 import server.partyquest.PartyQuest;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 import tools.Output;
@@ -199,7 +199,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private SavedLocation savedLocations[];
 	private SkillMacro[] skillMacros = new SkillMacro[5];
 	private List<Integer> lastmonthfameids;
-	private Map<MapleQuest, MapleQuestStatus> quests;
+	private Map<Quest, QuestStatus> quests;
 	private Set<MapleMonster> controlled = new LinkedHashSet<MapleMonster>();
 	private Map<Integer, String> entered = new LinkedHashMap<Integer, String>();
 	private Set<GameMapObject> visibleMapObjects = new LinkedHashSet<GameMapObject>();
@@ -259,7 +259,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		for (int i = 0; i < SavedLocationType.values().length; i++) {
 			savedLocations[i] = null;
 		}
-		quests = new LinkedHashMap<MapleQuest, MapleQuestStatus>();
+		quests = new LinkedHashMap<Quest, QuestStatus>();
 		setPosition(new Point(0, 0));
 	}
 
@@ -1567,10 +1567,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return client;
 	}
 
-	public final List<MapleQuestStatus> getCompletedQuests() {
-		List<MapleQuestStatus> ret = new LinkedList<MapleQuestStatus>();
-		for (MapleQuestStatus q : quests.values()) {
-			if (q.getStatus().equals(MapleQuestStatus.Status.COMPLETED)) {
+	public final List<QuestStatus> getCompletedQuests() {
+		List<QuestStatus> ret = new LinkedList<QuestStatus>();
+		for (QuestStatus q : quests.values()) {
+			if (q.getStatus().equals(QuestStatus.Status.COMPLETED)) {
 				ret.add(q);
 			}
 		}
@@ -2057,7 +2057,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public final byte getQuestStatus(final int quest) {
-		for (final MapleQuestStatus q : quests.values()) {
+		for (final QuestStatus q : quests.values()) {
 			if (q.getQuest().getId() == quest) {
 				return (byte) q.getStatus().getId();
 			}
@@ -2065,9 +2065,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return 0;
 	}
 
-	public MapleQuestStatus getQuest(MapleQuest quest) {
+	public QuestStatus getQuest(Quest quest) {
 		if (!quests.containsKey(quest)) {
-			return new MapleQuestStatus(quest, MapleQuestStatus.Status.NOT_STARTED);
+			return new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
 		}
 		return quests.get(quest);
 	}
@@ -2076,7 +2076,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (questid <= 0) {
 			return true; // For non quest items :3
 		}
-		MapleQuest quest = MapleQuest.getInstance(questid);
+		Quest quest = Quest.getInstance(questid);
 		return getInventory(ItemConstants.getInventoryType(itemid)).countById(itemid) < quest.getItemAmountNeeded(itemid);
 	}
 
@@ -2162,10 +2162,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return MapleRank.getById(gmLevel).toString();
 	}
 
-	public final List<MapleQuestStatus> getStartedQuests() {
-		List<MapleQuestStatus> ret = new LinkedList<MapleQuestStatus>();
-		for (MapleQuestStatus q : quests.values()) {
-			if (q.getStatus().equals(MapleQuestStatus.Status.STARTED)) {
+	public final List<QuestStatus> getStartedQuests() {
+		List<QuestStatus> ret = new LinkedList<QuestStatus>();
+		for (QuestStatus q : quests.values()) {
+			if (q.getStatus().equals(QuestStatus.Status.STARTED)) {
 				ret.add(q);
 			}
 		}
@@ -2174,8 +2174,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public final int getStartedQuestsSize() {
 		int i = 0;
-		for (MapleQuestStatus q : quests.values()) {
-			if (q.getStatus().equals(MapleQuestStatus.Status.STARTED)) {
+		for (QuestStatus q : quests.values()) {
+			if (q.getStatus().equals(QuestStatus.Status.STARTED)) {
 				if (q.getQuest().getInfoNumber() > 0) {
 					i++;
 				}
@@ -2806,8 +2806,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				PreparedStatement pse = con.prepareStatement("SELECT * FROM `questprogress` WHERE `queststatusid` = ?");
 				PreparedStatement psf = con.prepareStatement("SELECT `mapid` FROM `medalmaps` WHERE `queststatusid` = ?");
 				while (rs.next()) {
-					MapleQuest q = MapleQuest.getInstance(rs.getShort("quest"));
-					MapleQuestStatus status = new MapleQuestStatus(q, MapleQuestStatus.Status.getById(rs.getInt("status")));
+					Quest q = Quest.getInstance(rs.getShort("quest"));
+					QuestStatus status = new QuestStatus(q, QuestStatus.Status.getById(rs.getInt("status")));
 					long cTime = rs.getLong("time");
 					if (cTime > -1) {
 						status.setCompletionTime(cTime * 1000);
@@ -2969,8 +2969,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void mobKilled(int id) {
-		for (MapleQuestStatus q : quests.values()) {
-			if (q.getStatus() == MapleQuestStatus.Status.COMPLETED || q.getQuest().canComplete(this, null)) {
+		for (QuestStatus q : quests.values()) {
+			if (q.getStatus() == QuestStatus.Status.COMPLETED || q.getQuest().canComplete(this, null)) {
 				continue;
 			}
 			String progress = q.getProgress(id);
@@ -3715,7 +3715,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			PreparedStatement pse = con.prepareStatement("INSERT INTO `questprogress` VALUES (DEFAULT, ?, ?, ?)");
 			PreparedStatement psf = con.prepareStatement("INSERT INTO `medalmaps` VALUES (DEFAULT, ?, ?)");
 			ps.setInt(1, id);
-			for (MapleQuestStatus q : quests.values()) {
+			for (QuestStatus q : quests.values()) {
 				ps.setInt(2, q.getQuest().getId());
 				ps.setInt(3, q.getStatus().getId());
 				ps.setInt(4, (int) (q.getCompletionTime() / 1000));
@@ -4488,28 +4488,28 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void updateQuest(MapleQuestStatus quest) {
+	public void updateQuest(QuestStatus quest) {
 		quests.put(quest.getQuest(), quest);
-		if (quest.getStatus().equals(MapleQuestStatus.Status.STARTED)) {
+		if (quest.getStatus().equals(QuestStatus.Status.STARTED)) {
 			announce(PacketCreator.questProgress((short) quest.getQuest().getId(), quest.getProgress(0)));
 			if (quest.getQuest().getInfoNumber() > 0) {
 				announce(PacketCreator.questProgress(quest.getQuest().getInfoNumber(), Integer.toString(quest.getMedalProgress())));
 			}
 			announce(PacketCreator.updateQuestInfo((short) quest.getQuest().getId(), quest.getNpc()));
-		} else if (quest.getStatus().equals(MapleQuestStatus.Status.COMPLETED)) {
+		} else if (quest.getStatus().equals(QuestStatus.Status.COMPLETED)) {
 			announce(PacketCreator.completeQuest((short) quest.getQuest().getId(), quest.getCompletionTime()));
-		} else if (quest.getStatus().equals(MapleQuestStatus.Status.NOT_STARTED)) {
+		} else if (quest.getStatus().equals(QuestStatus.Status.NOT_STARTED)) {
 			announce(PacketCreator.forfeitQuest((short) quest.getQuest().getId()));
 		}
 	}
 
-	public void questTimeLimit(final MapleQuest quest, int time) {
+	public void questTimeLimit(final Quest quest, int time) {
 		ScheduledFuture<?> sf = TimerManager.getInstance().schedule(new Runnable() {
 
 			@Override
 			public void run() {
 				announce(PacketCreator.questExpire(quest.getId()));
-				MapleQuestStatus newStatus = new MapleQuestStatus(quest, MapleQuestStatus.Status.NOT_STARTED);
+				QuestStatus newStatus = new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
 				newStatus.setForfeited(getQuest(quest).getForfeited() + 1);
 				updateQuest(newStatus);
 			}

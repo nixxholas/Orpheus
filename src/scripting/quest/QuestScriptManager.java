@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.script.Invocable;
 import client.GameClient;
-import client.MapleQuestStatus;
+import client.QuestStatus;
 import java.lang.reflect.UndeclaredThrowableException;
 import scripting.AbstractScriptManager;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.Output;
 
 /**
@@ -44,8 +44,8 @@ public class QuestScriptManager extends AbstractScriptManager {
 	}
 
 	public void start(GameClient c, short questid, int npc) {
-		MapleQuest quest = MapleQuest.getInstance(questid);
-		if (!c.getPlayer().getQuest(quest).getStatus().equals(MapleQuestStatus.Status.NOT_STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
+		Quest quest = Quest.getInstance(questid);
+		if (!c.getPlayer().getQuest(quest).getStatus().equals(QuestStatus.Status.NOT_STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
 			dispose(c);
 			return;
 		}
@@ -84,8 +84,8 @@ public class QuestScriptManager extends AbstractScriptManager {
 	}
 
 	public void end(GameClient c, short questid, int npc) {
-		MapleQuest quest = MapleQuest.getInstance(questid);
-		if (!c.getPlayer().getQuest(quest).getStatus().equals(MapleQuestStatus.Status.STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
+		Quest quest = Quest.getInstance(questid);
+		if (!c.getPlayer().getQuest(quest).getStatus().equals(QuestStatus.Status.STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
 			dispose(c);
 			return;
 		}

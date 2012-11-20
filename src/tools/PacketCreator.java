@@ -49,7 +49,7 @@ import client.InventoryType;
 import client.MapleKeyBinding;
 import client.MapleMount;
 import client.Pet;
-import client.MapleQuestStatus;
+import client.QuestStatus;
 import client.MapleRing;
 import client.MapleStat;
 import client.MapleStatDelta;
@@ -278,7 +278,7 @@ public class PacketCreator {
 
 	private static void addQuestInfo(PacketWriter w, GameCharacter chr) {
 		w.writeShort(chr.getStartedQuestsSize());
-		for (MapleQuestStatus q : chr.getStartedQuests()) {
+		for (QuestStatus q : chr.getStartedQuests()) {
 			w.writeShort(q.getQuest().getId());
 			w.writeMapleAsciiString(q.getQuestData());
 			if (q.getQuest().getInfoNumber() > 0) {
@@ -286,9 +286,9 @@ public class PacketCreator {
 				w.writeMapleAsciiString(Integer.toString(q.getMedalProgress()));
 			}
 		}
-		List<MapleQuestStatus> completed = chr.getCompletedQuests();
+		List<QuestStatus> completed = chr.getCompletedQuests();
 		w.writeShort(completed.size());
-		for (MapleQuestStatus q : completed) {
+		for (QuestStatus q : completed) {
 			w.writeShort(q.getQuest().getId());
 			int time = getQuestTimestamp(q.getCompletionTime());
 			w.writeInt(time);
@@ -2583,8 +2583,8 @@ public class PacketCreator {
 			w.writeInt(0);
 		}
 		ArrayList<Short> medalQuests = new ArrayList<Short>();
-		List<MapleQuestStatus> completed = chr.getCompletedQuests();
-		for (MapleQuestStatus q : completed) {
+		List<QuestStatus> completed = chr.getCompletedQuests();
+		for (QuestStatus q : completed) {
 			if (q.getQuest().getId() >= 29000) { // && q.getQuest().getId() <=
 													// 29923
 				medalQuests.add(q.getQuest().getId());

@@ -30,7 +30,7 @@ import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
 import client.Pet;
-import client.MapleQuestStatus;
+import client.QuestStatus;
 import client.SkillFactory;
 import constants.ItemConstants;
 import java.awt.Point;
@@ -49,7 +49,7 @@ import server.maps.GameMap;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
 import server.partyquest.Pyramid;
-import server.quest.MapleQuest;
+import server.quest.Quest;
 import tools.PacketCreator;
 
 public class AbstractPlayerInteraction {
@@ -124,13 +124,13 @@ public class AbstractPlayerInteraction {
 		c.announce(PacketCreator.updateQuest((short) questid, status));
 	}
 
-	public MapleQuestStatus.Status getQuestStatus(int id) {
-		return c.getPlayer().getQuest(MapleQuest.getInstance(id)).getStatus();
+	public QuestStatus.Status getQuestStatus(int id) {
+		return c.getPlayer().getQuest(Quest.getInstance(id)).getStatus();
 	}
 
 	public boolean isQuestCompleted(int quest) {
 		try {
-			return getQuestStatus(quest) == MapleQuestStatus.Status.COMPLETED;
+			return getQuestStatus(quest) == QuestStatus.Status.COMPLETED;
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -138,14 +138,14 @@ public class AbstractPlayerInteraction {
 
 	public boolean isQuestStarted(int quest) {
 		try {
-			return getQuestStatus(quest) == MapleQuestStatus.Status.STARTED;
+			return getQuestStatus(quest) == QuestStatus.Status.STARTED;
 		} catch (NullPointerException e) {
 			return false;
 		}
 	}
 
 	public int getQuestProgress(int qid) {
-		return Integer.parseInt(getPlayer().getQuest(MapleQuest.getInstance(29932)).getProgress().get(0));
+		return Integer.parseInt(getPlayer().getQuest(Quest.getInstance(29932)).getProgress().get(0));
 	}
 
 	public void gainItem(int id, short quantity) {
