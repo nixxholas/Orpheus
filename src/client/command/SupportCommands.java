@@ -35,7 +35,7 @@ import net.server.Server;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleJob;
-import client.MaplePet;
+import client.Pet;
 import client.MapleRank;
 
 /**
@@ -93,7 +93,7 @@ public class SupportCommands extends EnumeratedCommands {
 					} catch (Exception e) {}
 					int petid = -1;
 					if (ItemConstants.isPet(itemId)) {
-						petid = MaplePet.createPet(itemId);
+						petid = Pet.createPet(itemId);
 					}
 					MapleInventoryManipulator.addById(c, itemId, quantity, chr.getName(), petid, -1);
 					break;

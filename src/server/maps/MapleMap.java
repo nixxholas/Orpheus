@@ -43,7 +43,7 @@ import client.MapleBuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import constants.ItemConstants;
@@ -1247,7 +1247,7 @@ public class MapleMap {
 				}
 			}, 15 * 60 * 1000 + 3000);
 		}
-		MaplePet[] pets = chr.getPets();
+		Pet[] pets = chr.getPets();
 		for (int i = 0; i < chr.getPets().length; i++) {
 			if (pets[i] != null) {
 				pets[i].setPos(getGroundBelow(chr.getPosition()));

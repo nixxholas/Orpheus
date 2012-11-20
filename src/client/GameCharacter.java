@@ -190,7 +190,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	private MapleMiniGame miniGame;
 	private MapleMount maplemount;
 	private MapleParty party;
-	private MaplePet[] pets = new MaplePet[3];
+	private Pet[] pets = new Pet[3];
 	private MaplePlayerShop playerShop = null;
 	private MapleShop shop = null;
 	private MapleSkinColor skinColor = MapleSkinColor.NORMAL;
@@ -386,7 +386,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		updateSingleStat(MapleStat.MP, getMp());
 	}
 
-	public void addPet(MaplePet pet) {
+	public void addPet(Pet pet) {
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] == null) {
 				pets[i] = pet;
@@ -2022,11 +2022,11 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return playerShop;
 	}
 
-	public MaplePet[] getPets() {
+	public Pet[] getPets() {
 		return pets;
 	}
 
-	public MaplePet getPet(int index) {
+	public Pet getPet(int index) {
 		return pets[index];
 	}
 
@@ -2041,7 +2041,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return -1;
 	}
 
-	public byte getPetIndex(MaplePet pet) {
+	public byte getPetIndex(Pet pet) {
 		for (byte i = 0; i < 3; i++) {
 			if (pets[i] != null) {
 				if (pets[i].getUniqueId() == pet.getUniqueId()) {
@@ -2687,7 +2687,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				}
 				IItem item = entry.item;
 				if (item.getPetId() > -1) {
-					MaplePet pet = item.getPet();
+					Pet pet = item.getPet();
 					if (pet != null && pet.isSummoned()) {
 						ret.addPet(pet);
 					}
@@ -3296,7 +3296,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		}
 	}
 
-	public void removePet(MaplePet pet, boolean shift_left) {
+	public void removePet(Pet pet, boolean shift_left) {
 		int slot = -1;
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] != null) {
@@ -4400,7 +4400,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return coolDowns.containsKey(Integer.valueOf(skillId));
 	}
 
-	public void startFullnessSchedule(final int decrease, final MaplePet pet, int petSlot) {
+	public void startFullnessSchedule(final int decrease, final Pet pet, int petSlot) {
 		if (isGM() && ServerConstants.GM_PETS_NEVER_HUNGRY || ServerConstants.PETS_NEVER_HUNGRY) {
 			return; // no fullness schedules :3
 		}
@@ -4452,11 +4452,11 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		}
 	}
 
-	public void unequipPet(MaplePet pet, boolean shift_left) {
+	public void unequipPet(Pet pet, boolean shift_left) {
 		unequipPet(pet, shift_left, false);
 	}
 
-	public void unequipPet(MaplePet pet, boolean shift_left, boolean hunger) {
+	public void unequipPet(Pet pet, boolean shift_left, boolean hunger) {
 		if (this.getPet(this.getPetIndex(pet)) != null) {
 			this.getPet(this.getPetIndex(pet)).setSummoned(false);
 			this.getPet(this.getPetIndex(pet)).saveToDb();

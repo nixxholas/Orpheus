@@ -32,7 +32,7 @@ import client.IItem;
 import client.Item;
 import client.GameClient;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import constants.ItemConstants;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
@@ -136,7 +136,7 @@ public class MapleShop {
 				int diff = cardreduce + c.getPlayer().getMeso();
 				if (MapleInventoryManipulator.checkSpace(c, itemId, quantity, "")) {
 					if (itemId >= 5000000 && itemId <= 5000100) {
-						int petid = MaplePet.createPet(itemId);
+						int petid = Pet.createPet(itemId);
 						MapleInventoryManipulator.addById(c, itemId, quantity, null, petid, -1);
 					} else {
 						MapleInventoryManipulator.addById(c, itemId, quantity);

@@ -25,7 +25,7 @@ import client.IItem;
 import client.GameCharacter;
 import client.InventoryType;
 import client.MapleJob;
-import client.MaplePet;
+import client.Pet;
 import client.MapleQuestStatus;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,7 +111,7 @@ public class MapleQuestRequirement {
 			case MIN_LEVEL:
 				return c.getLevel() >= MapleDataTool.getInt(getData());
 			case MIN_PET_TAMENESS:
-				MaplePet pet = c.getPet(0);
+				Pet pet = c.getPet(0);
 				if (pet == null)
 					return false;
 				return c.getPet(0).getCloseness() >= MapleDataTool.getInt(getData());

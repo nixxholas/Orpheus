@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import client.MaplePet;
+import client.Pet;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.maps.MapleMapItem;
@@ -43,7 +43,7 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		MaplePet pet = chr.getPet(chr.getPetIndex(slea.readInt()));// why would
+		Pet pet = chr.getPet(chr.getPetIndex(slea.readInt()));// why would
 																	// it be an
 																	// int...?
 		if (!pet.isSummoned())

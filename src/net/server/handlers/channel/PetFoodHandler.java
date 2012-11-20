@@ -25,7 +25,7 @@ import client.GameCharacter;
 import constants.ExpTable;
 import client.GameClient;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import client.autoban.AutobanManager;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
@@ -51,7 +51,7 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 		}
 		int previousFullness = 100;
 		byte slot = 0;
-		MaplePet[] pets = chr.getPets();
+		Pet[] pets = chr.getPets();
 		for (byte i = 0; i < 3; i++) {
 			if (pets[i] != null) {
 				if (pets[i].getFullness() < previousFullness) {
@@ -60,7 +60,7 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 				}
 			}
 		}
-		MaplePet pet = chr.getPet(slot);
+		Pet pet = chr.getPet(slot);
 		byte pos = (byte) slea.readShort();
 		int itemId = slea.readInt();
 		IItem use = chr.getInventory(InventoryType.USE).getItem(pos);

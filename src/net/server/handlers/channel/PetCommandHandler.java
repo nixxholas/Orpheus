@@ -25,7 +25,7 @@ import client.GameCharacter;
 import constants.ExpTable;
 import client.GameClient;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import client.PetCommand;
 import client.PetDataFactory;
 import tools.Randomizer;
@@ -40,7 +40,7 @@ public final class PetCommandHandler extends AbstractMaplePacketHandler {
 		GameCharacter chr = c.getPlayer();
 		int petId = slea.readInt();
 		byte petIndex = chr.getPetIndex(petId);
-		MaplePet pet = null;
+		Pet pet = null;
 		if (petIndex == -1) {
 			return;
 		} else {

@@ -62,5 +62,5 @@ public interface IItem extends Comparable<IItem> {
 
 	void setGiftFrom(String giftFrom);
 
-	MaplePet getPet();
+	Pet getPet();
 }

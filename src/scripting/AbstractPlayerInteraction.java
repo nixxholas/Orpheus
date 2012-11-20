@@ -29,7 +29,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import client.MapleQuestStatus;
 import client.SkillFactory;
 import constants.ItemConstants;
@@ -158,7 +158,7 @@ public class AbstractPlayerInteraction {
 
 	public void gainItem(int id, short quantity, boolean randomStats) {
 		if (id >= 5000000 && id <= 5000100) {
-			MapleInventoryManipulator.addById(c, id, (short) 1, null, MaplePet.createPet(id), -1);
+			MapleInventoryManipulator.addById(c, id, (short) 1, null, Pet.createPet(id), -1);
 		}
 		if (quantity >= 0) {
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();

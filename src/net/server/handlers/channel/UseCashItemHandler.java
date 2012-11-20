@@ -31,7 +31,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
 import client.MapleJob;
-import client.MaplePet;
+import client.Pet;
 import client.MapleStat;
 import client.MapleStatDelta;
 import client.SkillFactory;
@@ -379,7 +379,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 			player.getMap().startMapEffect(ii.getMsg(itemId).replaceFirst("%s", c.getPlayer().getName()).replaceFirst("%s", slea.readMapleAsciiString()), itemId);
 			remove(c, itemId);
 		} else if (itemType == 517) {
-			MaplePet pet = player.getPet(0);
+			Pet pet = player.getPet(0);
 			if (pet == null) {
 				c.announce(PacketCreator.enableActions());
 				return;
@@ -442,7 +442,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 			c.announce(PacketCreator.enableActions());
 		} else if (itemType == 524) {
 			for (byte i = 0; i < 3; i++) {
-				MaplePet pet = player.getPet(i);
+				Pet pet = player.getPet(i);
 				if (pet != null) {
 					if (pet.canConsume(itemId)) {
 						pet.setFullness(100);

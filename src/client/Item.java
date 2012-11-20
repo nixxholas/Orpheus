@@ -28,7 +28,7 @@ public class Item implements IItem {
 	private byte position;
 	private short quantity;
 	private int petid = -1;
-	private MaplePet pet = null;
+	private Pet pet = null;
 	private String owner = "";
 	protected List<String> log;
 	private byte flag;
@@ -49,7 +49,7 @@ public class Item implements IItem {
 		this.quantity = quantity;
 		this.petid = petid;
 		if (petid > -1)
-			this.pet = MaplePet.loadFromDb(id, position, petid);
+			this.pet = Pet.loadFromDb(id, position, petid);
 		this.flag = 0;
 		this.log = new LinkedList<String>();
 	}
@@ -172,7 +172,7 @@ public class Item implements IItem {
 		this.giftFrom = giftFrom;
 	}
 
-	public MaplePet getPet() {
+	public Pet getPet() {
 		return pet;
 	}
 }

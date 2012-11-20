@@ -26,7 +26,7 @@ import java.io.File;
 import java.sql.PreparedStatement;
 import client.GameClient;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import client.PetDataFactory;
 import client.SkillFactory;
 import java.sql.SQLException;
@@ -49,7 +49,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 		byte slot = slea.readByte();
 		slea.readByte();
 		boolean lead = slea.readByte() == 1;
-		MaplePet pet = chr.getInventory(InventoryType.CASH).getItem(slot).getPet();
+		Pet pet = chr.getInventory(InventoryType.CASH).getItem(slot).getPet();
 		if (pet == null)
 			return;
 		int petid = pet.getItemId();
@@ -61,7 +61,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 				return;
 			} else {
 				int evolveid = MapleDataTool.getInt("info/evol1", dataRoot.getData("Pet/" + petid + ".img"));
-				int petId = MaplePet.createPet(evolveid);
+				int petId = Pet.createPet(evolveid);
 				if (petId == -1) {
 					return;
 				}

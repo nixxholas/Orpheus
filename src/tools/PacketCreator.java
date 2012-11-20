@@ -48,7 +48,7 @@ import client.MapleInventory;
 import client.InventoryType;
 import client.MapleKeyBinding;
 import client.MapleMount;
-import client.MaplePet;
+import client.Pet;
 import client.MapleQuestStatus;
 import client.MapleRing;
 import client.MapleStat;
@@ -347,7 +347,7 @@ public class PacketCreator {
 		}
 		addExpirationTime(w, item.getExpiration());
 		if (isPet) {
-			MaplePet pet = item.getPet();
+			Pet pet = item.getPet();
 			w.writeAsciiString(StringUtil.getRightPaddedStr(pet.getName(), '\0', 13));
 			w.write(pet.getLevel());
 			w.writeShort(pet.getCloseness());
@@ -1925,7 +1925,7 @@ public class PacketCreator {
 		w.write(chr.getStance());
 		w.writeShort(0);// chr.getFh()
 		w.write(0);
-		MaplePet[] pet = chr.getPets();
+		Pet[] pet = chr.getPets();
 		for (int i = 0; i < 3; i++) {
 			if (pet[i] != null) {
 				addPetInfo(w, pet[i], false);
@@ -2544,7 +2544,7 @@ public class PacketCreator {
 		w.writeMapleAsciiString(guildName);
 		w.writeMapleAsciiString(allianceName);
 		w.write(0);
-		MaplePet[] pets = chr.getPets();
+		Pet[] pets = chr.getPets();
 		IItem inv = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -114);
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] != null) {
@@ -4306,7 +4306,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static void addPetInfo(PacketWriter w, MaplePet pet, boolean showpet) {
+	public static void addPetInfo(PacketWriter w, Pet pet, boolean showpet) {
 		w.write(1);
 		if (showpet) {
 			w.write(0);
@@ -4321,7 +4321,7 @@ public class PacketCreator {
 		w.writeInt(pet.getFh());
 	}
 
-	public static GamePacket showPet(GameCharacter chr, MaplePet pet, boolean remove, boolean hunger) {
+	public static GamePacket showPet(GameCharacter chr, Pet pet, boolean remove, boolean hunger) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SPAWN_PET.getValue());
 		w.writeInt(chr.getId());
@@ -4409,7 +4409,7 @@ public class PacketCreator {
 		mask |= MapleStat.PET.getValue();
 		w.write(0);
 		w.writeInt(mask);
-		MaplePet[] pets = chr.getPets();
+		Pet[] pets = chr.getPets();
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] != null) {
 				w.writeInt(pets[i].getUniqueId());

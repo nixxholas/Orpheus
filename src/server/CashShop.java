@@ -26,7 +26,7 @@ import client.Item;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
 import client.InventoryType;
-import client.MaplePet;
+import client.Pet;
 import constants.ItemConstants;
 import java.io.File;
 import java.sql.Connection;
@@ -90,7 +90,7 @@ public class CashShop {
 			int petid = -1;
 
 			if (ItemConstants.isPet(itemId))
-				petid = MaplePet.createPet(itemId);
+				petid = Pet.createPet(itemId);
 
 			if (ii.getInventoryType(itemId).equals(InventoryType.EQUIP)) {
 				item = ii.getEquipById(itemId);
