@@ -55,8 +55,8 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import server.events.gm.MapleEvent;
-import server.expeditions.MapleExpedition;
-import server.expeditions.MapleExpeditionType;
+import server.expeditions.Expedition;
+import server.expeditions.ExpeditionType;
 import server.maps.HiredMerchant;
 import server.maps.GameMap;
 
@@ -71,7 +71,7 @@ public final class Channel {
 	private EventScriptManager eventSM;
 	private Map<Integer, HiredMerchant> hiredMerchants = new HashMap<Integer, HiredMerchant>();
 	private ReentrantReadWriteLock merchant_lock = new ReentrantReadWriteLock(true);
-	private EnumMap<MapleExpeditionType, MapleExpedition> expeditions = new EnumMap<MapleExpeditionType, MapleExpedition>(MapleExpeditionType.class);
+	private EnumMap<ExpeditionType, Expedition> expeditions = new EnumMap<ExpeditionType, Expedition>(ExpeditionType.class);
 	private MapleEvent event;
 	private boolean finishedShutdown = false;
 
@@ -218,9 +218,9 @@ public final class Channel {
 		}
 	}
 
-	public List<GameCharacter> getPartyMembers(MapleParty party) {
+	public List<GameCharacter> getPartyMembers(Party party) {
 		List<GameCharacter> partym = new ArrayList<GameCharacter>(8);
-		for (MaplePartyCharacter partychar : party.getMembers()) {
+		for (PartyCharacter partychar : party.getMembers()) {
 			if (partychar.getChannel() == getId()) {
 				GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
 				if (chr != null) {
@@ -285,15 +285,15 @@ public final class Channel {
 		return retArr;
 	}
 
-	public boolean hasExpedition(MapleExpeditionType type) {
+	public boolean hasExpedition(ExpeditionType type) {
 		return expeditions.containsKey(type);
 	}
 
-	public void addExpedition(MapleExpeditionType type, MapleExpedition exped) {
+	public void addExpedition(ExpeditionType type, Expedition exped) {
 		expeditions.put(type, exped);
 	}
 
-	public MapleExpedition getExpedition(MapleExpeditionType type) {
+	public Expedition getExpedition(ExpeditionType type) {
 		return expeditions.get(type);
 	}
 

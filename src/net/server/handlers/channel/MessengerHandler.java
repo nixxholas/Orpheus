@@ -23,8 +23,8 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractPacketHandler;
-import net.server.MapleMessenger;
-import net.server.MapleMessengerCharacter;
+import net.server.Messenger;
+import net.server.MessengerCharacter;
 import net.server.World;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -37,20 +37,20 @@ public final class MessengerHandler extends AbstractPacketHandler {
 		byte mode = slea.readByte();
 		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
-		MapleMessenger messenger = player.getMessenger();
+		Messenger messenger = player.getMessenger();
 		switch (mode) {
 			case 0x00:
 				if (messenger == null) {
 					int messengerid = slea.readInt();
 					if (messengerid == 0) {
-						MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(player);
+						MessengerCharacter messengerplayer = new MessengerCharacter(player);
 						messenger = world.createMessenger(messengerplayer);
 						player.setMessenger(messenger);
 						player.setMessengerPosition(0);
 					} else {
 						messenger = world.getMessenger(messengerid);
 						int position = messenger.getLowestPosition();
-						MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(player, position);
+						MessengerCharacter messengerplayer = new MessengerCharacter(player, position);
 						if (messenger.getMembers().size() < 3) {
 							player.setMessenger(messenger);
 							player.setMessengerPosition(position);
@@ -61,7 +61,7 @@ public final class MessengerHandler extends AbstractPacketHandler {
 				break;
 			case 0x02:
 				if (messenger != null) {
-					MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(player);
+					MessengerCharacter messengerplayer = new MessengerCharacter(player);
 					world.leaveMessenger(messenger.getId(), messengerplayer);
 					player.setMessenger(null);
 					player.setMessengerPosition(4);
@@ -102,7 +102,7 @@ public final class MessengerHandler extends AbstractPacketHandler {
 				break;
 			case 0x06:
 				if (messenger != null) {
-					MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(player);
+					MessengerCharacter messengerplayer = new MessengerCharacter(player);
 					input = slea.readMapleAsciiString();
 					world.messengerChat(messenger, input, messengerplayer.getName());
 				}

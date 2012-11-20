@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameCharacter;
-import net.server.MaplePartyCharacter;
+import net.server.PartyCharacter;
 import client.GameClient;
 import client.autoban.AutobanFactory;
 import java.awt.Point;
@@ -103,12 +103,12 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 								return;
 							}
 							int partynum = 0;
-							for (MaplePartyCharacter partymem : chr.getParty().getMembers()) {
+							for (PartyCharacter partymem : chr.getParty().getMembers()) {
 								if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId() && partymem.getChannel() == c.getChannel()) {
 									partynum++;
 								}
 							}
-							for (MaplePartyCharacter partymem : chr.getParty().getMembers()) {
+							for (PartyCharacter partymem : chr.getParty().getMembers()) {
 								if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId()) {
 									GameCharacter somecharacter = c.getChannelServer().getPlayerStorage().getCharacterById(partymem.getId());
 									if (somecharacter != null) {

@@ -44,8 +44,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import tools.Randomizer;
 import net.GamePacket;
 import net.server.Channel;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import scripting.event.EventInstanceManager;
 import server.TimerManager;
 import server.life.MapleLifeFactory.BanishInfo;
@@ -892,11 +892,11 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
 	private static class OnePartyAttacker {
 
-		public MapleParty lastKnownParty;
+		public Party lastKnownParty;
 		public int damage;
 		public long lastAttackTime;
 
-		public OnePartyAttacker(MapleParty lastKnownParty, int damage) {
+		public OnePartyAttacker(Party lastKnownParty, int damage) {
 			this.lastKnownParty = lastKnownParty;
 			this.damage = damage;
 			this.lastAttackTime = System.currentTimeMillis();
@@ -982,10 +982,10 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			int highestDamage = 0;
 			Map<GameCharacter, Integer> expMap = new ArrayMap<GameCharacter, Integer>(6);
 			for (Entry<GameCharacter, OnePartyAttacker> attacker : attackers_.entrySet()) {
-				MapleParty party = attacker.getValue().lastKnownParty;
+				Party party = attacker.getValue().lastKnownParty;
 				double averagePartyLevel = 0;
 				List<GameCharacter> expApplicable = new ArrayList<GameCharacter>();
-				for (MaplePartyCharacter partychar : party.getMembers()) {
+				for (PartyCharacter partychar : party.getMembers()) {
 					if (attacker.getKey().getLevel() - partychar.getLevel() <= 5 || getLevel() - partychar.getLevel() <= 5) {
 						GameCharacter pchr = cserv.getPlayerStorage().getCharacterByName(partychar.getName());
 						if (pchr != null) {

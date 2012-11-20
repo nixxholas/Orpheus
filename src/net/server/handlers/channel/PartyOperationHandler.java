@@ -23,8 +23,8 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractPacketHandler;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.World;
 import tools.PacketCreator;
@@ -37,12 +37,12 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 		int operation = slea.readByte();
 		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
-		MapleParty party = player.getParty();
-		MaplePartyCharacter partyplayer = player.getMPC();
+		Party party = player.getParty();
+		PartyCharacter partyplayer = player.getMPC();
 		switch (operation) {
 			case 1: { // create
 				if (player.getParty() == null) {
-					partyplayer = new MaplePartyCharacter(player);
+					partyplayer = new PartyCharacter(player);
 					party = world.createParty(partyplayer);
 					player.setParty(party);
 					player.setMPC(partyplayer);
@@ -75,7 +75,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 					party = world.getParty(partyid);
 					if (party != null) {
 						if (party.getMembers().size() < 6) {
-							partyplayer = new MaplePartyCharacter(player);
+							partyplayer = new PartyCharacter(player);
 							world.updateParty(party.getId(), PartyOperation.JOIN, partyplayer);
 							player.receivePartyMemberHP();
 							player.updatePartyMemberHP();
@@ -111,7 +111,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 			case 5: { // expel
 				int cid = slea.readInt();
 				if (partyplayer.equals(party.getLeader())) {
-					MaplePartyCharacter expelled = party.getMemberById(cid);
+					PartyCharacter expelled = party.getMemberById(cid);
 					if (expelled != null) {
 						world.updateParty(party.getId(), PartyOperation.EXPEL, expelled);
 						if (player.getEventInstance() != null) {
@@ -126,7 +126,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 
 			case 6: {
 				int newLeader = slea.readInt();
-				MaplePartyCharacter newLeadr = party.getMemberById(newLeader);
+				PartyCharacter newLeadr = party.getMemberById(newLeader);
 				party.setLeader(newLeadr);
 				world.updateParty(party.getId(), PartyOperation.CHANGE_LEADER, newLeadr);
 				break;

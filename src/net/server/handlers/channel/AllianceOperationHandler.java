@@ -26,7 +26,7 @@ import net.AbstractPacketHandler;
 import net.GamePacket;
 import net.SendOpcode;
 import net.server.Server;
-import net.server.guild.MapleAlliance;
+import net.server.guild.Alliance;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.data.output.PacketWriter;
@@ -39,7 +39,7 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleAlliance alliance = null;
+		Alliance alliance = null;
 		if (c.getPlayer().getGuild() != null && c.getPlayer().getGuild().getAllianceId() > 0) {
 			alliance = Server.getInstance().getAlliance(c.getPlayer().getGuild().getAllianceId());
 		}

@@ -23,8 +23,8 @@ package server.partyquest;
 import client.GameCharacter;
 import java.util.ArrayList;
 import java.util.List;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import net.server.Server;
 
 /**
@@ -33,16 +33,16 @@ import net.server.Server;
  */
 public class PartyQuest {
 	byte channel, world;
-	MapleParty party;
+	Party party;
 	List<GameCharacter> participants = new ArrayList<GameCharacter>();
 
-	public PartyQuest(MapleParty party) {
+	public PartyQuest(Party party) {
 		this.party = party;
-		MaplePartyCharacter leader = party.getLeader();
+		PartyCharacter leader = party.getLeader();
 		channel = leader.getChannel();
 		world = leader.getWorld();
 		int mapid = leader.getMapId();
-		for (MaplePartyCharacter pchr : party.getMembers()) {
+		for (PartyCharacter pchr : party.getMembers()) {
 			if (pchr.getChannel() == channel && pchr.getMapId() == mapid) {
 				GameCharacter chr = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterById(pchr.getId());
 				if (chr != null)
@@ -51,7 +51,7 @@ public class PartyQuest {
 		}
 	}
 
-	public MapleParty getParty() {
+	public Party getParty() {
 		return party;
 	}
 

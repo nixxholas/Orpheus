@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import java.util.Collection;
 import net.AbstractPacketHandler;
-import net.server.MapleParty;
+import net.server.Party;
 import server.maps.GameMap;
 import server.maps.GameMapObject;
 import tools.PacketCreator;
@@ -58,11 +58,11 @@ public class PartySearchStartHandler extends AbstractPacketHandler {
 					if (c.getPlayer().getParty() == null) {
 						// WorldChannelInterface wci =
 						// c.getChannelServer().getWorldInterface();
-						MapleParty party = c.getPlayer().getParty();
+						Party party = c.getPlayer().getParty();
 						party = c.getPlayer().getParty();// .getParty(partyid);
 						if (party != null) {
 							if (party.getMembers().size() < 6) {
-								// MaplePartyCharacter partyplayer = tchar.getMPC();
+								// PartyCharacter partyplayer = tchar.getMPC();
 								// wci.updateParty(party.getId(),
 								// PartyOperation.JOIN, partyplayer);
 								c.getPlayer().receivePartyMemberHP();

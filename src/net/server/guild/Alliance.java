@@ -32,7 +32,7 @@ import tools.DatabaseConnection;
  * 
  * @author XoticStory.
  */
-public class MapleAlliance {
+public class Alliance {
 	private int[] guilds = new int[5];
 	private int allianceId = -1;
 	private int capacity;
@@ -40,7 +40,7 @@ public class MapleAlliance {
 	private String notice = "";
 	private String rankTitles[] = new String[5];
 
-	public MapleAlliance(String name, int id, int guild1, int guild2) {
+	public Alliance(String name, int id, int guild1, int guild2) {
 		this.name = name;
 		allianceId = id;
 		int[] guild = {guild1, guild2, -1, -1, -1};
@@ -51,11 +51,11 @@ public class MapleAlliance {
 		}
 	}
 
-	public static MapleAlliance loadAlliance(int id) {
+	public static Alliance loadAlliance(int id) {
 		if (id <= 0) {
 			return null;
 		}
-		MapleAlliance alliance = new MapleAlliance(null, -1, -1, -1);
+		Alliance alliance = new Alliance(null, -1, -1, -1);
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM `alliance` WHERE `id` = ?");
 			ps.setInt(1, id);

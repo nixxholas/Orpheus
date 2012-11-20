@@ -38,13 +38,13 @@ import tools.DatabaseConnection;
 import net.AbstractPacketHandler;
 import net.server.Channel;
 import net.server.CharacterIdChannelPair;
-import net.server.MaplePartyCharacter;
+import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.PlayerBuffValueHolder;
 import net.server.Server;
 import net.server.World;
-import net.server.guild.MapleAlliance;
-import net.server.guild.MapleGuild;
+import net.server.guild.Alliance;
+import net.server.guild.Guild;
 import tools.PacketCreator;
 import tools.GameLogger;
 import tools.Output;
@@ -176,7 +176,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.getFamilyInfo(f.getMember(player.getId())));
 		}
 		if (player.getGuildId() > 0) {
-			MapleGuild playerGuild = server.getGuild(player.getGuildId(), player.getMGC());
+			Guild playerGuild = server.getGuild(player.getGuildId(), player.getMGC());
 			if (playerGuild == null) {
 				player.deleteGuild(player.getGuildId());
 				player.resetMGC();
@@ -186,9 +186,9 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.showGuildInfo(player));
 				int allianceId = player.getGuild().getAllianceId();
 				if (allianceId > 0) {
-					MapleAlliance newAlliance = server.getAlliance(allianceId);
+					Alliance newAlliance = server.getAlliance(allianceId);
 					if (newAlliance == null) {
-						newAlliance = MapleAlliance.loadAlliance(allianceId);
+						newAlliance = Alliance.loadAlliance(allianceId);
 						if (newAlliance != null) {
 							server.addAlliance(allianceId, newAlliance);
 						} else {
@@ -205,7 +205,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		}
 		player.showNote();
 		if (player.getParty() != null) {
-			MaplePartyCharacter pchar = player.getMPC();
+			PartyCharacter pchar = player.getMPC();
 			pchar.setChannel(c.getChannel());
 			pchar.setMapId(player.getMapId());
 			pchar.setOnline(true);

@@ -37,8 +37,8 @@ import constants.skills.Paladin;
 import constants.skills.Priest;
 import net.AbstractPacketHandler;
 import net.server.Channel;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import net.server.Server;
 import server.MapleStatEffect;
 import server.TimerManager;
@@ -94,9 +94,9 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.enableActions());
 			return;
 		} else if (skillid == Buccaneer.TIME_LEAP) { // Timeleap
-			MapleParty p = chr.getParty();
+			Party p = chr.getParty();
 			if (p != null) {
-				for (MaplePartyCharacter mpc : p.getMembers()) {
+				for (PartyCharacter mpc : p.getMembers()) {
 					for (Channel cserv : Server.getInstance().getChannelsFromWorld(c.getWorld())) {
 						if (cserv.getPlayerStorage().getCharacterById(mpc.getId()) != null) {
 							cserv.getPlayerStorage().getCharacterById(mpc.getId()).removeAllCooldownsExcept(5121010);

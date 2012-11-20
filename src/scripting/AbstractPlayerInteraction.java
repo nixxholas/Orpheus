@@ -34,9 +34,9 @@ import client.QuestStatus;
 import client.SkillFactory;
 import constants.ItemConstants;
 import java.awt.Point;
-import net.server.MapleParty;
+import net.server.Party;
 import net.server.Server;
-import net.server.guild.MapleGuild;
+import net.server.guild.Guild;
 import scripting.event.EventManager;
 import scripting.npc.NPCScriptManager;
 import server.InventoryManipulator;
@@ -221,7 +221,7 @@ public class AbstractPlayerInteraction {
 		}
 	}
 
-	public MapleGuild getGuild() {
+	public Guild getGuild() {
 		try {
 			return Server.getInstance().getGuild(getPlayer().getGuildId(), null);
 		} catch (Exception e) {
@@ -229,7 +229,7 @@ public class AbstractPlayerInteraction {
 		return null;
 	}
 
-	public MapleParty getParty() {
+	public Party getParty() {
 		return getPlayer().getParty();
 	}
 

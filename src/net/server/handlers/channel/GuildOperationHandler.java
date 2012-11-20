@@ -20,8 +20,8 @@
  */
 package net.server.handlers.channel;
 
-import net.server.guild.MapleGuildResponse;
-import net.server.guild.MapleGuild;
+import net.server.guild.GuildInviteResponse;
+import net.server.guild.Guild;
 import client.GameClient;
 import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -105,7 +105,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					c.getPlayer().dropMessage(1, "You cannot create a new Guild while in one.");
 					return;
 				}
-				if (player.getMeso() < MapleGuild.CREATE_GUILD_COST) {
+				if (player.getMeso() < Guild.CREATE_GUILD_COST) {
 					c.getPlayer().dropMessage(1, "You do not have enough mesos to create a Guild.");
 					return;
 				}
@@ -121,7 +121,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.genericGuildMessage((byte) 0x1c));
 					return;
 				}
-				player.gainMeso(-MapleGuild.CREATE_GUILD_COST, true, false, true);
+				player.gainMeso(-Guild.CREATE_GUILD_COST, true, false, true);
 				player.setGuildId(gid);
 				player.setGuildRank(1);
 				player.saveGuildStatus();
@@ -134,7 +134,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					return;
 				}
 				String name = slea.readMapleAsciiString();
-				MapleGuildResponse mgr = MapleGuild.sendInvite(c, name);
+				GuildInviteResponse mgr = Guild.sendInvite(c, name);
 				if (mgr != null) {
 					c.announce(mgr.getPacket());
 				} else {
@@ -237,7 +237,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					System.out.println("[hax] " + player.getName() + " tried to change guild emblem without being the guild leader.");
 					return;
 				}
-				if (player.getMeso() < MapleGuild.CHANGE_EMBLEM_COST) {
+				if (player.getMeso() < Guild.CHANGE_EMBLEM_COST) {
 					c.announce(PacketCreator.serverNotice(1, "You do not have enough mesos to create a Guild."));
 					return;
 				}
@@ -246,7 +246,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				short logo = slea.readShort();
 				byte logocolor = slea.readByte();
 				Server.getInstance().setGuildEmblem(player.getGuildId(), bg, bgcolor, logo, logocolor);
-				player.gainMeso(-MapleGuild.CHANGE_EMBLEM_COST, true, false, true);
+				player.gainMeso(-Guild.CHANGE_EMBLEM_COST, true, false, true);
 				respawnPlayer(player);
 				break;
 			case 0x10:

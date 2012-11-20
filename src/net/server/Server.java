@@ -44,9 +44,9 @@ import tools.DatabaseConnection;
 import net.GameServerHandler;
 import net.PacketProcessor;
 import net.mina.GameCodecFactory;
-import net.server.guild.MapleAlliance;
-import net.server.guild.MapleGuild;
-import net.server.guild.MapleGuildCharacter;
+import net.server.guild.Alliance;
+import net.server.guild.Guild;
+import net.server.guild.GuildCharacter;
 import gm.server.GMServer;
 import server.TimerManager;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -74,9 +74,9 @@ public class Server implements Runnable {
 	private static Server instance = null;
 	private ArrayList<Map<Byte, AtomicInteger>> load = new ArrayList<Map<Byte, AtomicInteger>>();
 	private List<WorldRecommendation> worldRecommendedList = new LinkedList<WorldRecommendation>();
-	private Map<Integer, MapleGuild> guilds = new LinkedHashMap<Integer, MapleGuild>();
+	private Map<Integer, Guild> guilds = new LinkedHashMap<Integer, Guild>();
 	private PlayerBuffStorage buffStorage = new PlayerBuffStorage();
-	private Map<Integer, MapleAlliance> alliances = new LinkedHashMap<Integer, MapleAlliance>();
+	private Map<Integer, Alliance> alliances = new LinkedHashMap<Integer, Alliance>();
 	private boolean online = false;
 	private boolean gmServerEnabled = false;
 	private boolean debugMode = false;
@@ -289,7 +289,7 @@ public class Server implements Runnable {
 		return load;
 	}
 
-	public MapleAlliance getAlliance(int id) {
+	public Alliance getAlliance(int id) {
 		synchronized (alliances) {
 			if (alliances.containsKey(id)) {
 				return alliances.get(id);
@@ -298,7 +298,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	public void addAlliance(int id, MapleAlliance alliance) {
+	public void addAlliance(int id, Alliance alliance) {
 		synchronized (alliances) {
 			if (!alliances.containsKey(id)) {
 				alliances.put(id, alliance);
@@ -308,7 +308,7 @@ public class Server implements Runnable {
 
 	public void disbandAlliance(int id) {
 		synchronized (alliances) {
-			MapleAlliance alliance = alliances.get(id);
+			Alliance alliance = alliances.get(id);
 			if (alliance != null) {
 				for (Integer gid : alliance.getGuilds()) {
 					guilds.get(gid).setAllianceId(0);
@@ -319,13 +319,13 @@ public class Server implements Runnable {
 	}
 
 	public void allianceMessage(int id, GamePacket packet, int exception, int guildex) {
-		MapleAlliance alliance = alliances.get(id);
+		Alliance alliance = alliances.get(id);
 		if (alliance != null) {
 			for (Integer gid : alliance.getGuilds()) {
 				if (guildex == gid) {
 					continue;
 				}
-				MapleGuild guild = guilds.get(gid);
+				Guild guild = guilds.get(gid);
 				if (guild != null) {
 					guild.broadcast(packet, exception);
 				}
@@ -334,7 +334,7 @@ public class Server implements Runnable {
 	}
 
 	public boolean addGuildtoAlliance(int aId, int guildId) {
-		MapleAlliance alliance = alliances.get(aId);
+		Alliance alliance = alliances.get(aId);
 		if (alliance != null) {
 			alliance.addGuild(guildId);
 			return true;
@@ -343,7 +343,7 @@ public class Server implements Runnable {
 	}
 
 	public boolean removeGuildFromAlliance(int aId, int guildId) {
-		MapleAlliance alliance = alliances.get(aId);
+		Alliance alliance = alliances.get(aId);
 		if (alliance != null) {
 			alliance.removeGuild(guildId);
 			return true;
@@ -352,7 +352,7 @@ public class Server implements Runnable {
 	}
 
 	public boolean setAllianceRanks(int aId, String[] ranks) {
-		MapleAlliance alliance = alliances.get(aId);
+		Alliance alliance = alliances.get(aId);
 		if (alliance != null) {
 			alliance.setRankTitle(ranks);
 			return true;
@@ -361,7 +361,7 @@ public class Server implements Runnable {
 	}
 
 	public boolean setAllianceNotice(int aId, String notice) {
-		MapleAlliance alliance = alliances.get(aId);
+		Alliance alliance = alliances.get(aId);
 		if (alliance != null) {
 			alliance.setNotice(notice);
 			return true;
@@ -370,7 +370,7 @@ public class Server implements Runnable {
 	}
 
 	public boolean increaseAllianceCapacity(int aId, int inc) {
-		MapleAlliance alliance = alliances.get(aId);
+		Alliance alliance = alliances.get(aId);
 		if (alliance != null) {
 			alliance.increaseCapacity(inc);
 			return true;
@@ -393,10 +393,10 @@ public class Server implements Runnable {
 	}
 
 	public int createGuild(int leaderId, String name) {
-		return MapleGuild.createGuild(leaderId, name);
+		return Guild.createGuild(leaderId, name);
 	}
 
-	public MapleGuild getGuild(int id, MapleGuildCharacter mgc) {
+	public Guild getGuild(int id, GuildCharacter mgc) {
 		synchronized (guilds) {
 			if (guilds.get(id) != null) {
 				return guilds.get(id);
@@ -404,7 +404,7 @@ public class Server implements Runnable {
 			if (mgc == null) {
 				return null;
 			}
-			MapleGuild g = new MapleGuild(mgc);
+			Guild g = new Guild(mgc);
 			if (g.getId() == -1) {
 				return null;
 			}
@@ -422,13 +422,13 @@ public class Server implements Runnable {
 
 	}
 
-	public void setGuildMemberOnline(MapleGuildCharacter mgc, boolean bOnline, byte channel) {
-		MapleGuild g = getGuild(mgc.getGuildId(), mgc);
+	public void setGuildMemberOnline(GuildCharacter mgc, boolean bOnline, byte channel) {
+		Guild g = getGuild(mgc.getGuildId(), mgc);
 		g.setOnline(mgc.getId(), bOnline, channel);
 	}
 
-	public int addGuildMember(MapleGuildCharacter mgc) {
-		MapleGuild g = guilds.get(mgc.getGuildId());
+	public int addGuildMember(GuildCharacter mgc) {
+		Guild g = guilds.get(mgc.getGuildId());
 		if (g != null) {
 			return g.addGuildMember(mgc);
 		}
@@ -436,7 +436,7 @@ public class Server implements Runnable {
 	}
 
 	public boolean setGuildAllianceId(int gId, int aId) {
-		MapleGuild guild = guilds.get(gId);
+		Guild guild = guilds.get(gId);
 		if (guild != null) {
 			guild.setAllianceId(aId);
 			return true;
@@ -444,57 +444,57 @@ public class Server implements Runnable {
 		return false;
 	}
 
-	public void leaveGuild(MapleGuildCharacter mgc) {
-		MapleGuild g = guilds.get(mgc.getGuildId());
+	public void leaveGuild(GuildCharacter mgc) {
+		Guild g = guilds.get(mgc.getGuildId());
 		if (g != null) {
 			g.leaveGuild(mgc);
 		}
 	}
 
 	public void guildChat(int gid, String name, int cid, String msg) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			g.guildChat(name, cid, msg);
 		}
 	}
 
 	public void changeRank(int gid, int cid, int newRank) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			g.changeRank(cid, newRank);
 		}
 	}
 
-	public void expelMember(MapleGuildCharacter initiator, String name, int cid) {
-		MapleGuild g = guilds.get(initiator.getGuildId());
+	public void expelMember(GuildCharacter initiator, String name, int cid) {
+		Guild g = guilds.get(initiator.getGuildId());
 		if (g != null) {
 			g.expelMember(initiator, name, cid);
 		}
 	}
 
 	public void setGuildNotice(int gid, String notice) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			g.setGuildNotice(notice);
 		}
 	}
 
-	public void memberLevelJobUpdate(MapleGuildCharacter mgc) {
-		MapleGuild g = guilds.get(mgc.getGuildId());
+	public void memberLevelJobUpdate(GuildCharacter mgc) {
+		Guild g = guilds.get(mgc.getGuildId());
 		if (g != null) {
 			g.memberLevelJobUpdate(mgc);
 		}
 	}
 
 	public void changeRankTitle(int gid, String[] ranks) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			g.changeRankTitle(ranks);
 		}
 	}
 
 	public void setGuildEmblem(int gid, short bg, byte bgcolor, short logo, byte logocolor) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			g.setGuildEmblem(bg, bgcolor, logo, logocolor);
 		}
@@ -502,14 +502,14 @@ public class Server implements Runnable {
 
 	public void disbandGuild(int gid) {
 		synchronized (guilds) {
-			MapleGuild g = guilds.get(gid);
+			Guild g = guilds.get(gid);
 			g.disbandGuild();
 			guilds.remove(gid);
 		}
 	}
 
 	public boolean increaseGuildCapacity(int gid) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			return g.increaseCapacity();
 		}
@@ -517,7 +517,7 @@ public class Server implements Runnable {
 	}
 
 	public void gainGP(int gid, int amount) {
-		MapleGuild g = guilds.get(gid);
+		Guild g = guilds.get(gid);
 		if (g != null) {
 			g.gainGP(amount);
 		}
@@ -527,7 +527,7 @@ public class Server implements Runnable {
 		return buffStorage;
 	}
 
-	public void deleteGuildCharacter(MapleGuildCharacter mgc) {
+	public void deleteGuildCharacter(GuildCharacter mgc) {
 		setGuildMemberOnline(mgc, false, (byte) -1);
 		if (mgc.getGuildRank() > 1) {
 			leaveGuild(mgc);

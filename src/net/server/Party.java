@@ -25,34 +25,34 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapleParty {
-	private MaplePartyCharacter leader;
-	private List<MaplePartyCharacter> members = new LinkedList<MaplePartyCharacter>();
+public class Party {
+	private PartyCharacter leader;
+	private List<PartyCharacter> members = new LinkedList<PartyCharacter>();
 	private int id;
 
-	public MapleParty(int id, MaplePartyCharacter chrfor) {
+	public Party(int id, PartyCharacter chrfor) {
 		this.leader = chrfor;
 		this.members.add(this.leader);
 		this.id = id;
 	}
 
-	public boolean containsMembers(MaplePartyCharacter member) {
+	public boolean containsMembers(PartyCharacter member) {
 		return members.contains(member);
 	}
 
-	public void addMember(MaplePartyCharacter member) {
+	public void addMember(PartyCharacter member) {
 		members.add(member);
 	}
 
-	public void removeMember(MaplePartyCharacter member) {
+	public void removeMember(PartyCharacter member) {
 		members.remove(member);
 	}
 
-	public void setLeader(MaplePartyCharacter victim) {
+	public void setLeader(PartyCharacter victim) {
 		this.leader = victim;
 	}
 
-	public void updateMember(MaplePartyCharacter member) {
+	public void updateMember(PartyCharacter member) {
 		for (int i = 0; i < members.size(); i++) {
 			if (members.get(i).equals(member)) {
 				members.set(i, member);
@@ -60,8 +60,8 @@ public class MapleParty {
 		}
 	}
 
-	public MaplePartyCharacter getMemberById(int id) {
-		for (MaplePartyCharacter chr : members) {
+	public PartyCharacter getMemberById(int id) {
+		for (PartyCharacter chr : members) {
 			if (chr.getId() == id) {
 				return chr;
 			}
@@ -69,7 +69,7 @@ public class MapleParty {
 		return null;
 	}
 
-	public Collection<MaplePartyCharacter> getMembers() {
+	public Collection<PartyCharacter> getMembers() {
 		return Collections.unmodifiableList(members);
 	}
 
@@ -81,7 +81,7 @@ public class MapleParty {
 		this.id = id;
 	}
 
-	public MaplePartyCharacter getLeader() {
+	public PartyCharacter getLeader() {
 		return leader;
 	}
 
@@ -104,7 +104,7 @@ public class MapleParty {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final MapleParty other = (MapleParty) obj;
+		final Party other = (Party) obj;
 		if (id != other.id) {
 			return false;
 		}

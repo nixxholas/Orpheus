@@ -18,31 +18,47 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package server.expeditions;
+package net.server.guild;
 
-import client.GameCharacter;
-import java.util.List;
+public class GuildSummary implements java.io.Serializable {
+	private static final long serialVersionUID = 2107845458870315533L;
+	private String name;
+	private short logoBG;
+	private byte logoBGColor;
+	private short logo;
+	private byte logoColor;
+	private int allianceId;
 
-/**
- * 
- * @author kevintjuh93
- */
-public class MapleExpedition {
-	private List<GameCharacter> members;
-
-	public MapleExpedition(GameCharacter leader) {
-		members.add(leader);
+	public GuildSummary(Guild g) {
+		this.name = g.getName();
+		this.logoBG = (short) g.getLogoBG();
+		this.logoBGColor = (byte) g.getLogoBGColor();
+		this.logo = (short) g.getLogo();
+		this.logoColor = (byte) g.getLogoColor();
+		this.allianceId = g.getAllianceId();
 	}
 
-	public void addMember(GameCharacter chr) {
-		members.add(chr);
+	public String getName() {
+		return name;
 	}
 
-	public void removeMember(GameCharacter chr) {
-		members.remove(chr);
+	public short getLogoBG() {
+		return logoBG;
 	}
 
-	public List<GameCharacter> getAllMembers() {
-		return members;
+	public byte getLogoBGColor() {
+		return logoBGColor;
+	}
+
+	public short getLogo() {
+		return logo;
+	}
+
+	public byte getLogoColor() {
+		return logoColor;
+	}
+
+	public int getAllianceId() {
+		return allianceId;
 	}
 }

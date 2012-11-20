@@ -25,7 +25,7 @@ import java.io.Serializable;
 import client.Job;
 import client.GameCharacter;
 
-public class MaplePartyCharacter implements Serializable {
+public class PartyCharacter implements Serializable {
 	private static final long serialVersionUID = -6460122214407438511L;
 	private String name;
 	private int id;
@@ -39,7 +39,7 @@ public class MaplePartyCharacter implements Serializable {
 	private boolean online;
 	private Job job;
 
-	public MaplePartyCharacter(GameCharacter character) {
+	public PartyCharacter(GameCharacter character) {
 		this.name = character.getName();
 		this.level = character.getLevel();
 		this.channel = character.getClient().getChannel();
@@ -56,7 +56,7 @@ public class MaplePartyCharacter implements Serializable {
 		}
 	}
 
-	public MaplePartyCharacter() {
+	public PartyCharacter() {
 		this.name = "";
 	}
 
@@ -135,7 +135,7 @@ public class MaplePartyCharacter implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final MaplePartyCharacter other = (MaplePartyCharacter) obj;
+		final PartyCharacter other = (PartyCharacter) obj;
 		if (name == null) {
 			if (other.name != null) {
 				return false;

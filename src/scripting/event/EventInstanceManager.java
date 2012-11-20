@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.Properties;
 import client.GameCharacter;
 import tools.DatabaseConnection;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import provider.MapleDataProviderFactory;
 import server.TimerManager;
 import server.life.MapleMonster;
@@ -89,8 +89,8 @@ public class EventInstanceManager {
 		return eventTime - (System.currentTimeMillis() - timeStarted);
 	}
 
-	public void registerParty(MapleParty party, GameMap map) {
-		for (MaplePartyCharacter pc : party.getMembers()) {
+	public void registerParty(Party party, GameMap map) {
+		for (PartyCharacter pc : party.getMembers()) {
 			GameCharacter c = map.getCharacterById(pc.getId());
 			registerPlayer(c);
 		}

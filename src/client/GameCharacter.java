@@ -47,18 +47,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import net.GamePacket;
 import net.server.Channel;
-import net.server.MapleMessenger;
-import net.server.MapleMessengerCharacter;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Messenger;
+import net.server.MessengerCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.PlayerBuffValueHolder;
 import net.server.PlayerCoolDownValueHolder;
 import net.server.PlayerDiseaseValueHolder;
 import net.server.Server;
 import net.server.World;
-import net.server.guild.MapleGuild;
-import net.server.guild.MapleGuildCharacter;
+import net.server.guild.Guild;
+import net.server.guild.GuildCharacter;
 import scripting.event.EventInstanceManager;
 import server.CashShop;
 import server.MapleBuffStatDelta;
@@ -181,15 +181,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private EventInstanceManager eventInstance = null;
 	private HiredMerchant hiredMerchant = null;
 	private GameClient client;
-	private MapleGuildCharacter mgc = null;
-	private MaplePartyCharacter mpc = null;
+	private GuildCharacter mgc = null;
+	private PartyCharacter mpc = null;
 	private Inventory[] inventory;
 	private Job job = Job.BEGINNER;
 	private GameMap map, dojoMap;// Make a Dojo pq instance
-	private MapleMessenger messenger = null;
+	private Messenger messenger = null;
 	private Minigame miniGame;
 	private Mount maplemount;
-	private MapleParty party;
+	private Party party;
 	private Pet[] pets = new Pet[3];
 	private PlayerShop playerShop = null;
 	private Shop shop = null;
@@ -987,7 +987,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void checkMessenger() {
 		if (messenger != null && messengerposition < 4 && messengerposition > -1) {
 			World worldz = Server.getInstance().getWorld(world);
-			worldz.silentJoinMessenger(messenger.getId(), new MapleMessengerCharacter(this, messengerposition), messengerposition);
+			worldz.silentJoinMessenger(messenger.getId(), new MessengerCharacter(this, messengerposition), messengerposition);
 			worldz.updateMessenger(getMessenger().getId(), name, client.getChannel());
 		}
 	}
@@ -1265,7 +1265,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public String emblemCost() {
-		return nf.format(MapleGuild.CHANGE_EMBLEM_COST);
+		return nf.format(Guild.CHANGE_EMBLEM_COST);
 	}
 
 	public List<ScheduledFuture<?>> getTimers() {
@@ -1703,7 +1703,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return getGender() == 0;
 	}
 
-	public MapleGuild getGuild() {
+	public Guild getGuild() {
 		try {
 			return Server.getInstance().getGuild(getGuildId(), null);
 		} catch (Exception ex) {
@@ -1926,16 +1926,16 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return messengerposition;
 	}
 
-	public MapleGuildCharacter getMGC() {
+	public GuildCharacter getMGC() {
 		return mgc;
 	}
 
-	public MaplePartyCharacter getMPC() {
-		// if (mpc == null) mpc = new MaplePartyCharacter(this);
+	public PartyCharacter getMPC() {
+		// if (mpc == null) mpc = new PartyCharacter(this);
 		return mpc;
 	}
 
-	public void setMPC(MaplePartyCharacter mpc) {
+	public void setMPC(PartyCharacter mpc) {
 		this.mpc = mpc;
 	}
 
@@ -1979,7 +1979,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return mp;
 	}
 
-	public MapleMessenger getMessenger() {
+	public Messenger getMessenger() {
 		return messenger;
 	}
 
@@ -2010,7 +2010,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return controlled.size();
 	}
 
-	public MapleParty getParty() {
+	public Party getParty() {
 		return party;
 	}
 
@@ -2292,7 +2292,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public String guildCost() {
-		return nf.format(MapleGuild.CREATE_GUILD_COST);
+		return nf.format(Guild.CREATE_GUILD_COST);
 	}
 
 	private void guildUpdate() {
@@ -2569,7 +2569,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		client.announce(PacketCreator.updatePlayerStats(statup));
 		getMap().broadcastMessage(this, PacketCreator.showForeignEffect(getId(), 0), false);
 		recalcLocalStats();
-		setMPC(new MaplePartyCharacter(this));
+		setMPC(new PartyCharacter(this));
 		silentPartyUpdate();
 		if (this.guildid > 0) {
 			getGuild().broadcast(PacketCreator.levelUpMessage(2, level, name), this.getId());
@@ -2661,7 +2661,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				ret.dead = rs.getInt("dead") == 1;
 			}
 			if (ret.guildid > 0) {
-				ret.mgc = new MapleGuildCharacter(ret);
+				ret.mgc = new GuildCharacter(ret);
 			}
 			int buddyCapacity = rs.getInt("buddyCapacity");
 			ret.buddylist = new BuddyList(buddyCapacity);
@@ -2721,7 +2721,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 				ret.setPosition(portal.getPosition());
 				int partyid = rs.getInt("party");
-				MapleParty party = Server.getInstance().getWorld(ret.world).getParty(partyid);
+				Party party = Server.getInstance().getWorld(ret.world).getParty(partyid);
 				if (party != null) {
 					ret.mpc = party.getMemberById(ret.id);
 					if (ret.mpc != null) {
@@ -2731,7 +2731,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				int messengerid = rs.getInt("messengerid");
 				int position = rs.getInt("messengerposition");
 				if (messengerid > 0 && position < 4 && position > -1) {
-					MapleMessenger messenger = Server.getInstance().getWorld(ret.world).getMessenger(messengerid);
+					Messenger messenger = Server.getInstance().getWorld(ret.world).getMessenger(messengerid);
 					if (messenger != null) {
 						ret.messenger = messenger;
 						ret.messengerposition = position;
@@ -3204,7 +3204,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void receivePartyMemberHP() {
 		if (party != null) {
 			byte channel = client.getChannel();
-			for (MaplePartyCharacter partychar : party.getMembers()) {
+			for (PartyCharacter partychar : party.getMembers()) {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
@@ -3968,7 +3968,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		guildid = _id;
 		if (guildid > 0) {
 			if (mgc == null) {
-				mgc = new MapleGuildCharacter(this);
+				mgc = new GuildCharacter(this);
 			} else {
 				mgc.setGuildId(guildid);
 			}
@@ -4138,7 +4138,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 	}
 
-	public void setMessenger(MapleMessenger messenger) {
+	public void setMessenger(Messenger messenger) {
 		this.messenger = messenger;
 	}
 
@@ -4195,7 +4195,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.name = name;
 	}
 
-	public void setParty(MapleParty party) {
+	public void setParty(Party party) {
 		if (party == null) {
 			this.mpc = null;
 		}
@@ -4477,7 +4477,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void updatePartyMemberHP() {
 		if (party != null) {
 			byte channel = client.getChannel();
-			for (MaplePartyCharacter partychar : party.getMembers()) {
+			for (PartyCharacter partychar : party.getMembers()) {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {

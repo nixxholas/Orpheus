@@ -43,11 +43,11 @@ import net.GamePacket;
 import tools.DatabaseConnection;
 import net.server.Channel;
 import net.server.Server;
-import net.server.MapleMessengerCharacter;
-import net.server.MaplePartyCharacter;
+import net.server.MessengerCharacter;
+import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.World;
-import net.server.guild.MapleGuildCharacter;
+import net.server.guild.GuildCharacter;
 import scripting.npc.NPCConversationManager;
 import scripting.npc.NPCScriptManager;
 import scripting.quest.QuestActionManager;
@@ -706,7 +706,7 @@ public class GameClient {
 					}
 				}
 				if (player.getMessenger() != null) {
-					MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(player);
+					MessengerCharacter messengerplayer = new MessengerCharacter(player);
 					worlda.leaveMessenger(player.getMessenger().getId(), messengerplayer);
 					player.setMessenger(null);
 				}
@@ -727,7 +727,7 @@ public class GameClient {
 					}
 				}
 				if (player.getParty() != null) {
-					MaplePartyCharacter chrp = player.getMPC();
+					PartyCharacter chrp = player.getMPC();
 					chrp.setOnline(false);
 					worlda.updateParty(player.getParty().getId(), PartyOperation.LOG_ONOFF, chrp);
 				}
@@ -797,7 +797,7 @@ public class GameClient {
 			}
 			if (rs.getInt("guildid") > 0) {
 				try {
-					Server.getInstance().deleteGuildCharacter(new MapleGuildCharacter(cid, 0, rs.getString("name"), (byte) -1, (byte) -1, 0, rs.getInt("guildrank"), rs.getInt("guildid"), false, rs.getInt("allianceRank")));
+					Server.getInstance().deleteGuildCharacter(new GuildCharacter(cid, 0, rs.getString("name"), (byte) -1, (byte) -1, 0, rs.getInt("guildrank"), rs.getInt("guildid"), false, rs.getInt("allianceRank")));
 				} catch (Exception re) {
 					rs.close();
 					ps.close();

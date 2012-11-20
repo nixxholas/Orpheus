@@ -66,15 +66,15 @@ import net.GamePacket;
 import net.SendOpcode;
 import net.server.handlers.channel.PlayerInteractionHandler;
 import net.server.handlers.channel.SummonDamageHandler.SummonAttackEntry;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.PlayerCoolDownValueHolder;
 import net.server.Server;
-import net.server.guild.MapleAlliance;
-import net.server.guild.MapleGuild;
-import net.server.guild.MapleGuildCharacter;
-import net.server.guild.MapleGuildSummary;
+import net.server.guild.Alliance;
+import net.server.guild.Guild;
+import net.server.guild.GuildCharacter;
+import net.server.guild.GuildSummary;
 import server.CashShop.CashItem;
 import server.CashShop.CashItemFactory;
 import server.CashShop.SpecialCashItem;
@@ -1837,7 +1837,7 @@ public class PacketCreator {
 			w.writeMapleAsciiString("");
 			w.write(new byte[6]);
 		} else {
-			MapleGuildSummary gs = chr.getClient().getWorldServer().getGuildSummary(chr.getGuildId());
+			GuildSummary gs = chr.getClient().getWorldServer().getGuildSummary(chr.getGuildId());
 			if (gs != null) {
 				w.writeMapleAsciiString(gs.getName());
 				w.writeShort(gs.getLogoBG());
@@ -2533,10 +2533,10 @@ public class PacketCreator {
 		w.write(chr.getMarriageRing() != null ? 1 : 0);
 		String guildName = "";
 		String allianceName = "";
-		MapleGuildSummary gs = chr.getClient().getWorldServer().getGuildSummary(chr.getGuildId());
+		GuildSummary gs = chr.getClient().getWorldServer().getGuildSummary(chr.getGuildId());
 		if (chr.getGuildId() > 0 && gs != null) {
 			guildName = gs.getName();
-			MapleAlliance alliance = Server.getInstance().getAlliance(gs.getAllianceId());
+			Alliance alliance = Server.getInstance().getAlliance(gs.getAllianceId());
 			if (alliance != null) {
 				allianceName = alliance.getName();
 			}
@@ -3446,24 +3446,24 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	private static void addPartyStatus(PacketWriter w, int forchannel, MapleParty party, boolean leaving) {
-		List<MaplePartyCharacter> partymembers = new ArrayList<MaplePartyCharacter>(party.getMembers());
+	private static void addPartyStatus(PacketWriter w, int forchannel, Party party, boolean leaving) {
+		List<PartyCharacter> partymembers = new ArrayList<PartyCharacter>(party.getMembers());
 		while (partymembers.size() < 6) {
-			partymembers.add(new MaplePartyCharacter());
+			partymembers.add(new PartyCharacter());
 		}
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			w.writeInt(partychar.getId());
 		}
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			w.writeAsciiString(getRightPaddedStr(partychar.getName(), '\0', 13));
 		}
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			w.writeInt(partychar.getJobId());
 		}
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			w.writeInt(partychar.getLevel());
 		}
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			if (partychar.isOnline()) {
 				w.writeInt(partychar.getChannel() - 1);
 			} else {
@@ -3471,14 +3471,14 @@ public class PacketCreator {
 			}
 		}
 		w.writeInt(party.getLeader().getId());
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			if (partychar.getChannel() == forchannel) {
 				w.writeInt(partychar.getMapId());
 			} else {
 				w.writeInt(0);
 			}
 		}
-		for (MaplePartyCharacter partychar : partymembers) {
+		for (PartyCharacter partychar : partymembers) {
 			if (partychar.getChannel() == forchannel && !leaving) {
 				w.writeInt(partychar.getDoorTown());
 				w.writeInt(partychar.getDoorTarget());
@@ -3493,7 +3493,7 @@ public class PacketCreator {
 		}
 	}
 
-	public static GamePacket updateParty(int forChannel, MapleParty party, PartyOperation op, MaplePartyCharacter target) {
+	public static GamePacket updateParty(int forChannel, Party party, PartyOperation op, PartyCharacter target) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PARTY_OPERATION.getValue());
 		switch (op) {
@@ -3890,7 +3890,7 @@ public class PacketCreator {
 			w.write(0);
 			return w.getPacket();
 		}
-		MapleGuild g = c.getClient().getWorldServer().getGuild(c.getMGC());
+		Guild g = c.getClient().getWorldServer().getGuild(c.getMGC());
 		if (g == null) { // failed to read from DB - don't show a guild
 			w.write(0);
 			return w.getPacket();
@@ -3903,13 +3903,13 @@ public class PacketCreator {
 		for (int i = 1; i <= 5; i++) {
 			w.writeMapleAsciiString(g.getRankTitle(i));
 		}
-		Collection<MapleGuildCharacter> members = g.getMembers();
+		Collection<GuildCharacter> members = g.getMembers();
 		w.write(members.size()); // then it is the size of all the members
-		for (MapleGuildCharacter mgc : members) {// and each of their character
+		for (GuildCharacter mgc : members) {// and each of their character
 													// ids o_O
 			w.writeInt(mgc.getId());
 		}
-		for (MapleGuildCharacter mgc : members) {
+		for (GuildCharacter mgc : members) {
 			w.writeAsciiString(getRightPaddedStr(mgc.getName(), '\0', 13));
 			w.writeInt(mgc.getJobId());
 			w.writeInt(mgc.getLevel());
@@ -3969,7 +3969,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket newGuildMember(MapleGuildCharacter mgc) {
+	public static GamePacket newGuildMember(GuildCharacter mgc) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(0x27);
@@ -3987,7 +3987,7 @@ public class PacketCreator {
 	}
 
 	// someone leaving, mode == 0x2c for leaving, 0x2f for expelled
-	public static GamePacket memberLeft(MapleGuildCharacter mgc, boolean bExpelled) {
+	public static GamePacket memberLeft(GuildCharacter mgc, boolean bExpelled) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(bExpelled ? 0x2f : 0x2c);
@@ -3998,7 +3998,7 @@ public class PacketCreator {
 	}
 
 	// rank change
-	public static GamePacket changeRank(MapleGuildCharacter mgc) {
+	public static GamePacket changeRank(GuildCharacter mgc) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(0x40);
@@ -4017,7 +4017,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket guildMemberLevelJobUpdate(MapleGuildCharacter mgc) {
+	public static GamePacket guildMemberLevelJobUpdate(GuildCharacter mgc) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(0x3C);
@@ -6050,18 +6050,18 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	private static void getGuildInfo(PacketWriter w, MapleGuild guild) {
+	private static void getGuildInfo(PacketWriter w, Guild guild) {
 		w.writeInt(guild.getId());
 		w.writeMapleAsciiString(guild.getName());
 		for (int i = 1; i <= 5; i++) {
 			w.writeMapleAsciiString(guild.getRankTitle(i));
 		}
-		Collection<MapleGuildCharacter> members = guild.getMembers();
+		Collection<GuildCharacter> members = guild.getMembers();
 		w.write(members.size());
-		for (MapleGuildCharacter mgc : members) {
+		for (GuildCharacter mgc : members) {
 			w.writeInt(mgc.getId());
 		}
-		for (MapleGuildCharacter mgc : members) {
+		for (GuildCharacter mgc : members) {
 			w.writeAsciiString(getRightPaddedStr(mgc.getName(), '\0', 13));
 			w.writeInt(mgc.getJobId());
 			w.writeInt(mgc.getLevel());
@@ -6080,7 +6080,7 @@ public class PacketCreator {
 		w.writeInt(guild.getAllianceId());
 	}
 
-	public static GamePacket getAllianceInfo(MapleAlliance alliance) {
+	public static GamePacket getAllianceInfo(Alliance alliance) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x0C);
@@ -6099,7 +6099,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket makeNewAlliance(MapleAlliance alliance, GameClient c) {
+	public static GamePacket makeNewAlliance(Alliance alliance, GameClient c) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x0F);
@@ -6120,7 +6120,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getGuildAlliances(MapleAlliance alliance, GameClient c) {
+	public static GamePacket getGuildAlliances(Alliance alliance, GameClient c) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x0D);
@@ -6131,7 +6131,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket addGuildToAlliance(MapleAlliance alliance, int newGuild, GameClient c) {
+	public static GamePacket addGuildToAlliance(Alliance alliance, int newGuild, GameClient c) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x12);
@@ -6194,7 +6194,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket removeGuildFromAlliance(MapleAlliance alliance, int expelledGuild, GameClient c) {
+	public static GamePacket removeGuildFromAlliance(Alliance alliance, int expelledGuild, GameClient c) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x10);

@@ -44,11 +44,11 @@ import java.util.LinkedList;
 import java.util.List;
 import net.server.Channel;
 import tools.DatabaseConnection;
-import net.server.MapleParty;
-import net.server.MaplePartyCharacter;
+import net.server.Party;
+import net.server.PartyCharacter;
 import net.server.Server;
-import net.server.guild.MapleAlliance;
-import net.server.guild.MapleGuild;
+import net.server.guild.Alliance;
+import net.server.guild.Guild;
 import provider.MapleData;
 import provider.MapleDataProviderFactory;
 import scripting.AbstractPlayerInteraction;
@@ -57,7 +57,7 @@ import server.ItemInfoProvider;
 import server.ShopFactory;
 import server.MapleStatEffect;
 import server.events.gm.MapleEvent;
-import server.expeditions.MapleExpedition;
+import server.expeditions.Expedition;
 import server.maps.GameMap;
 import server.maps.GameMapFactory;
 import server.partyquest.Pyramid;
@@ -236,11 +236,11 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void displayGuildRanks() {
-		MapleGuild.displayGuildRanks(getClient(), npc);
+		Guild.displayGuildRanks(getClient(), npc);
 	}
 
 	@Override
-	public MapleParty getParty() {
+	public Party getParty() {
 		return getPlayer().getParty();
 	}
 
@@ -365,7 +365,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		}
 	}
 
-	public static MapleAlliance createAlliance(GameCharacter chr1, GameCharacter chr2, String name) {
+	public static Alliance createAlliance(GameCharacter chr1, GameCharacter chr2, String name) {
 		int id = 0;
 		int guild1 = chr1.getGuildId();
 		int guild2 = chr2.getGuildId();
@@ -384,7 +384,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 			e.printStackTrace();
 			return null;
 		}
-		MapleAlliance alliance = new MapleAlliance(name, id, guild1, guild2);
+		Alliance alliance = new Alliance(name, id, guild1, guild2);
 		try {
 			Server.getInstance().setGuildAllianceId(guild1, id);
 			Server.getInstance().setGuildAllianceId(guild2, id);
@@ -467,17 +467,17 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		}
 	}
 
-	public MapleExpedition createExpedition(String type, byte min) {
-		MapleParty party = getPlayer().getParty();
+	public Expedition createExpedition(String type, byte min) {
+		Party party = getPlayer().getParty();
 		if (party == null || party.getMembers().size() < min)
 			return null;
-		return new MapleExpedition(getPlayer());
+		return new Expedition(getPlayer());
 	}
 
 	public boolean createPyramid(String mode, boolean party) {// lol
 		PyramidMode mod = PyramidMode.valueOf(mode);
 
-		MapleParty partyz = getPlayer().getParty();
+		Party partyz = getPlayer().getParty();
 		GameMapFactory mf = c.getChannelServer().getMapFactory();
 
 		GameMap map = null;
@@ -503,7 +503,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		}
 
 		if (!party) {
-			partyz = new MapleParty(-1, new MaplePartyCharacter(getPlayer()));
+			partyz = new Party(-1, new PartyCharacter(getPlayer()));
 		}
 		Pyramid py = new Pyramid(partyz, mod, map.getId());
 		getPlayer().setPartyQuest(py);

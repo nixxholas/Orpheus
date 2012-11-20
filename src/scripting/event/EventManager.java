@@ -37,7 +37,7 @@ import client.GameCharacter;
 import com.mysql.jdbc.Connection;
 import constants.ServerConstants;
 import net.server.Channel;
-import net.server.MapleParty;
+import net.server.Party;
 import net.server.Server;
 import server.MapleStocks;
 import server.TimerManager;
@@ -148,7 +148,7 @@ public class EventManager {
 	}
 
 	// PQ method: starts a PQ
-	public void startInstance(MapleParty party, GameMap map) {
+	public void startInstance(Party party, GameMap map) {
 		try {
 			EventInstanceManager eim = (EventInstanceManager) (iv.invokeFunction("setup", (Object) null));
 			eim.registerParty(party, map);

@@ -30,7 +30,7 @@ import server.maps.GameMapObject;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.InventoryType;
-import net.server.MaplePartyCharacter;
+import net.server.PartyCharacter;
 import scripting.item.ItemScriptManager;
 import server.ItemInfoProvider;
 import server.ItemInfoProvider.scriptedItem;
@@ -77,12 +77,12 @@ public final class PetLootHandler extends AbstractPacketHandler {
 						if (mesosamm > 50000 * chr.getMesoRate())
 							return;
 						int partynum = 0;
-						for (MaplePartyCharacter partymem : chr.getParty().getMembers()) {
+						for (PartyCharacter partymem : chr.getParty().getMembers()) {
 							if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId() && partymem.getChannel() == c.getChannel()) {
 								partynum++;
 							}
 						}
-						for (MaplePartyCharacter partymem : chr.getParty().getMembers()) {
+						for (PartyCharacter partymem : chr.getParty().getMembers()) {
 							if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId()) {
 								GameCharacter somecharacter = c.getChannelServer().getPlayerStorage().getCharacterById(partymem.getId());
 								if (somecharacter != null)
