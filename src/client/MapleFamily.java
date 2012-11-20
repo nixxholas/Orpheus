@@ -34,7 +34,7 @@ public class MapleFamily {
 
 	public MapleFamily(int cid) {
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT familyid FROM family_character WHERE cid = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `familyid` FROM `family_character` WHERE `cid` = ?");
 			ps.setInt(1, cid);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -49,7 +49,7 @@ public class MapleFamily {
 
 	public static void getMapleFamily() {
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM family_character WHERE familyid = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM `family_character` WHERE `familyid` = ?");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

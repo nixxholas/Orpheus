@@ -485,7 +485,7 @@ public class PlayerCommands extends EnumeratedCommands {
 	private static ResultSet getGMList() {
 		try {
 			Connection con = (Connection) DatabaseConnection.getConnection();
-			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT name, gm FROM characters WHERE gm > 2 ORDER BY gm DESC, name DESC");
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT `name`, `gm` FROM `characters` WHERE `gm` > 2 ORDER BY `gm` DESC, `name` DESC");
 			return ps.executeQuery();
 		} catch (SQLException ex) {
 			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
@@ -499,15 +499,15 @@ public class PlayerCommands extends EnumeratedCommands {
 			PreparedStatement ps;
 			if (ServerConstants.ENABLE_HARDCORE_MODE) {
 				if (!noGMs) {
-					ps = (PreparedStatement) con.prepareStatement("SELECT rebirths, level, name, job, hardcore, dead FROM characters WHERE gm < 2 ORDER BY rebirths DESC, level DESC, name DESC LIMIT 10");
+					ps = (PreparedStatement) con.prepareStatement("SELECT `rebirths`, `level`, `name`, `job`, `hardcore`, `dead` FROM `characters` WHERE `gm` < 2 ORDER BY `rebirths` DESC, `level` DESC, `name` DESC LIMIT 10");
 				} else {
-					ps = (PreparedStatement) con.prepareStatement("SELECT rebirths, level, name, job, hardcore, dead FROM characters ORDER BY rebirths DESC, level DESC, name DESC LIMIT 10");
+					ps = (PreparedStatement) con.prepareStatement("SELECT `rebirths`, `level`, `name`, `job`, `hardcore`, `dead` FROM `characters` ORDER BY `rebirths` DESC, `level` DESC, `name` DESC LIMIT 10");
 				}
 			} else {
 				if (!noGMs) {
-					ps = (PreparedStatement) con.prepareStatement("SELECT rebirths, level, name, job FROM characters WHERE gm < 2 ORDER BY rebirths DESC, level DESC, name DESC LIMIT 10");
+					ps = (PreparedStatement) con.prepareStatement("SELECT `rebirths`, `level`, `name`, `job` FROM `characters` WHERE `gm` < 2 ORDER BY `rebirths` DESC, `level` DESC, `name` DESC LIMIT 10");
 				} else {
-					ps = (PreparedStatement) con.prepareStatement("SELECT rebirths, level, name, job FROM characters ORDER BY rebirths DESC, level DESC, name DESC LIMIT 10");
+					ps = (PreparedStatement) con.prepareStatement("SELECT `rebirths`, `level`, `name`, `job` FROM `characters` ORDER BY `rebirths` DESC, `level` DESC, `name` DESC LIMIT 10");
 				}
 			}
 			return ps.executeQuery();

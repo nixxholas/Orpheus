@@ -890,8 +890,10 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {
-		}  
-		return MaplePacketCreator.sendMTS(items, tab, type, page, pages); // resniff
+		}
+		// resniff
+		return MaplePacketCreator.sendMTS(items, tab, type, page, pages); 
+		
 	}
 
 	public MaplePacket getMTSSearch(int tab, int type, int cOi, String search, int page) {
@@ -902,12 +904,15 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 			List<String> retItems = new ArrayList<String>();
 			for (ItemNameEntry itemPair : ii.getAllItems()) {
 				if (itemPair.name.toLowerCase().contains(search.toLowerCase())) {
+
 					retItems.add(" itemid=" + itemPair.itemId + " OR ");
 				}
 			}
 			listaitems += " AND (";
 			if (retItems != null && retItems.size() > 0) {
 				for (String singleRetItem : retItems) {
+					// TODO: EWWWWWWWWWWWW use a string builder!
+					// EWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW!
 					listaitems += singleRetItem;
 				}
 				listaitems += " itemid=0 )";

@@ -80,7 +80,7 @@ public final class MonsterBook {
 	}
 
 	public void loadCards(final int charid) throws SQLException {
-		PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT cardid, level FROM monsterbook WHERE charid = ? ORDER BY cardid ASC");
+		PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `cardid`, `level` FROM `monsterbook` WHERE `charid` = ? ORDER BY `cardid` ASC");
 		ps.setInt(1, charid);
 		ResultSet rs = ps.executeQuery();
 		int cardid, level;
@@ -105,7 +105,7 @@ public final class MonsterBook {
 		}
 		try {
 			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("DELETE FROM monsterbook WHERE charid = ?");
+			PreparedStatement ps = con.prepareStatement("DELETE FROM `monsterbook` WHERE `charid` = ?");
 			ps.setInt(1, charid);
 			ps.execute();
 			ps.close();
@@ -113,7 +113,7 @@ public final class MonsterBook {
 			StringBuilder query = new StringBuilder();
 			for (Entry<Integer, Integer> all : cards.entrySet()) {
 				if (first) {
-					query.append("INSERT INTO monsterbook VALUES (");
+					query.append("INSERT INTO `monsterbook` VALUES (");
 					first = false;
 				} else {
 					query.append(",(");

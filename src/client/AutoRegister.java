@@ -45,7 +45,7 @@ public class AutoRegister {
 	}
 
 	private static PreparedStatement getSelectAccountByName(Connection connection, String login) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT name FROM accounts WHERE name = ?");
+		PreparedStatement ps = connection.prepareStatement("SELECT `name` FROM `accounts` WHERE `name` = ?");
 		ps.setString(1, login);
 		return ps;
 	}
@@ -89,7 +89,7 @@ public class AutoRegister {
 	private static PreparedStatement getInsertAccount(Connection connection, String login, String pwd, final String ip) 
 			throws SQLException, NoSuchAlgorithmException {
 		
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO accounts (name, password, email, birthday, macs, lastknownip) VALUES (?, ?, ?, ?, ?, ?)");
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO `accounts` (`name`, `password`, `email`, `birthday`, `macs`, `lastknownip`) VALUES (?, ?, ?, ?, ?, ?)");
 		
 		ps.setString(1, login);
 		ps.setString(2, HashCreator.getHash(pwd));
@@ -102,7 +102,7 @@ public class AutoRegister {
 	}
 
 	private static PreparedStatement getSelectAccountByIp(Connection connection, final String ip) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT lastknownip FROM accounts WHERE lastknownip = ?");
+		PreparedStatement ps = connection.prepareStatement("SELECT `lastknownip` FROM `accounts` WHERE `lastknownip` = ?");
 		ps.setString(1, ip);
 		return ps;
 	}

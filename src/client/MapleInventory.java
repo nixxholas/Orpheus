@@ -42,8 +42,8 @@ public class MapleInventory implements Iterable<IItem> {
 		this.slotLimit = slotLimit;
 	}
 
-	public boolean isExtendableInventory() { // not sure about cash, basing this
-												// on the previous one.
+	public boolean isExtendableInventory() { 
+		// not sure about cash, basing this on the previous one.
 		return !(type.equals(MapleInventoryType.UNDEFINED) || type.equals(MapleInventoryType.EQUIPPED) || type.equals(MapleInventoryType.CASH));
 	}
 

@@ -50,8 +50,8 @@ public enum ItemFactory {
 		final Connection connection = DatabaseConnection.getConnection();
 
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT * FROM `inventoryitems` LEFT JOIN `inventoryequipment` USING(`inventoryitemid`) WHERE `type` = ? AND `");
-		query.append(account ? "accountid" : "characterid").append("` = ?");
+		query.append("SELECT * FROM `inventoryitems` LEFT JOIN `inventoryequipment` USING(`inventoryitemid`) WHERE `type` = ? AND ");
+		query.append(account ? "`accountid`" : "`characterid`").append(" = ?");
 
 		if (login)
 			query.append(" AND `inventorytype` = ").append(MapleInventoryType.EQUIPPED.asByte());
@@ -119,8 +119,8 @@ public enum ItemFactory {
 		PreparedStatement pse = null;
 		try {
 			StringBuilder query = new StringBuilder();
-			query.append("DELETE FROM `inventoryitems` WHERE `type` = ? AND `");
-			query.append(account ? "accountid" : "characterid").append("` = ?");
+			query.append("DELETE FROM `inventoryitems` WHERE `type` = ? AND ");
+			query.append(account ? "`accountid`" : "`characterid`").append(" = ?");
 			Connection con = DatabaseConnection.getConnection();
 			ps = con.prepareStatement(query.toString());
 			ps.setInt(1, value);

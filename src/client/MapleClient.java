@@ -186,9 +186,9 @@ public class MapleClient {
 		List<CharacterNameAndId> chars = new ArrayList<CharacterNameAndId>(15);
 		try {
 			if (ServerConstants.ENABLE_HARDCORE_MODE) {
-				ps = DatabaseConnection.getConnection().prepareStatement("SELECT id, name FROM characters WHERE accountid = ? AND world = ? AND dead != 1");
+				ps = DatabaseConnection.getConnection().prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ? AND `dead` != 1");
 			} else {
-				ps = DatabaseConnection.getConnection().prepareStatement("SELECT id, name FROM characters WHERE accountid = ? AND world = ?");
+				ps = DatabaseConnection.getConnection().prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ?");
 			}
 			ps.setInt(1, this.getAccID());
 			ps.setInt(2, serverId);
@@ -211,7 +211,7 @@ public class MapleClient {
 	public boolean hasBannedIP() {
 		boolean ret = false;
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM ipbans WHERE ? LIKE CONCAT(ip, '%')");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM `ipbans` WHERE ? LIKE CONCAT(`ip`, '%')");
 			ps.setString(1, session.getRemoteAddress().toString());
 			ResultSet rs = ps.executeQuery();
 			rs.next();
@@ -232,7 +232,7 @@ public class MapleClient {
 		boolean ret = false;
 		int i = 0;
 		try {
-			StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM macbans WHERE mac IN (");
+			StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM `macbans` WHERE `mac` IN (");
 			for (i = 0; i < macs.size(); i++) {
 				sql.append("?");
 				if (i != macs.size() - 1) {
@@ -278,7 +278,7 @@ public class MapleClient {
 
 	private PreparedStatement getSelectMacsByAccountId(
 			final Connection connection) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT macs FROM accounts WHERE id = ?");
+		PreparedStatement ps = connection.prepareStatement("SELECT `macs` FROM `accounts` WHERE `id` = ?");
 		ps.setInt(1, accId);
 		return ps;
 	}
@@ -288,14 +288,14 @@ public class MapleClient {
 		try {
 			loadMacsIfNescessary();
 			List<String> filtered = new LinkedList<String>();
-			PreparedStatement ps = con.prepareStatement("SELECT filter FROM macfilters");
+			PreparedStatement ps = con.prepareStatement("SELECT `filter` FROM `macfilters`");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				filtered.add(rs.getString("filter"));
 			}
 			rs.close();
 			ps.close();
-			ps = con.prepareStatement("INSERT INTO macbans (mac) VALUES (?)");
+			ps = con.prepareStatement("INSERT INTO `macbans` (`mac`) VALUES (?)");
 			for (String mac : macs) {
 				boolean matched = false;
 				for (String filter : filtered) {
@@ -328,7 +328,7 @@ public class MapleClient {
 	public void setPin(String pin) {
 		this.pin = pin;
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET pin = ? WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `pin` = ? WHERE `id` = ?");
 			ps.setString(1, pin);
 			ps.setInt(2, accId);
 			ps.executeUpdate();
@@ -356,7 +356,7 @@ public class MapleClient {
 	public void setPic(String pic) {
 		this.pic = pic;
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET pic = ? WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `pic` = ? WHERE `id` = ?");
 			ps.setString(1, pic);
 			ps.setInt(2, accId);
 			ps.executeUpdate();
@@ -391,7 +391,7 @@ public class MapleClient {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = con.prepareStatement("SELECT id, password, salt, gender, banned, gm, pin, pic, characterslots, tos FROM accounts WHERE name = ?");
+			ps = con.prepareStatement("SELECT `id`, `password`, `salt`, `gender`, `banned`, `gm`, `pin`, `pic`, `characterslots`, `tos` FROM `accounts` WHERE `name` = ?");
 			ps.setString(1, login);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -432,7 +432,7 @@ public class MapleClient {
 					random.nextBytes(bytes);
 					String saltNew = HexTool.toString(bytes).replace(" ", "").toLowerCase();
 					String passhashNew = HashCreator.getHash("SHA-512", pwd + saltNew);
-					ps = con.prepareStatement("UPDATE accounts SET password = ?, salt = ? WHERE id = ?");
+					ps = con.prepareStatement("UPDATE `accounts` SET `password` = ?, `salt` = ? WHERE `id` = ?");
 					ps.setString(1, passhashNew);
 					ps.setString(2, saltNew);
 					ps.setInt(3, accId);
@@ -441,7 +441,7 @@ public class MapleClient {
 					rs.close();
 				}
 				
-				ps = con.prepareStatement("INSERT INTO iplog (accountid, ip) VALUES (?, ?)");
+				ps = con.prepareStatement("INSERT INTO `iplog` (`accountid`, `ip`) VALUES (?, ?)");
 				ps.setInt(1, accId);
 				ps.setString(2, session.getRemoteAddress().toString());
 				ps.executeUpdate();
@@ -474,7 +474,7 @@ public class MapleClient {
 		ResultSet rs = null;
 		final Calendar lTempban = Calendar.getInstance();
 		try {
-			ps = con.prepareStatement("SELECT `tempban` FROM accounts WHERE id = ?");
+			ps = con.prepareStatement("SELECT `tempban` FROM `accounts` WHERE `id` = ?");
 			ps.setInt(1, getAccID());
 			rs = ps.executeQuery();
 			long blubb = rs.getLong("tempban");
@@ -547,7 +547,7 @@ public class MapleClient {
 			}
 		}
 		try {
-			ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET macs = ? WHERE id = ?");
+			ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `macs` = ? WHERE `id` = ?");
 			ps.setString(1, newMacData.toString());
 			ps.setInt(2, accId);
 			ps.executeUpdate();
@@ -575,7 +575,7 @@ public class MapleClient {
 	public void updateLoginState(int newstate) {
 		try {
 			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("UPDATE accounts SET loggedin = ?, lastlogin = CURRENT_TIMESTAMP() WHERE id = ?");
+			PreparedStatement ps = con.prepareStatement("UPDATE `accounts` SET `loggedin` = ?, `lastlogin` = CURRENT_TIMESTAMP() WHERE `id` = ?");
 			ps.setInt(1, newstate);
 			ps.setInt(2, getAccID());
 			ps.executeUpdate();
@@ -595,7 +595,7 @@ public class MapleClient {
 	public int getLoginState() {
 		try {
 			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT loggedin, lastlogin, UNIX_TIMESTAMP(birthday) as birthday FROM accounts WHERE id = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT `loggedin`, `lastlogin`, UNIX_TIMESTAMP(`birthday`) AS `birthday` FROM `accounts` WHERE `id` = ?");
 			ps.setInt(1, getAccID());
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
@@ -623,7 +623,7 @@ public class MapleClient {
 			if (state == LOGIN_LOGGEDIN) {
 				loggedIn = true;
 			} else if (state == LOGIN_SERVER_TRANSITION) {
-				ps = con.prepareStatement("UPDATE accounts SET loggedin = 0 WHERE id = ?");
+				ps = con.prepareStatement("UPDATE `accounts` SET `loggedin` = 0 WHERE `id` = ?");
 				ps.setInt(1, getAccID());
 				ps.executeUpdate();
 				ps.close();
@@ -786,7 +786,7 @@ public class MapleClient {
 	public boolean deleteCharacter(int cid) {
 		Connection con = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = con.prepareStatement("SELECT id, guildid, guildrank, name, allianceRank FROM characters WHERE id = ? AND accountid = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT `id`, `guildid`, `guildrank`, `name`, `allianceRank` FROM `characters` WHERE `id` = ? AND `accountid` = ?");
 			ps.setInt(1, cid);
 			ps.setInt(2, accId);
 			ResultSet rs = ps.executeQuery();
@@ -805,15 +805,15 @@ public class MapleClient {
 				}
 			}
 			rs.close();
-			ps = con.prepareStatement("DELETE FROM wishlists WHERE charid = ?");
+			ps = con.prepareStatement("DELETE FROM `wishlists` WHERE `charid` = ?");
 			ps.setInt(1, cid);
 			ps.executeUpdate();
-			ps = con.prepareStatement("DELETE FROM characters WHERE id = ?");
+			ps = con.prepareStatement("DELETE FROM `characters` WHERE `id` = ?");
 			ps.setInt(1, cid);
 			ps.executeUpdate();
 			String[] toDel = {"famelog", "inventoryitems", "keymap", "queststatus", "savedlocations", "skillmacros", "skills", "eventstats"};
 			for (String s : toDel) {
-				ps = con.prepareStatement("DELETE FROM `" + s + "` WHERE characterid = ?");
+				ps = con.prepareStatement("DELETE FROM `" + s + "` WHERE `characterid` = ?");
 				ps.setInt(1, cid);
 				ps.executeUpdate();
 			}
@@ -910,7 +910,7 @@ public class MapleClient {
 			return true;
 		}
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `tos` FROM accounts WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `tos` FROM `accounts` WHERE `id` = ?");
 			ps.setInt(1, accId);
 			ResultSet rs = ps.executeQuery();
 
@@ -922,7 +922,7 @@ public class MapleClient {
 			ps.close();
 			rs.close();
 			rs = null;
-			ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET tos = 1 WHERE id = ?");
+			ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `tos` = 1 WHERE `id` = ?");
 			ps.setInt(1, accId);
 			ps.executeUpdate();
 			ps.close();
@@ -949,7 +949,7 @@ public class MapleClient {
 		if (characterSlots < 15) {
 			Connection con = DatabaseConnection.getConnection();
 			try {
-				PreparedStatement ps = con.prepareStatement("UPDATE accounts SET characterslots = ? WHERE id = ?");
+				PreparedStatement ps = con.prepareStatement("UPDATE `accounts` SET `characterslots` = ? WHERE `id` = ?");
 				ps.setInt(1, this.characterSlots += 1);
 				ps.setInt(2, accId);
 				ps.executeUpdate();
@@ -967,7 +967,7 @@ public class MapleClient {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = con.prepareStatement("SELECT `greason` FROM `accounts` WHERE id = ?");
+			ps = con.prepareStatement("SELECT `greason` FROM `accounts` WHERE `id` = ?");
 			ps.setInt(1, accId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -996,7 +996,7 @@ public class MapleClient {
 	public void setGender(byte m) {
 		this.gender = m;
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET gender = ? WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `gender` = ? WHERE `id` = ?");
 			ps.setByte(1, gender);
 			ps.setInt(2, accId);
 			ps.executeUpdate();
@@ -1019,7 +1019,7 @@ public class MapleClient {
 			return;
 		}
 		try {
-			PreparedStatement ps = con.prepareStatement("UPDATE accounts SET lastknownip = ? WHERE name = ?");
+			PreparedStatement ps = con.prepareStatement("UPDATE `accounts` SET `lastknownip` = ? WHERE `name` = ?");
 			ps.setString(1, sockAddr.substring(1, sockAddr.lastIndexOf(':')));
 			ps.setString(2, accountName);
 			ps.executeUpdate();
@@ -1039,7 +1039,7 @@ public class MapleClient {
 	
 	public static String getAccountNameById(int id) {
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT name FROM accounts WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `name` FROM `accounts` WHERE `id` = ?");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {

@@ -51,13 +51,8 @@ public class MapleRing implements Comparable<MapleRing> {
 	public static MapleRing loadFromDb(int ringId) {
 		try {
 			MapleRing ret = null;
-			Connection con = DatabaseConnection.getConnection(); // Get a
-																	// connection
-																	// to the
-																	// database
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM rings WHERE id = ?"); // Get
-																								// ring
-																								// details..
+			Connection con = DatabaseConnection.getConnection(); 
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM `rings` WHERE `id` = ?"); 
 			ps.setInt(1, ringId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -81,7 +76,7 @@ public class MapleRing implements Comparable<MapleRing> {
 			}
 			int[] ringID = new int[2];
 			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("INSERT INTO rings (itemid, partnerChrId, partnername) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement("INSERT INTO `rings` (`itemid`, `partnerChrId`, `partnername`) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, itemid);
 			ps.setInt(2, partner2.getId());
 			ps.setString(3, partner2.getName());
@@ -91,7 +86,7 @@ public class MapleRing implements Comparable<MapleRing> {
 			ringID[0] = rs.getInt(1); // ID.
 			rs.close();
 			ps.close();
-			ps = con.prepareStatement("INSERT INTO rings (itemid, partnerRingId, partnerChrId, partnername) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			ps = con.prepareStatement("INSERT INTO `rings` (`itemid`, `partnerRingId`, `partnerChrId`, `partnername`) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, itemid);
 			ps.setInt(2, ringID[0]);
 			ps.setInt(3, partner1.getId());
@@ -102,7 +97,7 @@ public class MapleRing implements Comparable<MapleRing> {
 			ringID[1] = rs.getInt(1);
 			rs.close();
 			ps.close();
-			ps = con.prepareStatement("UPDATE rings SET partnerRingId = ? WHERE id = ?");
+			ps = con.prepareStatement("UPDATE `rings` SET `partnerRingId` = ? WHERE `id` = ?");
 			ps.setInt(1, ringID[1]);
 			ps.setInt(2, ringID[0]);
 			ps.executeUpdate();

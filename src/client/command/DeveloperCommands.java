@@ -182,7 +182,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						mob.setFh(fh);
 						try {
 							Connection con = DatabaseConnection.getConnection();
-							PreparedStatement ps = con.prepareStatement("INSERT INTO spawns ( idd, f, fh, cy, rx0, rx1, type, x, y, mid, mobtime ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+							PreparedStatement ps = con.prepareStatement("INSERT INTO `spawns` (`idd`, `f`, `fh`, `cy`, `rx0`, `rx1`, `type`, `x`, `y`, `mid`, `mobtime`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 							ps.setInt(1, npcId);
 							ps.setInt(2, 0);
 							ps.setInt(3, fh);
@@ -217,7 +217,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						npc.setFh(fh);
 						try {
 							Connection con = DatabaseConnection.getConnection();
-							PreparedStatement ps = con.prepareStatement("INSERT INTO spawns ( idd, f, fh, cy, rx0, rx1, type, x, y, mid ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+							PreparedStatement ps = con.prepareStatement("INSERT INTO `spawns` (`idd`, `f`, `fh`, `cy`, `rx0`, `rx1`, `type`, `x`, `y`, `mid`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 							ps.setInt(1, npcId);
 							ps.setInt(2, 0);
 							ps.setInt(3, fh);
@@ -325,11 +325,11 @@ public class DeveloperCommands extends EnumeratedCommands {
 			Connection con = (Connection) DatabaseConnection.getConnection();
 			PreparedStatement ps;
 			ResultSet rs;
-			ps = (PreparedStatement) con.prepareStatement("SELECT id, rank, rankMove FROM characters WHERE gm < 2 ORDER BY rebirths DESC, level DESC, name DESC");
+			ps = (PreparedStatement) con.prepareStatement("SELECT `id`, `rank`, `rankMove` FROM `characters` WHERE `gm` < 2 ORDER BY `rebirths` DESC, `level` DESC, `name` DESC");
 			rs = ps.executeQuery();
 			int n = 1;
 			while (rs.next()) {
-				ps = (PreparedStatement) con.prepareStatement("UPDATE characters SET rank = ?, rankMove = ? WHERE id = ?");
+				ps = (PreparedStatement) con.prepareStatement("UPDATE `characters` SET `rank` = ?, `rankMove` = ? WHERE `id` = ?");
 				ps.setInt(1, n);
 				ps.setInt(2, rs.getInt("rank") - n);
 				ps.setInt(3, rs.getInt("id"));

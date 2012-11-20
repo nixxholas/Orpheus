@@ -57,7 +57,7 @@ public class MapleAlliance {
 		}
 		MapleAlliance alliance = new MapleAlliance(null, -1, -1, -1);
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM alliance WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM `alliance` WHERE `id` = ?");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
@@ -93,7 +93,7 @@ public class MapleAlliance {
 			sb.append("guild").append(i).append(" = ?, ");
 		}
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `alliance` SET " + sb.toString() + " WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `alliance` SET " + sb.toString() + " WHERE `id` = ?");
 			ps.setInt(1, this.capacity);
 			ps.setString(2, this.notice);
 			for (int i = 0; i < rankTitles.length; i++) {
@@ -113,7 +113,7 @@ public class MapleAlliance {
 		Connection con = DatabaseConnection.getConnection();
 		boolean ret = false;
 		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM alliance WHERE id = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM `alliance` WHERE `id` = ?");
 			ps.setInt(1, this.allianceId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -132,7 +132,7 @@ public class MapleAlliance {
 				}
 				rs.close();
 				if (avail != -1) { // empty slot
-					ps = con.prepareStatement("UPDATE alliance SET guild" + avail + " = ? WHERE id = ?");
+					ps = con.prepareStatement("UPDATE `alliance` SET `guild" + avail + "` = ? WHERE `id` = ?");
 					if (add) {
 						ps.setInt(1, gid);
 					} else {

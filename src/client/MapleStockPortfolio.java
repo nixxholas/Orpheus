@@ -125,7 +125,7 @@ public class MapleStockPortfolio {
 				Connection con = (Connection) DatabaseConnection.getConnection();
 				PreparedStatement ps;
 				if (newlyAdded.contains(pair)) {
-					ps = con.prepareStatement("INSERT INTO maplestocks_data (`cid`, `stockid`, `shares`) VALUES (?, ?, ?)");
+					ps = con.prepareStatement("INSERT INTO `maplestocks_data` (`cid`, `stockid`, `shares`) VALUES (?, ?, ?)");
 					ps.setInt(1, cid);
 					ps.setInt(2, MapleStocks.getInstance().idOf(pair.getLeft()));
 					ps.setInt(3, pair.getRight());
@@ -150,7 +150,7 @@ public class MapleStockPortfolio {
 		MapleStockPortfolio ret = new MapleStockPortfolio(cid);
 		try {
 			Connection con = (Connection) DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM maplestocks_data WHERE cid = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM `maplestocks_data` WHERE `cid` = ?");
 			ps.setInt(1, cid);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

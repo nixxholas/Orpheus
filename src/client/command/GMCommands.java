@@ -439,7 +439,7 @@ public class GMCommands extends EnumeratedCommands {
 					break;
 				case unban:
 					try {
-						PreparedStatement p = DatabaseConnection.getConnection().prepareStatement("UPDATE accounts SET banned = -1 WHERE id = " + MapleCharacter.getIdByName(sub[1]));
+						PreparedStatement p = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `banned` = -1 WHERE `id` = " + MapleCharacter.getIdByName(sub[1]));
 						p.executeUpdate();
 						p.close();
 					} catch (Exception e) {
