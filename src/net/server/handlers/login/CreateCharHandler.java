@@ -25,7 +25,7 @@ import client.Item;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleSkinColor;
 import net.AbstractMaplePacketHandler;
@@ -62,12 +62,12 @@ public final class CreateCharHandler extends AbstractMaplePacketHandler {
 		if (!newchar.isGM()) {
 			if (job == 0) { // Knights of Cygnus
 				newchar.setJob(MapleJob.NOBLESSE);
-				newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1));
+				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1));
 			} else if (job == 1) { // Adventurer
-				newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1));
+				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1));
 			} else if (job == 2) { // Aran
 				newchar.setJob(MapleJob.LEGEND);
-				newchar.getInventory(MapleInventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1));
+				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1));
 			} else {
 				c.disconnect(); // Muhaha
 				Output.print("[CHAR CREATION] A new job ID has been found: " + job); // Should probably ban for packet editing.
@@ -75,7 +75,7 @@ public final class CreateCharHandler extends AbstractMaplePacketHandler {
 			}
 		}
 		// CHECK FOR EQUIPS
-		MapleInventory equip = newchar.getInventory(MapleInventoryType.EQUIPPED);
+		MapleInventory equip = newchar.getInventory(InventoryType.EQUIPPED);
 		if (newchar.isGM()) {
 			IItem eq_hat = MapleItemInformationProvider.getInstance().getEquipById(1002140);
 			eq_hat.setPosition((byte) -1);

@@ -28,7 +28,7 @@ import client.ISkill;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MaplePet;
 import client.MapleQuestStatus;
 import client.SkillFactory;
@@ -167,7 +167,7 @@ public class AbstractPlayerInteraction {
 				c.getPlayer().dropMessage(1, "Your inventory is full. Please remove an item from your " + ii.getInventoryType(id).name() + " inventory.");
 				return;
 			}
-			if (ii.getInventoryType(id).equals(MapleInventoryType.EQUIP) && !ItemConstants.isRechargable(item.getItemId())) {
+			if (ii.getInventoryType(id).equals(InventoryType.EQUIP) && !ItemConstants.isRechargable(item.getItemId())) {
 				if (randomStats) {
 					MapleInventoryManipulator.addFromDrop(c, ii.randomizeStats((Equip) item), false);
 				} else {
@@ -258,7 +258,7 @@ public class AbstractPlayerInteraction {
 	public void removeFromParty(int id, List<GameCharacter> party) {
 		for (GameCharacter chr : party) {
 			GameClient cl = chr.getClient();
-			MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(id);
+			InventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(id);
 			MapleInventory iv = cl.getPlayer().getInventory(type);
 			int possesed = iv.countById(id);
 			if (possesed > 0) {
@@ -333,8 +333,8 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void removeAranPoleArm() {
-		IItem tempItem = c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -11);
-		MapleInventoryManipulator.removeFromSlot(c.getPlayer().getClient(), MapleInventoryType.EQUIPPED, (byte) -11, tempItem.getQuantity(), false, true);
+		IItem tempItem = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
+		MapleInventoryManipulator.removeFromSlot(c.getPlayer().getClient(), InventoryType.EQUIPPED, (byte) -11, tempItem.getQuantity(), false, true);
 	}
 
 	public void spawnMonster(int id, int x, int y) {

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import client.IItem;
 import client.GameCharacter;
-import client.MapleInventoryType;
+import client.InventoryType;
 import constants.ItemConstants;
 import java.util.ArrayList;
 import tools.PacketCreator;
@@ -181,16 +181,16 @@ public class MapleTrade {
 
 	private boolean fitsInInventory() {
 		MapleItemInformationProvider mii = MapleItemInformationProvider.getInstance();
-		Map<MapleInventoryType, Integer> neededSlots = new LinkedHashMap<MapleInventoryType, Integer>();
+		Map<InventoryType, Integer> neededSlots = new LinkedHashMap<InventoryType, Integer>();
 		for (IItem item : exchangeItems) {
-			MapleInventoryType type = mii.getInventoryType(item.getItemId());
+			InventoryType type = mii.getInventoryType(item.getItemId());
 			if (neededSlots.get(type) == null) {
 				neededSlots.put(type, 1);
 			} else {
 				neededSlots.put(type, neededSlots.get(type) + 1);
 			}
 		}
-		for (Map.Entry<MapleInventoryType, Integer> entry : neededSlots.entrySet()) {
+		for (Map.Entry<InventoryType, Integer> entry : neededSlots.entrySet()) {
 			if (chr.getInventory(entry.getKey()).isFull(entry.getValue() - 1)) {
 				return false;
 			}

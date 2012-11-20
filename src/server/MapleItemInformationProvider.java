@@ -33,7 +33,7 @@ import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleWeaponType;
 import client.SkillFactory;
@@ -69,7 +69,7 @@ public class MapleItemInformationProvider {
 	protected MapleData etcStringData;
 	protected MapleData insStringData;
 	protected MapleData petStringData;
-	protected Map<Integer, MapleInventoryType> inventoryTypeCache = new HashMap<Integer, MapleInventoryType>();
+	protected Map<Integer, InventoryType> inventoryTypeCache = new HashMap<Integer, InventoryType>();
 	protected Map<Integer, Short> slotMaxCache = new HashMap<Integer, Short>();
 	protected Map<Integer, MapleStatEffect> itemEffects = new HashMap<Integer, MapleStatEffect>();
 	protected Map<Integer, Map<String, Integer>> equipStatsCache = new HashMap<Integer, Map<String, Integer>>();
@@ -115,21 +115,21 @@ public class MapleItemInformationProvider {
 		return instance;
 	}
 
-	public MapleInventoryType getInventoryType(int itemId) {
+	public InventoryType getInventoryType(int itemId) {
 		if (inventoryTypeCache.containsKey(itemId)) {
 			return inventoryTypeCache.get(itemId);
 		}
-		MapleInventoryType ret;
+		InventoryType ret;
 		String idStr = "0" + String.valueOf(itemId);
 		MapleDataDirectoryEntry root = itemData.getRoot();
 		for (MapleDataDirectoryEntry topDir : root.getSubdirectories()) {
 			for (MapleDataFileEntry iFile : topDir.getFiles()) {
 				if (iFile.getName().equals(idStr.substring(0, 4) + ".img")) {
-					ret = MapleInventoryType.getByWZName(topDir.getName());
+					ret = InventoryType.getByWZName(topDir.getName());
 					inventoryTypeCache.put(itemId, ret);
 					return ret;
 				} else if (iFile.getName().equals(idStr.substring(1) + ".img")) {
-					ret = MapleInventoryType.getByWZName(topDir.getName());
+					ret = InventoryType.getByWZName(topDir.getName());
 					inventoryTypeCache.put(itemId, ret);
 					return ret;
 				}
@@ -139,13 +139,13 @@ public class MapleItemInformationProvider {
 		for (MapleDataDirectoryEntry topDir : root.getSubdirectories()) {
 			for (MapleDataFileEntry iFile : topDir.getFiles()) {
 				if (iFile.getName().equals(idStr + ".img")) {
-					ret = MapleInventoryType.EQUIP;
+					ret = InventoryType.EQUIP;
 					inventoryTypeCache.put(itemId, ret);
 					return ret;
 				}
 			}
 		}
-		ret = MapleInventoryType.UNDEFINED;
+		ret = InventoryType.UNDEFINED;
 		inventoryTypeCache.put(itemId, ret);
 		return ret;
 	}
@@ -311,7 +311,7 @@ public class MapleItemInformationProvider {
 		if (item != null) {
 			MapleData smEntry = item.getChildByPath("info/slotMax");
 			if (smEntry == null) {
-				if (getInventoryType(itemId).asByte() == MapleInventoryType.EQUIP.asByte()) {
+				if (getInventoryType(itemId).asByte() == InventoryType.EQUIP.asByte()) {
 					ret = 1;
 				} else {
 					ret = 100;
@@ -971,7 +971,7 @@ public class MapleItemInformationProvider {
 	}
 
 	public Collection<IItem> canWearEquipment(GameCharacter chr, Collection<IItem> items) {
-		MapleInventory inv = chr.getInventory(MapleInventoryType.EQUIPPED);
+		MapleInventory inv = chr.getInventory(InventoryType.EQUIPPED);
 		if (inv.checked())
 			return items;
 		Collection<IItem> itemz = new LinkedList<IItem>();
@@ -986,9 +986,9 @@ public class MapleItemInformationProvider {
 		boolean highfivestamp = false;
 		/*
 		 * Removed because players shouldn't even get this, and gm's should just
-		 * be gm job. try { for (Pair<IItem, MapleInventoryType> ii :
+		 * be gm job. try { for (Pair<IItem, InventoryType> ii :
 		 * ItemFactory.INVENTORY.loadItems(chr.getId(), false)) { if
-		 * (ii.getRight() == MapleInventoryType.CASH) { if
+		 * (ii.getRight() == InventoryType.CASH) { if
 		 * (ii.getLeft().getItemId() == 5590000) { highfivestamp = true; } } } }
 		 * catch (SQLException ex) { }
 		 */
@@ -1045,13 +1045,13 @@ public class MapleItemInformationProvider {
 		boolean highfivestamp = false;
 		/*
 		 * Removed check above for message >< try { for (Pair<IItem,
-		 * MapleInventoryType> ii : ItemFactory.INVENTORY.loadItems(chr.getId(),
-		 * false)) { if (ii.getRight() == MapleInventoryType.CASH) { if
+		 * InventoryType> ii : ItemFactory.INVENTORY.loadItems(chr.getId(),
+		 * false)) { if (ii.getRight() == InventoryType.CASH) { if
 		 * (ii.getLeft().getItemId() == 5590000) { highfivestamp = true; } } } }
 		 * catch (SQLException ex) { }
 		 */
 		int tdex = chr.getDex(), tstr = chr.getStr(), tint = chr.getInt(), tluk = chr.getLuk();
-		for (IItem item : chr.getInventory(MapleInventoryType.EQUIPPED).list()) {
+		for (IItem item : chr.getInventory(InventoryType.EQUIPPED).list()) {
 			IEquip eq = (IEquip) item;
 			tdex += eq.getDex();
 			tstr += eq.getStr();

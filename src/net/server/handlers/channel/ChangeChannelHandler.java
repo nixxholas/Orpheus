@@ -24,7 +24,7 @@ import client.MapleBuffStat;
 import client.GameCharacter;
 import java.net.InetAddress;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import java.io.IOException;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
@@ -77,7 +77,7 @@ public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
 		if (chr.getBuffedValue(MapleBuffStat.COMBO) != null) {
 			chr.cancelEffectFromBuffStat(MapleBuffStat.COMBO);
 		}
-		chr.getInventory(MapleInventoryType.EQUIPPED).checked(false); // test
+		chr.getInventory(InventoryType.EQUIPPED).checked(false); // test
 		chr.getMap().removePlayer(chr);
 		chr.getClient().getChannelServer().removePlayer(chr);
 		chr.saveToDB(true);

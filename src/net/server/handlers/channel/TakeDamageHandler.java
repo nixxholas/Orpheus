@@ -25,7 +25,7 @@ import client.Item;
 import client.MapleBuffStat;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.SkillFactory;
 import client.status.MonsterStatus;
 import constants.skills.Corsair;
@@ -72,7 +72,7 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 				if (damage > 0) {
 					loseItems = map.getMonsterById(monsteridfrom).getStats().loseItem();
 					if (loseItems != null) {
-						MapleInventoryType type;
+						InventoryType type;
 						final int playerpos = player.getPosition().x;
 						byte d = 1;
 						Point pos = new Point(0, player.getPosition().y);

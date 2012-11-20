@@ -37,7 +37,7 @@ import tools.Output;
 import tools.Pair;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleRank;
 import client.MapleStat;
@@ -303,7 +303,7 @@ public class PlayerCommands extends EnumeratedCommands {
 				case sell:
 					if (chr.haveItem(4001101)) {
 						if (chr.getMeso() <= (Integer.MAX_VALUE - 1000000000)) { // Has less than 1,147,483,647 mesos.
-							MapleInventoryManipulator.removeById(c, MapleInventoryType.ETC, 4001101, 1, true, true);
+							MapleInventoryManipulator.removeById(c, InventoryType.ETC, 4001101, 1, true, true);
 							chr.gainMeso(1000000000, false); // Gains 1,000,000,000 mesos.
 							chr.message("You've gained 1,000,000,000 mesos.");
 							chr.message("You now have " + chr.getItemQuantity(4001101, true) + " rice cakes.");

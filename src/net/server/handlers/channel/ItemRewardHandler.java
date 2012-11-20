@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import constants.ItemConstants;
 import java.util.List;
 import net.AbstractMaplePacketHandler;
@@ -44,7 +44,7 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt(); // will load from xml I don't care.
-		if (c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(MapleInventoryType.USE).countById(itemId) < 1)
+		if (c.getPlayer().getInventory(InventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(InventoryType.USE).countById(itemId) < 1)
 			return;
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		Pair<Integer, List<RewardItem>> rewards = ii.getItemReward(itemId);
@@ -55,7 +55,7 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 			}
 			if (Randomizer.nextInt(rewards.getLeft()) < reward.prob) {
 				// Is it even possible to get an item with prob 1?
-				if (ItemConstants.getInventoryType(reward.itemid) == MapleInventoryType.EQUIP) {
+				if (ItemConstants.getInventoryType(reward.itemid) == InventoryType.EQUIP) {
 					final IItem item = ii.getEquipById(reward.itemid);
 					if (reward.period != -1) {
 						item.setExpiration(System.currentTimeMillis() + (reward.period * 60 * 60 * 10));
@@ -64,7 +64,7 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 				} else {
 					MapleInventoryManipulator.addById(c, reward.itemid, reward.quantity);
 				}
-				MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, false, false);
+				MapleInventoryManipulator.removeById(c, InventoryType.USE, itemId, 1, false, false);
 				if (reward.worldmsg != null) {
 					String msg = reward.worldmsg;
 					msg.replaceAll("/name", c.getPlayer().getName());

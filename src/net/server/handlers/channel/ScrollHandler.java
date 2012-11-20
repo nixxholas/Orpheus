@@ -27,7 +27,7 @@ import client.Item;
 import client.GameClient;
 import client.SkillFactory;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.IEquip.ScrollResult;
 import client.ISkill;
 import net.AbstractMaplePacketHandler;
@@ -53,18 +53,18 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
 			whiteScroll = true;
 		}
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-		IEquip toScroll = (IEquip) c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem(dst);
+		IEquip toScroll = (IEquip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(dst);
 		ISkill LegendarySpirit = SkillFactory.getSkill(1003);
 		if (c.getPlayer().getSkillLevel(LegendarySpirit) > 0 && dst >= 0) {
 			legendarySpirit = true;
-			toScroll = (IEquip) c.getPlayer().getInventory(MapleInventoryType.EQUIP).getItem(dst);
+			toScroll = (IEquip) c.getPlayer().getInventory(InventoryType.EQUIP).getItem(dst);
 		}
 		byte oldLevel = toScroll.getLevel();
 		if (((IEquip) toScroll).getUpgradeSlots() < 1) {
 			c.announce(PacketCreator.getInventoryFull());
 			return;
 		}
-		MapleInventory useInventory = c.getPlayer().getInventory(MapleInventoryType.USE);
+		MapleInventory useInventory = c.getPlayer().getInventory(InventoryType.USE);
 		IItem scroll = useInventory.getItem(slot);
 		IItem wscroll = null;
 		List<Integer> scrollReqs = ii.getScrollReqs(scroll.getItemId());
@@ -97,17 +97,17 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
 		if (whiteScroll) {
 			useInventory.removeItem(wscroll.getPosition(), (short) 1, false);
 			if (wscroll.getQuantity() < 1) {
-				c.announce(PacketCreator.clearInventoryItem(MapleInventoryType.USE, wscroll.getPosition(), false));
+				c.announce(PacketCreator.clearInventoryItem(InventoryType.USE, wscroll.getPosition(), false));
 			} else {
-				c.announce(PacketCreator.updateInventorySlot(MapleInventoryType.USE, (Item) wscroll));
+				c.announce(PacketCreator.updateInventorySlot(InventoryType.USE, (Item) wscroll));
 			}
 		}
 		if (scrollSuccess == IEquip.ScrollResult.CURSE) {
 			c.announce(PacketCreator.scrolledItem(scroll, toScroll, true));
 			if (dst < 0) {
-				c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).removeItem(toScroll.getPosition());
+				c.getPlayer().getInventory(InventoryType.EQUIPPED).removeItem(toScroll.getPosition());
 			} else {
-				c.getPlayer().getInventory(MapleInventoryType.EQUIP).removeItem(toScroll.getPosition());
+				c.getPlayer().getInventory(InventoryType.EQUIP).removeItem(toScroll.getPosition());
 			}
 		} else {
 			c.announce(PacketCreator.scrolledItem(scroll, scrolled, false));

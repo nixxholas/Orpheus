@@ -25,7 +25,7 @@ import client.IItem;
 import client.Item;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
 import net.GamePacket;
@@ -515,7 +515,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		if (quantity < 0 || price < 110 || c.getPlayer().getItemQuantity(itemid, false) < quantity) {
 			return;
 		}
-		MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(itemid);
+		InventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(itemid);
 		IItem i = c.getPlayer().getInventory(type).getItem(slot).copy();
 		if (i != null && c.getPlayer().getMeso() >= 5000) {
 			Connection con = DatabaseConnection.getConnection();
@@ -590,7 +590,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 
 	private PreparedStatement getInsertStatement(GameClient c, short quantity, int price,
-			MapleInventoryType type, IItem i, Connection con,
+			InventoryType type, IItem i, Connection con,
 			final int playerId, String date) throws SQLException {
 		if (i.getType() == 2) {
 			return getInsertMtsItem(c, quantity, price, type, i, con, playerId, date);
@@ -600,7 +600,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 
 	private PreparedStatement getInsertMtsEquip(GameClient c, short quantity,
-			int price, MapleInventoryType type, IItem i, Connection con,
+			int price, InventoryType type, IItem i, Connection con,
 			final int playerId, String date) throws SQLException {
 		PreparedStatement pse;
 		Equip equip = (Equip) i;
@@ -638,7 +638,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 	}
 
 	private PreparedStatement getInsertMtsItem(GameClient c, short quantity, int price,
-			MapleInventoryType type, IItem i, Connection con,
+			InventoryType type, IItem i, Connection con,
 			final int playerId, String date) throws SQLException {
 		
 		Item item = (Item) i;

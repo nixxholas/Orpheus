@@ -20,7 +20,7 @@
  */
 package constants;
 
-import client.MapleInventoryType;
+import client.InventoryType;
 
 /**
  * 
@@ -72,11 +72,11 @@ public final class ItemConstants {
 		return itemId / 1000 == 5000;
 	}
 
-	public static MapleInventoryType getInventoryType(final int itemId) {
+	public static InventoryType getInventoryType(final int itemId) {
 		final byte type = (byte) (itemId / 1000000);
 		if (type < 1 || type > 5) {
-			return MapleInventoryType.UNDEFINED;
+			return InventoryType.UNDEFINED;
 		}
-		return MapleInventoryType.fromByte(type);
+		return InventoryType.fromByte(type);
 	}
 }

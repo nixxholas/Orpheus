@@ -30,7 +30,7 @@ import client.ItemFactory;
 import client.ItemInventoryEntry;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import com.mysql.jdbc.Statement;
 import constants.ItemConstants;
 import java.sql.SQLException;
@@ -308,7 +308,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 				newItem.setQuantity(pItems.getItem().getQuantity());
 			}
 			if (pItems.getBundles() > 0) {
-				itemsWithType.add(new ItemInventoryEntry(newItem, MapleInventoryType.fromByte(newItem.getType())));
+				itemsWithType.add(new ItemInventoryEntry(newItem, InventoryType.fromByte(newItem.getType())));
 			}
 		}
 		ItemFactory.MERCHANT.saveItems(itemsWithType, this.ownerId);
@@ -316,43 +316,43 @@ public class HiredMerchant extends AbstractMapleMapObject {
 
 	private static boolean check(GameCharacter chr, List<MaplePlayerShopItem> items) {
 		byte eq = 0, use = 0, setup = 0, etc = 0, cash = 0;
-		List<MapleInventoryType> li = new LinkedList<MapleInventoryType>();
+		List<InventoryType> li = new LinkedList<InventoryType>();
 		for (MaplePlayerShopItem item : items) {
-			final MapleInventoryType invtype = MapleItemInformationProvider.getInstance().getInventoryType(item.getItem().getItemId());
+			final InventoryType invtype = MapleItemInformationProvider.getInstance().getInventoryType(item.getItem().getItemId());
 			if (!li.contains(invtype)) {
 				li.add(invtype);
 			}
-			if (invtype == MapleInventoryType.EQUIP) {
+			if (invtype == InventoryType.EQUIP) {
 				eq++;
-			} else if (invtype == MapleInventoryType.USE) {
+			} else if (invtype == InventoryType.USE) {
 				use++;
-			} else if (invtype == MapleInventoryType.SETUP) {
+			} else if (invtype == InventoryType.SETUP) {
 				setup++;
-			} else if (invtype == MapleInventoryType.ETC) {
+			} else if (invtype == InventoryType.ETC) {
 				etc++;
-			} else if (invtype == MapleInventoryType.CASH) {
+			} else if (invtype == InventoryType.CASH) {
 				cash++;
 			}
 		}
-		for (MapleInventoryType mit : li) {
-			if (mit == MapleInventoryType.EQUIP) {
-				if (chr.getInventory(MapleInventoryType.EQUIP).getNumFreeSlot() <= eq) {
+		for (InventoryType mit : li) {
+			if (mit == InventoryType.EQUIP) {
+				if (chr.getInventory(InventoryType.EQUIP).getNumFreeSlot() <= eq) {
 					return false;
 				}
-			} else if (mit == MapleInventoryType.USE) {
-				if (chr.getInventory(MapleInventoryType.USE).getNumFreeSlot() <= use) {
+			} else if (mit == InventoryType.USE) {
+				if (chr.getInventory(InventoryType.USE).getNumFreeSlot() <= use) {
 					return false;
 				}
-			} else if (mit == MapleInventoryType.SETUP) {
-				if (chr.getInventory(MapleInventoryType.SETUP).getNumFreeSlot() <= setup) {
+			} else if (mit == InventoryType.SETUP) {
+				if (chr.getInventory(InventoryType.SETUP).getNumFreeSlot() <= setup) {
 					return false;
 				}
-			} else if (mit == MapleInventoryType.ETC) {
-				if (chr.getInventory(MapleInventoryType.ETC).getNumFreeSlot() <= etc) {
+			} else if (mit == InventoryType.ETC) {
+				if (chr.getInventory(InventoryType.ETC).getNumFreeSlot() <= etc) {
 					return false;
 				}
-			} else if (mit == MapleInventoryType.CASH) {
-				if (chr.getInventory(MapleInventoryType.CASH).getNumFreeSlot() <= cash) {
+			} else if (mit == InventoryType.CASH) {
+				if (chr.getInventory(InventoryType.CASH).getNumFreeSlot() <= cash) {
 					return false;
 				}
 			}

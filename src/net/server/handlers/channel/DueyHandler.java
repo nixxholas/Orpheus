@@ -25,7 +25,7 @@ import client.IItem;
 import client.Item;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import constants.ItemConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -133,7 +133,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 			}
 			if (send) {
 				if (inventId > 0) {
-					MapleInventoryType inv = MapleInventoryType.fromByte(inventId);
+					InventoryType inv = InventoryType.fromByte(inventId);
 					IItem item = c.getPlayer().getInventory(inv).getItem((byte) itemPos);
 					if (item != null && c.getPlayer().getItemQuantity(item.getItemId(), false) > amount) {
 						if (ItemConstants.isRechargable(item.getItemId())) {

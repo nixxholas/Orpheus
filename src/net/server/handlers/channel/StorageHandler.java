@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import constants.ItemConstants;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
@@ -47,7 +47,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 		if (mode == 4) { // take out
 			byte type = slea.readByte();
 			byte slot = slea.readByte();
-			slot = storage.getSlot(MapleInventoryType.fromByte(type), slot);
+			slot = storage.getSlot(InventoryType.fromByte(type), slot);
 			IItem item = storage.getItem(slot);
 			if (item != null) {
 				if (MapleItemInformationProvider.getInstance().isPickupRestricted(item.getItemId()) && chr.getItemQuantity(item.getItemId(), true) > 0) {
@@ -89,7 +89,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 			if (chr.getMeso() < meso) {
 				c.announce(PacketCreator.getStorageError((byte) 0x0B));
 			} else {
-				MapleInventoryType type = ii.getInventoryType(itemId);
+				InventoryType type = ii.getInventoryType(itemId);
 				IItem item = chr.getInventory(type).getItem(slot).copy();
 				if (item.getItemId() == itemId && (item.getQuantity() >= quantity || ItemConstants.isRechargable(itemId))) {
 					if (ItemConstants.isRechargable(itemId)) {

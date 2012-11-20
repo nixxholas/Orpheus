@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.GameClient;
 import client.MapleDisease;
-import client.MapleInventoryType;
+import client.InventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -45,7 +45,7 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
 		slea.readInt();
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt();
-		IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
+		IItem toUse = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() > 0 && toUse.getItemId() == itemId) {
 			if (itemId == 2022178 || itemId == 2022433 || itemId == 2050004) {
 				c.getPlayer().dispelDebuffs();
@@ -70,7 +70,7 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
 	}
 
 	private void remove(GameClient c, byte slot) {
-		MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, slot, (short) 1, false);
+		MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
 		c.announce(PacketCreator.enableActions());
 	}
 

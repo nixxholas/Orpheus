@@ -2,9 +2,9 @@ package client;
 
 public final class ItemInventoryEntry {
 	public final IItem item;
-	public final MapleInventoryType type;
+	public final InventoryType type;
 	
-	public ItemInventoryEntry(IItem item, MapleInventoryType type) {
+	public ItemInventoryEntry(IItem item, InventoryType type) {
 		this.item = item;
 		this.type = type;
 	}

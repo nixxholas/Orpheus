@@ -27,7 +27,7 @@ import java.sql.ResultSet;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleFamily;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.SkillFactory;
 import gm.server.GMServer;
 import java.sql.SQLException;
@@ -225,7 +225,7 @@ public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
 		 * .requestBuddylistAdd(pendingBuddyRequest.getId(), player.getId(),
 		 * pendingBuddyRequest.getName())); }
 		 */
-		if (player.getInventory(MapleInventoryType.EQUIPPED).findById(1122017) != null) {
+		if (player.getInventory(InventoryType.EQUIPPED).findById(1122017) != null) {
 			player.equipPendantOfSpirit();
 		}
 		c.announce(PacketCreator.updateBuddylist(player.getBuddylist().getBuddies()));

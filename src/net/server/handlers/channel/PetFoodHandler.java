@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameCharacter;
 import constants.ExpTable;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MaplePet;
 import client.autoban.AutobanManager;
 import tools.Randomizer;
@@ -63,7 +63,7 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 		MaplePet pet = chr.getPet(slot);
 		byte pos = (byte) slea.readShort();
 		int itemId = slea.readInt();
-		IItem use = chr.getInventory(MapleInventoryType.USE).getItem(pos);
+		IItem use = chr.getInventory(InventoryType.USE).getItem(pos);
 		if (use == null || (itemId / 10000) != 212 || use.getItemId() != itemId)
 			return;
 		boolean gainCloseness = false;
@@ -101,8 +101,8 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 			}
 			chr.getMap().broadcastMessage(PacketCreator.commandResponse(chr.getId(), slot, 0, false));
 		}
-		MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, pos, (short) 1, false);
-		IItem petz = chr.getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
+		MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, pos, (short) 1, false);
+		IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getPosition());
 		c.announce(PacketCreator.updateSlot(petz));
 		c.announce(PacketCreator.enableActions());
 	}

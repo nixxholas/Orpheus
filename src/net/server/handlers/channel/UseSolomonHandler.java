@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -41,16 +41,16 @@ public final class UseSolomonHandler extends AbstractMaplePacketHandler {
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt();
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-		IItem slotItem = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
+		IItem slotItem = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		int gachaexp = ii.getExpById(itemId);
-		if (c.getPlayer().getInventory(MapleInventoryType.USE).countById(itemId) <= 0 || slotItem.getItemId() != itemId || c.getPlayer().getLevel() > ii.getMaxLevelById(itemId)) {
+		if (c.getPlayer().getInventory(InventoryType.USE).countById(itemId) <= 0 || slotItem.getItemId() != itemId || c.getPlayer().getLevel() > ii.getMaxLevelById(itemId)) {
 			return;
 		}
 		if ((c.getPlayer().getGachaExp() + gachaexp) > Integer.MAX_VALUE) {
 			return;
 		}
 		c.getPlayer().gainGachaExp(gachaexp);
-		MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, slot, (short) 1, false);
+		MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
 		c.announce(PacketCreator.enableActions());
 	}
 }

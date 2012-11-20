@@ -25,7 +25,7 @@ import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleRing;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -190,7 +190,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 		} else if (action == 0x0E) { // Put into Cash Inventory
 			int cashId = slea.readInt();
 			slea.skip(4);
-			MapleInventory mi = chr.getInventory(MapleInventoryType.fromByte(slea.readByte()));
+			MapleInventory mi = chr.getInventory(InventoryType.fromByte(slea.readByte()));
 			IItem item = mi.findByCashId(cashId);
 			if (item == null) {
 				return;

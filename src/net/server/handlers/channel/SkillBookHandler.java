@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import java.util.Map;
 import client.IItem;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -46,7 +46,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt();
 		GameCharacter player = c.getPlayer();
-		IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
+		IItem toUse = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() == 1) {
 			if (toUse.getItemId() != itemId) {
 				return;
@@ -71,7 +71,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
 					success = false;
 					player.dropMessage("The skill book lights up, but the skill winds up as if nothing happened.");
 				}
-				MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, slot, (short) 1, false);
+				MapleInventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
 			} else {
 				canuse = false;
 			}

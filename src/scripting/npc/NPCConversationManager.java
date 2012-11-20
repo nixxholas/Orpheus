@@ -31,7 +31,7 @@ import constants.ServerConstants;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MaplePet;
 import client.MapleSkinColor;
@@ -262,7 +262,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 				getClient().announce(PacketCreator.showOwnPetLevelUp(index));
 				getPlayer().getMap().broadcastMessage(getPlayer(), PacketCreator.showPetLevelUp(getPlayer(), index));
 			}
-			IItem petz = getPlayer().getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
+			IItem petz = getPlayer().getInventory(InventoryType.CASH).getItem(pet.getPosition());
 			getPlayer().getClient().announce(PacketCreator.updateSlot(petz));
 		}
 	}
@@ -318,7 +318,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		}
 		sendNext("You have obtained a #b#t" + itemid + "##k.");
 		if (ServerConstants.BROADCAST_GACHAPON_ITEMS) {
-			getClient().getChannelServer().broadcastPacket(PacketCreator.gachaponMessage(getPlayer().getInventory(MapleInventoryType.fromByte((byte) (itemid / 1000000))).findById(itemid), c.getChannelServer().getMapFactory().getMap(gacMap[(getNpc() != 9100117 && getNpc() != 9100109) ? (getNpc() - 9100100) : getNpc() == 9100109 ? 8 : 9]).getMapName(), getPlayer()));
+			getClient().getChannelServer().broadcastPacket(PacketCreator.gachaponMessage(getPlayer().getInventory(InventoryType.fromByte((byte) (itemid / 1000000))).findById(itemid), c.getChannelServer().getMapFactory().getMap(gacMap[(getNpc() != 9100117 && getNpc() != 9100109) ? (getNpc() - 9100100) : getNpc() == 9100109 ? 8 : 9]).getMapName(), getPlayer()));
 		}
 	}
 
@@ -537,7 +537,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	
 	public String listEquips() {
 		StringBuilder sb = new StringBuilder();
-		MapleInventory mi = getPlayer().getInventory(MapleInventoryType.EQUIP);
+		MapleInventory mi = getPlayer().getInventory(InventoryType.EQUIP);
 		for (IItem i : mi.list()) {
 			sb.append("#L" + i.getPosition() + "##v" + i.getItemId() + "##l");
 		}
@@ -553,17 +553,17 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 	
 	public int getItemId(byte slot) {
-		return getPlayer().getInventory(MapleInventoryType.EQUIP).getItem(slot).getItemId();
+		return getPlayer().getInventory(InventoryType.EQUIP).getItem(slot).getItemId();
 	}
 	
 	public void setItemOwner(byte slot) {
-		MapleInventory equip = getPlayer().getInventory(MapleInventoryType.EQUIP);
+		MapleInventory equip = getPlayer().getInventory(InventoryType.EQUIP);
         Equip eu = (Equip) equip.getItem(slot);
         eu.setOwner(getName());
 	}
 	
 	public void makeItemEpic(byte slot) {
-		MapleInventory equip = getPlayer().getInventory(MapleInventoryType.EQUIP);
+		MapleInventory equip = getPlayer().getInventory(InventoryType.EQUIP);
         Equip eu = (Equip) equip.getItem(slot);
 		eu.setStr(Short.MAX_VALUE);
 		eu.setDex(Short.MAX_VALUE);
@@ -584,7 +584,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 	
 	public void modifyItem(byte slot, String stat, short value) {
-		MapleInventory equip = getPlayer().getInventory(MapleInventoryType.EQUIP);
+		MapleInventory equip = getPlayer().getInventory(InventoryType.EQUIP);
         Equip eu = (Equip) equip.getItem(slot);
 		if (stat.equalsIgnoreCase("str") || stat.equalsIgnoreCase("strength")) {
 	        eu.setStr(value);

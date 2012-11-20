@@ -45,7 +45,7 @@ import client.GameClient;
 import client.MapleDiseaseEntry;
 import client.MapleFamilyEntry;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleKeyBinding;
 import client.MapleMount;
 import client.MaplePet;
@@ -219,7 +219,7 @@ public class PacketCreator {
 	}
 
 	private static void addCharEquips(PacketWriter w, GameCharacter chr) {
-		MapleInventory equip = chr.getInventory(MapleInventoryType.EQUIPPED);
+		MapleInventory equip = chr.getInventory(InventoryType.EQUIPPED);
 		Collection<IItem> ii = MapleItemInformationProvider.getInstance().canWearEquipment(chr, equip.list());
 		Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
 		Map<Byte, Integer> maskedEquip = new LinkedHashMap<Byte, Integer>();
@@ -409,10 +409,10 @@ public class PacketCreator {
 
 	private static void addInventoryInfo(PacketWriter w, GameCharacter chr) {
 		for (byte i = 1; i <= 5; i++) {
-			w.write(chr.getInventory(MapleInventoryType.fromByte(i)).getSlotLimit());
+			w.write(chr.getInventory(InventoryType.fromByte(i)).getSlotLimit());
 		}
 		w.write(new byte[] {0, (byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
-		MapleInventory iv = chr.getInventory(MapleInventoryType.EQUIPPED);
+		MapleInventory iv = chr.getInventory(InventoryType.EQUIPPED);
 		Collection<IItem> equippedC = iv.list();
 		List<Item> equipped = new ArrayList<Item>(equippedC.size());
 		List<Item> equippedCash = new ArrayList<Item>(equippedC.size());
@@ -432,23 +432,23 @@ public class PacketCreator {
 			addItemInfo(w, item);
 		}
 		w.writeShort(0); // start of equip inventory
-		for (IItem item : chr.getInventory(MapleInventoryType.EQUIP).list()) {
+		for (IItem item : chr.getInventory(InventoryType.EQUIP).list()) {
 			addItemInfo(w, item);
 		}
 		w.writeInt(0);
-		for (IItem item : chr.getInventory(MapleInventoryType.USE).list()) {
+		for (IItem item : chr.getInventory(InventoryType.USE).list()) {
 			addItemInfo(w, item);
 		}
 		w.write(0);
-		for (IItem item : chr.getInventory(MapleInventoryType.SETUP).list()) {
+		for (IItem item : chr.getInventory(InventoryType.SETUP).list()) {
 			addItemInfo(w, item);
 		}
 		w.write(0);
-		for (IItem item : chr.getInventory(MapleInventoryType.ETC).list()) {
+		for (IItem item : chr.getInventory(InventoryType.ETC).list()) {
 			addItemInfo(w, item);
 		}
 		w.write(0);
-		for (IItem item : chr.getInventory(MapleInventoryType.CASH).list()) {
+		for (IItem item : chr.getInventory(InventoryType.CASH).list()) {
 			addItemInfo(w, item);
 		}
 	}
@@ -1898,7 +1898,7 @@ public class PacketCreator {
 		w.writeInt(CHAR_MAGIC_SPAWN);
 		w.writeShort(0);
 		w.write(0);
-		IItem mount = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -18);
+		IItem mount = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -18);
 		if (chr.getBuffedValue(MapleBuffStat.MONSTER_RIDING) != null && mount != null) {
 			w.writeInt(mount.getItemId());
 			w.writeInt(1004);
@@ -1918,7 +1918,7 @@ public class PacketCreator {
 		w.write(0);
 		w.writeShort(chr.getJob().getId());
 		addCharLook(w, chr, false);
-		w.writeInt(chr.getInventory(MapleInventoryType.CASH).countById(5110000));
+		w.writeInt(chr.getInventory(InventoryType.CASH).countById(5110000));
 		w.writeInt(chr.getItemEffect());
 		w.writeInt(chr.getChair());
 		w.writePos(chr.getPosition());
@@ -2204,32 +2204,32 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket addInventorySlot(MapleInventoryType type, IItem item) {
+	public static GamePacket addInventorySlot(InventoryType type, IItem item) {
 		return addInventorySlot(type, item, false);
 	}
 
-	public static GamePacket addInventorySlot(MapleInventoryType type, IItem item, boolean fromDrop) {
+	public static GamePacket addInventorySlot(InventoryType type, IItem item, boolean fromDrop) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(fromDrop ? 1 : 0);
 		w.writeShort(1); // add mode
-		w.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
+		w.write(type.equals(InventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
 		w.writeShort(item.getPosition()); // slot id
 		addItemInfo(w, item, true);
 		return w.getPacket();
 	}
 
-	public static GamePacket updateInventorySlot(MapleInventoryType type, IItem item) {
+	public static GamePacket updateInventorySlot(InventoryType type, IItem item) {
 		return updateInventorySlot(type, item, false);
 	}
 
-	public static GamePacket updateInventorySlot(MapleInventoryType type, IItem item, boolean fromDrop) {
+	public static GamePacket updateInventorySlot(InventoryType type, IItem item, boolean fromDrop) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(fromDrop ? 1 : 0);
 		w.writeShort(0x101); // update
-		w.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
+		w.write(type.equals(InventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
 		w.writeShort(item.getPosition()); // slot id
 		w.writeShort(item.getQuantity());
@@ -2244,11 +2244,11 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket moveInventoryItem(MapleInventoryType type, byte src, byte dst) {
+	public static GamePacket moveInventoryItem(InventoryType type, byte src, byte dst) {
 		return moveInventoryItem(type, src, dst, (byte) -1);
 	}
 
-	public static GamePacket moveInventoryItem(MapleInventoryType type, byte src, byte dst, byte equipIndicator) {
+	public static GamePacket moveInventoryItem(InventoryType type, byte src, byte dst, byte equipIndicator) {
 		// 1D 00 01 01 02 00 F5 FF 01 00 01
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
@@ -2262,7 +2262,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket moveAndMergeInventoryItem(MapleInventoryType type, byte src, byte dst, short total) {
+	public static GamePacket moveAndMergeInventoryItem(InventoryType type, byte src, byte dst, short total) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(new byte[] {1, 2, 3});
@@ -2275,7 +2275,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket moveAndMergeWithRestInventoryItem(MapleInventoryType type, byte src, byte dst, short srcQ, short dstQ) {
+	public static GamePacket moveAndMergeWithRestInventoryItem(InventoryType type, byte src, byte dst, short srcQ, short dstQ) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(new byte[] {1, 2, 1});
@@ -2289,12 +2289,12 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket clearInventoryItem(MapleInventoryType type, byte slot, boolean fromDrop) {
+	public static GamePacket clearInventoryItem(InventoryType type, byte slot, boolean fromDrop) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(fromDrop ? 1 : 0);
 		w.write(new byte[] {1, 3});
-		w.write(type.equals(MapleInventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
+		w.write(type.equals(InventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
 		w.writeShort(slot);
 		if (!fromDrop) {
@@ -2309,18 +2309,18 @@ public class PacketCreator {
 		w.write(1); // fromdrop always true
 		w.write(destroyed ? 2 : 3);
 		w.write(scroll.getQuantity() > 0 ? 1 : 3);
-		w.write(MapleInventoryType.USE.asByte());
+		w.write(InventoryType.USE.asByte());
 		w.writeShort(scroll.getPosition());
 		if (scroll.getQuantity() > 0) {
 			w.writeShort(scroll.getQuantity());
 		}
 		w.write(3);
 		if (!destroyed) {
-			w.write(MapleInventoryType.EQUIP.asByte());
+			w.write(InventoryType.EQUIP.asByte());
 			w.writeShort(item.getPosition());
 			w.write(0);
 		}
-		w.write(MapleInventoryType.EQUIP.asByte());
+		w.write(InventoryType.EQUIP.asByte());
 		w.writeShort(item.getPosition());
 		if (!destroyed) {
 			addItemInfo(w, item, true);
@@ -2417,7 +2417,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket dropInventoryItem(MapleInventoryType type, short src) {
+	public static GamePacket dropInventoryItem(InventoryType type, short src) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(new byte[] {1, 1, 3});
@@ -2429,7 +2429,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket dropInventoryItemUpdate(MapleInventoryType type, IItem item) {
+	public static GamePacket dropInventoryItemUpdate(InventoryType type, IItem item) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(new byte[] {1, 1, 1});
@@ -2545,7 +2545,7 @@ public class PacketCreator {
 		w.writeMapleAsciiString(allianceName);
 		w.write(0);
 		MaplePet[] pets = chr.getPets();
-		IItem inv = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -114);
+		IItem inv = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -114);
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] != null) {
 				w.write(pets[i].getUniqueId());
@@ -2559,7 +2559,7 @@ public class PacketCreator {
 			}
 		}
 		w.write(0); // end of pets
-		if (chr.getMount() != null && chr.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -18) != null) {
+		if (chr.getMount() != null && chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -18) != null) {
 			w.write(chr.getMount().getId()); // mount
 			w.writeInt(chr.getMount().getLevel()); // level
 			w.writeInt(chr.getMount().getExp()); // exp
@@ -2576,7 +2576,7 @@ public class PacketCreator {
 		w.writeInt(chr.getMonsterBook().getSpecialCard());
 		w.writeInt(chr.getMonsterBook().getTotalCards());
 		w.writeInt(chr.getMonsterBookCover() > 0 ? MapleItemInformationProvider.getInstance().getCardMobId(chr.getMonsterBookCover()) : 0);
-		IItem medal = chr.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -49);
+		IItem medal = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -49);
 		if (medal != null) {
 			w.writeInt(medal.getItemId());
 		} else {
@@ -3295,7 +3295,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket storeStorage(byte slots, MapleInventoryType type, Collection<IItem> items) {
+	public static GamePacket storeStorage(byte slots, InventoryType type, Collection<IItem> items) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.STORAGE.getValue());
 		w.write(0xD);
@@ -3310,7 +3310,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket takeOutStorage(byte slots, MapleInventoryType type, Collection<IItem> items) {
+	public static GamePacket takeOutStorage(byte slots, InventoryType type, Collection<IItem> items) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.STORAGE.getValue());
 		w.write(0x9);

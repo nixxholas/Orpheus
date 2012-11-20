@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameCharacter;
 import constants.ExpTable;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MaplePet;
 import client.PetCommand;
 import client.PetDataFactory;
@@ -67,7 +67,7 @@ public final class PetCommandHandler extends AbstractMaplePacketHandler {
 					c.announce(PacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
 					chr.getMap().broadcastMessage(PacketCreator.showPetLevelUp(c.getPlayer(), chr.getPetIndex(pet)));
 				}
-				IItem petz = chr.getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
+				IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getPosition());
 				c.announce(PacketCreator.updateSlot(petz));
 			}
 		}

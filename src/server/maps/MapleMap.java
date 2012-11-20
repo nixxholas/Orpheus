@@ -42,7 +42,7 @@ import client.Item;
 import client.MapleBuffStat;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MaplePet;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
@@ -392,7 +392,7 @@ public class MapleMap {
 						spawnMesoDrop(mesos * chr.getMesoRate(), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
 					}
 				} else {
-					if (ItemConstants.getInventoryType(de.itemId) == MapleInventoryType.EQUIP) {
+					if (ItemConstants.getInventoryType(de.itemId) == InventoryType.EQUIP) {
 						idrop = ii.randomizeStats((Equip) ii.getEquipById(de.itemId));
 					} else {
 						idrop = new Item(de.itemId, (byte) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum : 1));
@@ -414,7 +414,7 @@ public class MapleMap {
 				if (de.itemId == 0) {
 					// chr.getCashShop().gainCash(1, 80);
 				} else {
-					if (ItemConstants.getInventoryType(de.itemId) == MapleInventoryType.EQUIP) {
+					if (ItemConstants.getInventoryType(de.itemId) == InventoryType.EQUIP) {
 						idrop = ii.randomizeStats((Equip) ii.getEquipById(de.itemId));
 					} else {
 						idrop = new Item(de.itemId, (byte) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum : 1));

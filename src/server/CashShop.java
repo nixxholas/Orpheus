@@ -25,7 +25,7 @@ import client.IItem;
 import client.Item;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MaplePet;
 import constants.ItemConstants;
 import java.io.File;
@@ -92,7 +92,7 @@ public class CashShop {
 			if (ItemConstants.isPet(itemId))
 				petid = MaplePet.createPet(itemId);
 
-			if (ii.getInventoryType(itemId).equals(MapleInventoryType.EQUIP)) {
+			if (ii.getInventoryType(itemId).equals(InventoryType.EQUIP)) {
 				item = ii.getEquipById(itemId);
 			} else {
 				item = new Item(itemId, (byte) 0, count, petid);
@@ -397,7 +397,7 @@ public class CashShop {
 				IItem item = cItem.toItem();
 				IEquip equip = null;
 				item.setGiftFrom(rs.getString("from"));
-				if (item.getType() == MapleInventoryType.EQUIP.asByte()) {
+				if (item.getType() == InventoryType.EQUIP.asByte()) {
 					equip = (IEquip) item;
 					equip.setRingId(rs.getInt("ringid"));
 					gifts.add(new GiftEntry(equip, rs.getString("message")));

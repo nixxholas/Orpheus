@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import client.ISkill;
 import client.GameCharacter;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleQuestStatus;
 import client.MapleStat;
@@ -133,7 +133,7 @@ public class MapleQuestAction {
 					if (MapleDataTool.getInt(iEntry.getChildByPath("count"), 0) < 0) { // remove
 																						// items
 						int itemId = MapleDataTool.getInt(iEntry.getChildByPath("id"));
-						MapleInventoryType iType = ii.getInventoryType(itemId);
+						InventoryType iType = ii.getInventoryType(itemId);
 						short quantity = (short) (MapleDataTool.getInt(iEntry.getChildByPath("count"), 0) * -1);
 						MapleInventoryManipulator.removeById(c.getClient(), iType, itemId, quantity, true, false);
 						c.getClient().getSession().write(PacketCreator.getShowItemGain(itemId, (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0), true));

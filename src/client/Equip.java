@@ -281,7 +281,7 @@ public class Equip extends Item implements IEquip {
 		this.itemLevel++;
 		c.announce(PacketCreator.showEquipmentLevelUp());
 		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.showForeignEffect(c.getPlayer().getId(), 15));
-		c.getPlayer().forceUpdateItem(MapleInventoryType.EQUIPPED, this);
+		c.getPlayer().forceUpdateItem(InventoryType.EQUIPPED, this);
 	}
 
 	public int getItemExp() {
@@ -297,7 +297,7 @@ public class Equip extends Item implements IEquip {
 			itemExp = (itemExp - 364);
 			gainLevel(c, timeless);
 		} else
-			c.getPlayer().forceUpdateItem(MapleInventoryType.EQUIPPED, this);
+			c.getPlayer().forceUpdateItem(InventoryType.EQUIPPED, this);
 	}
 
 	public void setItemExp(int exp) {

@@ -27,7 +27,7 @@ import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleWeaponType;
 import client.SkillFactory;
 import constants.ItemConstants;
@@ -67,7 +67,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 				applyAttack(attack, player, 4);
 			}
 		} else {
-			IItem weapon = player.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -11);
+			IItem weapon = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
 			MapleWeaponType type = MapleItemInformationProvider.getInstance().getWeaponType(weapon.getItemId());
 			if (type == MapleWeaponType.NOT_A_WEAPON) {
 				return;
@@ -86,7 +86,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 			if (hasShadowPartner) {
 				bulletCount *= 2;
 			}
-			MapleInventory inv = player.getInventory(MapleInventoryType.USE);
+			MapleInventory inv = player.getInventory(InventoryType.USE);
 			for (byte i = 0; i < inv.getSlotLimit(); i++) {
 				IItem item = inv.getItem(i);
 				if (item != null) {
@@ -125,7 +125,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 					bulletConsume = (byte) (effect.getBulletConsume() * (hasShadowPartner ? 2 : 1));
 				}
 				if (!ServerConstants.UNLIMITED_PROJECTILES) {
-					MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, projectile, bulletConsume, false, true);
+					MapleInventoryManipulator.removeById(c, InventoryType.USE, projectile, bulletConsume, false, true);
 				}
 			}
 
@@ -133,7 +133,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 				int visProjectile = projectile; // visible projectile sent to
 												// players
 				if (ItemConstants.isThrowingStar(projectile)) {
-					MapleInventory cash = player.getInventory(MapleInventoryType.CASH);
+					MapleInventory cash = player.getInventory(InventoryType.CASH);
 					for (int i = 0; i < 96; i++) { // impose order...
 						IItem item = cash.getItem((byte) i);
 						if (item != null) {

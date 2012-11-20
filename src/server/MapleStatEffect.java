@@ -35,7 +35,7 @@ import client.MapleBuffStat;
 import client.GameCharacter;
 import client.MapleDisease;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleMount;
 import client.MapleStat;
@@ -683,7 +683,7 @@ public class MapleStatEffect {
 		}
 		if (isShadowClaw()) {
 			int projectile = 0;
-			MapleInventory use = applyto.getInventory(MapleInventoryType.USE);
+			MapleInventory use = applyto.getInventory(InventoryType.USE);
 			for (int i = 0; i < 97; i++) { // impose order...
 				IItem item = use.getItem((byte) i);
 				if (item != null) {
@@ -696,7 +696,7 @@ public class MapleStatEffect {
 			if (projectile == 0)
 				return false;
 			else
-				MapleInventoryManipulator.removeById(applyto.getClient(), MapleInventoryType.USE, projectile, 200, false, true);
+				MapleInventoryManipulator.removeById(applyto.getClient(), InventoryType.USE, projectile, 200, false, true);
 
 		}
 		SummonMovementType summonMovementType = getSummonMovementType();
@@ -847,7 +847,7 @@ public class MapleStatEffect {
 		MapleMount givemount = null;
 		if (isMonsterRiding()) {
 			int ridingLevel = 0;
-			IItem mount = applyfrom.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -18);
+			IItem mount = applyfrom.getInventory(InventoryType.EQUIPPED).getItem((byte) -18);
 			if (mount != null) {
 				ridingLevel = mount.getItemId();
 			}

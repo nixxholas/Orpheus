@@ -25,7 +25,7 @@ import java.awt.Point;
 import java.io.File;
 import java.sql.PreparedStatement;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MaplePet;
 import client.PetDataFactory;
 import client.SkillFactory;
@@ -49,7 +49,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 		byte slot = slea.readByte();
 		slea.readByte();
 		boolean lead = slea.readByte() == 1;
-		MaplePet pet = chr.getInventory(MapleInventoryType.CASH).getItem(slot).getPet();
+		MaplePet pet = chr.getInventory(InventoryType.CASH).getItem(slot).getPet();
 		if (pet == null)
 			return;
 		int petid = pet.getItemId();
@@ -72,8 +72,8 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 					ps.close();
 				} catch (SQLException ex) {
 				}
-				long expiration = chr.getInventory(MapleInventoryType.CASH).getItem(slot).getExpiration();
-				MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, petid, (short) 1, false, false);
+				long expiration = chr.getInventory(InventoryType.CASH).getItem(slot).getExpiration();
+				MapleInventoryManipulator.removeById(c, InventoryType.CASH, petid, (short) 1, false, false);
 				MapleInventoryManipulator.addById(c, evolveid, (short) 1, null, petId, expiration);
 				c.getSession().write(PacketCreator.enableActions());
 				return;

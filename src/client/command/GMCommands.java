@@ -48,7 +48,7 @@ import client.ISkill;
 import client.Item;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleStat;
 import client.SkillFactory;
@@ -166,7 +166,7 @@ public class GMCommands extends EnumeratedCommands {
 					} catch (Exception e) {
 					}
 					IItem toDrop;
-					if (MapleItemInformationProvider.getInstance().getInventoryType(itemId) == MapleInventoryType.EQUIP) {
+					if (MapleItemInformationProvider.getInstance().getInventoryType(itemId) == InventoryType.EQUIP) {
 						toDrop = MapleItemInformationProvider.getInstance().getEquipById(itemId);
 					} else {
 						toDrop = new Item(itemId, (byte) 0, quantity);

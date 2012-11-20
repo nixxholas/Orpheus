@@ -246,12 +246,12 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 	private GameCharacter() {
 		setStance(0);
-		inventory = new MapleInventory[MapleInventoryType.values().length];
+		inventory = new MapleInventory[InventoryType.values().length];
 		savedLocations = new SavedLocation[SavedLocationType.values().length];
 
-		for (MapleInventoryType type : MapleInventoryType.values()) {
+		for (InventoryType type : InventoryType.values()) {
 			byte b = 24;
-			if (type == MapleInventoryType.CASH) {
+			if (type == InventoryType.CASH) {
 				b = 96;
 			}
 			inventory[type.ordinal()] = new MapleInventory(type, (byte) b);
@@ -281,10 +281,10 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		ret.accountid = c.getAccID();
 		ret.buddylist = new BuddyList(20);
 		ret.maplemount = null;
-		ret.getInventory(MapleInventoryType.EQUIP).setSlotLimit(24);
-		ret.getInventory(MapleInventoryType.USE).setSlotLimit(24);
-		ret.getInventory(MapleInventoryType.SETUP).setSlotLimit(24);
-		ret.getInventory(MapleInventoryType.ETC).setSlotLimit(24);
+		ret.getInventory(InventoryType.EQUIP).setSlotLimit(24);
+		ret.getInventory(InventoryType.USE).setSlotLimit(24);
+		ret.getInventory(InventoryType.SETUP).setSlotLimit(24);
+		ret.getInventory(InventoryType.ETC).setSlotLimit(24);
 		int[] key = {18, 65, 2, 23, 3, 4, 5, 6, 16, 17, 19, 25, 26, 27, 31, 34, 35, 37, 38, 40, 43, 44, 45, 46, 50, 56, 59, 60, 61, 62, 63, 64, 57, 48, 29, 7, 24, 33, 41, 39};
 		int[] type = {4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 4, 4, 5, 6, 6, 6, 6, 6, 6, 5, 4, 5, 4, 4, 4, 4, 4};
 		int[] action = {0, 106, 10, 1, 12, 13, 18, 24, 8, 5, 4, 19, 14, 15, 2, 17, 11, 3, 20, 16, 9, 50, 51, 6, 7, 53, 100, 101, 102, 103, 104, 105, 54, 22, 52, 21, 25, 26, 23, 27};
@@ -542,7 +542,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		if (watk == 0) {
 			maxbasedamage = 1;
 		} else {
-			IItem weapon_item = getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -11);
+			IItem weapon_item = getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
 			if (weapon_item != null) {
 				MapleWeaponType weapon = MapleItemInformationProvider.getInstance().getWeaponType(weapon_item.getItemId());
 				int mainstat;
@@ -1243,7 +1243,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void doHurtHp() {
-		if (this.getInventory(MapleInventoryType.EQUIPPED).findById(getMap().getHPDecProtect()) != null) {
+		if (this.getInventory(InventoryType.EQUIPPED).findById(getMap().getHPDecProtect()) != null) {
 			return;
 		}
 		addHP(-getMap().getHPDec());
@@ -1364,7 +1364,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		OK, NOT_TODAY, NOT_THIS_MONTH
 	}
 
-	public void forceUpdateItem(MapleInventoryType type, IItem item) {
+	public void forceUpdateItem(InventoryType type, IItem item) {
 		client.announce(PacketCreator.clearInventoryItem(type, item.getPosition(), false));
 		client.announce(PacketCreator.addInventorySlot(type, item, false));
 	}
@@ -1804,7 +1804,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return int_;
 	}
 
-	public MapleInventory getInventory(MapleInventoryType type) {
+	public MapleInventory getInventory(InventoryType type) {
 		return inventory[type.ordinal()];
 	}
 
@@ -1815,7 +1815,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	public int getItemQuantity(int itemid, boolean checkEquipped) {
 		int possesed = inventory[MapleItemInformationProvider.getInstance().getInventoryType(itemid).ordinal()].countById(itemid);
 		if (checkEquipped) {
-			possesed += inventory[MapleInventoryType.EQUIPPED.ordinal()].countById(itemid);
+			possesed += inventory[InventoryType.EQUIPPED.ordinal()].countById(itemid);
 		}
 		return possesed;
 	}
@@ -2665,17 +2665,17 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			}
 			int buddyCapacity = rs.getInt("buddyCapacity");
 			ret.buddylist = new BuddyList(buddyCapacity);
-			ret.getInventory(MapleInventoryType.EQUIP).setSlotLimit(rs.getByte("equipslots"));
-			ret.getInventory(MapleInventoryType.USE).setSlotLimit(rs.getByte("useslots"));
-			ret.getInventory(MapleInventoryType.SETUP).setSlotLimit(rs.getByte("setupslots"));
-			ret.getInventory(MapleInventoryType.ETC).setSlotLimit(rs.getByte("etcslots"));
+			ret.getInventory(InventoryType.EQUIP).setSlotLimit(rs.getByte("equipslots"));
+			ret.getInventory(InventoryType.USE).setSlotLimit(rs.getByte("useslots"));
+			ret.getInventory(InventoryType.SETUP).setSlotLimit(rs.getByte("setupslots"));
+			ret.getInventory(InventoryType.ETC).setSlotLimit(rs.getByte("etcslots"));
 			for (ItemInventoryEntry entry : ItemFactory.INVENTORY.loadItems(ret.id, !channelserver)) {
 				ret.getInventory(entry.type).addFromDB(entry.item);
-				if (entry.type.equals(MapleInventoryType.EQUIP) || entry.type.equals(MapleInventoryType.EQUIPPED)) {
+				if (entry.type.equals(InventoryType.EQUIP) || entry.type.equals(InventoryType.EQUIPPED)) {
 					IEquip equip = (IEquip) entry.item;
 					if (equip.getRingId() > -1) {
 						MapleRing ring = MapleRing.loadFromDb(equip.getRingId());
-						if (entry.type.equals(MapleInventoryType.EQUIPPED)) {
+						if (entry.type.equals(InventoryType.EQUIPPED)) {
 							ring.equip();
 						}
 						if (ring.getItemId() > 1112012) {
@@ -2693,11 +2693,11 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					}
 					continue;
 				}
-				if (entry.type.equals(MapleInventoryType.EQUIP) || entry.type.equals(MapleInventoryType.EQUIPPED)) {
+				if (entry.type.equals(InventoryType.EQUIP) || entry.type.equals(InventoryType.EQUIPPED)) {
 					IEquip equip = (IEquip) entry.item;
 					if (equip.getRingId() > -1) {
 						MapleRing ring = MapleRing.loadFromDb(equip.getRingId());
-						if (entry.type.equals(MapleInventoryType.EQUIPPED)) {
+						if (entry.type.equals(InventoryType.EQUIPPED)) {
 							ring.equip();
 						}
 						if (ring.getItemId() > 1112012) {
@@ -2903,8 +2903,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				ret.silentEnforceMaxHpMp();
 			}
 			int mountid = ret.getJobType() * 10000000 + 1004;
-			if (ret.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -18) != null) {
-				ret.maplemount = new MapleMount(ret, ret.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -18).getItemId(), mountid);
+			if (ret.getInventory(InventoryType.EQUIPPED).getItem((byte) -18) != null) {
+				ret.maplemount = new MapleMount(ret, ret.getInventory(InventoryType.EQUIPPED).getItem((byte) -18).getItemId(), mountid);
 			} else {
 				ret.maplemount = new MapleMount(ret, 0, mountid);
 			}
@@ -3015,7 +3015,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				ps.close();
 				ps = con.prepareStatement("INSERT INTO `playernpcs_equip` (`NpcId`, `equipid`, `equippos`) VALUES (?, ?, ?)");
 				ps.setInt(1, npcId);
-				for (IItem equip : getInventory(MapleInventoryType.EQUIPPED)) {
+				for (IItem equip : getInventory(InventoryType.EQUIPPED)) {
 					int position = Math.abs(equip.getPosition());
 					if ((position < 12 && position > 0) || (position > 100 && position < 112)) {
 						ps.setInt(2, equip.getItemId());
@@ -3136,7 +3136,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		int speed = 100, jump = 100;
 		magic = localint_;
 		watk = 0;
-		for (IItem item : getInventory(MapleInventoryType.EQUIPPED)) {
+		for (IItem item : getInventory(InventoryType.EQUIPPED)) {
 			IEquip equip = (IEquip) item;
 			localmaxhp += equip.getHp();
 			localmaxmp += equip.getMp();
@@ -4069,7 +4069,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		recalcLocalStats();
 	}
 
-	public void setInventory(MapleInventoryType type, MapleInventory inv) {
+	public void setInventory(InventoryType type, MapleInventory inv) {
 		inventory[type.ordinal()] = inv;
 	}
 
@@ -4223,7 +4223,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public byte getSlots(int type) {
-		return type == MapleInventoryType.CASH.asByte() ? 96 : inventory[type].getSlotLimit();
+		return type == InventoryType.CASH.asByte() ? 96 : inventory[type].getSlotLimit();
 	}
 
 	public boolean gainSlots(int type, int slots) {
@@ -4416,7 +4416,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				} else {
 					pet.setFullness(newFullness);
 					pet.saveToDb();
-					IItem petz = getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
+					IItem petz = getInventory(InventoryType.CASH).getItem(pet.getPosition());
 					client.announce(PacketCreator.updateSlot(petz));
 				}
 			}
@@ -4900,7 +4900,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 	public void increaseEquipExp(int mobexp) {
 		MapleItemInformationProvider mii = MapleItemInformationProvider.getInstance();
-		for (IItem item : getInventory(MapleInventoryType.EQUIPPED).list()) {
+		for (IItem item : getInventory(InventoryType.EQUIPPED).list()) {
 			Equip nEquip = (Equip) item;
 			String itemName = mii.getName(nEquip.getItemId());
 			if (itemName == null) {

@@ -33,10 +33,10 @@ import java.util.Map;
 public class MapleInventory implements Iterable<IItem> {
 	private Map<Byte, IItem> inventory = new LinkedHashMap<Byte, IItem>();
 	private byte slotLimit;
-	private MapleInventoryType type;
+	private InventoryType type;
 	private boolean checked = false;
 
-	public MapleInventory(MapleInventoryType type, byte slotLimit) {
+	public MapleInventory(InventoryType type, byte slotLimit) {
 		this.inventory = new LinkedHashMap<Byte, IItem>();
 		this.type = type;
 		this.slotLimit = slotLimit;
@@ -44,11 +44,11 @@ public class MapleInventory implements Iterable<IItem> {
 
 	public boolean isExtendableInventory() { 
 		// not sure about cash, basing this on the previous one.
-		return !(type.equals(MapleInventoryType.UNDEFINED) || type.equals(MapleInventoryType.EQUIPPED) || type.equals(MapleInventoryType.CASH));
+		return !(type.equals(InventoryType.UNDEFINED) || type.equals(InventoryType.EQUIPPED) || type.equals(InventoryType.CASH));
 	}
 
 	public boolean isEquipInventory() {
-		return type.equals(MapleInventoryType.EQUIP) || type.equals(MapleInventoryType.EQUIPPED);
+		return type.equals(InventoryType.EQUIP) || type.equals(InventoryType.EQUIPPED);
 	}
 
 	public byte getSlotLimit() {
@@ -106,7 +106,7 @@ public class MapleInventory implements Iterable<IItem> {
 	}
 
 	public void addFromDB(IItem item) {
-		if (item.getPosition() < 0 && !type.equals(MapleInventoryType.EQUIPPED)) {
+		if (item.getPosition() < 0 && !type.equals(InventoryType.EQUIPPED)) {
 			throw new RuntimeException("Item with negative position in non-equipped IV wtf?");
 		}
 		inventory.put(item.getPosition(), item);
@@ -123,7 +123,7 @@ public class MapleInventory implements Iterable<IItem> {
 			inventory.put(dSlot, source);
 			inventory.remove(sSlot);
 		} else if (target.getItemId() == source.getItemId() && !ItemConstants.isRechargable(source.getItemId())) {
-			if (type.asByte() == MapleInventoryType.EQUIP.asByte()) {
+			if (type.asByte() == InventoryType.EQUIP.asByte()) {
 				swap(target, source);
 			}
 			if (source.getQuantity() + target.getQuantity() > slotMax) {
@@ -208,7 +208,7 @@ public class MapleInventory implements Iterable<IItem> {
 		return free;
 	}
 
-	public MapleInventoryType getType() {
+	public InventoryType getType() {
 		return type;
 	}
 

@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import net.AbstractMaplePacketHandler;
@@ -68,7 +68,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 					if (executeStandardPath) {
 						MapleMap to = chr.getMap();
 						if (wheel && chr.getItemQuantity(5510000, false) > 0) {
-							MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, 5510000, 1, true, false);
+							MapleInventoryManipulator.removeById(c, InventoryType.CASH, 5510000, 1, true, false);
 							chr.announce(PacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
 						} else {
 							chr.cancelAllBuffs(false);

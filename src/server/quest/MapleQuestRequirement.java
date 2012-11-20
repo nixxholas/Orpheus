@@ -23,7 +23,7 @@ package server.quest;
 import java.util.Calendar;
 import client.IItem;
 import client.GameCharacter;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MaplePet;
 import client.MapleQuestStatus;
@@ -69,13 +69,13 @@ public class MapleQuestRequirement {
 				for (MapleData itemEntry : getData().getChildren()) {
 					int itemId = MapleDataTool.getInt(itemEntry.getChildByPath("id"));
 					short quantity = 0;
-					MapleInventoryType iType = ii.getInventoryType(itemId);
+					InventoryType iType = ii.getInventoryType(itemId);
 					for (IItem item : c.getInventory(iType).listById(itemId))
 						quantity += item.getQuantity();
 					// Weird stuff, nexon made some quests only available when
 					// wearing gm clothes. This enables us to accept it ><
-					if (iType.equals(MapleInventoryType.EQUIP))
-						for (IItem item : c.getInventory(MapleInventoryType.EQUIPPED).listById(itemId))
+					if (iType.equals(InventoryType.EQUIP))
+						for (IItem item : c.getInventory(InventoryType.EQUIPPED).listById(itemId))
 							quantity += item.getQuantity();
 
 					if (itemEntry.getChildByPath("count") != null) {

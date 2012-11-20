@@ -29,7 +29,7 @@ import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
-import client.MapleInventoryType;
+import client.InventoryType;
 import net.server.MaplePartyCharacter;
 import scripting.item.ItemScriptManager;
 import server.MapleItemInformationProvider;
@@ -91,7 +91,7 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 						}
 						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 5, chr.getId(), true, chr.getPetIndex(pet)), mapitem.getPosition());
 						chr.getMap().removeMapObject(ob);
-					} else if (chr.getInventory(MapleInventoryType.EQUIPPED).findById(1812000) != null) {
+					} else if (chr.getInventory(InventoryType.EQUIPPED).findById(1812000) != null) {
 						chr.gainMeso(mapitem.getMeso(), true, true, false);
 						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 5, chr.getId(), true, chr.getPetIndex(pet)), mapitem.getPosition());
 						chr.getMap().removeMapObject(ob);
@@ -108,7 +108,7 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 					chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 5, chr.getId(), true, chr.getPetIndex(pet)), mapitem.getPosition());
 					chr.getMap().removeMapObject(ob);
 				} else if (mapitem.getItem().getItemId() / 100 == 50000) {
-					if (chr.getInventory(MapleInventoryType.EQUIPPED).findById(1812007) != null) {
+					if (chr.getInventory(InventoryType.EQUIPPED).findById(1812007) != null) {
 						for (int i : chr.getExcluded()) {
 							if (mapitem.getItem().getItemId() == i) {
 								return;

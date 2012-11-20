@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import net.AbstractMaplePacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -34,9 +34,9 @@ public final class UseItemEffectHandler extends AbstractMaplePacketHandler {
 		IItem toUse;
 		int itemId = slea.readInt();
 		if (itemId == 4290001 || itemId == 4290000) {
-			toUse = c.getPlayer().getInventory(MapleInventoryType.ETC).findById(itemId);
+			toUse = c.getPlayer().getInventory(InventoryType.ETC).findById(itemId);
 		} else {
-			toUse = c.getPlayer().getInventory(MapleInventoryType.CASH).findById(itemId);
+			toUse = c.getPlayer().getInventory(InventoryType.CASH).findById(itemId);
 		}
 		if (toUse == null || toUse.getQuantity() < 1) {
 			if (itemId != 0)

@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
-import client.MapleInventoryType;
+import client.InventoryType;
 import tools.Output;
 import tools.Randomizer;
 import java.util.Arrays;
@@ -64,7 +64,7 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 				break;
 			case 0x01: { // /d (inv)
 				final byte typeByte = slea.readByte();
-				final MapleInventoryType type = MapleInventoryType.fromByte(typeByte);
+				final InventoryType type = InventoryType.fromByte(typeByte);
 				final MapleInventory in = player.getInventory(type);
 				for (byte i = 0; i < in.getSlotLimit(); i++) {
 					final IItem item = in.getItem(i);

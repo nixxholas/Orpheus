@@ -35,7 +35,7 @@ import client.IItem;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 
@@ -48,7 +48,7 @@ public class MapleStorage {
 	private List<IItem> items;
 	private int meso;
 	private byte slots;
-	private Map<MapleInventoryType, List<IItem>> typeItems = new HashMap<MapleInventoryType, List<IItem>>();
+	private Map<InventoryType, List<IItem>> typeItems = new HashMap<InventoryType, List<IItem>>();
 
 	private MapleStorage(int id, byte slots, int meso) {
 		this.id = id;
@@ -142,14 +142,14 @@ public class MapleStorage {
 
 	public IItem takeOut(byte slot) {
 		IItem ret = items.remove(slot);
-		MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(ret.getItemId());
+		InventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(ret.getItemId());
 		typeItems.put(type, new ArrayList<IItem>(filterItems(type)));
 		return ret;
 	}
 
 	public void store(IItem item) {
 		items.add(item);
-		MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(item.getItemId());
+		InventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(item.getItemId());
 		typeItems.put(type, new ArrayList<IItem>(filterItems(type)));
 	}
 
@@ -157,7 +157,7 @@ public class MapleStorage {
 		return Collections.unmodifiableList(items);
 	}
 
-	private List<IItem> filterItems(MapleInventoryType type) {
+	private List<IItem> filterItems(InventoryType type) {
 		List<IItem> ret = new LinkedList<IItem>();
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		for (IItem item : items) {
@@ -168,7 +168,7 @@ public class MapleStorage {
 		return ret;
 	}
 
-	public byte getSlot(MapleInventoryType type, byte slot) {
+	public byte getSlot(InventoryType type, byte slot) {
 		byte ret = 0;
 		for (IItem item : items) {
 			if (item == typeItems.get(type).get(slot)) {
@@ -191,17 +191,17 @@ public class MapleStorage {
 				return 1;
 			}
 		});
-		for (MapleInventoryType type : MapleInventoryType.values()) {
+		for (InventoryType type : InventoryType.values()) {
 			typeItems.put(type, new ArrayList<IItem>(items));
 		}
 		c.getSession().write(PacketCreator.getStorage(npcId, slots, items, meso));
 	}
 
-	public void sendStored(GameClient c, MapleInventoryType type) {
+	public void sendStored(GameClient c, InventoryType type) {
 		c.getSession().write(PacketCreator.storeStorage(slots, type, typeItems.get(type)));
 	}
 
-	public void sendTakenOut(GameClient c, MapleInventoryType type) {
+	public void sendTakenOut(GameClient c, InventoryType type) {
 		c.getSession().write(PacketCreator.takeOutStorage(slots, type, typeItems.get(type)));
 	}
 

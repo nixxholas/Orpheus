@@ -30,7 +30,7 @@ import client.ISkill;
 import client.Item;
 import client.MapleBuffStat;
 import client.GameCharacter;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleJob;
 import client.MapleStat;
 import client.SkillFactory;
@@ -239,7 +239,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                             int toSteal = toSteals.get(rand(0, (toSteals.size() - 1))).itemId;
                             MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
                             IItem item = null;
-                            if (ItemConstants.getInventoryType(toSteal).equals(MapleInventoryType.EQUIP)) {
+                            if (ItemConstants.getInventoryType(toSteal).equals(InventoryType.EQUIP)) {
                                 item = ii.randomizeStats((Equip) ii.getEquipById(toSteal));
                             } else {
                                 item = new Item(toSteal, (byte) 0, (short) 1, -1);

@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleInventoryType;
+import client.InventoryType;
 import constants.ItemConstants;
 import java.util.Arrays;
 import net.AbstractMaplePacketHandler;
@@ -110,7 +110,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 				String desc = slea.readMapleAsciiString();
 				slea.skip(3);
 				int itemId = slea.readInt();
-				if (chr.getInventory(MapleInventoryType.CASH).countById(itemId) < 1) {
+				if (chr.getInventory(InventoryType.CASH).countById(itemId) < 1) {
 					return;
 				}
 
@@ -346,7 +346,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 			chr.getTrade().setMeso(slea.readInt());
 		} else if (mode == Action.SET_ITEMS.getCode()) {
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-			MapleInventoryType ivType = MapleInventoryType.fromByte(slea.readByte());
+			InventoryType ivType = InventoryType.fromByte(slea.readByte());
 			IItem item = chr.getInventory(ivType).getItem((byte) slea.readShort());
 			short quantity = slea.readShort();
 			byte targetSlot = slea.readByte();
@@ -380,7 +380,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 		} else if (mode == Action.CONFIRM.getCode()) {
 			MapleTrade.completeTrade(c.getPlayer());
 		} else if (mode == Action.ADD_ITEM.getCode() || mode == Action.PUT_ITEM.getCode()) {
-			MapleInventoryType type = MapleInventoryType.fromByte(slea.readByte());
+			InventoryType type = InventoryType.fromByte(slea.readByte());
 			byte slot = (byte) slea.readShort();
 			short bundles = slea.readShort();
 			if (chr.getItemQuantity(chr.getInventory(type).getItem(slot).getItemId(), false) < bundles || chr.getInventory(type).getItem(slot).getFlag() == ItemConstants.UNTRADEABLE) {

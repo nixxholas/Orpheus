@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import client.MapleInventoryType;
+import client.InventoryType;
 import client.MapleInventory;
 import server.MapleInventoryManipulator;
 import tools.PacketCreator;
@@ -37,7 +37,7 @@ public final class ItemSortHandler extends AbstractMaplePacketHandler {
 		chr.getAutobanManager().setTimestamp(2, slea.readInt());
 		byte inv = slea.readByte();
 		boolean sorted = false;
-		MapleInventoryType pInvType = MapleInventoryType.fromByte(inv);
+		InventoryType pInvType = InventoryType.fromByte(inv);
 		MapleInventory pInv = chr.getInventory(pInvType);
 		while (!sorted) {
 			byte freeSlot = pInv.getNextFreeSlot();
