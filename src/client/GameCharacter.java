@@ -66,7 +66,7 @@ import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleMiniGame;
 import server.MaplePlayerShop;
-import server.MaplePortal;
+import server.Portal;
 import server.MapleShop;
 import server.MapleStatEffect;
 import server.MapleStocks;
@@ -79,15 +79,15 @@ import server.events.gm.MapleFitness;
 import server.events.gm.MapleOla;
 import server.life.MapleMonster;
 import server.life.MobSkill;
-import server.maps.AbstractAnimatedMapleMapObject;
+import server.maps.AbstractAnimatedGameMapObject;
 import server.maps.HiredMerchant;
-import server.maps.MapleDoor;
-import server.maps.MapleMap;
-import server.maps.MapleMapEffect;
-import server.maps.MapleMapFactory;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
-import server.maps.MapleSummon;
+import server.maps.Door;
+import server.maps.GameMap;
+import server.maps.GameMapEffect;
+import server.maps.GameMapFactory;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
+import server.maps.Summon;
 import server.maps.PlayerNPCs;
 import server.maps.SavedLocation;
 import server.maps.SavedLocationType;
@@ -124,7 +124,7 @@ import constants.skills.SuperGM;
 import constants.skills.Swordsman;
 import constants.skills.ThunderBreaker;
 
-public class GameCharacter extends AbstractAnimatedMapleMapObject {
+public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	private byte world;
 	private int accountid, id;
@@ -185,7 +185,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	private MaplePartyCharacter mpc = null;
 	private Inventory[] inventory;
 	private MapleJob job = MapleJob.BEGINNER;
-	private MapleMap map, dojoMap;// Make a Dojo pq instance
+	private GameMap map, dojoMap;// Make a Dojo pq instance
 	private MapleMessenger messenger = null;
 	private MapleMiniGame miniGame;
 	private MapleMount maplemount;
@@ -202,14 +202,14 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	private Map<MapleQuest, MapleQuestStatus> quests;
 	private Set<MapleMonster> controlled = new LinkedHashSet<MapleMonster>();
 	private Map<Integer, String> entered = new LinkedHashMap<Integer, String>();
-	private Set<MapleMapObject> visibleMapObjects = new LinkedHashSet<MapleMapObject>();
+	private Set<GameMapObject> visibleMapObjects = new LinkedHashSet<GameMapObject>();
 	private Map<ISkill, SkillEntry> skills = new LinkedHashMap<ISkill, SkillEntry>();
 	private EnumMap<MapleBuffStat, MapleBuffStatValueHolder> effects = new EnumMap<MapleBuffStat, MapleBuffStatValueHolder>(MapleBuffStat.class);
 	private Map<Integer, MapleKeyBinding> keymap = new LinkedHashMap<Integer, MapleKeyBinding>();
-	private Map<Integer, MapleSummon> summons = new LinkedHashMap<Integer, MapleSummon>();
+	private Map<Integer, Summon> summons = new LinkedHashMap<Integer, Summon>();
 	private Map<Integer, MapleCoolDownValueHolder> coolDowns = new LinkedHashMap<Integer, MapleCoolDownValueHolder>(50);
 	private EnumMap<MapleDisease, DiseaseValueHolder> diseases = new EnumMap<MapleDisease, DiseaseValueHolder>(MapleDisease.class);
-	private List<MapleDoor> doors = new ArrayList<MapleDoor>();
+	private List<Door> doors = new ArrayList<Door>();
 	private ScheduledFuture<?> dragonBloodSchedule;
 	private ScheduledFuture<?> mapTimeLimitTask = null;
 	private ScheduledFuture<?>[] fullnessSchedule = new ScheduledFuture<?>[3];
@@ -349,7 +349,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return pts;
 	}
 
-	public void addDoor(MapleDoor door) {
+	public void addDoor(Door door) {
 		doors.add(door);
 	}
 
@@ -468,11 +468,11 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return MaxMP;
 	}
 
-	public void addSummon(int id, MapleSummon summon) {
+	public void addSummon(int id, Summon summon) {
 		summons.put(id, summon);
 	}
 
-	public void addVisibleMapObject(MapleMapObject mo) {
+	public void addVisibleMapObject(GameMapObject mo) {
 		visibleMapObjects.add(mo);
 	}
 
@@ -617,7 +617,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		c.setAccountName(this.client.getAccountName());// No null's for
 														// accountName
 		this.client = c;
-		MaplePortal portal = map.findClosestSpawnpoint(getPosition());
+		Portal portal = map.findClosestSpawnpoint(getPosition());
 		if (portal == null) {
 			portal = map.getPortal(0);
 		}
@@ -671,14 +671,14 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		deregisterBuffStats(buffstats);
 		if (effect.isMagicDoor()) {
 			if (!getDoors().isEmpty()) {
-				MapleDoor door = getDoors().iterator().next();
+				Door door = getDoors().iterator().next();
 				for (GameCharacter chr : door.getTarget().getCharacters()) {
 					door.sendDestroyData(chr.client);
 				}
 				for (GameCharacter chr : door.getTown().getCharacters()) {
 					door.sendDestroyData(chr.client);
 				}
-				for (MapleDoor destroyDoor : getDoors()) {
+				for (Door destroyDoor : getDoors()) {
 					door.getTarget().removeMapObject(destroyDoor);
 					door.getTown().removeMapObject(destroyDoor);
 				}
@@ -865,40 +865,40 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void changeMap(int map, int portal) {
-		MapleMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
+		GameMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
 		changeMap(warpMap, warpMap.getPortal(portal));
 	}
 
 	public void changeMap(int map, String portal) {
-		MapleMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
+		GameMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
 		changeMap(warpMap, warpMap.getPortal(portal));
 	}
 
-	public void changeMap(int map, MaplePortal portal) {
-		MapleMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
+	public void changeMap(int map, Portal portal) {
+		GameMap warpMap = client.getChannelServer().getMapFactory().getMap(map);
 		changeMap(warpMap, portal);
 	}
 
-	public void changeMap(MapleMap to) {
+	public void changeMap(GameMap to) {
 		changeMap(to, to.getPortal(0));
 	}
 
-	public void changeMap(final MapleMap to, final MaplePortal pto) {
+	public void changeMap(final GameMap to, final Portal pto) {
 		changeMapInternal(to, pto.getPosition(), PacketCreator.getWarpToMap(to, pto.getId(), this));
 	}
 
-	public void changeMap(final MapleMap to, final Point pos) {
+	public void changeMap(final GameMap to, final Point pos) {
 		// Position :O (LEFT)
 		changeMapInternal(to, pos, PacketCreator.getWarpToMap(to, 0x80, this));
 	}
 
 	public void changeMapBanish(int mapid, String portal, String msg) {
 		dropMessage(5, msg);
-		MapleMap map_ = client.getChannelServer().getMapFactory().getMap(mapid);
+		GameMap map_ = client.getChannelServer().getMapFactory().getMap(mapid);
 		changeMap(map_, map_.getPortal(portal));
 	}
 
-	private void changeMapInternal(final MapleMap to, final Point pos, GamePacket warpPacket) {
+	private void changeMapInternal(final GameMap to, final Point pos, GamePacket warpPacket) {
 		warpPacket.setOnSend(new Runnable() {
 
 			@Override
@@ -1086,7 +1086,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 						}
 					} else if (stat == MapleBuffStat.SUMMON || stat == MapleBuffStat.PUPPET) {
 						int summonId = mbsvh.effect.getSourceId();
-						MapleSummon summon = summons.get(summonId);
+						Summon summon = summons.get(summonId);
 						if (summon != null) {
 							getMap().broadcastMessage(PacketCreator.removeSummon(summon, true), summon.getPosition());
 							getMap().removeMapObject(summon);
@@ -1634,8 +1634,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return rebirths;
 	}
 
-	public List<MapleDoor> getDoors() {
-		return new ArrayList<MapleDoor>(doors);
+	public List<Door> getDoors() {
+		return new ArrayList<Door>(doors);
 	}
 
 	public int getDropRate() {
@@ -1864,7 +1864,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		}
 	}
 
-	public MapleMap getMap() {
+	public GameMap getMap() {
 		return map;
 	}
 
@@ -2241,7 +2241,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return str;
 	}
 
-	public Map<Integer, MapleSummon> getSummons() {
+	public Map<Integer, Summon> getSummons() {
 		return summons;
 	}
 
@@ -2269,7 +2269,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return vanquisherStage;
 	}
 
-	public Collection<MapleMapObject> getVisibleMapObjects() {
+	public Collection<GameMapObject> getVisibleMapObjects() {
 		return Collections.unmodifiableCollection(visibleMapObjects);
 	}
 
@@ -2454,7 +2454,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		return hidden;
 	}
 
-	public boolean isMapObjectVisible(MapleMapObject mo) {
+	public boolean isMapObjectVisible(GameMapObject mo) {
 		return visibleMapObjects.contains(mo);
 	}
 
@@ -2709,12 +2709,12 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				}
 			}
 			if (channelserver) {
-				MapleMapFactory mapFactory = client.getChannelServer().getMapFactory();
+				GameMapFactory mapFactory = client.getChannelServer().getMapFactory();
 				ret.map = mapFactory.getMap(ret.mapid);
 				if (ret.map == null) {
 					ret.map = mapFactory.getMap(100000000);
 				}
-				MaplePortal portal = ret.map.getPortal(ret.initialSpawnPoint);
+				Portal portal = ret.map.getPortal(ret.initialSpawnPoint);
 				if (portal == null) {
 					portal = ret.map.getPortal(0);
 					ret.initialSpawnPoint = 0;
@@ -3032,7 +3032,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				rs.next();
 				PlayerNPCs pn = new PlayerNPCs(rs);
 				for (Channel channel : Server.getInstance().getChannelsFromWorld(world)) {
-					MapleMap m = channel.getMapFactory().getMap(getMapId());
+					GameMap m = channel.getMapFactory().getMap(getMapId());
 					m.broadcastMessage(PacketCreator.spawnPlayerNPC(pn));
 					m.broadcastMessage(PacketCreator.getPlayerNPC(pn));
 					m.addMapObject(pn);
@@ -3320,7 +3320,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		}
 	}
 
-	public void removeVisibleMapObject(MapleMapObject mo) {
+	public void removeVisibleMapObject(GameMapObject mo) {
 		visibleMapObjects.remove(mo);
 	}
 
@@ -3465,7 +3465,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void saveLocation(String type) {
-		MaplePortal closest = map.findClosestPortal(getPosition());
+		Portal closest = map.findClosestPortal(getPosition());
 		savedLocations[SavedLocationType.fromString(type).ordinal()] = new SavedLocation(getMapId(), closest != null ? closest.getId() : 0);
 	}
 
@@ -3535,7 +3535,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			if (map == null || map.getId() == 610020000 || map.getId() == 610020001) {
 				ps.setInt(25, 0);
 			} else {
-				MaplePortal closest = map.findClosestSpawnpoint(getPosition());
+				Portal closest = map.findClosestSpawnpoint(getPosition());
 				if (closest != null) {
 					ps.setInt(25, closest.getId());
 				} else {
@@ -4102,7 +4102,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		this.mapid = PmapId;
 	}
 
-	public void setMap(MapleMap newmap) {
+	public void setMap(GameMap newmap) {
 		this.map = newmap;
 	}
 
@@ -4429,7 +4429,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void startMapEffect(String msg, int itemId, int duration) {
-		final MapleMapEffect mapEffect = new MapleMapEffect(msg, itemId);
+		final GameMapEffect mapEffect = new GameMapEffect(msg, itemId);
 		getClient().announce(mapEffect.makeStartData());
 		TimerManager.getInstance().schedule(new Runnable() {
 
@@ -4536,8 +4536,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.PLAYER;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.PLAYER;
 	}
 
 	@Override

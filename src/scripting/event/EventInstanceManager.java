@@ -36,8 +36,8 @@ import net.server.MaplePartyCharacter;
 import provider.MapleDataProviderFactory;
 import server.TimerManager;
 import server.life.MapleMonster;
-import server.maps.MapleMap;
-import server.maps.MapleMapFactory;
+import server.maps.GameMap;
+import server.maps.GameMapFactory;
 
 /**
  * 
@@ -48,7 +48,7 @@ public class EventInstanceManager {
 	private List<MapleMonster> mobs = new LinkedList<MapleMonster>();
 	private Map<GameCharacter, Integer> killCount = new HashMap<GameCharacter, Integer>();
 	private EventManager em;
-	private MapleMapFactory mapFactory;
+	private GameMapFactory mapFactory;
 	private String name;
 	private Properties props = new Properties();
 	private long timeStarted = 0;
@@ -57,7 +57,7 @@ public class EventInstanceManager {
 	public EventInstanceManager(EventManager em, String name) {
 		this.em = em;
 		this.name = name;
-		mapFactory = new MapleMapFactory(MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), (byte) 0, (byte) 1);// Fk
+		mapFactory = new GameMapFactory(MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), (byte) 0, (byte) 1);// Fk
 																																																															// this
 		mapFactory.setChannel(em.getChannelServer().getId());
 	}
@@ -89,7 +89,7 @@ public class EventInstanceManager {
 		return eventTime - (System.currentTimeMillis() - timeStarted);
 	}
 
-	public void registerParty(MapleParty party, MapleMap map) {
+	public void registerParty(MapleParty party, GameMap map) {
 		for (MaplePartyCharacter pc : party.getMembers()) {
 			GameCharacter c = map.getCharacterById(pc.getId());
 			registerPlayer(c);
@@ -192,7 +192,7 @@ public class EventInstanceManager {
 		em = null;
 	}
 
-	public MapleMapFactory getMapFactory() {
+	public GameMapFactory getMapFactory() {
 		return mapFactory;
 	}
 
@@ -226,8 +226,8 @@ public class EventInstanceManager {
 		}
 	}
 
-	public MapleMap getMapInstance(int mapId) {
-		MapleMap map = mapFactory.getMap(mapId);
+	public GameMap getMapInstance(int mapId) {
+		GameMap map = mapFactory.getMap(mapId);
 		if (!mapFactory.isMapLoaded(mapId)) {
 			if (em.getProperty("shuffleReactors") != null && em.getProperty("shuffleReactors").equals("true")) {
 				map.shuffleReactors();

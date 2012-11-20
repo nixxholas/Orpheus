@@ -40,7 +40,7 @@ import server.life.MobAttackInfo;
 import server.life.MobAttackInfoFactory;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.PacketCreator;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -59,7 +59,7 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 		boolean is_pgmr = false, is_pg = true;
 		int mpattack = 0;
 		MapleMonster attacker = null;
-		final MapleMap map = player.getMap();
+		final GameMap map = player.getMap();
 		if (damagefrom != -3) {
 			monsteridfrom = slea.readInt();
 			oid = slea.readInt();

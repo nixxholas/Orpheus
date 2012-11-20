@@ -25,8 +25,8 @@ import client.GameClient;
 import client.Pet;
 import net.AbstractMaplePacketHandler;
 import server.InventoryManipulator;
-import server.maps.MapleMapItem;
-import server.maps.MapleMapObject;
+import server.maps.GameMapItem;
+import server.maps.GameMapObject;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.InventoryType;
@@ -51,13 +51,13 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 
 		slea.skip(13);
 		int oid = slea.readInt();
-		MapleMapObject ob = chr.getMap().getMapObject(oid);
+		GameMapObject ob = chr.getMap().getMapObject(oid);
 		if (ob == null || pet == null) {
 			c.announce(PacketCreator.getInventoryFull());
 			return;
 		}
-		if (ob instanceof MapleMapItem) {
-			MapleMapItem mapitem = (MapleMapItem) ob;
+		if (ob instanceof GameMapItem) {
+			GameMapItem mapitem = (GameMapItem) ob;
 			synchronized (mapitem) {
 				if (!chr.needQuestItem(mapitem.getQuest(), mapitem.getItemId())) {
 					c.announce(PacketCreator.showItemUnavailable());

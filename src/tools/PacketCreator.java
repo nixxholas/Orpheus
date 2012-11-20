@@ -96,11 +96,11 @@ import server.life.MapleNPC;
 import server.life.MobSkill;
 import server.life.NpcDescriptionEntry;
 import server.maps.HiredMerchant;
-import server.maps.MapleMap;
-import server.maps.MapleMapItem;
-import server.maps.MapleMist;
-import server.maps.MapleReactor;
-import server.maps.MapleSummon;
+import server.maps.GameMap;
+import server.maps.GameMapItem;
+import server.maps.Mist;
+import server.maps.Reactor;
+import server.maps.Summon;
 import server.maps.PlayerNPCs;
 import server.movement.LifeMovementFragment;
 import tools.data.output.PacketWriter;
@@ -1031,14 +1031,14 @@ public class PacketCreator {
 	 * Gets a packet telling the client to change maps.
 	 * 
 	 * @param to
-	 *            The <code>MapleMap</code> to warp to.
+	 *            The <code>GameMap</code> to warp to.
 	 * @param spawnPoint
 	 *            The spawn portal number to spawn at.
 	 * @param chr
 	 *            The character warping to <code>to</code>
 	 * @return The map change packet.
 	 */
-	public static GamePacket getWarpToMap(MapleMap to, int spawnPoint, GameCharacter chr) {
+	public static GamePacket getWarpToMap(GameMap to, int spawnPoint, GameCharacter chr) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.WARP_TO_MAP.getValue());
 		w.writeInt(chr.getClient().getChannel() - 1);
@@ -1125,7 +1125,7 @@ public class PacketCreator {
 	 *            Animated spawn?
 	 * @return The spawn packet for the map object.
 	 */
-	public static GamePacket spawnSummon(MapleSummon summon, boolean animated) {
+	public static GamePacket spawnSummon(Summon summon, boolean animated) {
 		PacketWriter w = new PacketWriter(25);
 		w.writeShort(SendOpcode.SPAWN_SPECIAL_MAPOBJECT.getValue());
 		w.writeInt(summon.getOwner().getId());
@@ -1155,7 +1155,7 @@ public class PacketCreator {
 	 *            Animated removal?
 	 * @return The packet removing the object.
 	 */
-	public static GamePacket removeSummon(MapleSummon summon, boolean animated) {
+	public static GamePacket removeSummon(Summon summon, boolean animated) {
 		PacketWriter w = new PacketWriter(11);
 		w.writeShort(SendOpcode.REMOVE_SPECIAL_MAPOBJECT.getValue());
 		w.writeInt(summon.getOwner().getId());
@@ -1794,7 +1794,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket dropItemFromMapObject(MapleMapItem drop, Point dropfrom, Point dropto, byte mod) {
+	public static GamePacket dropItemFromMapObject(GameMapItem drop, Point dropfrom, Point dropto, byte mod) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.DROP_ITEM_FROM_MAPOBJECT.getValue());
 		w.write(mod);
@@ -3646,7 +3646,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnMist(int oid, int ownerCid, int skill, int level, MapleMist mist) {
+	public static GamePacket spawnMist(int oid, int ownerCid, int skill, int level, Mist mist) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SPAWN_MIST.getValue());
 		w.writeInt(oid);
@@ -3790,7 +3790,7 @@ public class PacketCreator {
 	}
 
 	// is there a way to spawn reactors non-animated?
-	public static GamePacket spawnReactor(MapleReactor reactor) {
+	public static GamePacket spawnReactor(Reactor reactor) {
 		PacketWriter w = new PacketWriter();
 		Point pos = reactor.getPosition();
 		w.writeShort(SendOpcode.REACTOR_SPAWN.getValue());
@@ -3803,7 +3803,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket triggerReactor(MapleReactor reactor, int stance) {
+	public static GamePacket triggerReactor(Reactor reactor, int stance) {
 		PacketWriter w = new PacketWriter();
 		Point pos = reactor.getPosition();
 		w.writeShort(SendOpcode.REACTOR_HIT.getValue());
@@ -3817,7 +3817,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket destroyReactor(MapleReactor reactor) {
+	public static GamePacket destroyReactor(Reactor reactor) {
 		PacketWriter w = new PacketWriter();
 		Point pos = reactor.getPosition();
 		w.writeShort(SendOpcode.REACTOR_DESTROY.getValue());

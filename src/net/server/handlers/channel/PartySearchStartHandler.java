@@ -23,8 +23,8 @@ package net.server.handlers.channel;
 import java.util.Collection;
 import net.AbstractMaplePacketHandler;
 import net.server.MapleParty;
-import server.maps.MapleMap;
-import server.maps.MapleMapObject;
+import server.maps.GameMap;
+import server.maps.GameMapObject;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameCharacter;
@@ -45,9 +45,9 @@ public class PartySearchStartHandler extends AbstractMaplePacketHandler {
 		slea.readInt(); // members
 		int jobs = slea.readInt();
 		GameCharacter chr = c.getPlayer();
-		MapleMap map = chr.getMap();
-		Collection<MapleMapObject> mapobjs = map.getAllPlayer();
-		for (MapleMapObject mapobj : mapobjs) {
+		GameMap map = chr.getMap();
+		Collection<GameMapObject> mapobjs = map.getAllPlayer();
+		for (GameMapObject mapobj : mapobjs) {
 			if (chr.getParty().getMembers().size() > 5) {
 				break;
 			}

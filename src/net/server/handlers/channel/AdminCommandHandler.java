@@ -34,8 +34,8 @@ import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import server.quest.MapleQuest;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -134,7 +134,7 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 			case 0x15: // Kill
 				int mobToKill = slea.readInt();
 				int amount = slea.readInt();
-				List<MapleMapObject> monsterx = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.MONSTER));
+				List<GameMapObject> monsterx = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 				for (int x = 0; x < amount; x++) {
 					MapleMonster monster = (MapleMonster) monsterx.get(x);
 					if (monster.getId() == mobToKill) {
@@ -156,8 +156,8 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 			case 0x18: // Maple & Mobhp
 				int mobHp = slea.readInt();
 				player.dropMessage("Monsters HP");
-				List<MapleMapObject> monsters = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.MONSTER));
-				for (MapleMapObject mobs : monsters) {
+				List<GameMapObject> monsters = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
+				for (GameMapObject mobs : monsters) {
 					MapleMonster monster = (MapleMonster) mobs;
 					if (monster.getId() == mobHp) {
 						player.dropMessage(monster.getName() + ": " + monster.getHp());

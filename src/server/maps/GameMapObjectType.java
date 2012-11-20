@@ -20,6 +20,6 @@
  */
 package server.maps;
 
-public enum MapleMapObjectType {
+public enum GameMapObjectType {
 	NPC, MONSTER, ITEM, PLAYER, DOOR, SUMMON, SHOP, MINI_GAME, MIST, REACTOR, HIRED_MERCHANT, PLAYER_NPC;
 }

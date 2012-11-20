@@ -27,7 +27,7 @@ import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
 import server.TimerManager;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.PacketCreator;
 
 /**
@@ -37,11 +37,11 @@ import tools.PacketCreator;
 public final class MapleOxQuiz {
 	private int round = 1;
 	private int question = 1;
-	private MapleMap map = null;
+	private GameMap map = null;
 	private int expGain = 200;
 	private static MapleDataProvider stringData = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Etc.wz"));
 
-	public MapleOxQuiz(MapleMap map) {
+	public MapleOxQuiz(GameMap map) {
 		this.map = map;
 		this.round = Randomizer.nextInt(9);
 		this.question = 1;

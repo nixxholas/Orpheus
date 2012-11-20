@@ -25,7 +25,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
 import net.AbstractMaplePacketHandler;
-import server.maps.MapleSummon;
+import server.maps.Summon;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -39,7 +39,7 @@ public final class DamageSummonHandler extends AbstractMaplePacketHandler {
 		int monsterIdFrom = slea.readInt();
 		if (SkillFactory.getSkill(skillid) != null) {
 			GameCharacter player = c.getPlayer();
-			MapleSummon summon = player.getSummons().get(skillid);
+			Summon summon = player.getSummons().get(skillid);
 			if (summon != null) {
 				summon.addHP(-damage);
 				if (summon.getHP() <= 0) {

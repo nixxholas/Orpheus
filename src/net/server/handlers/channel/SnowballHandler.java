@@ -24,7 +24,7 @@ import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.events.gm.MapleSnowball;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -37,7 +37,7 @@ public final class SnowballHandler extends AbstractMaplePacketHandler {
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		// D3 00 02 00 00 A5 01
 		GameCharacter chr = c.getPlayer();
-		MapleMap map = chr.getMap();
+		GameMap map = chr.getMap();
 		final MapleSnowball snowball = map.getSnowball(chr.getTeam());
 		final MapleSnowball othersnowball = map.getSnowball(chr.getTeam() == 0 ? (byte) 1 : 0);
 		int what = slea.readByte();

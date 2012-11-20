@@ -18,30 +18,31 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package server.maps;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import scripting.reactor.ReactorScriptManager;
-import server.maps.Reactor;
-import tools.data.input.SeekableLittleEndianAccessor;
+import net.GamePacket;
+import tools.PacketCreator;
 
-/**
- * 
- * @author Generic
- */
-public final class TouchReactorHandler extends AbstractMaplePacketHandler {
+public class GameMapEffect {
+	private String msg;
+	private int itemId;
+	private boolean active = true;
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
-		if (reactor != null) {
-			if (slea.readByte() != 0) {
-				ReactorScriptManager.getInstance().touch(c, reactor);
-			} else {
-				ReactorScriptManager.getInstance().untouch(c, reactor);
-			}
-		}
+	public GameMapEffect(String msg, int itemId) {
+		this.msg = msg;
+		this.itemId = itemId;
+	}
+
+	public GamePacket makeDestroyData() {
+		return PacketCreator.removeMapEffect();
+	}
+
+	public GamePacket makeStartData() {
+		return PacketCreator.startMapEffect(msg, itemId, active);
+	}
+
+	public void sendStartData(GameClient client) {
+		client.announce(makeStartData());
 	}
 }

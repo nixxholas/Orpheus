@@ -26,7 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ScheduledFuture;
 import server.TimerManager;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 
@@ -36,7 +36,7 @@ import tools.PacketCreator;
  */
 public class MonsterCarnival {
 	private MonsterCarnivalParty red, blue;
-	private MapleMap map;
+	private GameMap map;
 	private int room;
 	private long time = 0;
 	private long timeStarted = 0;

@@ -30,8 +30,8 @@ import scripting.item.ItemScriptManager;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleItemInformationProvider.scriptedItem;
-import server.maps.MapleMapItem;
-import server.maps.MapleMapObject;
+import server.maps.GameMapItem;
+import server.maps.GameMapObject;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -48,11 +48,11 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 		Point cpos = slea.readPos();
 		int oid = slea.readInt();
 		GameCharacter chr = c.getPlayer();
-		MapleMapObject ob = chr.getMap().getMapObject(oid);
+		GameMapObject ob = chr.getMap().getMapObject(oid);
 		if (chr.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(ob.getObjectId())).getNextFreeSlot() > -1) {
 			if (chr.getMapId() > 209000000 && chr.getMapId() < 209000016) {// happyville
 																			// trees
-				MapleMapItem mapitem = (MapleMapItem) ob;
+				GameMapItem mapitem = (GameMapItem) ob;
 				if (mapitem.getDropper().getObjectId() == c.getPlayer().getObjectId()) {
 					if (InventoryManipulator.addFromDrop(c, mapitem.getItem(), false)) {
 						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
@@ -77,8 +77,8 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 				c.announce(PacketCreator.getShowInventoryFull());
 				return;
 			}
-			if (ob instanceof MapleMapItem) {
-				MapleMapItem mapitem = (MapleMapItem) ob;
+			if (ob instanceof GameMapItem) {
+				GameMapItem mapitem = (GameMapItem) ob;
 				synchronized (mapitem) {
 					if (mapitem.getQuest() > 0 && !chr.needQuestItem(mapitem.getQuest(), mapitem.getItemId())) {
 						c.announce(PacketCreator.showItemUnavailable());

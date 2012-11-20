@@ -28,8 +28,8 @@ import server.life.MapleMonster;
 import server.life.MobSkill;
 import server.life.MobSkillEntry;
 import server.life.MobSkillFactory;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import server.movement.LifeMovementFragment;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -40,8 +40,8 @@ public final class MoveLifeHandler extends AbstractMovementPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int objectid = slea.readInt();
 		short moveid = slea.readShort();
-		MapleMapObject mmo = c.getPlayer().getMap().getMapObject(objectid);
-		if (mmo == null || mmo.getType() != MapleMapObjectType.MONSTER) {
+		GameMapObject mmo = c.getPlayer().getMap().getMapObject(objectid);
+		if (mmo == null || mmo.getType() != GameMapObjectType.MONSTER) {
 			return;
 		}
 		MapleMonster monster = (MapleMonster) mmo;

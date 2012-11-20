@@ -24,7 +24,7 @@ import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.events.gm.MapleCoconut;
 import server.events.gm.MapleCoconuts;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -41,7 +41,7 @@ public final class CoconutHandler extends AbstractMaplePacketHandler {
 		 */
 		int id = slea.readShort();
 		try {
-			MapleMap map = c.getPlayer().getMap();
+			GameMap map = c.getPlayer().getMap();
 			MapleCoconut event = map.getCoconut();
 			MapleCoconuts nut = event.getCoconut(id);
 			if (!nut.isHittable())

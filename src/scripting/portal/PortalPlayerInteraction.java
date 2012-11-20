@@ -25,19 +25,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import scripting.AbstractPlayerInteraction;
-import server.MaplePortal;
+import server.Portal;
 import tools.DatabaseConnection;
 
 public class PortalPlayerInteraction extends AbstractPlayerInteraction {
 
-	private MaplePortal portal;
+	private Portal portal;
 
-	public PortalPlayerInteraction(GameClient c, MaplePortal portal) {
+	public PortalPlayerInteraction(GameClient c, Portal portal) {
 		super(c);
 		this.portal = portal;
 	}
 
-	public MaplePortal getPortal() {
+	public Portal getPortal() {
 		return portal;
 	}
 

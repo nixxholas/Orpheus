@@ -79,10 +79,10 @@ import server.life.Element;
 import server.life.ElementalEffectiveness;
 import server.life.MapleMonster;
 import server.life.MapleMonsterInformationProvider;
-import server.maps.MapleMap;
-import server.maps.MapleMapItem;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMap;
+import server.maps.GameMapItem;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import server.partyquest.Pyramid;
 import tools.PacketCreator;
 import tools.data.input.LittleEndianAccessor;
@@ -169,14 +169,14 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
             return;
             }*/
             int totDamage = 0;
-            final MapleMap map = player.getMap();
+            final GameMap map = player.getMap();
 
             if (attack.skill == ChiefBandit.MESO_EXPLOSION) {
                 int delay = 0;
                 for (Integer oned : attack.allDamage.keySet()) {
-                    MapleMapObject mapobject = map.getMapObject(oned.intValue());
-                    if (mapobject != null && mapobject.getType() == MapleMapObjectType.ITEM) {
-                        final MapleMapItem mapitem = (MapleMapItem) mapobject;
+                    GameMapObject mapobject = map.getMapObject(oned.intValue());
+                    if (mapobject != null && mapobject.getType() == GameMapObjectType.ITEM) {
+                        final GameMapItem mapitem = (GameMapItem) mapobject;
                         if (mapitem.getMeso() > 9) {
                             synchronized (mapitem) {
                                 if (mapitem.isPickedUp()) {
@@ -196,7 +196,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                         } else if (mapitem.getMeso() == 0) {
                             return;
                         }
-                    } else if (mapobject != null && mapobject.getType() != MapleMapObjectType.MONSTER) {
+                    } else if (mapobject != null && mapobject.getType() != GameMapObjectType.MONSTER) {
                         return;
                     }
                 }

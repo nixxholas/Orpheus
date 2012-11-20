@@ -24,7 +24,7 @@ import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import server.TimerManager;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.PacketCreator;
 
 /**
@@ -33,7 +33,7 @@ import tools.PacketCreator;
  */
 // Make them better :)
 public class MapleCoconut extends MapleEvent {
-	private MapleMap map = null;
+	private GameMap map = null;
 	private int MapleScore = 0;
 	private int StoryScore = 0;
 	private int countBombing = 80;
@@ -41,7 +41,7 @@ public class MapleCoconut extends MapleEvent {
 	private int countStopped = 20;
 	private List<MapleCoconuts> coconuts = new LinkedList<MapleCoconuts>();
 
-	public MapleCoconut(MapleMap map) {
+	public MapleCoconut(GameMap map) {
 		super(1, 50);
 		this.map = map;
 	}

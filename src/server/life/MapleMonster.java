@@ -49,9 +49,9 @@ import net.server.MaplePartyCharacter;
 import scripting.event.EventInstanceManager;
 import server.TimerManager;
 import server.life.MapleLifeFactory.BanishInfo;
-import server.maps.MapleMap;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMap;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import server.maps.TimeMobEntry;
 import tools.ArrayMap;
 import tools.PacketCreator;
@@ -68,7 +68,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 	private Collection<MonsterListener> listeners = new LinkedList<MonsterListener>();
 	private GameCharacter highestDamageChar;
 	private EnumMap<MonsterStatus, MonsterStatusEffect> stati = new EnumMap<MonsterStatus, MonsterStatusEffect>(MonsterStatus.class);
-	private MapleMap map;
+	private GameMap map;
 	private int VenomMultiplier = 0;
 	private boolean fake = false;
 	private boolean dropsDisabled = false;
@@ -103,7 +103,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		return dropsDisabled;
 	}
 
-	public void setMap(MapleMap map) {
+	public void setMap(GameMap map) {
 		this.map = map;
 	}
 
@@ -309,7 +309,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 		final List<Integer> toSpawn = this.getRevives();
 		if (toSpawn != null) {
-			final MapleMap reviveMap = killer.getMap();
+			final GameMap reviveMap = killer.getMap();
 			if (toSpawn.contains(9300216) && reviveMap.getId() > 925000000 && reviveMap.getId() < 926000000) {
 				reviveMap.broadcastMessage(PacketCreator.playSound("Dojang/clear"));
 				reviveMap.broadcastMessage(PacketCreator.showEffect("dojang/end/clear"));
@@ -361,7 +361,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 		GameCharacter ret = highestDamageChar;
 		highestDamageChar = null; // may not keep hard references to chars
-									// outside of PlayerStorage or MapleMap
+									// outside of PlayerStorage or GameMap
 		return ret;
 	}
 
@@ -462,8 +462,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.MONSTER;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.MONSTER;
 	}
 
 	public void setEventInstance(EventInstanceManager eventInstance) {
@@ -653,7 +653,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		return fake;
 	}
 
-	public MapleMap getMap() {
+	public GameMap getMap() {
 		return map;
 	}
 
@@ -683,10 +683,10 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			}
 		}
 		if (toUse.getSkillId() == 200) {
-			Collection<MapleMapObject> mmo = getMap().getMapObjects();
+			Collection<GameMapObject> mmo = getMap().getMapObjects();
 			int i = 0;
-			for (MapleMapObject mo : mmo) {
-				if (mo.getType() == MapleMapObjectType.MONSTER) {
+			for (GameMapObject mo : mmo) {
+				if (mo.getType() == GameMapObjectType.MONSTER) {
 					i++;
 				}
 			}
@@ -749,7 +749,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		private final MonsterStatusEffect status;
 		private final Runnable cancelTask;
 		private final int type;
-		private final MapleMap map;
+		private final GameMap map;
 
 		private DamageTask(int dealDamage, GameCharacter chr, MonsterStatusEffect status, Runnable cancelTask, int type) {
 			this.dealDamage = dealDamage;
@@ -814,7 +814,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
 		public boolean contains(GameCharacter chr);
 
-		public void killedMob(MapleMap map, int baseExp, boolean mostDamage);
+		public void killedMob(GameMap map, int baseExp, boolean mostDamage);
 	}
 
 	private class SingleAttackerEntry implements AttackerEntry {
@@ -862,7 +862,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 
 		@Override
-		public void killedMob(MapleMap map, int baseExp, boolean mostDamage) {
+		public void killedMob(GameMap map, int baseExp, boolean mostDamage) {
 			GameCharacter chr = map.getCharacterById(chrid);
 			if (chr != null) {
 				giveExpToCharacter(chr, baseExp, mostDamage, 1);
@@ -976,7 +976,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 
 		@Override
-		public void killedMob(MapleMap map, int baseExp, boolean mostDamage) {
+		public void killedMob(GameMap map, int baseExp, boolean mostDamage) {
 			Map<GameCharacter, OnePartyAttacker> attackers_ = resolveAttackers();
 			GameCharacter highest = null;
 			int highestDamage = 0;

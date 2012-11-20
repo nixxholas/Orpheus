@@ -41,7 +41,7 @@ import net.server.MapleParty;
 import net.server.Server;
 import server.MapleStocks;
 import server.TimerManager;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
 
@@ -148,7 +148,7 @@ public class EventManager {
 	}
 
 	// PQ method: starts a PQ
-	public void startInstance(MapleParty party, MapleMap map) {
+	public void startInstance(MapleParty party, GameMap map) {
 		try {
 			EventInstanceManager eim = (EventInstanceManager) (iv.invokeFunction("setup", (Object) null));
 			eim.registerParty(party, map);

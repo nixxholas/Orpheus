@@ -28,10 +28,10 @@ import server.TimerManager;
 import tools.PacketCreator;
 
 /*
- * MapleTVEffect
+ * TVEffect
  * @author MrXotic
  */
-public class MapleTVEffect {
+public class TVEffect {
 	private List<String> message = new ArrayList<String>(5);
 	private GameCharacter user;
 	private static boolean active;
@@ -39,7 +39,7 @@ public class MapleTVEffect {
 	private byte world;
 	private GameCharacter partner;
 
-	public MapleTVEffect(GameCharacter user, GameCharacter partner, List<String> msg, int type, byte world) {
+	public TVEffect(GameCharacter user, GameCharacter partner, List<String> msg, int type, byte world) {
 		this.message = msg;
 		this.user = user;
 		this.type = type;

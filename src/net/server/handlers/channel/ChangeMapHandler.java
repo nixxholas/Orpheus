@@ -27,8 +27,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import net.AbstractMaplePacketHandler;
 import server.InventoryManipulator;
-import server.MaplePortal;
-import server.maps.MapleMap;
+import server.Portal;
+import server.maps.GameMap;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -57,7 +57,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 				slea.readByte(); // 1 = from dying 0 = regular portals
 				int targetid = slea.readInt();
 				String startwp = slea.readMapleAsciiString();
-				MaplePortal portal = chr.getMap().getPortal(startwp);
+				Portal portal = chr.getMap().getPortal(startwp);
 				slea.readByte();
 				boolean wheel = slea.readShort() > 0;
 				if (targetid != -1 && !chr.isAlive()) {
@@ -66,7 +66,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 						executeStandardPath = chr.getEventInstance().revivePlayer(chr);
 					}
 					if (executeStandardPath) {
-						MapleMap to = chr.getMap();
+						GameMap to = chr.getMap();
 						if (wheel && chr.getItemQuantity(5510000, false) > 0) {
 							InventoryManipulator.removeById(c, InventoryType.CASH, 5510000, 1, true, false);
 							chr.announce(PacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
@@ -79,7 +79,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 						chr.changeMap(to, to.getPortal(0));
 					}
 				} else if (targetid != -1 && chr.isGM()) {
-					MapleMap to = c.getChannelServer().getMapFactory().getMap(targetid);
+					GameMap to = c.getChannelServer().getMapFactory().getMap(targetid);
 					chr.changeMap(to, to.getPortal(0));
 				} else if (targetid != -1 && !chr.isGM()) {// Thanks celino for
 															// saving me some
@@ -112,7 +112,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 						}
 					}
 					if (warp) {
-						final MapleMap to = c.getChannelServer().getMapFactory().getMap(targetid);
+						final GameMap to = c.getChannelServer().getMapFactory().getMap(targetid);
 						chr.changeMap(to, to.getPortal(0));
 					}
 				}

@@ -37,9 +37,9 @@ import server.MapleItemInformationProvider;
 import server.MapleShopFactory;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
-import server.maps.MapleMap;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMap;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
 import tools.PacketCreator;
@@ -233,9 +233,9 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					break;
 				case killall:
-					List<MapleMapObject> monsters = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.MONSTER));
-					MapleMap map = chr.getMap();
-					for (MapleMapObject monstermo : monsters) {
+					List<GameMapObject> monsters = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
+					GameMap map = chr.getMap();
+					for (GameMapObject monstermo : monsters) {
 						MapleMonster monster = (MapleMonster) monstermo;
 						map.killMonster(monster, chr, true);
 						monster.giveExpToCharacter(chr, monster.getExp() * c.getPlayer().getExpRate(), true, 1);

@@ -32,17 +32,17 @@ import tools.PacketCreator;
  * 
  * @author Lerk
  */
-public class MapleReactor extends AbstractMapleMapObject {
+public class Reactor extends AbstractGameMapObject {
 	private int rid;
-	private MapleReactorStats stats;
+	private ReactorStats stats;
 	private byte state;
 	private int delay;
-	private MapleMap map;
+	private GameMap map;
 	private String name;
 	private boolean timerActive;
 	private boolean alive;
 
-	public MapleReactor(MapleReactorStats stats, int rid) {
+	public Reactor(ReactorStats stats, int rid) {
 		this.stats = stats;
 		this.rid = rid;
 		alive = true;
@@ -77,19 +77,19 @@ public class MapleReactor extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.REACTOR;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.REACTOR;
 	}
 
 	public int getReactorType() {
 		return stats.getType(state);
 	}
 
-	public void setMap(MapleMap map) {
+	public void setMap(GameMap map) {
 		this.map = map;
 	}
 
-	public MapleMap getMap() {
+	public GameMap getMap() {
 		return map;
 	}
 

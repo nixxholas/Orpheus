@@ -36,8 +36,8 @@ import server.MapleTrade;
 import server.maps.FieldLimit;
 import server.maps.HiredMerchant;
 import server.maps.HiredMerchantMessage;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -104,7 +104,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 				chr.getMap().broadcastMessage(PacketCreator.addMatchCardBox(chr, 1, 0));
 				game.sendMatchCard(c, type);
 			} else if (createType == 4 || createType == 5) { // shop
-				if (!chr.getMap().getMapObjectsInRange(chr.getPosition(), 23000, Arrays.asList(MapleMapObjectType.SHOP, MapleMapObjectType.HIRED_MERCHANT)).isEmpty()) {
+				if (!chr.getMap().getMapObjectsInRange(chr.getPosition(), 23000, Arrays.asList(GameMapObjectType.SHOP, GameMapObjectType.HIRED_MERCHANT)).isEmpty()) {
 					return;
 				}
 				String desc = slea.readMapleAsciiString();
@@ -139,7 +139,7 @@ public final class PlayerInteractionHandler extends AbstractMaplePacketHandler {
 				MapleTrade.visitTrade(chr, chr.getTrade().getPartner().getChr());
 			} else {
 				int oid = slea.readInt();
-				MapleMapObject ob = chr.getMap().getMapObject(oid);
+				GameMapObject ob = chr.getMap().getMapObject(oid);
 				if (ob instanceof MaplePlayerShop) {
 					MaplePlayerShop shop = (MaplePlayerShop) ob;
 					if (shop.isBanned(chr.getName())) {

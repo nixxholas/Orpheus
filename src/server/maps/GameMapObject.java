@@ -18,30 +18,25 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package server.maps;
 
+import java.awt.Point;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import scripting.reactor.ReactorScriptManager;
-import server.maps.Reactor;
-import tools.data.input.SeekableLittleEndianAccessor;
 
-/**
- * 
- * @author Generic
- */
-public final class TouchReactorHandler extends AbstractMaplePacketHandler {
+public interface GameMapObject {
+	public int getObjectId();
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
-		if (reactor != null) {
-			if (slea.readByte() != 0) {
-				ReactorScriptManager.getInstance().touch(c, reactor);
-			} else {
-				ReactorScriptManager.getInstance().untouch(c, reactor);
-			}
-		}
-	}
+	public void setObjectId(int id);
+
+	public GameMapObjectType getType();
+
+	public Point getPosition();
+
+	public void setPosition(Point position);
+
+	public void sendSpawnData(GameClient client);
+
+	public void sendDestroyData(GameClient client);
+
+	public void nullifyPosition();
 }

@@ -23,8 +23,8 @@ package server;
 import java.awt.Point;
 import provider.MapleData;
 import provider.MapleDataTool;
-import server.maps.MapleGenericPortal;
-import server.maps.MapleMapPortal;
+import server.maps.GenericPortal;
+import server.maps.GameMapPortal;
 
 public class PortalFactory {
 	private int nextDoorPortal;
@@ -33,18 +33,18 @@ public class PortalFactory {
 		nextDoorPortal = 0x80;
 	}
 
-	public MaplePortal makePortal(int type, MapleData portal) {
-		MapleGenericPortal ret = null;
-		if (type == MaplePortal.MAP_PORTAL) {
-			ret = new MapleMapPortal();
+	public Portal makePortal(int type, MapleData portal) {
+		GenericPortal ret = null;
+		if (type == Portal.MAP_PORTAL) {
+			ret = new GameMapPortal();
 		} else {
-			ret = new MapleGenericPortal(type);
+			ret = new GenericPortal(type);
 		}
 		loadPortal(ret, portal);
 		return ret;
 	}
 
-	private void loadPortal(MapleGenericPortal myPortal, MapleData portal) {
+	private void loadPortal(GenericPortal myPortal, MapleData portal) {
 		myPortal.setName(MapleDataTool.getString(portal.getChildByPath("pn")));
 		myPortal.setTarget(MapleDataTool.getString(portal.getChildByPath("tn")));
 		myPortal.setTargetMapId(MapleDataTool.getInt(portal.getChildByPath("tm")));
@@ -56,7 +56,7 @@ public class PortalFactory {
 			script = null;
 		}
 		myPortal.setScriptName(script);
-		if (myPortal.getType() == MaplePortal.DOOR_PORTAL) {
+		if (myPortal.getType() == Portal.DOOR_PORTAL) {
 			myPortal.setId(nextDoorPortal);
 			nextDoorPortal++;
 		} else {

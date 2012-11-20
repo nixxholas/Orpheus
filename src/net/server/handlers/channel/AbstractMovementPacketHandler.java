@@ -24,7 +24,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import net.AbstractMaplePacketHandler;
-import server.maps.AnimatedMapleMapObject;
+import server.maps.AnimatedGameMapObject;
 import server.movement.AbsoluteLifeMovement;
 import server.movement.ChairMovement;
 import server.movement.ChangeEquip;
@@ -135,7 +135,7 @@ public abstract class AbstractMovementPacketHandler extends AbstractMaplePacketH
 		return res;
 	}
 
-	protected void updatePosition(List<LifeMovementFragment> movement, AnimatedMapleMapObject target, int yoffset) {
+	protected void updatePosition(List<LifeMovementFragment> movement, AnimatedGameMapObject target, int yoffset) {
 		for (LifeMovementFragment move : movement) {
 			if (move instanceof LifeMovement) {
 				if (move instanceof AbsoluteLifeMovement) {

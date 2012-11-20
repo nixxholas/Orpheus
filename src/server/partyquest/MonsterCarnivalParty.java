@@ -23,7 +23,7 @@ package server.partyquest;
 import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.PacketCreator;
 
 /**
@@ -89,7 +89,7 @@ public class MonsterCarnivalParty {
 		members.clear();
 	}
 
-	public void warp(final MapleMap map, final int portalid) {
+	public void warp(final GameMap map, final int portalid) {
 		for (GameCharacter chr : members) {
 			chr.changeMap(map, map.getPortal(portalid));
 		}
@@ -102,7 +102,7 @@ public class MonsterCarnivalParty {
 			warpOut(980000004 + (leader.getCarnival().getRoom() * 100));
 	}
 
-	public boolean allInMap(MapleMap map) {
+	public boolean allInMap(GameMap map) {
 		boolean status = true;
 		for (GameCharacter chr : members) {
 			if (chr.getMap() != map) {

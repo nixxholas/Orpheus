@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -38,7 +38,7 @@ public final class MobDamageMobHandler extends AbstractMaplePacketHandler {
 		int to = slea.readInt();
 		slea.readByte();
 		int dmg = slea.readInt();
-		MapleMap map = c.getPlayer().getMap();
+		GameMap map = c.getPlayer().getMap();
 		if (map.getMonsterByOid(from) != null && map.getMonsterByOid(to) != null) {
 			map.damageMonster(c.getPlayer(), map.getMonsterByOid(to), dmg);
 		}

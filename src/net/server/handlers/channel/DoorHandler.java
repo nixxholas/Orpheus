@@ -22,8 +22,8 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import server.maps.MapleDoor;
-import server.maps.MapleMapObject;
+import server.maps.Door;
+import server.maps.GameMapObject;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -38,9 +38,9 @@ public final class DoorHandler extends AbstractMaplePacketHandler {
 		boolean mode = (slea.readByte() == 0); // specifies if backwarp or not,
 												// 1 town to target, 0 target to
 												// town
-		for (MapleMapObject obj : c.getPlayer().getMap().getMapObjects()) {
-			if (obj instanceof MapleDoor) {
-				MapleDoor door = (MapleDoor) obj;
+		for (GameMapObject obj : c.getPlayer().getMap().getMapObjects()) {
+			if (obj instanceof Door) {
+				Door door = (Door) obj;
 				if (door.getOwner().getId() == oid) {
 					door.warp(c.getPlayer(), mode);
 					return;

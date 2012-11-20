@@ -45,8 +45,8 @@ import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleShop;
 import server.MapleShopFactory;
-import server.maps.MapleMap;
-import server.maps.MapleTVEffect;
+import server.maps.GameMap;
+import server.maps.TVEffect;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -316,8 +316,8 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 					if (megassenger) {
 						Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(3, c.getChannel(), medal + player.getName() + " : " + builder.toString(), ear));
 					}
-					if (!MapleTVEffect.isActive()) {
-						new MapleTVEffect(player, victim, messages, tvType, c.getWorld());
+					if (!TVEffect.isActive()) {
+						new TVEffect(player, victim, messages, tvType, c.getWorld());
 						remove(c, itemId);
 					} else {
 						player.dropMessage(1, "MapleTV is already in use.");
@@ -410,7 +410,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 				GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(name);
 				boolean success = false;
 				if (victim != null) {
-					MapleMap target = victim.getMap();
+					GameMap target = victim.getMap();
 					if (c.getChannelServer().getMapFactory().getMap(victim.getMapId()).getForcedReturnId() == 999999999 || victim.getMapId() < 100000000) {
 						if (victim.gmLevel() <= player.gmLevel()) {
 							if (itemId == 5041000 || victim.getMapId() / player.getMapId() == 1) { // viprock

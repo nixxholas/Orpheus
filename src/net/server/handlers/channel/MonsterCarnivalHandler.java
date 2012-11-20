@@ -26,8 +26,8 @@ import java.awt.Point;
 import net.AbstractMaplePacketHandler;
 import server.partyquest.MonsterCarnival;
 import server.life.MapleLifeFactory;
-import server.maps.MapleReactor;
-import server.maps.MapleReactorFactory;
+import server.maps.Reactor;
+import server.maps.ReactorFactory;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -60,7 +60,7 @@ public final class MonsterCarnivalHandler extends AbstractMaplePacketHandler {
 
 				} else if (tab == 2) {
 					int rid = 9980000 + chr.getTeam();
-					MapleReactor reactor = new MapleReactor(MapleReactorFactory.getReactor(rid), rid);
+					Reactor reactor = new Reactor(ReactorFactory.getReactor(rid), rid);
 					/*
 					 * switch (number) { case 0: reactor.setMonsterStatus(tab,
 					 * MonsterStatus.WEAPON_ATTACK_UP,

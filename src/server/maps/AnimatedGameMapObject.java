@@ -18,30 +18,12 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package server.maps;
 
-import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import scripting.reactor.ReactorScriptManager;
-import server.maps.Reactor;
-import tools.data.input.SeekableLittleEndianAccessor;
+public interface AnimatedGameMapObject extends GameMapObject {
+	int getStance();
 
-/**
- * 
- * @author Generic
- */
-public final class TouchReactorHandler extends AbstractMaplePacketHandler {
+	void setStance(int stance);
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
-		if (reactor != null) {
-			if (slea.readByte() != 0) {
-				ReactorScriptManager.getInstance().touch(c, reactor);
-			} else {
-				ReactorScriptManager.getInstance().untouch(c, reactor);
-			}
-		}
-	}
+	boolean isFacingLeft();
 }

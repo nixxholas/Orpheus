@@ -26,15 +26,15 @@ import java.util.List;
 import client.GameCharacter;
 import client.GameClient;
 import net.GamePacket;
-import server.maps.AbstractMapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.AbstractGameMapObject;
+import server.maps.GameMapObjectType;
 import tools.PacketCreator;
 
 /**
  * 
  * @author Matze
  */
-public class MapleMiniGame extends AbstractMapleMapObject {
+public class MapleMiniGame extends AbstractGameMapObject {
 	private GameCharacter owner;
 	private GameCharacter visitor;
 	private String GameType = null;
@@ -337,7 +337,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.MINI_GAME;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.MINI_GAME;
 	}
 }

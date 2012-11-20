@@ -28,8 +28,8 @@ import client.GameCharacter;
 import client.GameClient;
 import net.GamePacket;
 import net.SendOpcode;
-import server.maps.AbstractMapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.AbstractGameMapObject;
+import server.maps.GameMapObjectType;
 import tools.PacketCreator;
 import tools.data.output.PacketWriter;
 
@@ -37,7 +37,7 @@ import tools.data.output.PacketWriter;
  * 
  * @author Matze
  */
-public class MaplePlayerShop extends AbstractMapleMapObject {
+public class MaplePlayerShop extends AbstractGameMapObject {
 	private GameCharacter owner;
 	private GameCharacter[] visitors = new GameCharacter[3];
 	private List<MaplePlayerShopItem> items = new ArrayList<MaplePlayerShopItem>();
@@ -268,7 +268,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.SHOP;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.SHOP;
 	}
 }

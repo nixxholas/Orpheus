@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import server.maps.MapleReactor;
+import server.maps.Reactor;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -38,7 +38,7 @@ public final class ReactorHitHandler extends AbstractMaplePacketHandler {
 		short stance = slea.readShort();
 		slea.skip(4);
 		int skillid = slea.readInt();
-		MapleReactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
+		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
 		if (reactor != null && reactor.isAlive()) {
 			reactor.hitReactor(charPos, stance, skillid, c);
 		}

@@ -67,12 +67,12 @@ import constants.skills.FPWizard;
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.life.MapleMonster;
-import server.maps.MapleDoor;
-import server.maps.MapleMap;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
-import server.maps.MapleMist;
-import server.maps.MapleSummon;
+import server.maps.Door;
+import server.maps.GameMap;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
+import server.maps.Mist;
+import server.maps.Summon;
 import server.maps.SummonMovementType;
 import net.server.PlayerCoolDownValueHolder;
 import tools.ArrayMap;
@@ -578,13 +578,13 @@ public class MapleStatEffect {
 	 * @param attack
 	 *            damage done by the skill
 	 */
-	public void applyPassive(GameCharacter applyto, MapleMapObject obj, int attack) {
+	public void applyPassive(GameCharacter applyto, GameMapObject obj, int attack) {
 		if (makeChanceResult()) {
 			switch (sourceid) { // MP eater
 				case FPWizard.MP_EATER:
 				case ILWizard.MP_EATER:
 				case Cleric.MP_EATER:
-					if (obj == null || obj.getType() != MapleMapObjectType.MONSTER) {
+					if (obj == null || obj.getType() != GameMapObjectType.MONSTER) {
 						return;
 					}
 					MapleMonster mob = (MapleMonster) obj; // x is absorb
@@ -666,7 +666,7 @@ public class MapleStatEffect {
 		applyto.getClient().getSession().write(PacketCreator.updatePlayerStats(hpmpupdate, true));
 		if (moveTo != -1) {
 			if (applyto.getMap().getReturnMapId() != applyto.getMapId()) {
-				MapleMap target;
+				GameMap target;
 				if (moveTo == 999999999) {
 					target = applyto.getMap().getReturnMap();
 				} else {
@@ -713,7 +713,7 @@ public class MapleStatEffect {
 			applyto.getMount().setTiredness(applyto.getMount().getTiredness() + this.getFatigue());
 
 		if (summonMovementType != null && pos != null) {
-			final MapleSummon tosummon = new MapleSummon(applyfrom, sourceid, pos, summonMovementType);
+			final Summon tosummon = new Summon(applyfrom, sourceid, pos, summonMovementType);
 			applyfrom.getMap().spawnSummon(tosummon);
 			applyfrom.addSummon(sourceid, tosummon);
 			tosummon.addHP(x);
@@ -724,10 +724,10 @@ public class MapleStatEffect {
 		if (isMagicDoor() && !FieldLimit.DOOR.check(applyto.getMap().getFieldLimit())) { // Magic
 																							// Door
 			Point doorPosition = new Point(applyto.getPosition());
-			MapleDoor door = new MapleDoor(applyto, doorPosition);
+			Door door = new Door(applyto, doorPosition);
 			applyto.getMap().spawnDoor(door);
 			applyto.addDoor(door);
-			door = new MapleDoor(door);
+			door = new Door(door);
 			applyto.addDoor(door);
 			door.getTown().spawnDoor(door);
 			if (applyto.getParty() != null) {// update town doors
@@ -736,7 +736,7 @@ public class MapleStatEffect {
 			applyto.disableDoor();
 		} else if (isMist()) {
 			Rectangle bounds = calculateBoundingBox(applyfrom.getPosition(), applyfrom.isFacingLeft());
-			MapleMist mist = new MapleMist(bounds, applyfrom, this);
+			Mist mist = new Mist(bounds, applyfrom, this);
 			applyfrom.getMap().spawnMist(mist, getDuration(), sourceid != Shadower.SMOKE_SCREEN, false);
 		} else if (isTimeLeap()) { // Time Leap
 			for (PlayerCoolDownValueHolder i : applyto.getAllCooldowns()) {
@@ -751,9 +751,9 @@ public class MapleStatEffect {
 	private void applyBuff(GameCharacter applyfrom) {
 		if (isPartyBuff() && (applyfrom.getParty() != null || isGmBuff())) {
 			Rectangle bounds = calculateBoundingBox(applyfrom.getPosition(), applyfrom.isFacingLeft());
-			List<MapleMapObject> affecteds = applyfrom.getMap().getMapObjectsInRect(bounds, Arrays.asList(MapleMapObjectType.PLAYER));
+			List<GameMapObject> affecteds = applyfrom.getMap().getMapObjectsInRect(bounds, Arrays.asList(GameMapObjectType.PLAYER));
 			List<GameCharacter> affectedp = new ArrayList<GameCharacter>(affecteds.size());
-			for (MapleMapObject affectedmo : affecteds) {
+			for (GameMapObject affectedmo : affecteds) {
 				GameCharacter affected = (GameCharacter) affectedmo;
 				if (affected != applyfrom && (isGmBuff() || applyfrom.getParty().equals(affected.getParty()))) {
 					if ((isResurrection() && !affected.isAlive()) || (!isResurrection() && affected.isAlive())) {
@@ -776,10 +776,10 @@ public class MapleStatEffect {
 
 	private void applyMonsterBuff(GameCharacter applyfrom) {
 		Rectangle bounds = calculateBoundingBox(applyfrom.getPosition(), applyfrom.isFacingLeft());
-		List<MapleMapObject> affected = applyfrom.getMap().getMapObjectsInRect(bounds, Arrays.asList(MapleMapObjectType.MONSTER));
+		List<GameMapObject> affected = applyfrom.getMap().getMapObjectsInRect(bounds, Arrays.asList(GameMapObjectType.MONSTER));
 		ISkill skill_ = SkillFactory.getSkill(sourceid);
 		int i = 0;
-		for (MapleMapObject mo : affected) {
+		for (GameMapObject mo : affected) {
 			MapleMonster monster = (MapleMonster) mo;
 			if (makeChanceResult()) {
 				monster.applyStatus(applyfrom, new MonsterStatusEffect(getMonsterStati(), skill_, null, false), isPoison(), getDuration());
@@ -813,7 +813,7 @@ public class MapleStatEffect {
 		chr.registerEffect(this, starttime, schedule);
 		SummonMovementType summonMovementType = getSummonMovementType();
 		if (summonMovementType != null) {
-			final MapleSummon tosummon = new MapleSummon(chr, sourceid, chr.getPosition(), summonMovementType);
+			final Summon tosummon = new Summon(chr, sourceid, chr.getPosition(), summonMovementType);
 			if (!tosummon.isStationary()) {
 				chr.addSummon(sourceid, tosummon);
 				tosummon.addHP(x);

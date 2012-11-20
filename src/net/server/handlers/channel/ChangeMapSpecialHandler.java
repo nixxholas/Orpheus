@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import server.MaplePortal;
+import server.Portal;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -37,7 +37,7 @@ public final class ChangeMapSpecialHandler extends AbstractMaplePacketHandler {
 		slea.readShort();
 		
 		final GameCharacter player = c.getPlayer();
-		final MaplePortal portal = player.getMap().getPortal(startwp);
+		final Portal portal = player.getMap().getPortal(startwp);
 		if (player.portalDelay() > System.currentTimeMillis()
 				|| player.getBlockedPortals().contains(portal.getScriptName())) {
 			c.announce(PacketCreator.enableActions());

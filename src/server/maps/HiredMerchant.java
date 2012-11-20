@@ -48,7 +48,7 @@ import tools.PacketCreator;
  * 
  * @author XoticStory
  */
-public class HiredMerchant extends AbstractMapleMapObject {
+public class HiredMerchant extends AbstractGameMapObject {
 
 	private int ownerId, itemId, mesos = 0;
 	private byte channel, world;
@@ -61,7 +61,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	private List<SoldItem> sold = new LinkedList<SoldItem>();
 	private boolean open;
 	public ScheduledFuture<?> schedule = null;
-	private MapleMap map;
+	private GameMap map;
 
 	public HiredMerchant(final GameCharacter owner, int itemId, String desc) {
 		this.setPosition(owner.getPosition());
@@ -390,8 +390,8 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.HIRED_MERCHANT;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.HIRED_MERCHANT;
 	}
 
 	@Override

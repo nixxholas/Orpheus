@@ -34,7 +34,7 @@ import tools.PacketCreator;
  * 
  * @author XoticStory
  */
-public class PlayerNPCs extends AbstractMapleMapObject {
+public class PlayerNPCs extends AbstractGameMapObject {
 	private Map<Byte, Integer> equips = new HashMap<Byte, Integer>();
 	private int npcId, face, hair;
 	private byte skin;
@@ -111,8 +111,8 @@ public class PlayerNPCs extends AbstractMapleMapObject {
 	}
 
 	@Override
-	public MapleMapObjectType getType() {
-		return MapleMapObjectType.PLAYER_NPC;
+	public GameMapObjectType getType() {
+		return GameMapObjectType.PLAYER_NPC;
 	}
 
 	@Override

@@ -24,7 +24,7 @@ import client.GameClient;
 import constants.skills.DarkKnight;
 import java.util.Collection;
 import net.AbstractMaplePacketHandler;
-import server.maps.MapleSummon;
+import server.maps.Summon;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -37,10 +37,10 @@ public final class BeholderHandler extends AbstractMaplePacketHandler {// broken
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Output.print("[BH] " + slea.toString());
-		Collection<MapleSummon> summons = c.getPlayer().getSummons().values();
+		Collection<Summon> summons = c.getPlayer().getSummons().values();
 		int oid = slea.readInt();
-		MapleSummon summon = null;
-		for (MapleSummon sum : summons) {
+		Summon summon = null;
+		for (Summon sum : summons) {
 			if (sum.getObjectId() == oid) {
 				summon = sum;
 			}

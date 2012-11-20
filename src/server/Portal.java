@@ -18,30 +18,40 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package server;
 
+import java.awt.Point;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import scripting.reactor.ReactorScriptManager;
-import server.maps.Reactor;
-import tools.data.input.SeekableLittleEndianAccessor;
 
-/**
- * 
- * @author Generic
- */
-public final class TouchReactorHandler extends AbstractMaplePacketHandler {
+public interface Portal {
+	public final int MAP_PORTAL = 2;
+	public final int DOOR_PORTAL = 6;
+	public static boolean OPEN = true;
+	public static boolean CLOSED = false;
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
-		if (reactor != null) {
-			if (slea.readByte() != 0) {
-				ReactorScriptManager.getInstance().touch(c, reactor);
-			} else {
-				ReactorScriptManager.getInstance().untouch(c, reactor);
-			}
-		}
-	}
+	int getType();
+
+	int getId();
+
+	Point getPosition();
+
+	String getName();
+
+	String getTarget();
+
+	String getScriptName();
+
+	void setScriptName(String newName);
+
+	void setPortalStatus(boolean newStatus);
+
+	boolean getPortalStatus();
+
+	int getTargetMapId();
+
+	void enterPortal(GameClient c);
+
+	void setPortalState(boolean state);
+
+	boolean getPortalState();
 }

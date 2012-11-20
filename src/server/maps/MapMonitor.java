@@ -21,15 +21,15 @@
 package server.maps;
 
 import java.util.concurrent.ScheduledFuture;
-import server.MaplePortal;
+import server.Portal;
 import server.TimerManager;
 
 public class MapMonitor {
 	private ScheduledFuture<?> monitorSchedule;
-	private MapleMap map;
-	private MaplePortal portal;
+	private GameMap map;
+	private Portal portal;
 
-	public MapMonitor(final MapleMap map, String portal) {
+	public MapMonitor(final GameMap map, String portal) {
 		this.map = map;
 		this.portal = map.getPortal(portal);
 		this.monitorSchedule = TimerManager.getInstance().register(new Runnable() {
@@ -47,7 +47,7 @@ public class MapMonitor {
 		map.killAllMonsters();
 		map.clearDrops();
 		if (portal != null) {
-			portal.setPortalStatus(MaplePortal.OPEN);
+			portal.setPortalStatus(Portal.OPEN);
 		}
 		map.resetReactors();
 	}

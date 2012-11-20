@@ -30,7 +30,7 @@ import client.status.MonsterStatusEffect;
 import net.AbstractMaplePacketHandler;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
-import server.maps.MapleSummon;
+import server.maps.Summon;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -60,8 +60,8 @@ public final class SummonDamageHandler extends AbstractMaplePacketHandler {
 		if (!player.isAlive()) {
 			return;
 		}
-		MapleSummon summon = null;
-		for (MapleSummon sum : player.getSummons().values()) {
+		Summon summon = null;
+		for (Summon sum : player.getSummons().values()) {
 			if (sum.getObjectId() == oid) {
 				summon = sum;
 			}

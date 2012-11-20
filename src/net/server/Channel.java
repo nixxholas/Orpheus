@@ -44,7 +44,7 @@ import net.mina.MapleCodecFactory;
 import provider.MapleDataProviderFactory;
 import scripting.event.EventScriptManager;
 import server.TimerManager;
-import server.maps.MapleMapFactory;
+import server.maps.GameMapFactory;
 import tools.PacketCreator;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.buffer.SimpleBufferAllocator;
@@ -58,7 +58,7 @@ import server.events.gm.MapleEvent;
 import server.expeditions.MapleExpedition;
 import server.expeditions.MapleExpeditionType;
 import server.maps.HiredMerchant;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 
 public final class Channel {
 
@@ -67,7 +67,7 @@ public final class Channel {
 	private byte world, channel;
 	private IoAcceptor acceptor;
 	private String ip, serverMessage;
-	private MapleMapFactory mapFactory;
+	private GameMapFactory mapFactory;
 	private EventScriptManager eventSM;
 	private Map<Integer, HiredMerchant> hiredMerchants = new HashMap<Integer, HiredMerchant>();
 	private ReentrantReadWriteLock merchant_lock = new ReentrantReadWriteLock(true);
@@ -78,7 +78,7 @@ public final class Channel {
 	public Channel(final byte world, final byte channel) {
 		this.world = world;
 		this.channel = channel;
-		this.mapFactory = new MapleMapFactory(MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), world, channel);
+		this.mapFactory = new GameMapFactory(MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), world, channel);
 
 		try {
 			eventSM = new EventScriptManager(this, ServerConstants.EVENTS.split(" "));
@@ -139,7 +139,7 @@ public final class Channel {
 		}
 	}
 
-	public MapleMapFactory getMapFactory() {
+	public GameMapFactory getMapFactory() {
 		return mapFactory;
 	}
 
@@ -236,7 +236,7 @@ public final class Channel {
 
 		@Override
 		public void run() {
-			for (Entry<Integer, MapleMap> map : mapFactory.getMaps().entrySet()) {
+			for (Entry<Integer, GameMap> map : mapFactory.getMaps().entrySet()) {
 				map.getValue().respawn();
 			}
 		}

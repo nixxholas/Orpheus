@@ -24,7 +24,7 @@ import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import scripting.npc.NPCScriptManager;
 import server.life.MapleNPC;
-import server.maps.MapleMapObject;
+import server.maps.GameMapObject;
 import server.maps.PlayerNPCs;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -38,7 +38,7 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
 			return;
 		}
 		int oid = slea.readInt();
-		MapleMapObject obj = c.getPlayer().getMap().getMapObject(oid);
+		GameMapObject obj = c.getPlayer().getMap().getMapObject(oid);
 		if (obj instanceof MapleNPC) {
 			MapleNPC npc = (MapleNPC) obj;
 			if (npc.getId() == 9010009) {

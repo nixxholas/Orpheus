@@ -39,22 +39,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import tools.DatabaseConnection;
 
-public class MapleMapFactory {
+public class GameMapFactory {
 	private MapleDataProvider source;
 	private MapleData nameData;
-	private Map<Integer, MapleMap> maps = new HashMap<Integer, MapleMap>();
+	private Map<Integer, GameMap> maps = new HashMap<Integer, GameMap>();
 	private byte channel, world;
 
-	public MapleMapFactory(MapleDataProvider source, MapleDataProvider stringSource, byte world, byte channel) {
+	public GameMapFactory(MapleDataProvider source, MapleDataProvider stringSource, byte world, byte channel) {
 		this.source = source;
 		this.nameData = stringSource.getData("Map.img");
 		this.world = world;
 		this.channel = channel;
 	}
 
-	public MapleMap getMap(int mapid) {
+	public GameMap getMap(int mapid) {
 		Integer omapid = Integer.valueOf(mapid);
-		MapleMap map = maps.get(omapid);
+		GameMap map = maps.get(omapid);
 		if (map == null) {
 			synchronized (this) {
 				map = maps.get(omapid);
@@ -74,7 +74,7 @@ public class MapleMapFactory {
 				if (mobRate != null) {
 					monsterRate = ((Float) mobRate.getData()).floatValue();
 				}
-				map = new MapleMap(mapid, world, channel, MapleDataTool.getInt("info/returnMap", mapData), monsterRate);
+				map = new GameMap(mapid, world, channel, MapleDataTool.getInt("info/returnMap", mapData), monsterRate);
 				map.setOnFirstUserEnter(MapleDataTool.getString(mapData.getChildByPath("info/onFirstUserEnter"), String.valueOf(mapid)));
 				map.setOnUserEnter(MapleDataTool.getString(mapData.getChildByPath("info/onUserEnter"), String.valueOf(mapid)));
 				map.setFieldLimit(MapleDataTool.getInt(mapData.getChildByPath("info/fieldLimit"), 0));
@@ -87,7 +87,7 @@ public class MapleMapFactory {
 				if (timeMob != null)
 					map.timeMob(MapleDataTool.getInt(timeMob.getChildByPath("id")), MapleDataTool.getString(timeMob.getChildByPath("message")));
 
-				List<MapleFoothold> allFootholds = new LinkedList<MapleFoothold>();
+				List<Foothold> allFootholds = new LinkedList<Foothold>();
 				Point lBound = new Point();
 				Point uBound = new Point();
 				for (MapleData footRoot : mapData.getChildByPath("foothold")) {
@@ -97,7 +97,7 @@ public class MapleMapFactory {
 							int y1 = MapleDataTool.getInt(footHold.getChildByPath("y1"));
 							int x2 = MapleDataTool.getInt(footHold.getChildByPath("x2"));
 							int y2 = MapleDataTool.getInt(footHold.getChildByPath("y2"));
-							MapleFoothold fh = new MapleFoothold(new Point(x1, y1), new Point(x2, y2), Integer.parseInt(footHold.getName()));
+							Foothold fh = new Foothold(new Point(x1, y1), new Point(x2, y2), Integer.parseInt(footHold.getName()));
 							fh.setPrev(MapleDataTool.getInt(footHold.getChildByPath("prev")));
 							fh.setNext(MapleDataTool.getInt(footHold.getChildByPath("next")));
 							if (fh.getX1() < lBound.x) {
@@ -116,8 +116,8 @@ public class MapleMapFactory {
 						}
 					}
 				}
-				MapleFootholdTree fTree = new MapleFootholdTree(lBound, uBound);
-				for (MapleFoothold fh : allFootholds) {
+				FootholdTree fTree = new FootholdTree(lBound, uBound);
+				for (Foothold fh : allFootholds) {
 					fTree.insert(fh);
 				}
 				map.setFootholds(fTree);
@@ -194,7 +194,7 @@ public class MapleMapFactory {
 					for (MapleData reactor : mapData.getChildByPath("reactor")) {
 						String id = MapleDataTool.getString(reactor.getChildByPath("id"));
 						if (id != null) {
-							MapleReactor newReactor = loadReactor(reactor, id);
+							Reactor newReactor = loadReactor(reactor, id);
 							map.spawnReactor(newReactor);
 						}
 					}
@@ -268,8 +268,8 @@ public class MapleMapFactory {
 		return myLife;
 	}
 
-	private MapleReactor loadReactor(MapleData reactor, String id) {
-		MapleReactor myReactor = new MapleReactor(MapleReactorFactory.getReactor(Integer.parseInt(id)), Integer.parseInt(id));
+	private Reactor loadReactor(MapleData reactor, String id) {
+		Reactor myReactor = new Reactor(ReactorFactory.getReactor(Integer.parseInt(id)), Integer.parseInt(id));
 		int x = MapleDataTool.getInt(reactor.getChildByPath("x"));
 		int y = MapleDataTool.getInt(reactor.getChildByPath("y"));
 		myReactor.setPosition(new Point(x, y));
@@ -324,7 +324,7 @@ public class MapleMapFactory {
 		this.channel = world;
 	}
 
-	public Map<Integer, MapleMap> getMaps() {
+	public Map<Integer, GameMap> getMaps() {
 		return maps;
 	}
 }

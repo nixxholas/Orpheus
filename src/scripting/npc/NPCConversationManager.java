@@ -58,8 +58,8 @@ import server.MapleShopFactory;
 import server.MapleStatEffect;
 import server.events.gm.MapleEvent;
 import server.expeditions.MapleExpedition;
-import server.maps.MapleMap;
-import server.maps.MapleMapFactory;
+import server.maps.GameMap;
+import server.maps.GameMapFactory;
 import server.partyquest.Pyramid;
 import server.partyquest.Pyramid.PyramidMode;
 import server.quest.MapleQuest;
@@ -478,9 +478,9 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		PyramidMode mod = PyramidMode.valueOf(mode);
 
 		MapleParty partyz = getPlayer().getParty();
-		MapleMapFactory mf = c.getChannelServer().getMapFactory();
+		GameMapFactory mf = c.getChannelServer().getMapFactory();
 
-		MapleMap map = null;
+		GameMap map = null;
 		int mapid = 926010100;
 		if (party) {
 			mapid += 10000;

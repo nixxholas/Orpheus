@@ -31,9 +31,9 @@ import client.status.MonsterStatus;
 import java.util.LinkedList;
 import java.util.Map;
 import tools.Randomizer;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
-import server.maps.MapleMist;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
+import server.maps.Mist;
 import tools.ArrayMap;
 
 /**
@@ -128,9 +128,9 @@ public class MobSkill {
 				break;
 			case 114:
 				if (lt != null && rb != null && skill) {
-					List<MapleMapObject> objects = getObjectsInRange(monster, MapleMapObjectType.MONSTER);
+					List<GameMapObject> objects = getObjectsInRange(monster, GameMapObjectType.MONSTER);
 					final int hps = (getX() / 1000) * (int) (950 + 1050 * Math.random());
-					for (MapleMapObject mons : objects) {
+					for (GameMapObject mons : objects) {
 						((MapleMonster) mons).heal(hps, getY());
 					}
 				} else {
@@ -180,7 +180,7 @@ public class MobSkill {
 				}
 				break;
 			case 131: // Mist
-				monster.getMap().spawnMist(new MapleMist(calculateBoundingBox(monster.getPosition(), true), monster, this), x * 10, false, false);
+				monster.getMap().spawnMist(new Mist(calculateBoundingBox(monster.getPosition(), true), monster, this), x * 10, false, false);
 				break;
 			case 132:
 				disease = MapleDisease.CONFUSE;
@@ -270,7 +270,7 @@ public class MobSkill {
 		}
 		if (stats.size() > 0) {
 			if (lt != null && rb != null && skill) {
-				for (MapleMapObject mons : getObjectsInRange(monster, MapleMapObjectType.MONSTER)) {
+				for (GameMapObject mons : getObjectsInRange(monster, GameMapObjectType.MONSTER)) {
 					((MapleMonster) mons).applyMonsterBuff(stats, getX(), getSkillId(), getDuration(), this, reflection);
 				}
 			} else {
@@ -369,8 +369,8 @@ public class MobSkill {
 		return new Rectangle(mylt.x, mylt.y, myrb.x - mylt.x, myrb.y - mylt.y);
 	}
 
-	private List<MapleMapObject> getObjectsInRange(MapleMonster monster, MapleMapObjectType objectType) {
-		List<MapleMapObjectType> objectTypes = new ArrayList<MapleMapObjectType>();
+	private List<GameMapObject> getObjectsInRange(MapleMonster monster, GameMapObjectType objectType) {
+		List<GameMapObjectType> objectTypes = new ArrayList<GameMapObjectType>();
 		objectTypes.add(objectType);
 		return monster.getMap().getMapObjectsInBox(calculateBoundingBox(monster.getPosition(), monster.isFacingLeft()), objectTypes);
 	}

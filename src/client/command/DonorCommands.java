@@ -26,9 +26,9 @@ import java.util.List;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import server.InventoryManipulator;
-import server.maps.MapleMapItem;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMapItem;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import tools.MapleLogger;
 import tools.PacketCreator;
 import net.server.Channel;
@@ -90,9 +90,9 @@ public class DonorCommands extends EnumeratedCommands {
 						return false;
 					}
 				case itemvac:
-					List<MapleMapObject> items = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.ITEM));
-					for (MapleMapObject item : items) {
-						MapleMapItem mapitem = (MapleMapItem) item;
+					List<GameMapObject> items = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.ITEM));
+					for (GameMapObject item : items) {
+						GameMapItem mapitem = (GameMapItem) item;
 						if (!InventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
 							continue;
 						}

@@ -18,30 +18,40 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package server.maps;
 
-import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import scripting.reactor.ReactorScriptManager;
-import server.maps.Reactor;
-import tools.data.input.SeekableLittleEndianAccessor;
+import java.awt.Point;
 
-/**
- * 
- * @author Generic
- */
-public final class TouchReactorHandler extends AbstractMaplePacketHandler {
+public abstract class AbstractGameMapObject implements GameMapObject {
+	private Point position = new Point();
+	private int objectId;
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
-		if (reactor != null) {
-			if (slea.readByte() != 0) {
-				ReactorScriptManager.getInstance().touch(c, reactor);
-			} else {
-				ReactorScriptManager.getInstance().untouch(c, reactor);
-			}
-		}
+	public abstract GameMapObjectType getType();
+
+	@Override
+	public Point getPosition() {
+		return new Point(position);
+	}
+
+	@Override
+	public void setPosition(Point position) {
+		this.position.x = position.x;
+		this.position.y = position.y;
+	}
+
+	@Override
+	public int getObjectId() {
+		return objectId;
+	}
+
+	@Override
+	public void setObjectId(int id) {
+		this.objectId = id;
+	}
+
+	@Override
+	public void nullifyPosition() {
+		this.position = null;
 	}
 }

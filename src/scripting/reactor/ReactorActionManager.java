@@ -33,7 +33,7 @@ import scripting.AbstractPlayerInteraction;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
-import server.maps.MapleReactor;
+import server.maps.Reactor;
 import tools.PacketCreator;
 import server.maps.MapMonitor;
 import server.maps.ReactorDropEntry;
@@ -42,10 +42,10 @@ import server.maps.ReactorDropEntry;
  * @author Lerk
  */
 public class ReactorActionManager extends AbstractPlayerInteraction {
-	private MapleReactor reactor;
+	private Reactor reactor;
 	private GameClient client;
 
-	public ReactorActionManager(GameClient c, MapleReactor reactor) {
+	public ReactorActionManager(GameClient c, Reactor reactor) {
 		super(c);
 		this.reactor = reactor;
 		this.client = c;
@@ -151,7 +151,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 		}
 	}
 
-	public MapleReactor getReactor() {
+	public Reactor getReactor() {
 		return reactor;
 	}
 

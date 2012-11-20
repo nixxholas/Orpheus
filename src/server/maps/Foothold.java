@@ -18,30 +18,74 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package server.maps;
 
-import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import scripting.reactor.ReactorScriptManager;
-import server.maps.Reactor;
-import tools.data.input.SeekableLittleEndianAccessor;
+import java.awt.Point;
 
 /**
  * 
- * @author Generic
+ * @author Matze
  */
-public final class TouchReactorHandler extends AbstractMaplePacketHandler {
+public class Foothold implements Comparable<Foothold> {
+	private Point p1;
+	private Point p2;
+	private int id;
+	private int next, prev;
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
-		if (reactor != null) {
-			if (slea.readByte() != 0) {
-				ReactorScriptManager.getInstance().touch(c, reactor);
-			} else {
-				ReactorScriptManager.getInstance().untouch(c, reactor);
-			}
+	public Foothold(Point p1, Point p2, int id) {
+		this.p1 = p1;
+		this.p2 = p2;
+		this.id = id;
+	}
+
+	public boolean isWall() {
+		return p1.x == p2.x;
+	}
+
+	public int getX1() {
+		return p1.x;
+	}
+
+	public int getX2() {
+		return p2.x;
+	}
+
+	public int getY1() {
+		return p1.y;
+	}
+
+	public int getY2() {
+		return p2.y;
+	}
+
+	public int compareTo(Foothold o) {
+		Foothold other = o;
+		if (p2.y < other.getY1()) {
+			return -1;
+		} else if (p1.y > other.getY2()) {
+			return 1;
+		} else {
+			return 0;
 		}
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getNext() {
+		return next;
+	}
+
+	public void setNext(int next) {
+		this.next = next;
+	}
+
+	public int getPrev() {
+		return prev;
+	}
+
+	public void setPrev(int prev) {
+		this.prev = prev;
 	}
 }

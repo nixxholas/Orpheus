@@ -24,7 +24,7 @@ import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import server.TimerManager;
-import server.maps.MapleMap;
+import server.maps.GameMap;
 import tools.PacketCreator;
 
 /**
@@ -32,7 +32,7 @@ import tools.PacketCreator;
  * @author kevintjuh93
  */
 public class MapleSnowball {
-	private MapleMap map;
+	private GameMap map;
 	private int position = 0;
 	private int hits = 25;
 	private int snowmanhp = 7500;
@@ -41,7 +41,7 @@ public class MapleSnowball {
 	private boolean winner = false;
 	List<GameCharacter> characters = new LinkedList<GameCharacter>();
 
-	public MapleSnowball(int team, MapleMap map) {
+	public MapleSnowball(int team, GameMap map) {
 		this.map = map;
 		this.team = team;
 

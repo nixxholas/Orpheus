@@ -45,9 +45,9 @@ import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
-import server.maps.MapleMap;
-import server.maps.MapleMapObject;
-import server.maps.MapleMapObjectType;
+import server.maps.GameMap;
+import server.maps.GameMapObject;
+import server.maps.GameMapObjectType;
 import server.partyquest.Pyramid;
 import server.quest.MapleQuest;
 import tools.PacketCreator;
@@ -85,8 +85,8 @@ public class AbstractPlayerInteraction {
 		}
 	}
 
-	protected MapleMap getWarpMap(int map) {
-		MapleMap target;
+	protected GameMap getWarpMap(int map) {
+		GameMap target;
 		if (getPlayer().getEventInstance() == null) {
 			target = c.getChannelServer().getMapFactory().getMap(map);
 		} else {
@@ -95,7 +95,7 @@ public class AbstractPlayerInteraction {
 		return target;
 	}
 
-	public MapleMap getMap(int map) {
+	public GameMap getMap(int map) {
 		return getWarpMap(map);
 	}
 
@@ -300,7 +300,7 @@ public class AbstractPlayerInteraction {
 	public void resetMap(int mapid) {
 		getMap(mapid).resetReactors();
 		getMap(mapid).killAllMonsters();
-		for (MapleMapObject i : getMap(mapid).getMapObjectsInRange(c.getPlayer().getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.ITEM))) {
+		for (GameMapObject i : getMap(mapid).getMapObjectsInRange(c.getPlayer().getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.ITEM))) {
 			getMap(mapid).removeMapObject(i);
 			getMap(mapid).broadcastMessage(PacketCreator.removeItemFromMap(i.getObjectId(), 0, c.getPlayer().getId()));
 		}

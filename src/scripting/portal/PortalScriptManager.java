@@ -33,7 +33,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import client.GameClient;
 import java.lang.reflect.UndeclaredThrowableException;
-import server.MaplePortal;
+import server.Portal;
 import tools.Output;
 
 public class PortalScriptManager {
@@ -84,7 +84,7 @@ public class PortalScriptManager {
 		return script;
 	}
 
-	public boolean executePortalScript(MaplePortal portal, GameClient c) {
+	public boolean executePortalScript(Portal portal, GameClient c) {
 		PortalScript script = getPortalScript(portal.getScriptName());
 		if (script != null) {
 			return script.enter(new PortalPlayerInteraction(c, portal));
