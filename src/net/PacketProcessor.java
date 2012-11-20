@@ -203,7 +203,7 @@ public final class PacketProcessor {
 		registerHandler(RecvOpcode.DUEY_ACTION, new DueyHandler());
 		registerHandler(RecvOpcode.USE_DEATHITEM, new UseDeathItemHandler());
 		// registerHandler(RecvOpcode.PLAYER_UPDATE, new PlayerUpdateHandler()); // don't use unused stuff
-		registerHandler(RecvOpcode.USE_MAPLELIFE, new UseMapleLifeHandler());
+		registerHandler(RecvOpcode.USE_MAPLELIFE, new UseLifeHandler());
 		registerHandler(RecvOpcode.USE_CATCH_ITEM, new UseCatchItemHandler());
 		registerHandler(RecvOpcode.MOB_DAMAGE_MOB_FRIENDLY, new MobDamageMobFriendlyHandler());
 		registerHandler(RecvOpcode.PARTY_SEARCH_REGISTER, new PartySearchRegisterHandler());

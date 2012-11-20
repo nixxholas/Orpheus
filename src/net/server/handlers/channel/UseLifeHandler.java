@@ -29,7 +29,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Jay Estrella
  */
-public class UseMapleLifeHandler extends AbstractPacketHandler {
+public class UseLifeHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
