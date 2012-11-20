@@ -77,7 +77,7 @@ import server.events.MapleEvents;
 import server.events.RescueGaga;
 import server.events.gm.MapleFitness;
 import server.events.gm.MapleOla;
-import server.life.MapleMonster;
+import server.life.Monster;
 import server.life.MobSkill;
 import server.maps.AbstractAnimatedGameMapObject;
 import server.maps.HiredMerchant;
@@ -200,7 +200,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private SkillMacro[] skillMacros = new SkillMacro[5];
 	private List<Integer> lastmonthfameids;
 	private Map<Quest, QuestStatus> quests;
-	private Set<MapleMonster> controlled = new LinkedHashSet<MapleMonster>();
+	private Set<Monster> controlled = new LinkedHashSet<Monster>();
 	private Map<Integer, String> entered = new LinkedHashMap<Integer, String>();
 	private Set<GameMapObject> visibleMapObjects = new LinkedHashSet<GameMapObject>();
 	private Map<ISkill, SkillEntry> skills = new LinkedHashMap<ISkill, SkillEntry>();
@@ -992,7 +992,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void checkMonsterAggro(MapleMonster monster) {
+	public void checkMonsterAggro(Monster monster) {
 		if (!monster.isControllerHasAggro()) {
 			if (monster.getController() == this) {
 				monster.setControllerHasAggro(true);
@@ -1010,7 +1010,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		savedLocations[type.ordinal()] = null;
 	}
 
-	public void controlMonster(MapleMonster monster, boolean aggro) {
+	public void controlMonster(Monster monster, boolean aggro) {
 		monster.setController(this);
 		controlled.add(monster);
 		client.announce(PacketCreator.controlMonster(monster, false, aggro));
@@ -1577,7 +1577,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return Collections.unmodifiableList(ret);
 	}
 
-	public Collection<MapleMonster> getControlledMonsters() {
+	public Collection<Monster> getControlledMonsters() {
 		return Collections.unmodifiableCollection(controlled);
 	}
 
@@ -4440,7 +4440,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}, duration);
 	}
 
-	public void stopControllingMonster(MapleMonster monster) {
+	public void stopControllingMonster(Monster monster) {
 		controlled.remove(monster);
 	}
 

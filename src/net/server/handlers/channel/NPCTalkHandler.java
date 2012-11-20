@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import net.AbstractPacketHandler;
 import scripting.npc.NPCScriptManager;
-import server.life.MapleNPC;
+import server.life.Npc;
 import server.maps.GameMapObject;
 import server.maps.PlayerNPCs;
 import tools.PacketCreator;
@@ -39,8 +39,8 @@ public final class NPCTalkHandler extends AbstractPacketHandler {
 		}
 		int oid = slea.readInt();
 		GameMapObject obj = c.getPlayer().getMap().getMapObject(oid);
-		if (obj instanceof MapleNPC) {
-			MapleNPC npc = (MapleNPC) obj;
+		if (obj instanceof Npc) {
+			Npc npc = (Npc) obj;
 			if (npc.getId() == 9010009) {
 				c.announce(PacketCreator.sendDuey((byte) 8, DueyHandler.loadItems(c.getPlayer())));
 			} else if (npc.hasShop()) {

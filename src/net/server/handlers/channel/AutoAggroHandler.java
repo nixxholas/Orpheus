@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import server.life.MapleMonster;
+import server.life.Monster;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class AutoAggroHandler extends AbstractPacketHandler {
@@ -30,7 +30,7 @@ public final class AutoAggroHandler extends AbstractPacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int oid = slea.readInt();
-		MapleMonster monster = c.getPlayer().getMap().getMonsterByOid(oid);
+		Monster monster = c.getPlayer().getMap().getMonsterByOid(oid);
 		if (monster != null && monster.getController() != null) {
 			if (!monster.isControllerHasAggro()) {
 				if (c.getPlayer().getMap().getCharacterById(monster.getController().getId()) == null) {

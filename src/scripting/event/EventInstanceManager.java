@@ -35,7 +35,7 @@ import net.server.Party;
 import net.server.PartyCharacter;
 import provider.MapleDataProviderFactory;
 import server.TimerManager;
-import server.life.MapleMonster;
+import server.life.Monster;
 import server.maps.GameMap;
 import server.maps.GameMapFactory;
 
@@ -45,7 +45,7 @@ import server.maps.GameMapFactory;
  */
 public class EventInstanceManager {
 	private List<GameCharacter> chars = new ArrayList<GameCharacter>();
-	private List<MapleMonster> mobs = new LinkedList<MapleMonster>();
+	private List<Monster> mobs = new LinkedList<Monster>();
 	private Map<GameCharacter, Integer> killCount = new HashMap<GameCharacter, Integer>();
 	private EventManager em;
 	private GameMapFactory mapFactory;
@@ -109,12 +109,12 @@ public class EventInstanceManager {
 		return new ArrayList<GameCharacter>(chars);
 	}
 
-	public void registerMonster(MapleMonster mob) {
+	public void registerMonster(Monster mob) {
 		mobs.add(mob);
 		mob.setEventInstance(this);
 	}
 
-	public void unregisterMonster(MapleMonster mob) {
+	public void unregisterMonster(Monster mob) {
 		mobs.remove(mob);
 		mob.setEventInstance(null);
 		if (mobs.isEmpty()) {
@@ -159,7 +159,7 @@ public class EventInstanceManager {
 	 * @param chr
 	 * @param mob
 	 */
-	public void monsterKilled(GameCharacter chr, MapleMonster mob) {
+	public void monsterKilled(GameCharacter chr, Monster mob) {
 		try {
 			Integer kc = killCount.get(chr);
 			int inc = ((Double) em.getIv().invokeFunction("monsterValue", this, mob.getId())).intValue();

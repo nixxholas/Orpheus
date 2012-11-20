@@ -31,8 +31,8 @@ import client.GameClient;
 import client.InventoryType;
 import scripting.AbstractPlayerInteraction;
 import server.ItemInfoProvider;
-import server.life.MapleLifeFactory;
-import server.life.MapleNPC;
+import server.life.LifeFactory;
+import server.life.Npc;
 import server.maps.Reactor;
 import tools.PacketCreator;
 import server.maps.MapMonitor;
@@ -124,7 +124,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 
 	private void spawnMonster(int id, int qty, Point pos) {
 		for (int i = 0; i < qty; i++) {
-			reactor.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(id), pos);
+			reactor.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(id), pos);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 	}
 
 	public void spawnNpc(int npcId, Point pos) {
-		MapleNPC npc = MapleLifeFactory.getNPC(npcId);
+		Npc npc = LifeFactory.getNPC(npcId);
 		if (npc != null) {
 			npc.setPosition(pos);
 			npc.setCy(pos.y);
@@ -156,6 +156,6 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 	}
 
 	public void spawnFakeMonster(int id) {
-		reactor.getMap().spawnFakeMonsterOnGroundBelow(MapleLifeFactory.getMonster(id), getPosition());
+		reactor.getMap().spawnFakeMonsterOnGroundBelow(LifeFactory.getMonster(id), getPosition());
 	}
 }

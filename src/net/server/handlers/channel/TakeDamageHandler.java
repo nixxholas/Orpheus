@@ -34,8 +34,8 @@ import java.util.List;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.life.MapleLifeFactory.loseItem;
-import server.life.MapleMonster;
+import server.life.LifeFactory.loseItem;
+import server.life.Monster;
 import server.life.MobAttackInfo;
 import server.life.MobAttackInfoFactory;
 import server.life.MobSkill;
@@ -58,12 +58,12 @@ public final class TakeDamageHandler extends AbstractPacketHandler {
 		int pos_x = 0, pos_y = 0, fake = 0;
 		boolean is_pgmr = false, is_pg = true;
 		int mpattack = 0;
-		MapleMonster attacker = null;
+		Monster attacker = null;
 		final GameMap map = player.getMap();
 		if (damagefrom != -3) {
 			monsteridfrom = slea.readInt();
 			oid = slea.readInt();
-			attacker = (MapleMonster) map.getMapObject(oid);
+			attacker = (Monster) map.getMapObject(oid);
 			List<loseItem> loseItems = null;
 			if (attacker != null) {
 				if (attacker.isBuffed(MonsterStatus.NEUTRALISE)) {

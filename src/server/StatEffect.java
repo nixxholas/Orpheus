@@ -66,7 +66,7 @@ import constants.skills.FPMage;
 import constants.skills.FPWizard;
 import provider.MapleData;
 import provider.MapleDataTool;
-import server.life.MapleMonster;
+import server.life.Monster;
 import server.maps.Door;
 import server.maps.GameMap;
 import server.maps.GameMapObject;
@@ -587,7 +587,7 @@ public class StatEffect {
 					if (obj == null || obj.getType() != GameMapObjectType.MONSTER) {
 						return;
 					}
-					MapleMonster mob = (MapleMonster) obj; // x is absorb
+					Monster mob = (Monster) obj; // x is absorb
 															// percentage
 					if (!mob.isBoss()) {
 						int absorbMp = Math.min((int) (mob.getMaxMp() * (getX() / 100.0)), mob.getMp());
@@ -780,7 +780,7 @@ public class StatEffect {
 		ISkill skill_ = SkillFactory.getSkill(sourceid);
 		int i = 0;
 		for (GameMapObject mo : affected) {
-			MapleMonster monster = (MapleMonster) mo;
+			Monster monster = (Monster) mo;
 			if (makeChanceResult()) {
 				monster.applyStatus(applyfrom, new MonsterStatusEffect(getMonsterStati(), skill_, null, false), isPoison(), getDuration());
 			}

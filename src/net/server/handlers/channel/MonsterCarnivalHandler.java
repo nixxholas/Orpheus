@@ -25,7 +25,7 @@ import client.GameClient;
 import java.awt.Point;
 import net.AbstractPacketHandler;
 import server.partyquest.MonsterCarnival;
-import server.life.MapleLifeFactory;
+import server.life.LifeFactory;
 import server.maps.Reactor;
 import server.maps.ReactorFactory;
 import tools.PacketCreator;
@@ -51,7 +51,7 @@ public final class MonsterCarnivalHandler extends AbstractPacketHandler {
 			if (chr.getCP() > getPrice(tab, number)) {
 				if (tab == 0) { // SPAWNING
 					if (chr.getCarnivalParty().canSummon()) {
-						chr.getMap().spawnCPQMonster(MapleLifeFactory.getMonster(getMonster(number)), new Point(1, 1), carnival.oppositeTeam(chr.getCarnivalParty()).getTeam());
+						chr.getMap().spawnCPQMonster(LifeFactory.getMonster(getMonster(number)), new Point(1, 1), carnival.oppositeTeam(chr.getCarnivalParty()).getTeam());
 						chr.getCarnivalParty().summon();
 					} else
 						chr.announce(PacketCreator.CPQMessage((byte) 2));

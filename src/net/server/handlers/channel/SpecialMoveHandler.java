@@ -42,7 +42,7 @@ import net.server.PartyCharacter;
 import net.server.Server;
 import server.StatEffect;
 import server.TimerManager;
-import server.life.MapleMonster;
+import server.life.Monster;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -84,7 +84,7 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 				mobId = slea.readInt();
 				success = slea.readByte();
 				chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.showMagnet(mobId, success), false);
-				MapleMonster monster = chr.getMap().getMonsterByOid(mobId);
+				Monster monster = chr.getMap().getMonsterByOid(mobId);
 				if (monster != null) {
 					monster.switchController(c.getPlayer(), monster.isControllerHasAggro());
 				}

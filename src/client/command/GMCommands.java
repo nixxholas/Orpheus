@@ -35,8 +35,8 @@ import net.server.Server;
 import scripting.npc.NPCScriptManager;
 import server.ItemInfoProvider;
 import server.ShopFactory;
-import server.life.MapleLifeFactory;
-import server.life.MapleMonster;
+import server.life.LifeFactory;
+import server.life.Monster;
 import server.maps.GameMap;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
@@ -236,7 +236,7 @@ public class GMCommands extends EnumeratedCommands {
 					List<GameMapObject> monsters = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 					GameMap map = chr.getMap();
 					for (GameMapObject monstermo : monsters) {
-						MapleMonster monster = (MapleMonster) monstermo;
+						Monster monster = (Monster) monstermo;
 						map.killMonster(monster, chr, true);
 						monster.giveExpToCharacter(chr, monster.getExp() * c.getPlayer().getExpRate(), true, 1);
 					}
@@ -345,7 +345,7 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					break;
 				case pap:
-					chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8500001), chr.getPosition());
+					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8500001), chr.getPosition());
 					break;
 				case popup:
 					if (sub.length >= 3) {
@@ -356,7 +356,7 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					break;
 				case pianus:
-					chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8510000), chr.getPosition());
+					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8510000), chr.getPosition());
 					break;
 				case notice:
 					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(6, "[Notice] " + joinStringFrom(sub, 1)));
@@ -420,10 +420,10 @@ public class GMCommands extends EnumeratedCommands {
 				case spawn:
 					if (sub.length > 2) {
 						for (int i = 0; i < Integer.parseInt(sub[2]); i++) {
-							chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(Integer.parseInt(sub[1])), chr.getPosition());
+							chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(Integer.parseInt(sub[1])), chr.getPosition());
 						}
 					} else {
-						chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(Integer.parseInt(sub[1])), chr.getPosition());
+						chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(Integer.parseInt(sub[1])), chr.getPosition());
 					}
 					break;
 				case speak:

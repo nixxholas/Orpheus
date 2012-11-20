@@ -30,9 +30,9 @@ import paranoia.ParanoiaInformationHandler;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import server.TimerManager;
-import server.life.MapleLifeFactory;
-import server.life.MapleMonster;
-import server.life.MapleNPC;
+import server.life.LifeFactory;
+import server.life.Monster;
+import server.life.Npc;
 import tools.DatabaseConnection;
 import tools.GameLogger;
 import tools.PacketCreator;
@@ -55,7 +55,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 		Channel cserv = c.getChannelServer();
 		GameCharacter victim; // For commands with targets.
 		ResultSet rs; // For commands with MySQL results.
-        MapleNPC npc;
+        Npc npc;
 		int npcId = 0;
         int mobTime = 0;
         int xpos = 0;
@@ -110,7 +110,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						return false;
 					}
 				case horntail:
-					chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8810026), chr.getPosition());
+					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8810026), chr.getPosition());
 					break;
 				case mesorate:
 					c.getWorldServer().setMesoRate(Integer.parseInt(sub[1]));
@@ -121,7 +121,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					chr.message("Done.");
 					break;
 				case npc:
-					npc = MapleLifeFactory.getNPC(Integer.parseInt(sub[1]));
+					npc = LifeFactory.getNPC(Integer.parseInt(sub[1]));
 					if (npc != null) {
 						npc.setPosition(chr.getPosition());
 						npc.setCy(chr.getPosition().y);
@@ -154,7 +154,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					}
 					break;
 				case pinkbean:
-					chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8820009), chr.getPosition());
+					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8820009), chr.getPosition());
 					break;
 				case playernpc:
 					if (sub.length > 2) {
@@ -173,7 +173,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					if (sub[2] == null) {
 						mobTime = 0;
 					}
-					MapleMonster mob = MapleLifeFactory.getMonster(npcId);
+					Monster mob = LifeFactory.getMonster(npcId);
 					if (mob != null && !mob.getName().equals("MISSINGNO")) {
 						mob.setPosition(chr.getPosition());
 						mob.setCy(ypos);
@@ -205,7 +205,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					break;
 				case pnpc:
 					npcId = Integer.parseInt(sub[1]);
-					npc = MapleLifeFactory.getNPC(npcId);
+					npc = LifeFactory.getNPC(npcId);
 					xpos = chr.getPosition().x;
 					ypos = chr.getPosition().y;
 					fh = chr.getMap().getFootholds().findBelow(chr.getPosition()).getId();
@@ -301,9 +301,9 @@ public class DeveloperCommands extends EnumeratedCommands {
 					updateRankings();
 					break;
 				case zakum:
-					chr.getMap().spawnFakeMonsterOnGroundBelow(MapleLifeFactory.getMonster(8800000), chr.getPosition());
+					chr.getMap().spawnFakeMonsterOnGroundBelow(LifeFactory.getMonster(8800000), chr.getPosition());
 					for (int x = 8800003; x < 8800011; x++) {
-						chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(x), chr.getPosition());
+						chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(x), chr.getPosition());
 					}
 					break;
 			}

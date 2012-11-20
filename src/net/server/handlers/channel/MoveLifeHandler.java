@@ -24,7 +24,7 @@ import java.awt.Point;
 import java.util.List;
 import client.GameClient;
 import tools.Randomizer;
-import server.life.MapleMonster;
+import server.life.Monster;
 import server.life.MobSkill;
 import server.life.MobSkillEntry;
 import server.life.MobSkillFactory;
@@ -44,7 +44,7 @@ public final class MoveLifeHandler extends AbstractMovementPacketHandler {
 		if (mmo == null || mmo.getType() != GameMapObjectType.MONSTER) {
 			return;
 		}
-		MapleMonster monster = (MapleMonster) mmo;
+		Monster monster = (Monster) mmo;
 		List<LifeMovementFragment> res = null;
 		byte skillByte = slea.readByte();
 		byte skill = slea.readByte();

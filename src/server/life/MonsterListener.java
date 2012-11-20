@@ -23,5 +23,5 @@ package server.life;
 import client.GameCharacter;
 
 public interface MonsterListener {
-	public void monsterKilled(MapleMonster monster, GameCharacter highestDamageChar);
+	public void monsterKilled(Monster monster, GameCharacter highestDamageChar);
 }

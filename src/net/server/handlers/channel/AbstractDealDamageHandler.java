@@ -77,8 +77,8 @@ import server.StatEffect;
 import server.TimerManager;
 import server.life.Element;
 import server.life.ElementalEffectiveness;
-import server.life.MapleMonster;
-import server.life.MapleMonsterInformationProvider;
+import server.life.Monster;
+import server.life.MonsterInfoProvider;
 import server.maps.GameMap;
 import server.maps.GameMapItem;
 import server.maps.GameMapObject;
@@ -202,7 +202,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                 }
             }
             for (Integer oned : attack.allDamage.keySet()) {
-                final MapleMonster monster = map.getMonsterByOid(oned.intValue());
+                final Monster monster = map.getMonsterByOid(oned.intValue());
                 if (monster != null) {
                     int totDamageToOneMonster = 0;
                     List<Integer> onedList = attack.allDamage.get(oned);
@@ -234,7 +234,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     } else if (attack.skill == Bandit.STEAL) {
                         ISkill steal = SkillFactory.getSkill(Bandit.STEAL);
                         if (Math.random() < 0.3 && steal.getEffect(player.getSkillLevel(steal)).makeChanceResult()) { //Else it drops too many cool stuff :(
-                            List<MonsterDropEntry> toSteals = MapleMonsterInformationProvider.getInstance().retrieveDrop(monster.getId());
+                            List<MonsterDropEntry> toSteals = MonsterInfoProvider.getInstance().retrieveDrop(monster.getId());
                             Collections.shuffle(toSteals);
                             int toSteal = toSteals.get(rand(0, (toSteals.size() - 1))).itemId;
                             ItemInfoProvider ii = ItemInfoProvider.getInstance();

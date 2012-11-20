@@ -29,9 +29,9 @@ import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataTool;
 import server.PortalFactory;
-import server.life.AbstractLoadedMapleLife;
-import server.life.MapleLifeFactory;
-import server.life.MapleMonster;
+import server.life.AbstractLoadedLife;
+import server.life.LifeFactory;
+import server.life.Monster;
 import tools.StringUtil;
 import java.awt.Point;
 import java.sql.Connection;
@@ -148,12 +148,12 @@ public class GameMapFactory {
                         int y = rs.getInt("y");
                         int mobTime = rs.getInt("mobtime");
 
-                        AbstractLoadedMapleLife myLife = giveLife(id, f, hide, fh, cy, rx0, rx1, x, y, type);
+                        AbstractLoadedLife myLife = giveLife(id, f, hide, fh, cy, rx0, rx1, x, y, type);
 
                         if (type.equals("n")) {
                             map.addMapObject(myLife);
                         } else if (type.equals("m")) {
-                            MapleMonster monster = (MapleMonster) myLife;
+                            Monster monster = (Monster) myLife;
                             map.addMonsterSpawn(monster, mobTime, 0);
                         }
                     }
@@ -175,9 +175,9 @@ public class GameMapFactory {
 					String type = MapleDataTool.getString(life.getChildByPath("type"));
 					if (id.equals("9001105"))
 						id = "9001108";// soz
-					AbstractLoadedMapleLife myLife = loadLife(life, id, type);
-					if (myLife instanceof MapleMonster) {
-						MapleMonster monster = (MapleMonster) myLife;
+					AbstractLoadedLife myLife = loadLife(life, id, type);
+					if (myLife instanceof Monster) {
+						Monster monster = (Monster) myLife;
 						int mobTime = MapleDataTool.getInt("mobTime", life, 0);
 						int team = MapleDataTool.getInt("team", life, -1);
 						if (mobTime == -1) { // does not respawn, force spawn
@@ -236,8 +236,8 @@ public class GameMapFactory {
 		return maps.containsKey(mapId);
 	}
 	
-	private AbstractLoadedMapleLife giveLife(int id, int f, boolean hide, int fh, int cy, int rx0, int rx1, int x, int y, String type) {
-        AbstractLoadedMapleLife myLife = MapleLifeFactory.getLife(id, type);
+	private AbstractLoadedLife giveLife(int id, int f, boolean hide, int fh, int cy, int rx0, int rx1, int x, int y, String type) {
+        AbstractLoadedLife myLife = LifeFactory.getLife(id, type);
         myLife.setCy(cy);
         myLife.setF(f);
         myLife.setFh(fh);
@@ -248,8 +248,8 @@ public class GameMapFactory {
         return myLife;
     }
 
-	private AbstractLoadedMapleLife loadLife(MapleData life, String id, String type) {
-		AbstractLoadedMapleLife myLife = MapleLifeFactory.getLife(Integer.parseInt(id), type);
+	private AbstractLoadedLife loadLife(MapleData life, String id, String type) {
+		AbstractLoadedLife myLife = LifeFactory.getLife(Integer.parseInt(id), type);
 		myLife.setCy(MapleDataTool.getInt(life.getChildByPath("cy")));
 		MapleData dF = life.getChildByPath("f");
 		if (dF != null) {

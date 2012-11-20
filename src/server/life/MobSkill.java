@@ -101,7 +101,7 @@ public class MobSkill {
 		this.limit = limit;
 	}
 
-	public void applyEffect(GameCharacter player, MapleMonster monster, boolean skill) {
+	public void applyEffect(GameCharacter player, Monster monster, boolean skill) {
 		Disease disease = null;
 		Map<MonsterStatus, Integer> stats = new ArrayMap<MonsterStatus, Integer>();
 		List<Integer> reflection = new LinkedList<Integer>();
@@ -131,7 +131,7 @@ public class MobSkill {
 					List<GameMapObject> objects = getObjectsInRange(monster, GameMapObjectType.MONSTER);
 					final int hps = (getX() / 1000) * (int) (950 + 1050 * Math.random());
 					for (GameMapObject mons : objects) {
-						((MapleMonster) mons).heal(hps, getY());
+						((Monster) mons).heal(hps, getY());
 					}
 				} else {
 					monster.heal(getX(), getY());
@@ -221,7 +221,7 @@ public class MobSkill {
 			case 200:
 				if (monster.getMap().getSpawnedMonstersOnMap() < 80) {
 					for (Integer mobId : getSummons()) {
-						MapleMonster toSpawn = MapleLifeFactory.getMonster(mobId);
+						Monster toSpawn = LifeFactory.getMonster(mobId);
 						toSpawn.setPosition(monster.getPosition());
 						int ypos, xpos;
 						xpos = (int) monster.getPosition().getX();
@@ -271,7 +271,7 @@ public class MobSkill {
 		if (stats.size() > 0) {
 			if (lt != null && rb != null && skill) {
 				for (GameMapObject mons : getObjectsInRange(monster, GameMapObjectType.MONSTER)) {
-					((MapleMonster) mons).applyMonsterBuff(stats, getX(), getSkillId(), getDuration(), this, reflection);
+					((Monster) mons).applyMonsterBuff(stats, getX(), getSkillId(), getDuration(), this, reflection);
 				}
 			} else {
 				monster.applyMonsterBuff(stats, getX(), getSkillId(), getDuration(), this, reflection);
@@ -300,7 +300,7 @@ public class MobSkill {
 		monster.setMp(monster.getMp() - getMpCon());
 	}
 
-	private List<GameCharacter> getPlayersInRange(MapleMonster monster, GameCharacter player) {
+	private List<GameCharacter> getPlayersInRange(Monster monster, GameCharacter player) {
 		List<GameCharacter> players = new ArrayList<GameCharacter>();
 		players.add(player);
 		return monster.getMap().getPlayersInRange(calculateBoundingBox(monster.getPosition(), monster.isFacingLeft()), players);
@@ -369,7 +369,7 @@ public class MobSkill {
 		return new Rectangle(mylt.x, mylt.y, myrb.x - mylt.x, myrb.y - mylt.y);
 	}
 
-	private List<GameMapObject> getObjectsInRange(MapleMonster monster, GameMapObjectType objectType) {
+	private List<GameMapObject> getObjectsInRange(Monster monster, GameMapObjectType objectType) {
 		List<GameMapObjectType> objectTypes = new ArrayList<GameMapObjectType>();
 		objectTypes.add(objectType);
 		return monster.getMap().getMapObjectsInBox(calculateBoundingBox(monster.getPosition(), monster.isFacingLeft()), objectTypes);

@@ -48,7 +48,7 @@ import net.server.Party;
 import net.server.PartyCharacter;
 import scripting.event.EventInstanceManager;
 import server.TimerManager;
-import server.life.MapleLifeFactory.BanishInfo;
+import server.life.LifeFactory.BanishInfo;
 import server.maps.GameMap;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
@@ -57,9 +57,9 @@ import tools.ArrayMap;
 import tools.PacketCreator;
 import tools.Output;
 
-public class MapleMonster extends AbstractLoadedMapleLife {
+public class Monster extends AbstractLoadedLife {
 
-	private MapleMonsterStats stats;
+	private MonsterStats stats;
 	private int hp, mp;
 	private WeakReference<GameCharacter> controller = new WeakReference<GameCharacter>(null);
 	private boolean controllerHasAggro, controllerKnowsAboutAggro;
@@ -78,17 +78,17 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 	private int team;
 	public ReentrantLock monsterLock = new ReentrantLock();
 
-	public MapleMonster(int id, MapleMonsterStats stats) {
+	public Monster(int id, MonsterStats stats) {
 		super(id);
 		initWithStats(stats);
 	}
 
-	public MapleMonster(MapleMonster monster) {
+	public Monster(Monster monster) {
 		super(monster);
 		initWithStats(monster.stats);
 	}
 
-	private void initWithStats(MapleMonsterStats stats) {
+	private void initWithStats(MonsterStats stats) {
 		setStance(5);
 		this.stats = stats;
 		hp = stats.getHp();
@@ -162,7 +162,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		this.VenomMultiplier = multiplier;
 	}
 
-	public MapleMonsterStats getStats() {
+	public MonsterStats getStats() {
 		return stats;
 	}
 
@@ -322,7 +322,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
 				if (timeMob.id == 9300338 && (reviveMap.getId() >= 922240100 && reviveMap.getId() <= 922240119)) {
 					if (!reviveMap.containsNPC(9001108)) {
-						MapleNPC npc = MapleLifeFactory.getNPC(9001108);
+						Npc npc = LifeFactory.getNPC(9001108);
 						npc.setPosition(new Point(172, 9));
 						npc.setCy(9);
 						npc.setRx0(172 + 50);
@@ -336,7 +336,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 				}
 			}
 			for (Integer mid : toSpawn) {
-				final MapleMonster mob = MapleLifeFactory.getMonster(mid);
+				final Monster mob = LifeFactory.getMonster(mid);
 				if (eventInstance != null) {
 					eventInstance.registerMonster(mob);
 				}
@@ -542,7 +542,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 				if (isAlive()) {
 					GamePacket packet = PacketCreator.cancelMonsterStatus(getObjectId(), status.getStati());
 					map.broadcastMessage(packet, getPosition());
-					if (getController() != null && !getController().isMapObjectVisible(MapleMonster.this)) {
+					if (getController() != null && !getController().isMapObjectVisible(Monster.this)) {
 						getController().getClient().getSession().write(packet);
 					}
 				}
@@ -623,7 +623,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 				if (isAlive()) {
 					GamePacket packet = PacketCreator.cancelMonsterStatus(getObjectId(), stats);
 					map.broadcastMessage(packet, getPosition());
-					if (getController() != null && !getController().isMapObjectVisible(MapleMonster.this)) {
+					if (getController() != null && !getController().isMapObjectVisible(Monster.this)) {
 						getController().getClient().getSession().write(packet);
 					}
 					for (final MonsterStatus stat : stats.keySet()) {
@@ -706,7 +706,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		} else {
 			this.skillsUsed.put(new MobSkillEntry(skillId, level), 1);
 		}
-		final MapleMonster mons = this;
+		final Monster mons = this;
 		TimerManager tMan = TimerManager.getInstance();
 		tMan.schedule(new Runnable() {
 

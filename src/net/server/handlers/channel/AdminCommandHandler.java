@@ -32,8 +32,8 @@ import java.util.List;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.life.MapleLifeFactory;
-import server.life.MapleMonster;
+import server.life.LifeFactory;
+import server.life.Monster;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
 import server.quest.Quest;
@@ -57,7 +57,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				for (int z = 0; z < toSpawn.length; z++) {
 					int[] toSpawnChild = toSpawn[z];
 					if (Randomizer.nextInt(101) <= toSpawnChild[1]) {
-						player.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(toSpawnChild[0]), player.getPosition());
+						player.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(toSpawnChild[0]), player.getPosition());
 					}
 				}
 				c.announce(PacketCreator.enableActions());
@@ -136,7 +136,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				int amount = slea.readInt();
 				List<GameMapObject> monsterx = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 				for (int x = 0; x < amount; x++) {
-					MapleMonster monster = (MapleMonster) monsterx.get(x);
+					Monster monster = (Monster) monsterx.get(x);
 					if (monster.getId() == mobToKill) {
 						player.getMap().killMonster(monster, player, true);
 						monster.giveExpToCharacter(player, monster.getExp(), true, 1);
@@ -150,7 +150,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				int mobId = slea.readInt();
 				int quantity = slea.readInt();
 				for (int i = 0; i < quantity; i++) {
-					player.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(mobId), player.getPosition());
+					player.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(mobId), player.getPosition());
 				}
 				break;
 			case 0x18: // Maple & Mobhp
@@ -158,7 +158,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				player.dropMessage("Monsters HP");
 				List<GameMapObject> monsters = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 				for (GameMapObject mobs : monsters) {
-					MapleMonster monster = (MapleMonster) mobs;
+					Monster monster = (Monster) mobs;
 					if (monster.getId() == mobHp) {
 						player.dropMessage(monster.getName() + ": " + monster.getHp());
 					}

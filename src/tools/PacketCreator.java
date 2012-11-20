@@ -91,8 +91,8 @@ import server.Trade;
 import server.WorldRecommendation;
 import server.events.gm.MapleSnowball;
 import server.partyquest.MonsterCarnivalParty;
-import server.life.MapleMonster;
-import server.life.MapleNPC;
+import server.life.Monster;
+import server.life.Npc;
 import server.life.MobSkill;
 import server.life.NpcDescriptionEntry;
 import server.maps.HiredMerchant;
@@ -1326,7 +1326,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnNPC(MapleNPC life) {
+	public static GamePacket spawnNPC(Npc life) {
 		PacketWriter w = new PacketWriter(24);
 		w.writeShort(SendOpcode.SPAWN_NPC.getValue());
 		w.writeInt(life.getObjectId());
@@ -1345,7 +1345,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnNPCRequestController(MapleNPC life, boolean MiniMap) {
+	public static GamePacket spawnNPCRequestController(Npc life, boolean MiniMap) {
 		PacketWriter w = new PacketWriter(23);
 		w.writeShort(SendOpcode.SPAWN_NPC_REQUEST_CONTROLLER.getValue());
 		w.write(1);
@@ -1409,7 +1409,7 @@ public class PacketCreator {
 	 *            Is it a new spawn?
 	 * @return The spawn monster packet.
 	 */
-	public static GamePacket spawnMonster(MapleMonster life, boolean newSpawn) {
+	public static GamePacket spawnMonster(Monster life, boolean newSpawn) {
 		return spawnMonsterInternal(life, false, newSpawn, false, 0, false);
 	}
 
@@ -1424,7 +1424,7 @@ public class PacketCreator {
 	 *            The spawn effect.
 	 * @return The spawn monster packet.
 	 */
-	public static GamePacket spawnMonster(MapleMonster life, boolean newSpawn, int effect) {
+	public static GamePacket spawnMonster(Monster life, boolean newSpawn, int effect) {
 		return spawnMonsterInternal(life, false, newSpawn, false, effect, false);
 	}
 
@@ -1439,7 +1439,7 @@ public class PacketCreator {
 	 *            Aggressive monster?
 	 * @return The monster control packet.
 	 */
-	public static GamePacket controlMonster(MapleMonster life, boolean newSpawn, boolean aggro) {
+	public static GamePacket controlMonster(Monster life, boolean newSpawn, boolean aggro) {
 		return spawnMonsterInternal(life, true, newSpawn, aggro, 0, false);
 	}
 
@@ -1449,7 +1449,7 @@ public class PacketCreator {
 	 * @param life
 	 * @return
 	 */
-	public static GamePacket makeMonsterInvisible(MapleMonster life) {
+	public static GamePacket makeMonsterInvisible(Monster life) {
 		return spawnMonsterInternal(life, true, false, false, 0, true);
 	}
 
@@ -1468,7 +1468,7 @@ public class PacketCreator {
 	 *            The spawn effect to use.
 	 * @return The spawn/control packet.
 	 */
-	private static GamePacket spawnMonsterInternal(MapleMonster life, boolean requestController, boolean newSpawn, boolean aggro, int effect, boolean makeInvis) {
+	private static GamePacket spawnMonsterInternal(Monster life, boolean requestController, boolean newSpawn, boolean aggro, int effect, boolean makeInvis) {
 		PacketWriter w = new PacketWriter();
 		if (makeInvis) {
 			w.writeShort(SendOpcode.SPAWN_MONSTER_CONTROL.getValue());
@@ -1516,7 +1516,7 @@ public class PacketCreator {
 	 *            The effect to show when spawning.
 	 * @return The packet to spawn the mob as non-targettable.
 	 */
-	public static GamePacket spawnFakeMonster(MapleMonster life, int effect) {
+	public static GamePacket spawnFakeMonster(Monster life, int effect) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SPAWN_MONSTER_CONTROL.getValue());
 		w.write(1);
@@ -1548,7 +1548,7 @@ public class PacketCreator {
 	 *            The mob to make targettable.
 	 * @return The packet to make the mob targettable.
 	 */
-	public static GamePacket makeMonsterReal(MapleMonster life) {
+	public static GamePacket makeMonsterReal(Monster life) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SPAWN_MONSTER.getValue());
 		w.writeInt(life.getObjectId());
@@ -6540,7 +6540,7 @@ public class PacketCreator {
 		return builder.toString();
 	}
 
-	public static GamePacket MobDamageMobFriendly(MapleMonster mob, int damage) {
+	public static GamePacket MobDamageMobFriendly(Monster mob, int damage) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.DAMAGE_MONSTER.getValue());
 		w.writeInt(mob.getObjectId());

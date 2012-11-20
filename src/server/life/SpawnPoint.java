@@ -50,14 +50,14 @@ public class SpawnPoint {
 		return nextPossibleSpawn <= System.currentTimeMillis();
 	}
 
-	public MapleMonster getMonster() {
-		MapleMonster mob = new MapleMonster(MapleLifeFactory.getMonster(monster));
+	public Monster getMonster() {
+		Monster mob = new Monster(LifeFactory.getMonster(monster));
 		mob.setPosition(new Point(pos));
 		mob.setTeam(team);
 		spawnedMonsters.incrementAndGet();
 		mob.addListener(new MonsterListener() {
 			@Override
-			public void monsterKilled(MapleMonster monster, GameCharacter highestDamageChar) {
+			public void monsterKilled(Monster monster, GameCharacter highestDamageChar) {
 				nextPossibleSpawn = System.currentTimeMillis();
 				if (mobTime > 0) {
 					nextPossibleSpawn += mobTime * 1000;

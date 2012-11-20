@@ -26,14 +26,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import server.life.MapleLifeFactory.BanishInfo;
-import server.life.MapleLifeFactory.loseItem;
-import server.life.MapleLifeFactory.selfDestruction;
+import server.life.LifeFactory.BanishInfo;
+import server.life.LifeFactory.loseItem;
+import server.life.LifeFactory.selfDestruction;
 
 /**
  * @author Frz
  */
-public class MapleMonsterStats {
+public class MonsterStats {
 	private int exp, hp, mp, level, PADamage, dropPeriod, cp, buffToGive,
 			removeAfter;
 	private boolean boss, undead, ffaLoot, isExplosiveReward, firstAttack,

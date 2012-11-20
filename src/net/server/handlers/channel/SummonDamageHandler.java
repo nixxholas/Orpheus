@@ -29,7 +29,7 @@ import client.SkillFactory;
 import client.status.MonsterStatusEffect;
 import net.AbstractPacketHandler;
 import server.StatEffect;
-import server.life.MapleMonster;
+import server.life.Monster;
 import server.maps.Summon;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -85,7 +85,7 @@ public final class SummonDamageHandler extends AbstractPacketHandler {
 		player.getMap().broadcastMessage(player, PacketCreator.summonAttack(player.getId(), summon.getSkill(), direction, allDamage), summon.getPosition());
 		for (SummonAttackEntry attackEntry : allDamage) {
 			int damage = attackEntry.getDamage();
-			MapleMonster target = player.getMap().getMonsterByOid(attackEntry.getMonsterOid());
+			Monster target = player.getMap().getMonsterByOid(attackEntry.getMonsterOid());
 			if (target != null) {
 				if (damage > 0 && summonEffect.getMonsterStati().size() > 0) {
 					if (summonEffect.makeChanceResult()) {

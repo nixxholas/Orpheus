@@ -60,8 +60,8 @@ import server.ItemInfoProvider;
 import server.Portal;
 import server.StatEffect;
 import server.TimerManager;
-import server.life.MapleMonster;
-import server.life.MapleNPC;
+import server.life.Monster;
+import server.life.Npc;
 import server.life.SpawnPoint;
 import tools.PacketCreator;
 import server.events.gm.MapleCoconut;
@@ -72,9 +72,9 @@ import server.events.gm.MapleSnowball;
 import server.partyquest.MonsterCarnival;
 import server.partyquest.MonsterCarnivalParty;
 import server.life.CoolDamageEntry;
-import server.life.MapleLifeFactory;
-import server.life.MapleLifeFactory.selfDestruction;
-import server.life.MapleMonsterInformationProvider;
+import server.life.LifeFactory;
+import server.life.LifeFactory.selfDestruction;
+import server.life.MonsterInfoProvider;
 import server.life.MonsterDropEntry;
 import server.life.MonsterGlobalDropEntry;
 import server.partyquest.Pyramid;
@@ -354,7 +354,7 @@ public class GameMap {
 		return ret;
 	}
 
-	private void dropFromMonster(final GameCharacter chr, final MapleMonster mob) {
+	private void dropFromMonster(final GameCharacter chr, final Monster mob) {
 		if (mob.dropsDisabled() || !dropsOn) {
 			return;
 		}
@@ -371,7 +371,7 @@ public class GameMap {
 			chServerrate *= (stati.get(MonsterStatus.SHOWDOWN).getStati().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
 		}
 
-		final MapleMonsterInformationProvider mi = MapleMonsterInformationProvider.getInstance();
+		final MonsterInfoProvider mi = MonsterInfoProvider.getInstance();
 		final List<MonsterDropEntry> dropEntry = new ArrayList<MonsterDropEntry>(mi.retrieveDrop(mob.getId()));
 
 		Collections.shuffle(dropEntry);
@@ -426,7 +426,7 @@ public class GameMap {
 		}
 	}
 
-	private void spawnDrop(final IItem idrop, final Point dropPos, final MapleMonster mob, final GameCharacter chr, final byte droptype, final short questid) {
+	private void spawnDrop(final IItem idrop, final Point dropPos, final Monster mob, final GameCharacter chr, final byte droptype, final short questid) {
 		final GameMapItem mdrop = new GameMapItem(idrop, dropPos, mob, chr, droptype, false, questid);
 		spawnAndAddRangedMapObject(mdrop, new DelayedPacketCreation() {
 
@@ -463,13 +463,13 @@ public class GameMap {
 		broadcastMessage(PacketCreator.dropItemFromMapObject(drop, dropper.getPosition(), droppos, (byte) 3), drop.getPosition());
 	}
 
-	public MapleMonster getMonsterById(int id) {
+	public Monster getMonsterById(int id) {
 		objectRLock.lock();
 		try {
 			for (GameMapObject obj : mapobjects.values()) {
 				if (obj.getType() == GameMapObjectType.MONSTER) {
-					if (((MapleMonster) obj).getId() == id) {
-						return (MapleMonster) obj;
+					if (((Monster) obj).getId() == id) {
+						return (Monster) obj;
 					}
 				}
 			}
@@ -482,7 +482,7 @@ public class GameMap {
 	public int countMonster(int id) {
 		int count = 0;
 		for (GameMapObject m : getMapObjectsInRange(new Point(0, 0), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER))) {
-			MapleMonster mob = (MapleMonster) m;
+			Monster mob = (Monster) m;
 			if (mob.getId() == id) {
 				count++;
 			}
@@ -490,10 +490,10 @@ public class GameMap {
 		return count;
 	}
 
-	public boolean damageMonster(final GameCharacter chr, final MapleMonster monster, final int damage) {
+	public boolean damageMonster(final GameCharacter chr, final Monster monster, final int damage) {
 		if (monster.getId() == 8800000) {
 			for (GameMapObject object : chr.getMap().getMapObjects()) {
-				MapleMonster mons = chr.getMap().getMonsterByOid(object.getObjectId());
+				Monster mons = chr.getMap().getMonsterByOid(object.getObjectId());
 				if (mons != null) {
 					if (mons.getId() >= 8800003 && mons.getId() <= 8800010) {
 						return true;
@@ -536,7 +536,7 @@ public class GameMap {
 					}
 				} else if (monster.getId() >= 8810002 && monster.getId() <= 8810009) {
 					for (GameMapObject object : chr.getMap().getMapObjects()) {
-						MapleMonster mons = chr.getMap().getMonsterByOid(object.getObjectId());
+						Monster mons = chr.getMap().getMonsterByOid(object.getObjectId());
 						if (mons != null) {
 							if (mons.getId() == 8810018) {
 								damageMonster(chr, mons, damage);
@@ -557,11 +557,11 @@ public class GameMap {
 		return false;
 	}
 
-	public void killMonster(final MapleMonster monster, final GameCharacter chr, final boolean withDrops) {
+	public void killMonster(final Monster monster, final GameCharacter chr, final boolean withDrops) {
 		killMonster(monster, chr, withDrops, false, 1);
 	}
 
-	public void killMonster(final MapleMonster monster, final GameCharacter chr, final boolean withDrops, final boolean secondTime, int animation) {
+	public void killMonster(final Monster monster, final GameCharacter chr, final boolean withDrops, final boolean secondTime, int animation) {
 		if (monster.getId() == 8810018 && !secondTime) {
 			TimerManager.getInstance().schedule(new Runnable() {
 
@@ -631,7 +631,7 @@ public class GameMap {
 			boolean makeZakReal = true;
 			Collection<GameMapObject> objects = getMapObjects();
 			for (GameMapObject object : objects) {
-				MapleMonster mons = getMonsterByOid(object.getObjectId());
+				Monster mons = getMonsterByOid(object.getObjectId());
 				if (mons != null) {
 					if (mons.getId() >= 8800003 && mons.getId() <= 8800010) {
 						makeZakReal = false;
@@ -641,7 +641,7 @@ public class GameMap {
 			}
 			if (makeZakReal) {
 				for (GameMapObject object : objects) {
-					MapleMonster mons = chr.getMap().getMonsterByOid(object.getObjectId());
+					Monster mons = chr.getMap().getMonsterByOid(object.getObjectId());
 					if (mons != null) {
 						if (mons.getId() == 8800000) {
 							makeMonsterReal(mons);
@@ -663,9 +663,9 @@ public class GameMap {
 
 	public void killMonster(int monsId) {
 		for (GameMapObject mmo : getMapObjects()) {
-			if (mmo instanceof MapleMonster) {
-				if (((MapleMonster) mmo).getId() == monsId) {
-					this.killMonster((MapleMonster) mmo, (GameCharacter) getAllPlayer().get(0), false);
+			if (mmo instanceof Monster) {
+				if (((Monster) mmo).getId() == monsId) {
+					this.killMonster((Monster) mmo, (GameCharacter) getAllPlayer().get(0), false);
 				}
 			}
 		}
@@ -673,7 +673,7 @@ public class GameMap {
 
 	public void killAllMonsters() {
 		for (GameMapObject monstermo : getMapObjectsInRange(new Point(0, 0), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER))) {
-			MapleMonster monster = (MapleMonster) monstermo;
+			Monster monster = (Monster) monstermo;
 			spawnedMonstersOnMap.decrementAndGet();
 			monster.setHp(0);
 			broadcastMessage(PacketCreator.killMonster(monster.getObjectId(), true), monster.getPosition());
@@ -763,7 +763,7 @@ public class GameMap {
 	 * 
 	 * @param monster
 	 */
-	public void updateMonsterController(MapleMonster monster) {
+	public void updateMonsterController(Monster monster) {
 		monster.monsterLock.lock();
 		try {
 			if (!monster.isAlive()) {
@@ -816,7 +816,7 @@ public class GameMap {
 		try {
 			for (GameMapObject obj : mapobjects.values()) {
 				if (obj.getType() == GameMapObjectType.NPC) {
-					if (((MapleNPC) obj).getId() == npcid) {
+					if (((Npc) obj).getId() == npcid) {
 						return true;
 					}
 				}
@@ -838,13 +838,13 @@ public class GameMap {
 	 * @param oid
 	 * @return
 	 */
-	public MapleMonster getMonsterByOid(int oid) {
+	public Monster getMonsterByOid(int oid) {
 		GameMapObject mmo = getMapObject(oid);
 		if (mmo == null) {
 			return null;
 		}
 		if (mmo.getType() == GameMapObjectType.MONSTER) {
-			return (MapleMonster) mmo;
+			return (Monster) mmo;
 		}
 		return null;
 	}
@@ -873,11 +873,11 @@ public class GameMap {
 		return null;
 	}
 
-	public void spawnMonsterOnGroudBelow(MapleMonster mob, Point pos) {
+	public void spawnMonsterOnGroudBelow(Monster mob, Point pos) {
 		spawnMonsterOnGroundBelow(mob, pos);
 	}
 
-	public void spawnMonsterOnGroundBelow(MapleMonster mob, Point pos) {
+	public void spawnMonsterOnGroundBelow(Monster mob, Point pos) {
 		Point spos = new Point(pos.x, pos.y - 1);
 		spos = calcPointBelow(spos);
 		spos.y--;
@@ -885,7 +885,7 @@ public class GameMap {
 		spawnMonster(mob);
 	}
 
-	public void spawnCPQMonster(MapleMonster mob, Point pos, int team) {
+	public void spawnCPQMonster(Monster mob, Point pos, int team) {
 		Point spos = new Point(pos.x, pos.y - 1);
 		spos = calcPointBelow(spos);
 		spos.y--;
@@ -894,7 +894,7 @@ public class GameMap {
 		spawnMonster(mob);
 	}
 
-	private void monsterItemDrop(final MapleMonster m, final IItem item, long delay) {
+	private void monsterItemDrop(final Monster m, final IItem item, long delay) {
 		final ScheduledFuture<?> monsterItemDrop = TimerManager.getInstance().register(new Runnable() {
 
 			@Override
@@ -912,7 +912,7 @@ public class GameMap {
 		}
 	}
 
-	public void spawnFakeMonsterOnGroundBelow(MapleMonster mob, Point pos) {
+	public void spawnFakeMonsterOnGroundBelow(Monster mob, Point pos) {
 		Point spos = getGroundBelow(pos);
 		mob.setPosition(spos);
 		spawnFakeMonster(mob);
@@ -925,7 +925,7 @@ public class GameMap {
 		return spos;
 	}
 
-	public void spawnRevives(final MapleMonster monster) {
+	public void spawnRevives(final Monster monster) {
 		monster.setMap(this);
 
 		spawnAndAddRangedMapObject(monster, new DelayedPacketCreation() {
@@ -939,7 +939,7 @@ public class GameMap {
 		spawnedMonstersOnMap.incrementAndGet();
 	}
 
-	public void spawnMonster(final MapleMonster monster) {
+	public void spawnMonster(final Monster monster) {
 		if (mobCapacity != -1 && mobCapacity == spawnedMonstersOnMap.get()) {
 			return;// PyPQ
 		}
@@ -990,12 +990,12 @@ public class GameMap {
 		}
 	}
 
-	public void spawnDojoMonster(final MapleMonster monster) {
+	public void spawnDojoMonster(final Monster monster) {
 		Point[] pts = {new Point(140, 0), new Point(190, 7), new Point(187, 7)};
 		spawnMonsterWithEffect(monster, 15, pts[Randomizer.nextInt(3)]);
 	}
 
-	public void spawnMonsterWithEffect(final MapleMonster monster, final int effect, Point pos) {
+	public void spawnMonsterWithEffect(final Monster monster, final int effect, Point pos) {
 		monster.setMap(this);
 		Point spos = new Point(pos.x, pos.y - 1);
 		spos = calcPointBelow(spos);
@@ -1019,7 +1019,7 @@ public class GameMap {
 		spawnedMonstersOnMap.incrementAndGet();
 	}
 
-	public void spawnFakeMonster(final MapleMonster monster) {
+	public void spawnFakeMonster(final Monster monster) {
 		monster.setMap(this);
 		monster.setFake(true);
 		spawnAndAddRangedMapObject(monster, new DelayedPacketCreation() {
@@ -1033,7 +1033,7 @@ public class GameMap {
 		spawnedMonstersOnMap.incrementAndGet();
 	}
 
-	public void makeMonsterReal(final MapleMonster monster) {
+	public void makeMonsterReal(final Monster monster) {
 		monster.setFake(false);
 		broadcastMessage(PacketCreator.makeMonsterReal(monster));
 		updateMonsterController(monster);
@@ -1122,7 +1122,7 @@ public class GameMap {
 					for (GameMapObject mo : affectedMonsters) {
 						if (mist.makeChanceResult()) {
 							MonsterStatusEffect poisonEffect = new MonsterStatusEffect(Collections.singletonMap(MonsterStatus.POISON, 1), mist.getSourceSkill(), null, false);
-							((MapleMonster) mo).applyStatus(mist.getOwner(), poisonEffect, true, duration);
+							((Monster) mo).applyStatus(mist.getOwner(), poisonEffect, true, duration);
 						}
 					}
 				}
@@ -1234,7 +1234,7 @@ public class GameMap {
 		if (mapid == 923010000 && getMonsterById(9300102) == null) { // Kenta's
 																		// Mount
 																		// Quest
-			spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(9300102), new Point(77, 426));
+			spawnMonsterOnGroundBelow(LifeFactory.getMonster(9300102), new Point(77, 426));
 		} else if (mapid == 910110000) { // Henesys Party Quest
 			chr.getClient().announce(PacketCreator.getClock(15 * 60));
 			TimerManager.getInstance().register(new Runnable() {
@@ -1374,7 +1374,7 @@ public class GameMap {
 			broadcastGMMessage(PacketCreator.removePlayerFromMap(chr.getId()));
 		}
 
-		for (MapleMonster monster : chr.getControlledMonsters()) {
+		for (Monster monster : chr.getControlledMonsters()) {
 			monster.setController(null);
 			monster.setControllerHasAggro(false);
 			monster.setControllerKnowsAboutAggro(false);
@@ -1497,7 +1497,7 @@ public class GameMap {
 				if (isNonRangedType(o.getType())) {
 					o.sendSpawnData(mapleClient);
 				} else if (o.getType() == GameMapObjectType.MONSTER) {
-					updateMonsterController((MapleMonster) o);
+					updateMonsterController((Monster) o);
 				}
 			}
 		} finally {
@@ -1595,7 +1595,7 @@ public class GameMap {
 	 * @param monster
 	 * @param mobTime
 	 */
-	public void addMonsterSpawn(MapleMonster monster, int mobTime, int team) {
+	public void addMonsterSpawn(Monster monster, int mobTime, int team) {
 		Point newpos = calcPointBelow(monster.getPosition());
 		newpos.y -= 1;
 		SpawnPoint sp = new SpawnPoint(monster.getId(), newpos, !monster.isMobile(), mobTime, mobInterval, team);
@@ -1642,7 +1642,7 @@ public class GameMap {
 		}
 	}
 
-	public void moveMonster(MapleMonster monster, Point reportedPos) {
+	public void moveMonster(Monster monster, Point reportedPos) {
 		monster.setPosition(reportedPos);
 		chrRLock.lock();
 		try {
@@ -2141,7 +2141,7 @@ public class GameMap {
 	public void toggleHiddenNPC(int id) {
 		for (GameMapObject obj : mapobjects.values()) {
 			if (obj.getType() == GameMapObjectType.NPC) {
-				MapleNPC npc = (MapleNPC) obj;
+				Npc npc = (Npc) obj;
 				if (npc.getId() == id) {
 					npc.setHide(!npc.isHidden());
 					if (!npc.isHidden()) // Should only be hidden upon changing

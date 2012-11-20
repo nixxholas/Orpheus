@@ -41,8 +41,8 @@ import scripting.event.EventManager;
 import scripting.npc.NPCScriptManager;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.life.MapleLifeFactory;
-import server.life.MapleMonster;
+import server.life.LifeFactory;
+import server.life.Monster;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
 import server.maps.GameMap;
@@ -338,7 +338,7 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void spawnMonster(int id, int x, int y) {
-		MapleMonster monster = MapleLifeFactory.getMonster(id);
+		Monster monster = LifeFactory.getMonster(id);
 		monster.setPosition(new Point(x, y));
 		getPlayer().getMap().spawnMonster(monster);
 	}

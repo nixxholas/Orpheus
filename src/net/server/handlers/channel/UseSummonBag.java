@@ -27,7 +27,7 @@ import tools.Randomizer;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.life.MapleLifeFactory;
+import server.life.LifeFactory;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -54,7 +54,7 @@ public final class UseSummonBag extends AbstractPacketHandler {
 			for (int z = 0; z < toSpawn.length; z++) {
 				int[] toSpawnChild = toSpawn[z];
 				if (Randomizer.nextInt(101) <= toSpawnChild[1]) {
-					c.getPlayer().getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(toSpawnChild[0]), c.getPlayer().getPosition());
+					c.getPlayer().getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(toSpawnChild[0]), c.getPlayer().getPosition());
 				}
 			}
 		}
