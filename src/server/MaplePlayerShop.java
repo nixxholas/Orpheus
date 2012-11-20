@@ -26,7 +26,7 @@ import java.util.List;
 import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
-import net.MaplePacket;
+import net.GamePacket;
 import net.SendOpcode;
 import server.maps.AbstractMapleMapObject;
 import server.maps.MapleMapObjectType;
@@ -149,7 +149,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		}
 	}
 
-	public void broadcastToVisitors(MaplePacket packet) {
+	public void broadcastToVisitors(GamePacket packet) {
 		for (int i = 0; i < 3; i++) {
 			if (visitors[i] != null) {
 				visitors[i].getClient().getSession().write(packet);
@@ -173,7 +173,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		}
 	}
 
-	public static MaplePacket shopErrorMessage(int error, int type) {
+	public static GamePacket shopErrorMessage(int error, int type) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(0x0A);
@@ -182,7 +182,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		return mplew.getPacket();
 	}
 
-	public void broadcast(MaplePacket packet) {
+	public void broadcast(GamePacket packet) {
 		if (owner.getClient() != null && owner.getClient().getSession() != null) {
 			owner.getClient().getSession().write(packet);
 		}

@@ -51,7 +51,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		Runnable r = ((MaplePacket) message).getOnSend();
+		Runnable r = ((GamePacket) message).getOnSend();
 		if (r != null) {
 			r.run();
 		}

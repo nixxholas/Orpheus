@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.MaplePacket;
+import net.GamePacket;
 import tools.DatabaseConnection;
 import net.MapleServerHandler;
 import net.PacketProcessor;
@@ -318,7 +318,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	public void allianceMessage(int id, MaplePacket packet, int exception, int guildex) {
+	public void allianceMessage(int id, GamePacket packet, int exception, int guildex) {
 		MapleAlliance alliance = alliances.get(id);
 		if (alliance != null) {
 			for (Integer gid : alliance.getGuilds()) {
@@ -547,7 +547,7 @@ public class Server implements Runnable {
 		worlda.reloadGuildSummary();
 	}
 
-	public void broadcastMessage(byte world, MaplePacket packet) {
+	public void broadcastMessage(byte world, GamePacket packet) {
 		for (Channel ch : getChannelsFromWorld(world)) {
 			ch.broadcastPacket(packet);
 		}

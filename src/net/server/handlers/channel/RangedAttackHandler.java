@@ -40,7 +40,7 @@ import constants.skills.Shadower;
 import constants.skills.ThunderBreaker;
 import constants.skills.WindArcher;
 import tools.Randomizer;
-import net.MaplePacket;
+import net.GamePacket;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
@@ -147,7 +147,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 				if (soulArrow || attack.skill == 3111004 || attack.skill == 3211004 || attack.skill == 11101004 || attack.skill == 15111007 || attack.skill == 14101006) {
 					visProjectile = 0;
 				}
-				MaplePacket packet;
+				GamePacket packet;
 				switch (attack.skill) {
 					case 3121004: // Hurricane
 					case 3221001: // Pierce

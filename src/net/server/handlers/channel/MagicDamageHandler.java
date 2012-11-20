@@ -25,7 +25,7 @@ import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.SkillFactory;
-import net.MaplePacket;
+import net.GamePacket;
 import server.MapleStatEffect;
 import server.TimerManager;
 import tools.MaplePacketCreator;
@@ -37,7 +37,7 @@ public final class MagicDamageHandler extends AbstractDealDamageHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
-		MaplePacket packet = MaplePacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
+		GamePacket packet = MaplePacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
 		if (attack.skill == 2121001 || attack.skill == 2221001 || attack.skill == 2321001) {
 			packet = MaplePacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);
 		}

@@ -28,7 +28,7 @@ import client.GameClient;
 import client.MapleInventoryType;
 import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.Channel;
 import server.ItemNameEntry;
 import server.MapleInventoryManipulator;
@@ -710,7 +710,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		return items;
 	}
 
-	public MaplePacket getCart(int cid) {
+	public GamePacket getCart(int cid) {
 		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
@@ -822,7 +822,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		return items;
 	}
 
-	private static MaplePacket getMTS(int tab, int type, int page) {
+	private static GamePacket getMTS(int tab, int type, int page) {
 		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
@@ -896,7 +896,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
 		
 	}
 
-	public MaplePacket getMTSSearch(int tab, int type, int cOi, String search, int page) {
+	public GamePacket getMTSSearch(int tab, int type, int cOi, String search, int page) {
 		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		String listaitems = "";

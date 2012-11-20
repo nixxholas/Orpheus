@@ -36,7 +36,7 @@ import constants.ItemConstants;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import tools.DatabaseConnection;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.Server;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -82,7 +82,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		}, 1000 * 60 * 60 * 24);
 	}
 
-	public void broadcastToVisitors(MaplePacket packet) {
+	public void broadcastToVisitors(GamePacket packet) {
 		for (GameCharacter visitor : visitors) {
 			if (visitor != null) {
 				visitor.getClient().getSession().write(packet);

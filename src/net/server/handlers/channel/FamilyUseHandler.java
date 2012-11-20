@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import client.GameCharacter;
 import net.AbstractMaplePacketHandler;
-import net.MaplePacket;
+import net.GamePacket;
 import net.SendOpcode;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.data.output.MaplePacketLittleEndianWriter;
@@ -64,7 +64,7 @@ public final class FamilyUseHandler extends AbstractMaplePacketHandler {
 	/**
 	 * [65 00][02][08 00 00 00][C8 00 00 00][00 00 00 00][00][40 77 1B 00]
 	 */
-	private static MaplePacket useRep(int mode, int type, int erate, int drate, int time) {
+	private static GamePacket useRep(int mode, int type, int erate, int drate, int time) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(0x60);// noty
 		mplew.write(mode);
@@ -89,7 +89,7 @@ public final class FamilyUseHandler extends AbstractMaplePacketHandler {
 	// 8C 93 3E 00
 	// 40 0D 03 00 00 00 00 00 02
 	@SuppressWarnings("unused")
-	private static MaplePacket giveBuff() {
+	private static GamePacket giveBuff() {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.GIVE_BUFF.getValue());
 		mplew.writeInt(0);

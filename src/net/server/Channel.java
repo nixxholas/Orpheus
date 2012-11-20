@@ -37,7 +37,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import tools.DatabaseConnection;
 import tools.Output;
-import net.MaplePacket;
+import net.GamePacket;
 import net.MapleServerHandler;
 import net.PacketProcessor;
 import net.mina.MapleCodecFactory;
@@ -164,7 +164,7 @@ public final class Channel {
 		return players.getAllCharacters().size();
 	}
 
-	public void broadcastPacket(MaplePacket data) {
+	public void broadcastPacket(GamePacket data) {
 		for (GameCharacter chr : players.getAllCharacters()) {
 			chr.announce(data);
 		}
@@ -190,7 +190,7 @@ public final class Channel {
 		return eventSM;
 	}
 
-	public void broadcastGMPacket(MaplePacket data) {
+	public void broadcastGMPacket(GamePacket data) {
 		for (GameCharacter chr : players.getAllCharacters()) {
 			if (chr.isGM()) {
 				chr.announce(data);
@@ -198,7 +198,7 @@ public final class Channel {
 		}
 	}
 
-	public void broadcastGMPacket(MaplePacket data, String exclude) {
+	public void broadcastGMPacket(GamePacket data, String exclude) {
 		for (GameCharacter character : players.getAllCharacters()) {
 			if (character.isGM() && !character.getName().equals(exclude)) {
 				character.announce(data);

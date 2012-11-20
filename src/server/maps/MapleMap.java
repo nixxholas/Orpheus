@@ -52,7 +52,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import tools.Output;
 import tools.Randomizer;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.Channel;
 import net.server.Server;
 import scripting.map.MapScriptManager;
@@ -150,7 +150,7 @@ public class MapleMap {
 		objectWLock = objectLock.writeLock();
 	}
 
-	public void broadcastMessage(GameCharacter source, MaplePacket packet) {
+	public void broadcastMessage(GameCharacter source, GamePacket packet) {
 		chrRLock.lock();
 		try {
 			for (GameCharacter chr : characters) {
@@ -163,7 +163,7 @@ public class MapleMap {
 		}
 	}
 
-	public void broadcastGMMessage(GameCharacter source, MaplePacket packet) {
+	public void broadcastGMMessage(GameCharacter source, GamePacket packet) {
 		chrRLock.lock();
 		try {
 			for (GameCharacter chr : characters) {
@@ -1391,11 +1391,11 @@ public class MapleMap {
 		}
 	}
 
-	public void broadcastMessage(MaplePacket packet) {
+	public void broadcastMessage(GamePacket packet) {
 		broadcastMessage(null, packet, Double.POSITIVE_INFINITY, null);
 	}
 
-	public void broadcastGMMessage(MaplePacket packet) {
+	public void broadcastGMMessage(GamePacket packet) {
 		broadcastGMMessage(null, packet, Double.POSITIVE_INFINITY, null);
 	}
 
@@ -1406,7 +1406,7 @@ public class MapleMap {
 	 * @param packet
 	 * @param repeatToSource
 	 */
-	public void broadcastMessage(GameCharacter source, MaplePacket packet, boolean repeatToSource) {
+	public void broadcastMessage(GameCharacter source, GamePacket packet, boolean repeatToSource) {
 		broadcastMessage(repeatToSource ? null : source, packet, Double.POSITIVE_INFINITY, source.getPosition());
 	}
 
@@ -1418,7 +1418,7 @@ public class MapleMap {
 	 * @param repeatToSource
 	 * @param ranged
 	 */
-	public void broadcastMessage(GameCharacter source, MaplePacket packet, boolean repeatToSource, boolean ranged) {
+	public void broadcastMessage(GameCharacter source, GamePacket packet, boolean repeatToSource, boolean ranged) {
 		broadcastMessage(repeatToSource ? null : source, packet, ranged ? 722500 : Double.POSITIVE_INFINITY, source.getPosition());
 	}
 
@@ -1428,7 +1428,7 @@ public class MapleMap {
 	 * @param packet
 	 * @param rangedFrom
 	 */
-	public void broadcastMessage(MaplePacket packet, Point rangedFrom) {
+	public void broadcastMessage(GamePacket packet, Point rangedFrom) {
 		broadcastMessage(null, packet, 722500, rangedFrom);
 	}
 
@@ -1439,11 +1439,11 @@ public class MapleMap {
 	 * @param packet
 	 * @param rangedFrom
 	 */
-	public void broadcastMessage(GameCharacter source, MaplePacket packet, Point rangedFrom) {
+	public void broadcastMessage(GameCharacter source, GamePacket packet, Point rangedFrom) {
 		broadcastMessage(source, packet, 722500, rangedFrom);
 	}
 
-	private void broadcastMessage(GameCharacter source, MaplePacket packet, double rangeSq, Point rangedFrom) {
+	private void broadcastMessage(GameCharacter source, GamePacket packet, double rangeSq, Point rangedFrom) {
 		chrRLock.lock();
 		try {
 			for (GameCharacter chr : characters) {
@@ -1880,11 +1880,11 @@ public class MapleMap {
 		this.docked = isDocked;
 	}
 
-	public void broadcastGMMessage(GameCharacter source, MaplePacket packet, boolean repeatToSource) {
+	public void broadcastGMMessage(GameCharacter source, GamePacket packet, boolean repeatToSource) {
 		broadcastGMMessage(repeatToSource ? null : source, packet, Double.POSITIVE_INFINITY, source.getPosition());
 	}
 
-	private void broadcastGMMessage(GameCharacter source, MaplePacket packet, double rangeSq, Point rangedFrom) {
+	private void broadcastGMMessage(GameCharacter source, GamePacket packet, double rangeSq, Point rangedFrom) {
 		chrRLock.lock();
 		try {
 			for (GameCharacter chr : characters) {
@@ -1903,7 +1903,7 @@ public class MapleMap {
 		}
 	}
 
-	public void broadcastNONGMMessage(GameCharacter source, MaplePacket packet, boolean repeatToSource) {
+	public void broadcastNONGMMessage(GameCharacter source, GamePacket packet, boolean repeatToSource) {
 		chrRLock.lock();
 		try {
 			for (GameCharacter chr : characters) {

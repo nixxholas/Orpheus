@@ -39,7 +39,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import javax.script.ScriptEngine;
-import net.MaplePacket;
+import net.GamePacket;
 import tools.DatabaseConnection;
 import net.server.Channel;
 import net.server.Server;
@@ -1005,7 +1005,7 @@ public class GameClient {
 		}
 	}
 
-	public void announce(MaplePacket packet) {
+	public void announce(GamePacket packet) {
 		session.write(packet);
 	}
 

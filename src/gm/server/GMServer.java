@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import net.MaplePacket;
+import net.GamePacket;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.buffer.SimpleBufferAllocator;
 import org.apache.mina.core.filterchain.IoFilter;
@@ -80,7 +80,7 @@ public class GMServer {
 		inGame = new HashMap<String, IoSession>();
 	}
 
-	public void broadcastOutGame(MaplePacket packet, String exclude) {
+	public void broadcastOutGame(GamePacket packet, String exclude) {
 		for (IoSession ss : outGame.values()) {
 			if (!ss.getAttribute("NAME").equals(exclude)) {
 				ss.write(packet);
@@ -88,7 +88,7 @@ public class GMServer {
 		}
 	}
 
-	public void broadcastInGame(MaplePacket packet) {
+	public void broadcastInGame(GamePacket packet) {
 		for (IoSession ss : inGame.values()) {
 			ss.write(packet);
 		}

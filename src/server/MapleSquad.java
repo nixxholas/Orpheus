@@ -23,7 +23,7 @@ package server;
 import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
-import net.MaplePacket;
+import net.GamePacket;
 import tools.MaplePacketCreator;
 
 /**
@@ -79,7 +79,7 @@ public class MapleSquad {
 			return false;
 		} else {
 			members.add(member);
-			MaplePacket packet = MaplePacketCreator.serverNotice(5, member.getName() + " has joined the fight!");
+			GamePacket packet = MaplePacketCreator.serverNotice(5, member.getName() + " has joined the fight!");
 			getLeader().getClient().getSession().write(packet);
 			return true;
 		}

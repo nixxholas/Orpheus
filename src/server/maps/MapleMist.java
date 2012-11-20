@@ -26,7 +26,7 @@ import client.GameClient;
 import client.SkillFactory;
 import java.awt.Point;
 import java.awt.Rectangle;
-import net.MaplePacket;
+import net.GamePacket;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
 import server.life.MobSkill;
@@ -115,18 +115,18 @@ public class MapleMist extends AbstractMapleMapObject {
 		throw new UnsupportedOperationException();
 	}
 
-	public MaplePacket makeDestroyData() {
+	public GamePacket makeDestroyData() {
 		return MaplePacketCreator.removeMist(getObjectId());
 	}
 
-	public MaplePacket makeSpawnData() {
+	public GamePacket makeSpawnData() {
 		if (owner != null) {
 			return MaplePacketCreator.spawnMist(getObjectId(), owner.getId(), getSourceSkill().getId(), owner.getSkillLevel(SkillFactory.getSkill(source.getSourceId())), this);
 		}
 		return MaplePacketCreator.spawnMist(getObjectId(), mob.getId(), skill.getSkillId(), skill.getSkillLevel(), this);
 	}
 
-	public MaplePacket makeFakeSpawnData(int level) {
+	public GamePacket makeFakeSpawnData(int level) {
 		if (owner != null) {
 			return MaplePacketCreator.spawnMist(getObjectId(), owner.getId(), getSourceSkill().getId(), level, this);
 		}

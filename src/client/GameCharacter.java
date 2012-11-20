@@ -45,7 +45,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.Channel;
 import net.server.MapleMessenger;
 import net.server.MapleMessengerCharacter;
@@ -898,7 +898,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		changeMap(map_, map_.getPortal(portal));
 	}
 
-	private void changeMapInternal(final MapleMap to, final Point pos, MaplePacket warpPacket) {
+	private void changeMapInternal(final MapleMap to, final Point pos, GamePacket warpPacket) {
 		warpPacket.setOnSend(new Runnable() {
 
 			@Override
@@ -4526,7 +4526,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		announce(MaplePacketCreator.updatePlayerStats(Collections.singletonList(new MapleStatDelta(stat, Integer.valueOf(newval))), itemReaction));
 	}
 
-	public void announce(MaplePacket packet) {
+	public void announce(GamePacket packet) {
 		client.announce(packet);
 	}
 

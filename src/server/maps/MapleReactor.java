@@ -23,7 +23,7 @@ package server.maps;
 import java.awt.Rectangle;
 import client.GameClient;
 import java.util.List;
-import net.MaplePacket;
+import net.GamePacket;
 import scripting.reactor.ReactorScriptManager;
 import server.TimerManager;
 import tools.MaplePacketCreator;
@@ -110,7 +110,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 		client.getSession().write(makeDestroyData());
 	}
 
-	public MaplePacket makeDestroyData() {
+	public GamePacket makeDestroyData() {
 		return MaplePacketCreator.destroyReactor(this);
 	}
 
@@ -119,7 +119,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 		client.getSession().write(makeSpawnData());
 	}
 
-	public MaplePacket makeSpawnData() {
+	public GamePacket makeSpawnData() {
 		return MaplePacketCreator.spawnReactor(this);
 	}
 

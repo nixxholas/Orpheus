@@ -107,7 +107,7 @@ import constants.skills.SuperGM;
 import constants.skills.ThunderBreaker;
 import constants.skills.WhiteKnight;
 import constants.skills.WindArcher;
-import net.MaplePacket;
+import net.GamePacket;
 import server.maps.FieldLimit;
 
 /**
@@ -895,8 +895,8 @@ public class MapleStatEffect {
 			applyto.getMap().broadcastMessage(applyto, MaplePacketCreator.showBuffeffect(applyto.getId(), sourceid, 1, (byte) 3), false);
 		}
 		if (localstatups.size() > 0) {
-			MaplePacket buff = null;
-			MaplePacket mbuff = null;
+			GamePacket buff = null;
+			GamePacket mbuff = null;
 			if (getSummonMovementType() == null)
 				buff = MaplePacketCreator.giveBuff((skill ? sourceid : -sourceid), localDuration, localstatups);
 			if (isDash()) {

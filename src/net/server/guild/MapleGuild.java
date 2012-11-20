@@ -34,7 +34,7 @@ import client.GameClient;
 import java.util.LinkedList;
 import tools.DatabaseConnection;
 import tools.Output;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.Channel;
 import net.server.Server;
 import tools.MaplePacketCreator;
@@ -243,15 +243,15 @@ public class MapleGuild {
 		return signature;
 	}
 
-	public void broadcast(MaplePacket packet) {
+	public void broadcast(GamePacket packet) {
 		broadcast(packet, -1, BCOp.NONE);
 	}
 
-	public void broadcast(MaplePacket packet, int exception) {
+	public void broadcast(GamePacket packet, int exception) {
 		broadcast(packet, exception, BCOp.NONE);
 	}
 
-	public void broadcast(MaplePacket packet, int exceptionId, BCOp bcop) {
+	public void broadcast(GamePacket packet, int exceptionId, BCOp bcop) {
 		synchronized (notifications) {
 			if (bDirty) {
 				buildNotifications();
@@ -274,7 +274,7 @@ public class MapleGuild {
 		}
 	}
 
-	public void guildMessage(MaplePacket serverNotice) {
+	public void guildMessage(GamePacket serverNotice) {
 		for (MapleGuildCharacter mgc : members) {
 			for (Channel cs : Server.getInstance().getChannelsFromWorld(world)) {
 				if (cs.getPlayerStorage().getCharacterById(mgc.getId()) != null) {

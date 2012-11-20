@@ -34,7 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.guild.MapleGuild;
 import net.server.guild.MapleGuildCharacter;
 import net.server.guild.MapleGuildSummary;
@@ -245,7 +245,7 @@ public class World {
 		setGuildAndRank(affectedPlayers, -1, -1, -1); // respawn player
 	}
 
-	public void sendPacket(List<Integer> targetIds, MaplePacket packet, int exception) {
+	public void sendPacket(List<Integer> targetIds, GamePacket packet, int exception) {
 		GameCharacter c;
 		for (int i : targetIds) {
 			if (i == exception) {
@@ -589,7 +589,7 @@ public class World {
 		}
 	}
 
-	public void broadcastPacket(MaplePacket data) {
+	public void broadcastPacket(GamePacket data) {
 		for (GameCharacter chr : players.getAllCharacters()) {
 			chr.announce(data);
 		}

@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import net.MaplePacket;
+import net.GamePacket;
 import net.SendOpcode;
 import net.server.Server;
 import net.server.guild.MapleAlliance;
@@ -128,7 +128,7 @@ public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
 		alliance.saveToDB();
 	}
 
-	private static MaplePacket sendShowInfo(int allianceid, int playerid) {
+	private static GamePacket sendShowInfo(int allianceid, int playerid) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x02);
@@ -137,7 +137,7 @@ public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
 		return mplew.getPacket();
 	}
 
-	private static MaplePacket sendInvitation(int allianceid, int playerid, final String guildname) {
+	private static GamePacket sendInvitation(int allianceid, int playerid, final String guildname) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x05);
@@ -147,7 +147,7 @@ public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
 		return mplew.getPacket();
 	}
 
-	private static MaplePacket sendChangeGuild(int allianceid, int playerid, int guildid, int option) {
+	private static GamePacket sendChangeGuild(int allianceid, int playerid, int guildid, int option) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x07);
@@ -158,7 +158,7 @@ public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
 		return mplew.getPacket();
 	}
 
-	private static MaplePacket sendChangeLeader(int allianceid, int playerid, int victim) {
+	private static GamePacket sendChangeLeader(int allianceid, int playerid, int victim) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x08);
@@ -168,7 +168,7 @@ public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
 		return mplew.getPacket();
 	}
 
-	private static MaplePacket sendChangeRank(int allianceid, int playerid, int int1, byte byte1) {
+	private static GamePacket sendChangeRank(int allianceid, int playerid, int int1, byte byte1) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x09);

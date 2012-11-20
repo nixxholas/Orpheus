@@ -42,7 +42,7 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantLock;
 import tools.Randomizer;
-import net.MaplePacket;
+import net.GamePacket;
 import net.server.Channel;
 import net.server.MapleParty;
 import net.server.MaplePartyCharacter;
@@ -420,7 +420,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		this.controllerKnowsAboutAggro = controllerKnowsAboutAggro;
 	}
 
-	public MaplePacket makeBossHPBarPacket() {
+	public GamePacket makeBossHPBarPacket() {
 		return MaplePacketCreator.showBossHP(getId(), getHp(), getMaxHp(), getTagColor(), getTagBgColor());
 	}
 
@@ -540,7 +540,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			@Override
 			public void run() {
 				if (isAlive()) {
-					MaplePacket packet = MaplePacketCreator.cancelMonsterStatus(getObjectId(), status.getStati());
+					GamePacket packet = MaplePacketCreator.cancelMonsterStatus(getObjectId(), status.getStati());
 					map.broadcastMessage(packet, getPosition());
 					if (getController() != null && !getController().isMapObjectVisible(MapleMonster.this)) {
 						getController().getClient().getSession().write(packet);
@@ -605,7 +605,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			stati.put(stat, status);
 		}
 		int animationTime = status.getSkill().getAnimationTime();
-		MaplePacket packet = MaplePacketCreator.applyMonsterStatus(getObjectId(), status);
+		GamePacket packet = MaplePacketCreator.applyMonsterStatus(getObjectId(), status);
 		map.broadcastMessage(packet, getPosition());
 		if (getController() != null && !getController().isMapObjectVisible(this)) {
 			getController().getClient().getSession().write(packet);
@@ -621,7 +621,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			@Override
 			public void run() {
 				if (isAlive()) {
-					MaplePacket packet = MaplePacketCreator.cancelMonsterStatus(getObjectId(), stats);
+					GamePacket packet = MaplePacketCreator.cancelMonsterStatus(getObjectId(), stats);
 					map.broadcastMessage(packet, getPosition());
 					if (getController() != null && !getController().isMapObjectVisible(MapleMonster.this)) {
 						getController().getClient().getSession().write(packet);
@@ -633,7 +633,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			}
 		};
 		final MonsterStatusEffect effect = new MonsterStatusEffect(stats, null, skill, true);
-		MaplePacket packet = MaplePacketCreator.applyMonsterStatus(getObjectId(), effect);
+		GamePacket packet = MaplePacketCreator.applyMonsterStatus(getObjectId(), effect);
 		map.broadcastMessage(packet, getPosition());
 		if (getController() != null && !getController().isMapObjectVisible(this)) {
 			getController().getClient().getSession().write(packet);

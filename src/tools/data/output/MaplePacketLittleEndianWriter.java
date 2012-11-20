@@ -22,7 +22,7 @@ package tools.data.output;
 
 import java.io.ByteArrayOutputStream;
 import net.ByteArrayMaplePacket;
-import net.MaplePacket;
+import net.GamePacket;
 import tools.HexTool;
 
 /**
@@ -54,12 +54,12 @@ public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
 	}
 
 	/**
-	 * Gets a <code>MaplePacket</code> instance representing this sequence of
+	 * Gets a <code>GamePacket</code> instance representing this sequence of
 	 * bytes.
 	 * 
-	 * @return A <code>MaplePacket</code> with the bytes in this stream.
+	 * @return A <code>GamePacket</code> with the bytes in this stream.
 	 */
-	public MaplePacket getPacket() {
+	public GamePacket getPacket() {
 		return new ByteArrayMaplePacket(baos.toByteArray());
 	}
 

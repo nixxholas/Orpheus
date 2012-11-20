@@ -22,7 +22,7 @@ package net;
 
 import tools.HexTool;
 
-public class ByteArrayMaplePacket implements MaplePacket {
+public class ByteArrayMaplePacket implements GamePacket {
 	private byte[] data;
 	private Runnable onSend;
 

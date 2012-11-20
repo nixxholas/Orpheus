@@ -21,7 +21,7 @@
 package gm;
 
 import java.util.List;
-import net.MaplePacket;
+import net.GamePacket;
 import tools.data.output.MaplePacketLittleEndianWriter;
 
 /**
@@ -30,14 +30,14 @@ import tools.data.output.MaplePacketLittleEndianWriter;
  */
 public class GMPacketCreator {
 
-	public static MaplePacket keyResponse(final boolean ok) {
+	public static GamePacket keyResponse(final boolean ok) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(3);
 		mplew.writeShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
 		mplew.write(ok ? 1 : 0);
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket sendLoginResponse(final byte loginOk, final String login) {
+	public static GamePacket sendLoginResponse(final byte loginOk, final String login) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
 		mplew.write(loginOk);
@@ -47,14 +47,14 @@ public class GMPacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket chat(final String msg) {
+	public static GamePacket chat(final String msg) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.CHAT.getValue());
 		mplew.writeMapleAsciiString(msg);
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket sendUserList(final List<String> names) {
+	public static GamePacket sendUserList(final List<String> names) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.GM_LIST.getValue());
 		mplew.write(0);
@@ -64,7 +64,7 @@ public class GMPacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addUser(final String name) {
+	public static GamePacket addUser(final String name) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.GM_LIST.getValue());
 		mplew.write(1);
@@ -73,7 +73,7 @@ public class GMPacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket removeUser(final String name) {
+	public static GamePacket removeUser(final String name) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.GM_LIST.getValue());
 		mplew.write(2);
@@ -82,7 +82,7 @@ public class GMPacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket sendPlayerList(final List<String> list) {
+	public static GamePacket sendPlayerList(final List<String> list) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.SEND_PLAYER_LIST.getValue());
 		for (String s : list) {
@@ -91,14 +91,14 @@ public class GMPacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket commandResponse(final byte op) {
+	public static GamePacket commandResponse(final byte op) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
 		mplew.write(op);
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket playerStats(final String name, final String job, final byte level, final int exp, final short hp, final short mp, final short str, final short dex, final short int_, final short luk, final int meso) {
+	public static GamePacket playerStats(final String name, final String job, final byte level, final int exp, final short hp, final short mp, final short str, final short dex, final short int_, final short luk, final int meso) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
 		mplew.write(3);

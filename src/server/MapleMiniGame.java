@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import client.GameCharacter;
 import client.GameClient;
-import net.MaplePacket;
+import net.GamePacket;
 import server.maps.AbstractMapleMapObject;
 import server.maps.MapleMapObjectType;
 import tools.MaplePacketCreator;
@@ -92,7 +92,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		return visitor == challenger;
 	}
 
-	public void broadcastToVisitor(MaplePacket packet) {
+	public void broadcastToVisitor(GamePacket packet) {
 		if (visitor != null) {
 			visitor.getClient().announce(packet);
 		}
@@ -208,7 +208,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		return loser;
 	}
 
-	public void broadcast(MaplePacket packet) {
+	public void broadcast(GamePacket packet) {
 		if (owner.getClient() != null && owner.getClient().getSession() != null) {
 			owner.getClient().announce(packet);
 		}
