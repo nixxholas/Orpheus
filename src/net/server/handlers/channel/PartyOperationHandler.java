@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.MapleParty;
@@ -35,7 +35,7 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int operation = slea.readByte();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
 		MapleParty party = player.getParty();
 		MaplePartyCharacter partyplayer = player.getMPC();
@@ -92,7 +92,7 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 			}
 			case 4: {// invite
 				String name = slea.readMapleAsciiString();
-				MapleCharacter invited = world.getPlayerStorage().getCharacterByName(name);
+				GameCharacter invited = world.getPlayerStorage().getCharacterByName(name);
 				if (invited != null) {
 					if (invited.getParty() == null) {
 						if (party.getMembers().size() < 6) {

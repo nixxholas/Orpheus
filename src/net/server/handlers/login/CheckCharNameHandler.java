@@ -20,7 +20,7 @@
  */
 package net.server.handlers.login;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -31,6 +31,6 @@ public final class CheckCharNameHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String name = slea.readMapleAsciiString();
-		c.announce(MaplePacketCreator.charNameResponse(name, !MapleCharacter.canCreateChar(name)));
+		c.announce(MaplePacketCreator.charNameResponse(name, !GameCharacter.canCreateChar(name)));
 	}
 }

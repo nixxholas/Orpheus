@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import net.server.MaplePartyCharacter;
 import client.GameClient;
 import client.autoban.AutobanFactory;
@@ -47,7 +47,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 		slea.readByte();
 		Point cpos = slea.readPos();
 		int oid = slea.readInt();
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		MapleMapObject ob = chr.getMap().getMapObject(oid);
 		if (chr.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(ob.getObjectId())).getNextFreeSlot() > -1) {
 			if (chr.getMapId() > 209000000 && chr.getMapId() < 209000016) {// happyville
@@ -110,7 +110,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 							}
 							for (MaplePartyCharacter partymem : chr.getParty().getMembers()) {
 								if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId()) {
-									MapleCharacter somecharacter = c.getChannelServer().getPlayerStorage().getCharacterById(partymem.getId());
+									GameCharacter somecharacter = c.getChannelServer().getPlayerStorage().getCharacterById(partymem.getId());
 									if (somecharacter != null) {
 										somecharacter.gainMeso(mesosamm / partynum, true, true, false);
 									}
@@ -159,9 +159,9 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 			if (ii.isConsumeOnPickup(id)) {
 				if (id > 2022430 && id < 2022434) {
-					for (MapleCharacter mc : c.getPlayer().getMap().getCharacters()) {
-						if (mc.getParty() == c.getPlayer().getParty()) {
-							ii.getItemEffect(id).applyTo(mc);
+					for (GameCharacter player : c.getPlayer().getMap().getCharacters()) {
+						if (player.getParty() == c.getPlayer().getParty()) {
+							ii.getItemEffect(id).applyTo(player);
 						}
 					}
 				} else {

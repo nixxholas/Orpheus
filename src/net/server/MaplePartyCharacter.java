@@ -23,7 +23,7 @@ package net.server;
 import java.awt.Point;
 import java.io.Serializable;
 import client.MapleJob;
-import client.MapleCharacter;
+import client.GameCharacter;
 
 public class MaplePartyCharacter implements Serializable {
 	private static final long serialVersionUID = -6460122214407438511L;
@@ -39,20 +39,20 @@ public class MaplePartyCharacter implements Serializable {
 	private boolean online;
 	private MapleJob job;
 
-	public MaplePartyCharacter(MapleCharacter maplechar) {
-		this.name = maplechar.getName();
-		this.level = maplechar.getLevel();
-		this.channel = maplechar.getClient().getChannel();
-		this.world = maplechar.getWorld();
-		this.id = maplechar.getId();
-		this.jobid = maplechar.getJob().getId();
-		this.mapid = maplechar.getMapId();
+	public MaplePartyCharacter(GameCharacter character) {
+		this.name = character.getName();
+		this.level = character.getLevel();
+		this.channel = character.getClient().getChannel();
+		this.world = character.getWorld();
+		this.id = character.getId();
+		this.jobid = character.getJob().getId();
+		this.mapid = character.getMapId();
 		this.online = true;
-		this.job = maplechar.getJob();
-		if (maplechar.getDoors().size() > 0) {
-			this.doorTown = maplechar.getDoors().get(0).getTown().getId();
-			this.doorTarget = maplechar.getDoors().get(0).getTarget().getId();
-			this.doorPosition = maplechar.getDoors().get(0).getTargetPosition();
+		this.job = character.getJob();
+		if (character.getDoors().size() > 0) {
+			this.doorTown = character.getDoors().get(0).getTown().getId();
+			this.doorTarget = character.getDoors().get(0).getTarget().getId();
+			this.doorPosition = character.getDoors().get(0).getTargetPosition();
 		}
 	}
 

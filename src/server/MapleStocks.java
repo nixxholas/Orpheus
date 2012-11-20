@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import net.server.Channel;
 import net.server.Server;
 import net.server.World;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleStock;
 import com.mysql.jdbc.Connection;
 import constants.ServerConstants;
@@ -99,7 +99,7 @@ public class MapleStocks {
 		int sum = 0;
 		for (World w : Server.getInstance().getWorlds()) {
 			for (Channel c : w.getChannels()) {
-				for (MapleCharacter chr : c.getPlayerStorage().getAllCharacters()) {
+				for (GameCharacter chr : c.getPlayerStorage().getAllCharacters()) {
 					for (Pair<String, Integer> pair : chr.getStockPortfolio().toArrayList()) {
 						if (pair.getLeft() == ticker) {
 							sum += pair.getRight();
@@ -156,7 +156,7 @@ public class MapleStocks {
 		ArrayList<Pair<String, Integer>> totals = new ArrayList<Pair<String, Integer>>();
 		for (World w : Server.getInstance().getWorlds()) {
 			for (Channel c : w.getChannels()) {
-				for (MapleCharacter chr : c.getPlayerStorage().getAllCharacters()) {
+				for (GameCharacter chr : c.getPlayerStorage().getAllCharacters()) {
 					for (Pair<String, Integer> pair : chr.getStockPortfolio().toArrayList()) {
 						boolean add = true;
 						for (Pair<String, Integer> totalPair : totals) {

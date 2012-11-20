@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
@@ -36,22 +36,22 @@ public class EnterCashShopHandler extends AbstractMaplePacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		try {
-			MapleCharacter mc = c.getPlayer();
+			GameCharacter player = c.getPlayer();
 
-			if (mc.getCashShop().isOpened())
+			if (player.getCashShop().isOpened())
 				return;
 
-			Server.getInstance().getPlayerBuffStorage().addBuffsToStorage(mc.getId(), mc.getAllBuffs());
-			mc.cancelBuffEffects();
-			mc.cancelExpirationTask();
+			Server.getInstance().getPlayerBuffStorage().addBuffsToStorage(player.getId(), player.getAllBuffs());
+			player.cancelBuffEffects();
+			player.cancelExpirationTask();
 			c.announce(MaplePacketCreator.openCashShop(c, false));
-			mc.saveToDB(true);
-			mc.getCashShop().open(true);
-			mc.getMap().removePlayer(mc);
+			player.saveToDB(true);
+			player.getCashShop().open(true);
+			player.getMap().removePlayer(player);
 			c.announce(MaplePacketCreator.showCashInventory(c));
-			c.announce(MaplePacketCreator.showGifts(mc.getCashShop().loadGifts()));
-			c.announce(MaplePacketCreator.showWishList(mc, false));
-			c.announce(MaplePacketCreator.showCash(mc));
+			c.announce(MaplePacketCreator.showGifts(player.getCashShop().loadGifts()));
+			c.announce(MaplePacketCreator.showWishList(player, false));
+			c.announce(MaplePacketCreator.showCash(player));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

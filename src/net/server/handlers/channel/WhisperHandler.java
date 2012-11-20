@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,7 +47,7 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 		if (mode == 6) { // whisper
 			String recipient = slea.readMapleAsciiString();
 			String text = slea.readMapleAsciiString();
-			MapleCharacter player = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
+			GameCharacter player = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 			if (player != null) {
 				if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
 					if (BlacklistHandler.isBlacklisted(c.getAccID())) {
@@ -74,7 +74,7 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 			}
 		} else if (mode == 5) { // - /find
 			String recipient = slea.readMapleAsciiString();
-			MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
+			GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 			if (victim != null && c.getPlayer().gmLevel() >= victim.gmLevel()) {
 				if (victim.getCashShop().isOpened()) {
 					c.announce(MaplePacketCreator.getFindReply(victim.getName(), -1, 2));

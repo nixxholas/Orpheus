@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 import client.Equip;
 import client.IEquip;
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -970,7 +970,7 @@ public class MapleItemInformationProvider {
 		return itemId / 1000000 == 5 || getEquipStats(itemId).get("cash") == 1;
 	}
 
-	public Collection<IItem> canWearEquipment(MapleCharacter chr, Collection<IItem> items) {
+	public Collection<IItem> canWearEquipment(GameCharacter chr, Collection<IItem> items) {
 		MapleInventory inv = chr.getInventory(MapleInventoryType.EQUIPPED);
 		if (inv.checked())
 			return items;
@@ -1037,7 +1037,7 @@ public class MapleItemInformationProvider {
 		return itemz;
 	}
 
-	public boolean canWearEquipment(MapleCharacter chr, Equip equip) {
+	public boolean canWearEquipment(GameCharacter chr, Equip equip) {
 		if (chr.getJob() == MapleJob.SUPERGM || chr.getJob() == MapleJob.GM) {
 			equip.wear(true);
 			return true;

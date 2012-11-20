@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import java.util.ArrayList;
 import java.util.List;
 import client.ISkill;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
 import client.status.MonsterStatusEffect;
@@ -56,7 +56,7 @@ public final class SummonDamageHandler extends AbstractMaplePacketHandler {
 
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int oid = slea.readInt();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		if (!player.isAlive()) {
 			return;
 		}

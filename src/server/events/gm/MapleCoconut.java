@@ -20,7 +20,7 @@
  */
 package server.events.gm;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import server.TimerManager;
@@ -62,7 +62,7 @@ public class MapleCoconut extends MapleEvent {
 					if (getMapleScore() == getStoryScore()) {
 						bonusTime();
 					} else if (getMapleScore() > getStoryScore()) {
-						for (MapleCharacter chr : map.getCharacters()) {
+						for (GameCharacter chr : map.getCharacters()) {
 							if (chr.getTeam() == 0) {
 								chr.getClient().announce(MaplePacketCreator.showEffect("event/coconut/victory"));
 								chr.getClient().announce(MaplePacketCreator.playSound("Coconut/Victory"));
@@ -73,7 +73,7 @@ public class MapleCoconut extends MapleEvent {
 						}
 						warpOut();
 					} else {
-						for (MapleCharacter chr : map.getCharacters()) {
+						for (GameCharacter chr : map.getCharacters()) {
 							if (chr.getTeam() == 1) {
 								chr.getClient().announce(MaplePacketCreator.showEffect("event/coconut/victory"));
 								chr.getClient().announce(MaplePacketCreator.playSound("Coconut/Victory"));
@@ -95,13 +95,13 @@ public class MapleCoconut extends MapleEvent {
 			@Override
 			public void run() {
 				if (getMapleScore() == getStoryScore()) {
-					for (MapleCharacter chr : map.getCharacters()) {
+					for (GameCharacter chr : map.getCharacters()) {
 						chr.getClient().announce(MaplePacketCreator.showEffect("event/coconut/lose"));
 						chr.getClient().announce(MaplePacketCreator.playSound("Coconut/Failed"));
 					}
 					warpOut();
 				} else if (getMapleScore() > getStoryScore()) {
-					for (MapleCharacter chr : map.getCharacters()) {
+					for (GameCharacter chr : map.getCharacters()) {
 						if (chr.getTeam() == 0) {
 							chr.getClient().announce(MaplePacketCreator.showEffect("event/coconut/victory"));
 							chr.getClient().announce(MaplePacketCreator.playSound("Coconut/Victory"));
@@ -112,7 +112,7 @@ public class MapleCoconut extends MapleEvent {
 					}
 					warpOut();
 				} else {
-					for (MapleCharacter chr : map.getCharacters()) {
+					for (GameCharacter chr : map.getCharacters()) {
 						if (chr.getTeam() == 1) {
 							chr.getClient().announce(MaplePacketCreator.showEffect("event/coconut/victory"));
 							chr.getClient().announce(MaplePacketCreator.playSound("Coconut/Victory"));
@@ -133,7 +133,7 @@ public class MapleCoconut extends MapleEvent {
 		TimerManager.getInstance().schedule(new Runnable() {
 			@Override
 			public void run() {
-				for (MapleCharacter chr : map.getCharacters()) {
+				for (GameCharacter chr : map.getCharacters()) {
 					if ((getMapleScore() > getStoryScore() && chr.getTeam() == 0) || (getStoryScore() > getMapleScore() && chr.getTeam() == 1)) {
 						chr.changeMap(109050000);
 					} else {

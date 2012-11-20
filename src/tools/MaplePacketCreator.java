@@ -40,7 +40,7 @@ import client.Item;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleDiseaseEntry;
 import client.MapleFamilyEntry;
@@ -137,7 +137,7 @@ public class MaplePacketCreator {
 		return realTimestamp * 10000 + 116444592000000000L;
 	}
 
-	private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addCharStats(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		mplew.writeInt(chr.getId()); // character id
 		mplew.writeAsciiString(StringUtil.getRightPaddedStr(chr.getName(), '\0', 13));
 		mplew.write(chr.getGender()); // gender (0 = male, 1 = female)
@@ -175,7 +175,7 @@ public class MaplePacketCreator {
 		mplew.writeInt(0);
 	}
 
-	private static void addCharLook(MaplePacketLittleEndianWriter mplew, MapleCharacter chr, boolean mega) {
+	private static void addCharLook(MaplePacketLittleEndianWriter mplew, GameCharacter chr, boolean mega) {
 		mplew.write(chr.getGender());
 		mplew.write(chr.getSkinColor().getId()); // skin color
 		mplew.writeInt(chr.getFace()); // face
@@ -184,7 +184,7 @@ public class MaplePacketCreator {
 		addCharEquips(mplew, chr);
 	}
 
-	private static void addCharacterInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addCharacterInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		mplew.writeLong(-1);
 		mplew.write(0);
 		addCharStats(mplew, chr);
@@ -209,7 +209,7 @@ public class MaplePacketCreator {
 		mplew.writeInt(0);
 	}
 
-	private static void addTeleportInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addTeleportInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		final int[] tele = chr.getTrockMaps();
 		final int[] viptele = chr.getVipTrockMaps();
 		for (int i = 0; i < 5; i++) {
@@ -220,7 +220,7 @@ public class MaplePacketCreator {
 		}
 	}
 
-	private static void addCharEquips(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addCharEquips(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		MapleInventory equip = chr.getInventory(MapleInventoryType.EQUIPPED);
 		Collection<IItem> ii = MapleItemInformationProvider.getInstance().canWearEquipment(chr, equip.list());
 		Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
@@ -260,7 +260,7 @@ public class MaplePacketCreator {
 		}
 	}
 
-	private static void addCharEntry(MaplePacketLittleEndianWriter mplew, MapleCharacter chr, boolean viewall) {
+	private static void addCharEntry(MaplePacketLittleEndianWriter mplew, GameCharacter chr, boolean viewall) {
 		addCharStats(mplew, chr);
 		addCharLook(mplew, chr, false);
 		if (!viewall) {
@@ -278,7 +278,7 @@ public class MaplePacketCreator {
 		mplew.writeInt(chr.getJobRankMove()); // move (negative is downwards)
 	}
 
-	private static void addQuestInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addQuestInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		mplew.writeShort(chr.getStartedQuestsSize());
 		for (MapleQuestStatus q : chr.getStartedQuests()) {
 			mplew.writeShort(q.getQuest().getId());
@@ -409,7 +409,7 @@ public class MaplePacketCreator {
 
 	}
 
-	private static void addInventoryInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addInventoryInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		for (byte i = 1; i <= 5; i++) {
 			mplew.write(chr.getInventory(MapleInventoryType.fromByte(i)).getSlotLimit());
 		}
@@ -455,11 +455,11 @@ public class MaplePacketCreator {
 		}
 	}
 
-	private static void addSkillInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addSkillInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		mplew.write(0); // start of skills
-		Map<ISkill, MapleCharacter.SkillEntry> skills = chr.getSkills();
+		Map<ISkill, GameCharacter.SkillEntry> skills = chr.getSkills();
 		mplew.writeShort(skills.size());
-		for (Entry<ISkill, MapleCharacter.SkillEntry> skill : skills.entrySet()) {
+		for (Entry<ISkill, GameCharacter.SkillEntry> skill : skills.entrySet()) {
 			mplew.writeInt(skill.getKey().getId());
 			mplew.writeInt(skill.getValue().skillevel);
 			addExpirationTime(mplew, skill.getValue().expiration);
@@ -475,7 +475,7 @@ public class MaplePacketCreator {
 		}
 	}
 
-	private static void addMonsterBookInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addMonsterBookInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		mplew.writeInt(chr.getMonsterBookCover()); // cover
 		mplew.write(0);
 		Map<Integer, Integer> cards = chr.getMonsterBook().getCards();
@@ -859,15 +859,15 @@ public class MaplePacketCreator {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.CHARLIST.getValue());
 		mplew.write(0);
-		List<MapleCharacter> chars = c.loadCharacters(serverId);
+		List<GameCharacter> chars = c.loadCharacters(serverId);
 		byte length = (byte) chars.size();
-		for (MapleCharacter chr : chars) {
+		for (GameCharacter chr : chars) {
 			if (chr.isHardcoreDead()) {
 				length--;
 			}
 		}
 		mplew.write(length);
-		for (MapleCharacter chr : chars) {
+		for (GameCharacter chr : chars) {
 			addCharEntry(mplew, chr, false);
 		}
 		if (ServerConstants.ENABLE_PIC) {
@@ -912,7 +912,7 @@ public class MaplePacketCreator {
 	 *            The partner shown with chr
 	 * @return the SEND_TV packet
 	 */
-	public static MaplePacket sendTV(MapleCharacter chr, List<String> messages, int type, MapleCharacter partner) {
+	public static MaplePacket sendTV(GameCharacter chr, List<String> messages, int type, GameCharacter partner) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SEND_TV.getValue());
 		mplew.write(partner != null ? 3 : 1);
@@ -946,7 +946,7 @@ public class MaplePacketCreator {
 	 *            The character to get info about.
 	 * @return The character info packet.
 	 */
-	public static MaplePacket getCharInfo(MapleCharacter chr) {
+	public static MaplePacket getCharInfo(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.WARP_TO_MAP.getValue());
 		mplew.writeInt(chr.getClient().getChannel() - 1);
@@ -1040,7 +1040,7 @@ public class MaplePacketCreator {
 	 *            The character warping to <code>to</code>
 	 * @return The map change packet.
 	 */
-	public static MaplePacket getWarpToMap(MapleMap to, int spawnPoint, MapleCharacter chr) {
+	public static MaplePacket getWarpToMap(MapleMap to, int spawnPoint, GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.WARP_TO_MAP.getValue());
 		mplew.writeInt(chr.getClient().getChannel() - 1);
@@ -1295,7 +1295,7 @@ public class MaplePacketCreator {
 	 *            Whether or not the ear is shown for whisper.
 	 * @return
 	 */
-	public static MaplePacket getAvatarMega(MapleCharacter chr, String medal, byte channel, int itemId, List<String> message, boolean ear) {
+	public static MaplePacket getAvatarMega(GameCharacter chr, String medal, byte channel, int itemId, List<String> message, boolean ear) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.AVATAR_MEGA.getValue());
 		mplew.writeInt(itemId);
@@ -1317,7 +1317,7 @@ public class MaplePacketCreator {
 	 * @param player
 	 * @return
 	 */
-	public static MaplePacket gachaponMessage(IItem item, String town, MapleCharacter player) {
+	public static MaplePacket gachaponMessage(IItem item, String town, GameCharacter player) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SERVERMESSAGE.getValue());
 		mplew.write(0x0B);
@@ -1829,7 +1829,7 @@ public class MaplePacketCreator {
 	 *            The character to spawn to other clients.
 	 * @return The spawn player packet.
 	 */
-	public static MaplePacket spawnPlayerMapobject(MapleCharacter chr) {
+	public static MaplePacket spawnPlayerMapobject(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SPAWN_PLAYER.getValue());
 		mplew.writeInt(chr.getId());
@@ -1971,7 +1971,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	private static void addRingLook(MaplePacketLittleEndianWriter mplew, MapleCharacter chr, boolean crush) {
+	private static void addRingLook(MaplePacketLittleEndianWriter mplew, GameCharacter chr, boolean crush) {
 		List<MapleRing> rings;
 		if (crush) {
 			rings = chr.getCrushRings();
@@ -1997,7 +1997,7 @@ public class MaplePacketCreator {
 		}
 	}
 
-	private static void addMarriageRingLook(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addMarriageRingLook(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		if (chr.getMarriageRing() != null && !chr.getMarriageRing().equipped()) {
 			mplew.write(0);
 			return;
@@ -2041,7 +2041,7 @@ public class MaplePacketCreator {
 		mplew.write(joinable);
 	}
 
-	public static MaplePacket facialExpression(MapleCharacter from, int expression) {
+	public static MaplePacket facialExpression(GameCharacter from, int expression) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(10);
 		mplew.writeShort(SendOpcode.FACIAL_EXPRESSION.getValue());
 		mplew.writeInt(from.getId());
@@ -2108,14 +2108,14 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket closeRangeAttack(MapleCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, Map<Integer, List<Integer>> damage, int speed, int direction, int display) {
+	public static MaplePacket closeRangeAttack(GameCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, Map<Integer, List<Integer>> damage, int speed, int direction, int display) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.CLOSE_RANGE_ATTACK.getValue());
 		addAttackBody(mplew, chr, skill, skilllevel, stance, numAttackedAndDamage, 0, damage, speed, direction, display);
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket rangedAttack(MapleCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, int projectile, Map<Integer, List<Integer>> damage, int speed, int direction, int display) {
+	public static MaplePacket rangedAttack(GameCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, int projectile, Map<Integer, List<Integer>> damage, int speed, int direction, int display) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.RANGED_ATTACK.getValue());
 		addAttackBody(mplew, chr, skill, skilllevel, stance, numAttackedAndDamage, projectile, damage, speed, direction, display);
@@ -2123,7 +2123,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket magicAttack(MapleCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, Map<Integer, List<Integer>> damage, int charge, int speed, int direction, int display) {
+	public static MaplePacket magicAttack(GameCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, Map<Integer, List<Integer>> damage, int charge, int speed, int direction, int display) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MAGIC_ATTACK.getValue());
 		addAttackBody(mplew, chr, skill, skilllevel, stance, numAttackedAndDamage, 0, damage, speed, direction, display);
@@ -2133,7 +2133,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	private static void addAttackBody(LittleEndianWriter lew, MapleCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, int projectile, Map<Integer, List<Integer>> damage, int speed, int direction, int display) {
+	private static void addAttackBody(LittleEndianWriter lew, GameCharacter chr, int skill, int skilllevel, int stance, int numAttackedAndDamage, int projectile, Map<Integer, List<Integer>> damage, int speed, int direction, int display) {
 		lew.writeInt(chr.getId());
 		lew.write(numAttackedAndDamage);
 		lew.write(0x5B);// ?
@@ -2406,7 +2406,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket updateCharLook(MapleCharacter chr) {
+	public static MaplePacket updateCharLook(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_LOOK.getValue());
 		mplew.writeInt(chr.getId());
@@ -2475,7 +2475,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addNewCharEntry(MapleCharacter chr) {
+	public static MaplePacket addNewCharEntry(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ADD_NEW_CHAR_ENTRY.getValue());
 		mplew.write(0);
@@ -2523,7 +2523,7 @@ public class MaplePacketCreator {
 	 * @param isSelf
 	 * @return
 	 */
-	public static MaplePacket charInfo(MapleCharacter chr) {
+	public static MaplePacket charInfo(GameCharacter chr) {
 		// 3D 00 0A 43 01 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00
 		// 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
@@ -2870,7 +2870,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getPlayerShopChat(MapleCharacter c, String chat, boolean owner) {
+	public static MaplePacket getPlayerShopChat(GameCharacter c, String chat, boolean owner) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.CHAT.getCode());
@@ -2880,7 +2880,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getPlayerShopNewVisitor(MapleCharacter c, int slot) {
+	public static MaplePacket getPlayerShopNewVisitor(GameCharacter c, int slot) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.VISIT.getCode());
@@ -2900,7 +2900,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getTradePartnerAdd(MapleCharacter c) {
+	public static MaplePacket getTradePartnerAdd(GameCharacter c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.VISIT.getCode());
@@ -2910,7 +2910,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getTradeInvite(MapleCharacter c) {
+	public static MaplePacket getTradeInvite(GameCharacter c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.INVITE.getCode());
@@ -3031,7 +3031,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addCharBox(MapleCharacter c, int type) {
+	public static MaplePacket addCharBox(GameCharacter c, int type) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		mplew.writeInt(c.getId());
@@ -3039,7 +3039,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket removeCharBox(MapleCharacter c) {
+	public static MaplePacket removeCharBox(GameCharacter c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(7);
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		mplew.writeInt(c.getId());
@@ -3419,7 +3419,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket partyInvite(MapleCharacter from) {
+	public static MaplePacket partyInvite(GameCharacter from) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PARTY_OPERATION.getValue());
 		mplew.write(4);
@@ -3897,7 +3897,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket showGuildInfo(MapleCharacter c) {
+	public static MaplePacket showGuildInfo(GameCharacter c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		mplew.write(0x1A); // signature for showing guild info
@@ -4185,7 +4185,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket skillEffect(MapleCharacter from, int skillId, int level, byte flags, int speed, byte direction) {
+	public static MaplePacket skillEffect(GameCharacter from, int skillId, int level, byte flags, int speed, byte direction) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SKILL_EFFECT.getValue());
 		mplew.writeInt(from.getId());
@@ -4197,7 +4197,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket skillCancel(MapleCharacter from, int skillId) {
+	public static MaplePacket skillCancel(GameCharacter from, int skillId) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.CANCEL_SKILL_EFFECT.getValue());
 		mplew.writeInt(from.getId());
@@ -4256,7 +4256,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket sendSpouseChat(MapleCharacter wife, String msg) {
+	public static MaplePacket sendSpouseChat(GameCharacter wife, String msg) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SPOUSE_CHAT.getValue());
 		mplew.writeMapleAsciiString(wife.getName());
@@ -4264,7 +4264,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addMessengerPlayer(String from, MapleCharacter chr, int position, byte channel) {
+	public static MaplePacket addMessengerPlayer(String from, GameCharacter chr, int position, byte channel) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MESSENGER.getValue());
 		mplew.write(0x00);
@@ -4284,7 +4284,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket updateMessengerPlayer(String from, MapleCharacter chr, int position, byte channel) {
+	public static MaplePacket updateMessengerPlayer(String from, GameCharacter chr, int position, byte channel) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MESSENGER.getValue());
 		mplew.write(0x07);
@@ -4336,7 +4336,7 @@ public class MaplePacketCreator {
 		mplew.writeInt(pet.getFh());
 	}
 
-	public static MaplePacket showPet(MapleCharacter chr, MaplePet pet, boolean remove, boolean hunger) {
+	public static MaplePacket showPet(GameCharacter chr, MaplePet pet, boolean remove, boolean hunger) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SPAWN_PET.getValue());
 		mplew.writeInt(chr.getId());
@@ -4397,7 +4397,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket showPetLevelUp(MapleCharacter chr, byte index) {
+	public static MaplePacket showPetLevelUp(GameCharacter chr, byte index) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SHOW_FOREIGN_EFFECT.getValue());
 		mplew.writeInt(chr.getId());
@@ -4407,7 +4407,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket changePetName(MapleCharacter chr, String newname, int slot) {
+	public static MaplePacket changePetName(GameCharacter chr, String newname, int slot) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PET_NAMECHANGE.getValue());
 		mplew.writeInt(chr.getId());
@@ -4417,7 +4417,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket petStatUpdate(MapleCharacter chr) {
+	public static MaplePacket petStatUpdate(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.UPDATE_STATS.getValue());
 		int mask = 0;
@@ -4463,7 +4463,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket skillBookSuccess(MapleCharacter chr, int skillid, int maxlevel, boolean canuse, boolean success) {
+	public static MaplePacket skillBookSuccess(GameCharacter chr, int skillid, int maxlevel, boolean canuse, boolean success) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.USE_SKILL_BOOK.getValue());
 		mplew.writeInt(chr.getId());
@@ -4577,13 +4577,13 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket showAllCharacterInfo(byte worldid, List<MapleCharacter> chars) {
+	public static MaplePacket showAllCharacterInfo(byte worldid, List<GameCharacter> chars) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALL_CHARLIST.getValue());
 		mplew.write(0);
 		mplew.write(worldid);
 		mplew.write(chars.size());
-		for (MapleCharacter chr : chars) {
+		for (GameCharacter chr : chars) {
 			addCharEntry(mplew, chr, true);
 		}
 		return mplew.getPacket();
@@ -4618,7 +4618,7 @@ public class MaplePacketCreator {
 		addCharLook(mplew, minigame.getOwner(), false);
 		mplew.writeMapleAsciiString(minigame.getOwner().getName());
 		if (minigame.getVisitor() != null) {
-			MapleCharacter visitor = minigame.getVisitor();
+			GameCharacter visitor = minigame.getVisitor();
 			mplew.write(1);
 			addCharLook(mplew, visitor, false);
 			mplew.writeMapleAsciiString(visitor.getName());
@@ -4631,7 +4631,7 @@ public class MaplePacketCreator {
 		mplew.writeInt(minigame.getOwner().getMiniGamePoints("losses", true));
 		mplew.writeInt(2000);
 		if (minigame.getVisitor() != null) {
-			MapleCharacter visitor = minigame.getVisitor();
+			GameCharacter visitor = minigame.getVisitor();
 			mplew.write(1);
 			mplew.writeInt(1);
 			mplew.writeInt(visitor.getMiniGamePoints("wins", true));
@@ -4716,7 +4716,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getMiniGameNewVisitor(MapleCharacter c, int slot) {
+	public static MaplePacket getMiniGameNewVisitor(GameCharacter c, int slot) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.VISIT.getCode());
@@ -4805,7 +4805,7 @@ public class MaplePacketCreator {
 		addCharLook(mplew, minigame.getOwner(), false);
 		mplew.writeMapleAsciiString(minigame.getOwner().getName());
 		if (minigame.getVisitor() != null) {
-			MapleCharacter visitor = minigame.getVisitor();
+			GameCharacter visitor = minigame.getVisitor();
 			mplew.write(1);
 			addCharLook(mplew, visitor, false);
 			mplew.writeMapleAsciiString(visitor.getName());
@@ -4818,7 +4818,7 @@ public class MaplePacketCreator {
 		mplew.writeInt(minigame.getOwner().getMiniGamePoints("losses", false));
 		mplew.writeInt(2000);
 		if (minigame.getVisitor() != null) {
-			MapleCharacter visitor = minigame.getVisitor();
+			GameCharacter visitor = minigame.getVisitor();
 			mplew.write(1);
 			mplew.writeInt(2);
 			mplew.writeInt(visitor.getMiniGamePoints("wins", false));
@@ -4851,7 +4851,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getMatchCardNewVisitor(MapleCharacter c, int slot) {
+	public static MaplePacket getMatchCardNewVisitor(GameCharacter c, int slot) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.VISIT.getCode());
@@ -4917,7 +4917,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getFredrick(MapleCharacter chr) {
+	public static MaplePacket getFredrick(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.FREDRICK.getValue());
 		mplew.write(0x23);
@@ -4939,7 +4939,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addOmokBox(MapleCharacter c, int ammount, int type) {
+	public static MaplePacket addOmokBox(GameCharacter c, int ammount, int type) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		mplew.writeInt(c.getId());
@@ -4947,7 +4947,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket removeOmokBox(MapleCharacter c) {
+	public static MaplePacket removeOmokBox(GameCharacter c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(7);
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		mplew.writeInt(c.getId());
@@ -4955,7 +4955,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addMatchCardBox(MapleCharacter c, int ammount, int type) {
+	public static MaplePacket addMatchCardBox(GameCharacter c, int ammount, int type) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		mplew.writeInt(c.getId());
@@ -4963,7 +4963,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket removeMatchcardBox(MapleCharacter c) {
+	public static MaplePacket removeMatchcardBox(GameCharacter c) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		mplew.writeInt(c.getId());
@@ -4971,7 +4971,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getPlayerShopChat(MapleCharacter c, String chat, byte slot) {
+	public static MaplePacket getPlayerShopChat(GameCharacter c, String chat, byte slot) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.CHAT.getCode());
@@ -4981,7 +4981,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket getTradeChat(MapleCharacter c, String chat, boolean owner) {
+	public static MaplePacket getTradeChat(GameCharacter c, String chat, boolean owner) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.CHAT.getCode());
@@ -5022,7 +5022,7 @@ public class MaplePacketCreator {
 				mplew.writeInt(item.getPrice());
 				mplew.writeInt(hm.getOwnerId());
 				mplew.write(hm.getFreeSlot() == -1 ? 1 : 0);
-				MapleCharacter chr = c.getChannelServer().getPlayerStorage().getCharacterById(hm.getOwnerId());
+				GameCharacter chr = c.getChannelServer().getPlayerStorage().getCharacterById(hm.getOwnerId());
 				if ((chr != null) && (c.getChannel() == hm.getChannel())) {
 					mplew.write(1);
 				} else {
@@ -5060,7 +5060,7 @@ public class MaplePacketCreator {
 	 * = You cannot sell any items when managing.. blabla 0x12 = FKING POPUP LOL
 	 */
 
-	public static MaplePacket getHiredMerchant(MapleCharacter chr, HiredMerchant hm, boolean firstTime) {// Thanks
+	public static MaplePacket getHiredMerchant(GameCharacter chr, HiredMerchant hm, boolean firstTime) {// Thanks
 																											// Dustin
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
@@ -5117,7 +5117,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket updateHiredMerchant(HiredMerchant hm, MapleCharacter chr) {
+	public static MaplePacket updateHiredMerchant(HiredMerchant hm, GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.UPDATE_MERCHANT.getCode());
@@ -5169,7 +5169,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket hiredMerchantVisitorAdd(MapleCharacter chr, int slot) {
+	public static MaplePacket hiredMerchantVisitorAdd(GameCharacter chr, int slot) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(PlayerInteractionHandler.Action.VISIT.getCode());
@@ -5362,7 +5362,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket useChalkboard(MapleCharacter chr, boolean close) {
+	public static MaplePacket useChalkboard(GameCharacter chr, boolean close) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.CHALKBOARD.getValue());
 		mplew.writeInt(chr.getId());
@@ -5375,7 +5375,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket trockRefreshMapList(MapleCharacter chr, boolean delete, boolean vip) {
+	public static MaplePacket trockRefreshMapList(GameCharacter chr, boolean delete, boolean vip) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.TROCK_LOCATIONS.getValue());
 		mplew.write(delete ? 2 : 3);
@@ -5395,7 +5395,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket showMTSCash(MapleCharacter p) {
+	public static MaplePacket showMTSCash(GameCharacter p) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MTS_OPERATION2.getValue());
 		mplew.writeInt(p.getCashShop().getCash(4));
@@ -5512,13 +5512,13 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket showCash(MapleCharacter mc) {
+	public static MaplePacket showCash(GameCharacter player) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SHOW_CASH.getValue());
 
-		mplew.writeInt(mc.getCashShop().getCash(1));
-		mplew.writeInt(mc.getCashShop().getCash(2));
-		mplew.writeInt(mc.getCashShop().getCash(4));
+		mplew.writeInt(player.getCashShop().getCash(1));
+		mplew.writeInt(player.getCashShop().getCash(2));
+		mplew.writeInt(player.getCashShop().getCash(4));
 
 		return mplew.getPacket();
 	}
@@ -5574,7 +5574,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket updateGender(MapleCharacter chr) {
+	public static MaplePacket updateGender(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(3);
 		mplew.writeShort(SendOpcode.GENDER.getValue());
 		mplew.write(chr.getGender());
@@ -5606,7 +5606,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket loadFamily(MapleCharacter player) {
+	public static MaplePacket loadFamily(GameCharacter player) {
 		String[] title = {"Family Reunion", "Summon Family", "My Drop Rate 1.5x (15 min)", "My EXP 1.5x (15 min)", "Family Bonding (30 min)", "My Drop Rate 2x (15 min)", "My EXP 2x (15 min)", "My Drop Rate 2x (30 min)", "My EXP 2x (30 min)", "My Party Drop Rate 2x (30 min)", "My Party EXP 2x (30 min)"};
 		String[] description = {"[Target] Me\n[Effect] Teleport directly to the Family member of your choice.", "[Target] 1 Family member\n[Effect] Summon a Family member of choice to the map you're in.", "[Target] Me\n[Time] 15 min.\n[Effect] Monster drop rate will be increased #c1.5x#.\n*  If the Drop Rate event is in progress, this will be nullified.", "[Target] Me\n[Time] 15 min.\n[Effect] EXP earned from hunting will be increased #c1.5x#.\n* If the EXP event is in progress, this will be nullified.", "[Target] At least 6 Family members online that are below me in the Pedigree\n[Time] 30 min.\n[Effect] Monster drop rate and EXP earned will be increased #c2x#. \n* If the EXP event is in progress, this will be nullified.", "[Target] Me\n[Time] 15 min.\n[Effect] Monster drop rate will be increased #c2x#.\n* If the Drop Rate event is in progress, this will be nullified.", "[Target] Me\n[Time] 15 min.\n[Effect] EXP earned from hunting will be increased #c2x#.\n* If the EXP event is in progress, this will be nullified.", "[Target] Me\n[Time] 30 min.\n[Effect] Monster drop rate will be increased #c2x#.\n* If the Drop Rate event is in progress, this will be nullified.", "[Target] Me\n[Time] 30 min.\n[Effect] EXP earned from hunting will be increased #c2x#. \n* If the EXP event is in progress, this will be nullified.", "[Target] My party\n[Time] 30 min.\n[Effect] Monster drop rate will be increased #c2x#.\n* If the Drop Rate event is in progress, this will be nullified.", "[Target] My party\n[Time] 30 min.\n[Effect] EXP earned from hunting will be increased #c2x#.\n* If the EXP event is in progress, this will be nullified."};
 		int[] repCost = {3, 5, 7, 8, 10, 12, 15, 20, 25, 40, 50};
@@ -6179,13 +6179,13 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket allianceMemberOnline(MapleCharacter mc, boolean online) {
+	public static MaplePacket allianceMemberOnline(GameCharacter player, boolean online) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x0E);
-		mplew.writeInt(mc.getGuild().getAllianceId());
-		mplew.writeInt(mc.getGuildId());
-		mplew.writeInt(mc.getId());
+		mplew.writeInt(player.getGuild().getAllianceId());
+		mplew.writeInt(player.getGuildId());
+		mplew.writeInt(player.getId());
 		mplew.write(online ? 1 : 0);
 		return mplew.getPacket();
 	}
@@ -6210,15 +6210,15 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket updateAllianceJobLevel(MapleCharacter mc) {
+	public static MaplePacket updateAllianceJobLevel(GameCharacter player) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		mplew.write(0x18);
-		mplew.writeInt(mc.getGuild().getAllianceId());
-		mplew.writeInt(mc.getGuildId());
-		mplew.writeInt(mc.getId());
-		mplew.writeInt(mc.getLevel());
-		mplew.writeInt(mc.getJob().getId());
+		mplew.writeInt(player.getGuild().getAllianceId());
+		mplew.writeInt(player.getGuildId());
+		mplew.writeInt(player.getId());
+		mplew.writeInt(player.getLevel());
+		mplew.writeInt(player.getJob().getId());
 		return mplew.getPacket();
 	}
 
@@ -6298,7 +6298,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket addItemToWeddingRegistry(MapleCharacter chr, IItem item) {
+	public static MaplePacket addItemToWeddingRegistry(GameCharacter chr, IItem item) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.WEDDING_ACTION.getValue());
 		mplew.write(0x0B);
@@ -6453,7 +6453,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket updateDojoStats(MapleCharacter chr, int belt) {
+	public static MaplePacket updateDojoStats(GameCharacter chr, int belt) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		mplew.write(10);
@@ -6603,7 +6603,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	private static void addRingInfo(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
+	private static void addRingInfo(MaplePacketLittleEndianWriter mplew, GameCharacter chr) {
 		mplew.writeShort(chr.getCrushRings().size());
 		for (MapleRing ring : chr.getCrushRings()) {
 			mplew.writeInt(ring.getPartnerChrId());
@@ -6830,7 +6830,7 @@ public class MaplePacketCreator {
 		mplew.writeLong(0);
 	}
 
-	public static MaplePacket showWishList(MapleCharacter mc, boolean update) {
+	public static MaplePacket showWishList(GameCharacter player, boolean update) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.CASHSHOP_OPERATION.getValue());
 
@@ -6840,11 +6840,11 @@ public class MaplePacketCreator {
 			mplew.write(0x4F);
 		}
 
-		for (int sn : mc.getCashShop().getWishList()) {
+		for (int sn : player.getCashShop().getWishList()) {
 			mplew.writeInt(sn);
 		}
 
-		for (int i = mc.getCashShop().getWishList().size(); i < 10; i++) {
+		for (int i = player.getCashShop().getWishList().size(); i < 10; i++) {
 			mplew.writeInt(0);
 		}
 
@@ -7055,7 +7055,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket startCPQ(MapleCharacter chr, MonsterCarnivalParty enemy) {
+	public static MaplePacket startCPQ(GameCharacter chr, MonsterCarnivalParty enemy) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(25);
 		mplew.writeShort(SendOpcode.MONSTER_CARNIVAL_START.getValue());
 		mplew.write(chr.getTeam()); // team
@@ -7102,7 +7102,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket CPQDied(MapleCharacter chr) {
+	public static MaplePacket CPQDied(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MONSTER_CARNIVAL_SUMMON.getValue());
 		mplew.write(chr.getTeam()); // Team
@@ -7132,7 +7132,7 @@ public class MaplePacketCreator {
 		return mplew.getPacket();
 	}
 
-	public static MaplePacket leaveCPQ(MapleCharacter chr) {
+	public static MaplePacket leaveCPQ(GameCharacter chr) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 		mplew.writeShort(SendOpcode.MONSTER_CARNIVAL_LEAVE.getValue());
 		mplew.write(0); // Something

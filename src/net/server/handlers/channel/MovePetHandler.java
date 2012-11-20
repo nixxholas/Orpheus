@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import java.util.List;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import server.movement.LifeMovementFragment;
 import tools.MaplePacketCreator;
@@ -38,7 +38,7 @@ public final class MovePetHandler extends AbstractMovementPacketHandler {
 		if (res.isEmpty()) {
 			return;
 		}
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		byte slot = player.getPetIndex(petId);
 		if (slot == -1) {
 			return;

@@ -21,7 +21,7 @@
 package server.maps;
 
 import java.util.List;
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.ArrayList;
 import net.server.Server;
 import server.TimerManager;
@@ -33,18 +33,18 @@ import tools.MaplePacketCreator;
  */
 public class MapleTVEffect {
 	private List<String> message = new ArrayList<String>(5);
-	private MapleCharacter user;
+	private GameCharacter user;
 	private static boolean active;
 	private int type;
 	private byte world;
-	private MapleCharacter partner;
+	private GameCharacter partner;
 
-	public MapleTVEffect(MapleCharacter user_, MapleCharacter partner_, List<String> msg, int type_, byte world_) {
+	public MapleTVEffect(GameCharacter user, GameCharacter partner, List<String> msg, int type, byte world) {
 		this.message = msg;
-		this.user = user_;
-		this.type = type_;
-		this.world = world_;
-		this.partner = partner_;
+		this.user = user;
+		this.type = type;
+		this.world = world;
+		this.partner = partner;
 		broadcastTV(true);
 	}
 

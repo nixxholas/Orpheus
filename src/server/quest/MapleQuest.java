@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleQuestStatus;
 import client.MapleQuestStatus.Status;
 import provider.MapleData;
@@ -132,7 +132,7 @@ public class MapleQuest {
 		return ret;
 	}
 
-	private boolean canStart(MapleCharacter c, int npcid) {
+	private boolean canStart(GameCharacter c, int npcid) {
 		if (c.getQuest(this).getStatus() != Status.NOT_STARTED && !(c.getQuest(this).getStatus() == Status.COMPLETED && repeatable)) {
 			return false;
 		}
@@ -144,7 +144,7 @@ public class MapleQuest {
 		return true;
 	}
 
-	public boolean canComplete(MapleCharacter c, Integer npcid) {
+	public boolean canComplete(GameCharacter c, Integer npcid) {
 		if (!c.getQuest(this).getStatus().equals(Status.STARTED)) {
 			return false;
 		}
@@ -156,7 +156,7 @@ public class MapleQuest {
 		return true;
 	}
 
-	public void start(MapleCharacter c, int npc) {
+	public void start(GameCharacter c, int npc) {
 		if ((autoStart || checkNPCOnMap(c, npc)) && canStart(c, npc)) {
 			for (MapleQuestAction a : startActs) {
 				a.run(c, null);
@@ -165,11 +165,11 @@ public class MapleQuest {
 		}
 	}
 
-	public void complete(MapleCharacter c, int npc) {
+	public void complete(GameCharacter c, int npc) {
 		complete(c, npc, null);
 	}
 
-	public void complete(MapleCharacter c, int npc, Integer selection) {
+	public void complete(GameCharacter c, int npc, Integer selection) {
 		if ((autoPreComplete || checkNPCOnMap(c, npc)) && canComplete(c, npc)) {
 			/*
 			 * for (MapleQuestAction a : completeActs) { if (!a.check(c)) {
@@ -182,11 +182,11 @@ public class MapleQuest {
 		}
 	}
 
-	public void reset(MapleCharacter c) {
+	public void reset(GameCharacter c) {
 		c.updateQuest(new MapleQuestStatus(this, MapleQuestStatus.Status.NOT_STARTED));
 	}
 
-	public void forfeit(MapleCharacter c) {
+	public void forfeit(GameCharacter c) {
 		if (!c.getQuest(this).getStatus().equals(Status.STARTED)) {
 			return;
 		}
@@ -198,7 +198,7 @@ public class MapleQuest {
 		c.updateQuest(newStatus);
 	}
 
-	public boolean forceStart(MapleCharacter c, int npc) {
+	public boolean forceStart(GameCharacter c, int npc) {
 		if (!canStart(c, npc))
 			return false;
 
@@ -214,7 +214,7 @@ public class MapleQuest {
 		return true;
 	}
 
-	public boolean forceComplete(MapleCharacter c, int npc) {
+	public boolean forceComplete(GameCharacter c, int npc) {
 		if (!canComplete(c, npc))
 			return false;
 
@@ -236,7 +236,7 @@ public class MapleQuest {
 		return relevantMobs;
 	}
 
-	private boolean checkNPCOnMap(MapleCharacter player, int npcid) {
+	private boolean checkNPCOnMap(GameCharacter player, int npcid) {
 		return player.getMap().containsNPC(npcid);
 	}
 

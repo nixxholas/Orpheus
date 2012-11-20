@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
@@ -39,7 +39,7 @@ public class WeddingHandler extends AbstractMaplePacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Output.print("Wedding Packet: " + slea);
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		byte operation = slea.readByte();
 		switch (operation) {
 			case 0x06:// Add an item to the Wedding Registry

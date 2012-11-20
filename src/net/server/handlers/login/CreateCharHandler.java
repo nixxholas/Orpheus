@@ -22,7 +22,7 @@ package net.server.handlers.login;
 
 import client.IItem;
 import client.Item;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -39,10 +39,10 @@ public final class CreateCharHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String name = slea.readMapleAsciiString();
-		if (!MapleCharacter.canCreateChar(name)) {
+		if (!GameCharacter.canCreateChar(name)) {
 			return;
 		}
-		MapleCharacter newchar = MapleCharacter.getDefault(c);
+		GameCharacter newchar = GameCharacter.getDefault(c);
 		newchar.setWorld(c.getWorld());
 		int job = slea.readInt();
 		int face = slea.readInt();

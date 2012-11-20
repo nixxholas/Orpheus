@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.MaplePacket;
 import net.SendOpcode;
@@ -38,15 +38,15 @@ import tools.data.output.MaplePacketLittleEndianWriter;
  * @author Matze
  */
 public class MaplePlayerShop extends AbstractMapleMapObject {
-	private MapleCharacter owner;
-	private MapleCharacter[] visitors = new MapleCharacter[3];
+	private GameCharacter owner;
+	private GameCharacter[] visitors = new GameCharacter[3];
 	private List<MaplePlayerShopItem> items = new ArrayList<MaplePlayerShopItem>();
-	private MapleCharacter[] slot = {null, null, null};
+	private GameCharacter[] slot = {null, null, null};
 	private String description;
 	private int boughtnumber = 0;
 	private List<String> bannedList = new ArrayList<String>();
 
-	public MaplePlayerShop(MapleCharacter owner, String description) {
+	public MaplePlayerShop(GameCharacter owner, String description) {
 		this.setPosition(owner.getPosition());
 		this.owner = owner;
 		this.description = description;
@@ -56,11 +56,11 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		return visitors[0] == null || visitors[1] == null || visitors[2] == null;
 	}
 
-	public boolean isOwner(MapleCharacter c) {
+	public boolean isOwner(GameCharacter c) {
 		return owner.equals(c);
 	}
 
-	public void addVisitor(MapleCharacter visitor) {
+	public void addVisitor(GameCharacter visitor) {
 		for (int i = 0; i < 3; i++) {
 			if (visitors[i] == null) {
 				visitors[i] = visitor;
@@ -80,7 +80,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		}
 	}
 
-	public void removeVisitor(MapleCharacter visitor) {
+	public void removeVisitor(GameCharacter visitor) {
 		if (visitor == owner) {
 			owner.getMap().removeMapObject(this);
 			owner.setPlayerShop(null);
@@ -97,7 +97,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		}
 	}
 
-	public boolean isVisitor(MapleCharacter visitor) {
+	public boolean isVisitor(GameCharacter visitor) {
 		return visitors[0] == visitor || visitors[1] == visitor || visitors[2] == visitor;
 	}
 
@@ -191,10 +191,10 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 
 	public void chat(GameClient c, String chat) {
 		byte s = 0;
-		for (MapleCharacter mc : getVisitors()) {
+		for (GameCharacter visitor : getVisitors()) {
 			s++;
-			if (mc != null) {
-				if (mc.getName().equalsIgnoreCase(c.getPlayer().getName())) {
+			if (visitor != null) {
+				if (visitor.getName().equalsIgnoreCase(c.getPlayer().getName())) {
 					break;
 				}
 			} else if (s == 3) {
@@ -208,19 +208,19 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		c.getSession().write(MaplePacketCreator.getPlayerShop(c, this, isOwner(c.getPlayer())));
 	}
 
-	public MapleCharacter getOwner() {
+	public GameCharacter getOwner() {
 		return owner;
 	}
 
-	public MapleCharacter[] getVisitors() {
+	public GameCharacter[] getVisitors() {
 		return visitors;
 	}
 
-	public MapleCharacter getSlot(int s) {
+	public GameCharacter getSlot(int s) {
 		return slot[s];
 	}
 
-	private void setSlot(MapleCharacter person, int s) {
+	private void setSlot(GameCharacter person, int s) {
 		slot[s] = person;
 		if (person != null) {
 			person.setSlot(s);

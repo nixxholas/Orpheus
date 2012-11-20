@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.awt.Point;
 import java.io.File;
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		slea.readInt();
 		byte slot = slea.readByte();
 		slea.readByte();

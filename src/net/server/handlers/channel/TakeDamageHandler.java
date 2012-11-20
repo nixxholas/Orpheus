@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.ISkill;
 import client.Item;
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import client.SkillFactory;
@@ -49,7 +49,7 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		slea.readInt();
 		byte damagefrom = slea.readByte();
 		slea.readByte(); // Element

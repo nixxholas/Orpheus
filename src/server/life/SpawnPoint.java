@@ -22,7 +22,7 @@ package server.life;
 
 import java.awt.Point;
 import java.util.concurrent.atomic.AtomicInteger;
-import client.MapleCharacter;
+import client.GameCharacter;
 
 public class SpawnPoint {
 	private int monster, mobTime, team;
@@ -57,7 +57,7 @@ public class SpawnPoint {
 		spawnedMonsters.incrementAndGet();
 		mob.addListener(new MonsterListener() {
 			@Override
-			public void monsterKilled(MapleMonster monster, MapleCharacter highestDamageChar) {
+			public void monsterKilled(MapleMonster monster, GameCharacter highestDamageChar) {
 				nextPossibleSpawn = System.currentTimeMillis();
 				if (mobTime > 0) {
 					nextPossibleSpawn += mobTime * 1000;

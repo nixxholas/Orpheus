@@ -20,7 +20,7 @@
  */
 package server.partyquest;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -54,9 +54,9 @@ public class MonsterCarnival {
 		this.time = 600000;
 		map.broadcastMessage(MaplePacketCreator.getClock((int) (time / 1000)));
 
-		for (MapleCharacter chr : red.getMembers())
+		for (GameCharacter chr : red.getMembers())
 			chr.setCarnival(this);
-		for (MapleCharacter chr : blue.getMembers())
+		for (GameCharacter chr : blue.getMembers())
 			chr.setCarnival(this);
 
 		this.schedule = TimerManager.getInstance().schedule(new Runnable() {
@@ -133,7 +133,7 @@ public class MonsterCarnival {
 			return red;
 	}
 
-	public void playerLeft(MapleCharacter chr) {
+	public void playerLeft(GameCharacter chr) {
 		map.broadcastMessage(chr, MaplePacketCreator.leaveCPQ(chr));
 	}
 
@@ -155,14 +155,14 @@ public class MonsterCarnival {
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("INSERT INTO carnivalresults VALUES (?,?,?,?)");
-			for (MapleCharacter chr : red.getMembers()) {
+			for (GameCharacter chr : red.getMembers()) {
 				ps.setInt(1, chr.getId());
 				ps.setInt(2, chr.getCP());
 				ps.setInt(3, red.getTotalCP());
 				ps.setInt(4, red.isWinner() ? 1 : 0);
 				ps.execute();
 			}
-			for (MapleCharacter chr : blue.getMembers()) {
+			for (GameCharacter chr : blue.getMembers()) {
 				ps.setInt(1, chr.getId());
 				ps.setInt(2, chr.getCP());
 				ps.setInt(3, blue.getTotalCP());

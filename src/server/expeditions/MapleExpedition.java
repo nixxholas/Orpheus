@@ -20,7 +20,7 @@
  */
 package server.expeditions;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.List;
 
 /**
@@ -28,21 +28,21 @@ import java.util.List;
  * @author kevintjuh93
  */
 public class MapleExpedition {
-	private List<MapleCharacter> members;
+	private List<GameCharacter> members;
 
-	public MapleExpedition(MapleCharacter leader) {
+	public MapleExpedition(GameCharacter leader) {
 		members.add(leader);
 	}
 
-	public void addMember(MapleCharacter chr) {
+	public void addMember(GameCharacter chr) {
 		members.add(chr);
 	}
 
-	public void removeMember(MapleCharacter chr) {
+	public void removeMember(GameCharacter chr) {
 		members.remove(chr);
 	}
 
-	public List<MapleCharacter> getAllMembers() {
+	public List<GameCharacter> getAllMembers() {
 		return members;
 	}
 }

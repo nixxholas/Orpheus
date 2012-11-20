@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Channel;
@@ -37,7 +37,7 @@ public class RemoteStoreHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		HiredMerchant hm = getMerchant(c);
 		if (chr.hasMerchant() && hm != null) {
 			if (hm.getChannel() == chr.getClient().getChannel()) {

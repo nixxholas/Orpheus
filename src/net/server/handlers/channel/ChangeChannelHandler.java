@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.net.InetAddress;
 import client.GameClient;
 import client.MapleInventoryType;
@@ -43,7 +43,7 @@ public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte channel = (byte) (slea.readByte() + 1);
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		Server server = Server.getInstance();
 		if (chr.isBanned()) {
 			c.disconnect();

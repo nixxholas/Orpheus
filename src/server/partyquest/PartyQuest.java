@@ -20,7 +20,7 @@
  */
 package server.partyquest;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.ArrayList;
 import java.util.List;
 import net.server.MapleParty;
@@ -34,7 +34,7 @@ import net.server.Server;
 public class PartyQuest {
 	byte channel, world;
 	MapleParty party;
-	List<MapleCharacter> participants = new ArrayList<MapleCharacter>();
+	List<GameCharacter> participants = new ArrayList<GameCharacter>();
 
 	public PartyQuest(MapleParty party) {
 		this.party = party;
@@ -44,7 +44,7 @@ public class PartyQuest {
 		int mapid = leader.getMapId();
 		for (MaplePartyCharacter pchr : party.getMembers()) {
 			if (pchr.getChannel() == channel && pchr.getMapId() == mapid) {
-				MapleCharacter chr = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterById(pchr.getId());
+				GameCharacter chr = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterById(pchr.getId());
 				if (chr != null)
 					this.participants.add(chr);
 			}
@@ -55,11 +55,11 @@ public class PartyQuest {
 		return party;
 	}
 
-	public List<MapleCharacter> getParticipants() {
+	public List<GameCharacter> getParticipants() {
 		return participants;
 	}
 
-	public void removeParticipant(MapleCharacter chr) throws Throwable {
+	public void removeParticipant(GameCharacter chr) throws Throwable {
 		synchronized (participants) {
 			participants.remove(chr);
 			chr.setPartyQuest(null);

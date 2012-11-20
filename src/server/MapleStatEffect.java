@@ -32,7 +32,7 @@ import java.util.concurrent.ScheduledFuture;
 import client.IItem;
 import client.ISkill;
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleDisease;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -578,7 +578,7 @@ public class MapleStatEffect {
 	 * @param attack
 	 *            damage done by the skill
 	 */
-	public void applyPassive(MapleCharacter applyto, MapleMapObject obj, int attack) {
+	public void applyPassive(GameCharacter applyto, MapleMapObject obj, int attack) {
 		if (makeChanceResult()) {
 			switch (sourceid) { // MP eater
 				case FPWizard.MP_EATER:
@@ -603,15 +603,15 @@ public class MapleStatEffect {
 		}
 	}
 
-	public boolean applyTo(MapleCharacter chr) {
+	public boolean applyTo(GameCharacter chr) {
 		return applyTo(chr, chr, true, null);
 	}
 
-	public boolean applyTo(MapleCharacter chr, Point pos) {
+	public boolean applyTo(GameCharacter chr, Point pos) {
 		return applyTo(chr, chr, true, pos);
 	}
 
-	private boolean applyTo(MapleCharacter applyfrom, MapleCharacter applyto, boolean primary, Point pos) {
+	private boolean applyTo(GameCharacter applyfrom, GameCharacter applyto, boolean primary, Point pos) {
 		if (skill && (sourceid == GM.HIDE || sourceid == SuperGM.HIDE)) {
 			applyto.toggleHide(false);
 			return true;
@@ -748,13 +748,13 @@ public class MapleStatEffect {
 		return true;
 	}
 
-	private void applyBuff(MapleCharacter applyfrom) {
+	private void applyBuff(GameCharacter applyfrom) {
 		if (isPartyBuff() && (applyfrom.getParty() != null || isGmBuff())) {
 			Rectangle bounds = calculateBoundingBox(applyfrom.getPosition(), applyfrom.isFacingLeft());
 			List<MapleMapObject> affecteds = applyfrom.getMap().getMapObjectsInRect(bounds, Arrays.asList(MapleMapObjectType.PLAYER));
-			List<MapleCharacter> affectedp = new ArrayList<MapleCharacter>(affecteds.size());
+			List<GameCharacter> affectedp = new ArrayList<GameCharacter>(affecteds.size());
 			for (MapleMapObject affectedmo : affecteds) {
-				MapleCharacter affected = (MapleCharacter) affectedmo;
+				GameCharacter affected = (GameCharacter) affectedmo;
 				if (affected != applyfrom && (isGmBuff() || applyfrom.getParty().equals(affected.getParty()))) {
 					if ((isResurrection() && !affected.isAlive()) || (!isResurrection() && affected.isAlive())) {
 						affectedp.add(affected);
@@ -766,7 +766,7 @@ public class MapleStatEffect {
 					}
 				}
 			}
-			for (MapleCharacter affected : affectedp) {
+			for (GameCharacter affected : affectedp) {
 				applyTo(applyfrom, affected, false, null);
 				affected.getClient().getSession().write(MaplePacketCreator.showOwnBuffEffect(sourceid, 2));
 				affected.getMap().broadcastMessage(affected, MaplePacketCreator.showBuffeffect(affected.getId(), sourceid, 2), false);
@@ -774,7 +774,7 @@ public class MapleStatEffect {
 		}
 	}
 
-	private void applyMonsterBuff(MapleCharacter applyfrom) {
+	private void applyMonsterBuff(GameCharacter applyfrom) {
 		Rectangle bounds = calculateBoundingBox(applyfrom.getPosition(), applyfrom.isFacingLeft());
 		List<MapleMapObject> affected = applyfrom.getMap().getMapObjectsInRect(bounds, Arrays.asList(MapleMapObjectType.MONSTER));
 		ISkill skill_ = SkillFactory.getSkill(sourceid);
@@ -805,7 +805,7 @@ public class MapleStatEffect {
 		return bounds;
 	}
 
-	public void silentApplyBuff(MapleCharacter chr, long starttime) {
+	public void silentApplyBuff(GameCharacter chr, long starttime) {
 		int localDuration = duration;
 		localDuration = alchemistModifyVal(chr, localDuration, false);
 		CancelEffectAction cancelAction = new CancelEffectAction(chr, this, starttime);
@@ -823,7 +823,7 @@ public class MapleStatEffect {
 			chr.announce(MaplePacketCreator.skillCooldown(5221999, chr.getBattleshipHp()));
 	}
 
-	public final void applyComboBuff(final MapleCharacter applyto, int combo) {
+	public final void applyComboBuff(final GameCharacter applyto, int combo) {
 		final List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.ARAN_COMBO, combo));
 		applyto.getClient().getSession().write(MaplePacketCreator.giveBuff(sourceid, 99999, stat));
 
@@ -836,7 +836,7 @@ public class MapleStatEffect {
 		applyto.registerEffect(this, starttime, null);
 	}
 
-	private void applyBuffEffect(MapleCharacter applyfrom, MapleCharacter applyto, boolean primary) {
+	private void applyBuffEffect(GameCharacter applyfrom, GameCharacter applyto, boolean primary) {
 		if (!isMonsterRiding())
 			applyto.cancelEffect(this, true, -1);
 
@@ -950,7 +950,7 @@ public class MapleStatEffect {
 		}
 	}
 
-	private int calcHPChange(MapleCharacter applyfrom, boolean primary) {
+	private int calcHPChange(GameCharacter applyfrom, boolean primary) {
 		int hpchange = 0;
 		if (hp != 0) {
 			if (!skill) {
@@ -984,7 +984,7 @@ public class MapleStatEffect {
 		return (int) ((Math.random() * ((int) (stat * upperfactor * rate) - (int) (stat * lowerfactor * rate) + 1)) + (int) (stat * lowerfactor * rate));
 	}
 
-	private int calcMPChange(MapleCharacter applyfrom, boolean primary) {
+	private int calcMPChange(GameCharacter applyfrom, boolean primary) {
 		int mpchange = 0;
 		if (mp != 0) {
 			if (primary) {
@@ -1022,7 +1022,7 @@ public class MapleStatEffect {
 		return mpchange;
 	}
 
-	private int alchemistModifyVal(MapleCharacter chr, int val, boolean withX) {
+	private int alchemistModifyVal(GameCharacter chr, int val, boolean withX) {
 		if (!skill && (chr.getJob().isA(MapleJob.HERMIT) || chr.getJob().isA(MapleJob.NIGHTWALKER3))) {
 			MapleStatEffect alchemistEffect = getAlchemistEffect(chr);
 			if (alchemistEffect != null) {
@@ -1032,7 +1032,7 @@ public class MapleStatEffect {
 		return val;
 	}
 
-	private MapleStatEffect getAlchemistEffect(MapleCharacter chr) {
+	private MapleStatEffect getAlchemistEffect(GameCharacter chr) {
 		int id = Hermit.ALCHEMIST;
 		if (chr.isCygnus()) {
 			id = NightWalker.ALCHEMIST;
@@ -1234,7 +1234,7 @@ public class MapleStatEffect {
 		return morphId;
 	}
 
-	private int getMorph(MapleCharacter chr) {
+	private int getMorph(GameCharacter chr) {
 		if (morphId % 10 == 0) {
 			return morphId + chr.getGender();
 		}
@@ -1288,18 +1288,18 @@ public class MapleStatEffect {
 
 	private static class CancelEffectAction implements Runnable {
 		private MapleStatEffect effect;
-		private WeakReference<MapleCharacter> target;
+		private WeakReference<GameCharacter> target;
 		private long startTime;
 
-		public CancelEffectAction(MapleCharacter target, MapleStatEffect effect, long startTime) {
+		public CancelEffectAction(GameCharacter target, MapleStatEffect effect, long startTime) {
 			this.effect = effect;
-			this.target = new WeakReference<MapleCharacter>(target);
+			this.target = new WeakReference<GameCharacter>(target);
 			this.startTime = startTime;
 		}
 
 		@Override
 		public void run() {
-			MapleCharacter realTarget = target.get();
+			GameCharacter realTarget = target.get();
 			if (realTarget != null) {
 				realTarget.cancelEffect(effect, false, startTime);
 			}

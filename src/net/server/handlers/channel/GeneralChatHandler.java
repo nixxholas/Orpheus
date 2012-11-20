@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import paranoia.BlacklistHandler;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
-import client.MapleCharacter;
+import client.GameCharacter;
 import tools.MapleLogger;
 import tools.MaplePacketCreator;
 import tools.Output;
@@ -46,7 +46,7 @@ public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String s = slea.readMapleAsciiString();
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		char heading = s.charAt(0);
 		/*
 		 * WARNING: Daemons below!

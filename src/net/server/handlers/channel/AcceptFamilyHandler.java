@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -38,7 +38,7 @@ public final class AcceptFamilyHandler extends AbstractMaplePacketHandler {
 		Output.print(slea.toString());
 		int inviterId = slea.readInt();
 		// String inviterName = slea.readMapleAsciiString();
-		MapleCharacter inviter = c.getWorldServer().getPlayerStorage().getCharacterById(inviterId);
+		GameCharacter inviter = c.getWorldServer().getPlayerStorage().getCharacterById(inviterId);
 		if (inviter != null) {
 			inviter.getClient().announce(MaplePacketCreator.sendFamilyJoinResponse(true, c.getPlayer().getName()));
 		}

@@ -46,7 +46,7 @@ import tools.MaplePacketCreator;
 import client.IItem;
 import client.ISkill;
 import client.Item;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import client.MapleJob;
@@ -62,10 +62,10 @@ public class GMCommands extends EnumeratedCommands {
 	
 	@SuppressWarnings("unused")
 	public static boolean execute(GameClient c, String[] sub, char heading) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
 		Server serv = Server.getInstance();
-		MapleCharacter victim; // For commands with targets.
+		GameCharacter victim; // For commands with targets.
 		ResultSet rs; // For commands with MySQL results.
 
 		try {
@@ -97,7 +97,7 @@ public class GMCommands extends EnumeratedCommands {
 							reason += " (IP: " + ip + ")"; // Add the IP afterward, no need to share that with everyone.
 							victim.ban(reason);
 						} else {
-							if (MapleCharacter.ban(sub[1], reason, false)) {
+							if (GameCharacter.ban(sub[1], reason, false)) {
 								chr.dropMessage("Successfully banned " + sub[1] + ".");
 							} else {
 								chr.dropMessage("Failed to ban " + sub[1] + ".");
@@ -363,7 +363,7 @@ public class GMCommands extends EnumeratedCommands {
 					break;
 				case saveall:
 					for (Channel chan : Server.getInstance().getAllChannels()) {
-		                for (MapleCharacter plyrs : chan.getPlayerStorage().getAllCharacters()) {
+		                for (GameCharacter plyrs : chan.getPlayerStorage().getAllCharacters()) {
 		                    plyrs.saveToDB(true);
 		                }
 		            }
@@ -439,7 +439,7 @@ public class GMCommands extends EnumeratedCommands {
 					break;
 				case unban:
 					try {
-						PreparedStatement p = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `banned` = -1 WHERE `id` = " + MapleCharacter.getIdByName(sub[1]));
+						PreparedStatement p = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `banned` = -1 WHERE `id` = " + GameCharacter.getIdByName(sub[1]));
 						p.executeUpdate();
 						p.close();
 					} catch (Exception e) {
@@ -457,11 +457,11 @@ public class GMCommands extends EnumeratedCommands {
 		}
 	}
 	
-	protected static void getHelp(MapleCharacter chr) {
+	protected static void getHelp(GameCharacter chr) {
 		GMCommands.getHelp(-1, chr);
 	}
 
-	protected static void getHelp(int page, MapleCharacter chr) {
+	protected static void getHelp(int page, GameCharacter chr) {
         int pageNumber = (int) (Command.values().length / ServerConstants.ENTRIES_PER_PAGE);
         if (Command.values().length % ServerConstants.ENTRIES_PER_PAGE > 0) {
         	pageNumber++;

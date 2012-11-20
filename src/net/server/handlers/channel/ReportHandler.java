@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,7 +56,7 @@ public final class ReportHandler extends AbstractMaplePacketHandler {
 				return;
 			}
 			c.getChannelServer().broadcastGMPacket(MaplePacketCreator.serverNotice(6, victim + " was reported for: " + description));
-			addReport(c.getPlayer().getId(), MapleCharacter.getIdByName(victim), 0, description, null);
+			addReport(c.getPlayer().getId(), GameCharacter.getIdByName(victim), 0, description, null);
 		} else if (type == 1) {
 			String chatlog = slea.readMapleAsciiString();
 			if (chatlog == null) {
@@ -72,7 +72,7 @@ public final class ReportHandler extends AbstractMaplePacketHandler {
 				}
 			}
 			c.getChannelServer().broadcastGMPacket(MaplePacketCreator.serverNotice(6, victim + " was reported for: " + description));
-			addReport(c.getPlayer().getId(), MapleCharacter.getIdByName(victim), reason, description, chatlog);
+			addReport(c.getPlayer().getId(), GameCharacter.getIdByName(victim), reason, description, chatlog);
 		} else {
 			c.getChannelServer().broadcastGMPacket(MaplePacketCreator.serverNotice(6, c.getPlayer().getName() + " is probably packet editing. Got unknown report type, which is impossible."));
 		}

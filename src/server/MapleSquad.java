@@ -20,7 +20,7 @@
  */
 package server;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import net.MaplePacket;
@@ -31,25 +31,25 @@ import tools.MaplePacketCreator;
  * @author Danny
  */
 public class MapleSquad {
-	private MapleCharacter leader;
-	private List<MapleCharacter> members = new LinkedList<MapleCharacter>();
-	private List<MapleCharacter> bannedMembers = new LinkedList<MapleCharacter>();
+	private GameCharacter leader;
+	private List<GameCharacter> members = new LinkedList<GameCharacter>();
+	private List<GameCharacter> bannedMembers = new LinkedList<GameCharacter>();
 	private int ch;
 	private int status = 0;
 
-	public MapleSquad(int ch, MapleCharacter leader) {
+	public MapleSquad(int ch, GameCharacter leader) {
 		this.leader = leader;
 		this.members.add(leader);
 		this.ch = ch;
 		this.status = 1;
 	}
 
-	public MapleCharacter getLeader() {
+	public GameCharacter getLeader() {
 		return leader;
 	}
 
-	public boolean containsMember(MapleCharacter member) {
-		for (MapleCharacter mmbr : members) {
+	public boolean containsMember(GameCharacter member) {
+		for (GameCharacter mmbr : members) {
 			if (mmbr.getId() == member.getId()) {
 				return true;
 			}
@@ -57,8 +57,8 @@ public class MapleSquad {
 		return false;
 	}
 
-	public boolean isBanned(MapleCharacter member) {
-		for (MapleCharacter banned : bannedMembers) {
+	public boolean isBanned(GameCharacter member) {
+		for (GameCharacter banned : bannedMembers) {
 			if (banned.getId() == member.getId()) {
 				return true;
 			}
@@ -66,7 +66,7 @@ public class MapleSquad {
 		return false;
 	}
 
-	public List<MapleCharacter> getMembers() {
+	public List<GameCharacter> getMembers() {
 		return members;
 	}
 
@@ -74,7 +74,7 @@ public class MapleSquad {
 		return members.size();
 	}
 
-	public boolean addMember(MapleCharacter member) {
+	public boolean addMember(GameCharacter member) {
 		if (isBanned(member)) {
 			return false;
 		} else {
@@ -85,9 +85,9 @@ public class MapleSquad {
 		}
 	}
 
-	public void banMember(MapleCharacter member, boolean ban) {
+	public void banMember(GameCharacter member, boolean ban) {
 		int index = -1;
-		for (MapleCharacter mmbr : members) {
+		for (GameCharacter mmbr : members) {
 			if (mmbr.getId() == member.getId()) {
 				index = members.indexOf(mmbr);
 			}

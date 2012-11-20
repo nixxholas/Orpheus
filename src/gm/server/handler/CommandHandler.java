@@ -20,7 +20,7 @@
  */
 package gm.server.handler;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import gm.GMPacketCreator;
 import gm.GMPacketHandler;
 import net.server.Server;
@@ -70,7 +70,7 @@ public class CommandHandler implements GMPacketHandler {
 						world.setMesoRate(slea.readByte());
 						break;
 				}
-				for (MapleCharacter chr : world.getPlayerStorage().getAllCharacters()) {
+				for (GameCharacter chr : world.getPlayerStorage().getAllCharacters()) {
 					chr.setRates();
 				}
 			}
@@ -90,7 +90,7 @@ public class CommandHandler implements GMPacketHandler {
 				String user = slea.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
 					if (world.isConnected(user)) {
-						MapleCharacter chr = world.getPlayerStorage().getCharacterByName(user);
+						GameCharacter chr = world.getPlayerStorage().getCharacterByName(user);
 						chr.ban(slea.readMapleAsciiString());
 						chr.sendPolice("You have been blocked by #b" + session.getAttribute("NAME") + " #kfor the HACK reason.");
 						session.write(GMPacketCreator.commandResponse((byte) 1));
@@ -104,7 +104,7 @@ public class CommandHandler implements GMPacketHandler {
 				String user = slea.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
 					if (world.isConnected(user)) {
-						MapleCharacter chr = world.getPlayerStorage().getCharacterByName(user);
+						GameCharacter chr = world.getPlayerStorage().getCharacterByName(user);
 						String job = chr.getJob().name() + " (" + chr.getJob().getId() + ")";
 						session.write(GMPacketCreator.playerStats(user, job, (byte) chr.getLevel(), chr.getExp(), (short) chr.getMaxHp(), (short) chr.getMaxMp(), (short) chr.getStr(), (short) chr.getDex(), (short) chr.getInt(), (short) chr.getLuk(), chr.getMeso()));
 						return;

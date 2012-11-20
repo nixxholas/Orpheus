@@ -32,7 +32,7 @@ import server.maps.MapleMapObjectType;
 import tools.MapleLogger;
 import tools.MaplePacketCreator;
 import net.server.Channel;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleStat;
 
@@ -45,9 +45,9 @@ public class DonorCommands extends EnumeratedCommands {
 	
 	@SuppressWarnings("unused")
 	public static boolean execute(GameClient c, String[] sub, char heading) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
-		MapleCharacter victim; // For commands with targets.
+		GameCharacter victim; // For commands with targets.
 		ResultSet rs; // For commands with MySQL results.
 
 		try {
@@ -112,11 +112,11 @@ public class DonorCommands extends EnumeratedCommands {
 		}
 	}
 	
-	protected static void getHelp(MapleCharacter chr) {
+	protected static void getHelp(GameCharacter chr) {
 		DonorCommands.getHelp(-1, chr);
 	}
 
-	protected static void getHelp(int page, MapleCharacter chr) {
+	protected static void getHelp(int page, GameCharacter chr) {
         int pageNumber = (int) (Command.values().length / ServerConstants.ENTRIES_PER_PAGE);
         if (Command.values().length % ServerConstants.ENTRIES_PER_PAGE > 0) {
         	pageNumber++;

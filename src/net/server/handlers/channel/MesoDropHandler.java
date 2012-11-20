@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -34,7 +34,7 @@ public final class MesoDropHandler extends AbstractMaplePacketHandler {// FIX
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		if (!chr.isAlive()) {
 			c.announce(MaplePacketCreator.enableActions());
 			return;

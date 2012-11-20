@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -37,7 +37,7 @@ public final class FamilyAddHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		Output.print(slea.toString());
 		String toAdd = slea.readMapleAsciiString();
-		MapleCharacter addChr = c.getChannelServer().getPlayerStorage().getCharacterByName(toAdd);
+		GameCharacter addChr = c.getChannelServer().getPlayerStorage().getCharacterByName(toAdd);
 		if (addChr != null) {
 			addChr.getClient().announce(MaplePacketCreator.sendFamilyInvite(c.getPlayer().getId(), toAdd));
 			c.getPlayer().dropMessage("The invite has been sent.");

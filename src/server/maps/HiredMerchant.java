@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledFuture;
 import client.IItem;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import com.mysql.jdbc.Statement;
@@ -55,7 +55,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	private long start;
 	private String ownerName = "";
 	private String description = "";
-	private MapleCharacter[] visitors = new MapleCharacter[3];
+	private GameCharacter[] visitors = new GameCharacter[3];
 	private List<MaplePlayerShopItem> items = new LinkedList<MaplePlayerShopItem>();
 	private List<HiredMerchantMessage> messages = new LinkedList<HiredMerchantMessage>();
 	private List<SoldItem> sold = new LinkedList<SoldItem>();
@@ -63,7 +63,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	public ScheduledFuture<?> schedule = null;
 	private MapleMap map;
 
-	public HiredMerchant(final MapleCharacter owner, int itemId, String desc) {
+	public HiredMerchant(final GameCharacter owner, int itemId, String desc) {
 		this.setPosition(owner.getPosition());
 		this.start = System.currentTimeMillis();
 		this.ownerId = owner.getId();
@@ -83,14 +83,14 @@ public class HiredMerchant extends AbstractMapleMapObject {
 	}
 
 	public void broadcastToVisitors(MaplePacket packet) {
-		for (MapleCharacter visitor : visitors) {
+		for (GameCharacter visitor : visitors) {
 			if (visitor != null) {
 				visitor.getClient().getSession().write(packet);
 			}
 		}
 	}
 
-	public void addVisitor(MapleCharacter visitor) {
+	public void addVisitor(GameCharacter visitor) {
 		int i = this.getFreeSlot();
 		if (i > -1) {
 			visitors[i] = visitor;
@@ -98,7 +98,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		}
 	}
 
-	public void removeVisitor(MapleCharacter visitor) {
+	public void removeVisitor(GameCharacter visitor) {
 		int slot = getVisitorSlot(visitor);
 		if (visitors[slot] == visitor) {
 			visitors[slot] = null;
@@ -108,7 +108,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		}
 	}
 
-	public int getVisitorSlot(MapleCharacter visitor) {
+	public int getVisitorSlot(GameCharacter visitor) {
 		for (int i = 0; i < 3; i++) {
 			if (visitors[i] == visitor) {
 				return i;
@@ -160,7 +160,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 					if (pItem.getBundles() < 1) {
 						pItem.setDoesExist(false);
 					}
-					MapleCharacter owner = Server.getInstance().getWorld(world).getPlayerStorage().getCharacterByName(ownerName);
+					GameCharacter owner = Server.getInstance().getWorld(world).getPlayerStorage().getCharacterByName(ownerName);
 					if (owner != null) {
 						owner.addMerchantMesos(price);
 					} else {
@@ -244,7 +244,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		return description;
 	}
 
-	public MapleCharacter[] getVisitors() {
+	public GameCharacter[] getVisitors() {
 		return visitors;
 	}
 
@@ -293,7 +293,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		return itemId;
 	}
 
-	public boolean isOwner(MapleCharacter chr) {
+	public boolean isOwner(GameCharacter chr) {
 		return chr.getId() == ownerId;
 	}
 
@@ -314,7 +314,7 @@ public class HiredMerchant extends AbstractMapleMapObject {
 		ItemFactory.MERCHANT.saveItems(itemsWithType, this.ownerId);
 	}
 
-	private static boolean check(MapleCharacter chr, List<MaplePlayerShopItem> items) {
+	private static boolean check(GameCharacter chr, List<MaplePlayerShopItem> items) {
 		byte eq = 0, use = 0, setup = 0, etc = 0, cash = 0;
 		List<MapleInventoryType> li = new LinkedList<MapleInventoryType>();
 		for (MaplePlayerShopItem item : items) {

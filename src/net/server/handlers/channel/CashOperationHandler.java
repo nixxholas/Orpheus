@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.IEquip;
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -45,7 +45,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		CashShop cs = chr.getCashShop();
 		if (!cs.isOpened()) {
 			c.announce(MaplePacketCreator.enableActions());
@@ -76,7 +76,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 		} else if (action == 0x04) {// TODO check for gender
 			int birthday = slea.readInt();
 			CashItem cItem = CashItemFactory.getItem(slea.readInt());
-			Map<String, String> recipient = MapleCharacter.getCharacterFromDatabase(slea.readMapleAsciiString());
+			Map<String, String> recipient = GameCharacter.getCharacterFromDatabase(slea.readMapleAsciiString());
 			String message = slea.readMapleAsciiString();
 			if (!canBuy(cItem, cs.getCash(4)) || message.length() < 1 || message.length() > 73) {
 				return;
@@ -101,7 +101,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 																																	// not
 			} catch (SQLException ex) {
 			}
-			MapleCharacter receiver = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient.get("name"));
+			GameCharacter receiver = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient.get("name"));
 			if (receiver != null)
 				receiver.showNote();
 		} else if (action == 0x05) { // Modify wish list
@@ -205,7 +205,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 				String recipient = slea.readMapleAsciiString();
 				String text = slea.readMapleAsciiString();
 				CashItem ring = CashItemFactory.getItem(SN);
-				MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
+				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 				if (partner == null) {
 					chr.getClient().announce(MaplePacketCreator.serverNotice(1, "The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel."));
 				} else {
@@ -251,7 +251,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 				int available = slea.readShort() - 1;
 				String text = slea.readAsciiString(available);
 				slea.readByte();
-				MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(sentTo);
+				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(sentTo);
 				if (partner == null) {
 					chr.dropMessage("The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel.");
 				} else {

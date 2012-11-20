@@ -25,7 +25,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleDisease;
 import client.status.MonsterStatus;
 import java.util.LinkedList;
@@ -101,7 +101,7 @@ public class MobSkill {
 		this.limit = limit;
 	}
 
-	public void applyEffect(MapleCharacter player, MapleMonster monster, boolean skill) {
+	public void applyEffect(GameCharacter player, MapleMonster monster, boolean skill) {
 		MapleDisease disease = null;
 		Map<MonsterStatus, Integer> stats = new ArrayMap<MonsterStatus, Integer>();
 		List<Integer> reflection = new LinkedList<Integer>();
@@ -160,7 +160,7 @@ public class MobSkill {
 				break;
 			case 127:
 				if (lt != null && rb != null && skill) {
-					for (MapleCharacter character : getPlayersInRange(monster, player)) {
+					for (GameCharacter character : getPlayersInRange(monster, player)) {
 						character.dispel();
 					}
 				} else {
@@ -172,7 +172,7 @@ public class MobSkill {
 				break;
 			case 129: // Banish
 				if (lt != null && rb != null && skill) {
-					for (MapleCharacter chr : getPlayersInRange(monster, player)) {
+					for (GameCharacter chr : getPlayersInRange(monster, player)) {
 						chr.changeMapBanish(monster.getBanish().getMap(), monster.getBanish().getPortal(), monster.getBanish().getMsg());
 					}
 				} else {
@@ -280,7 +280,7 @@ public class MobSkill {
 		if (disease != null) {
 			if (lt != null && rb != null && skill) {
 				int i = 0;
-				for (MapleCharacter character : getPlayersInRange(monster, player)) {
+				for (GameCharacter character : getPlayersInRange(monster, player)) {
 					if (!character.isActiveBuffedValue(2321005)) {
 						if (disease.equals(MapleDisease.SEDUCE)) {
 							if (i < 10) {
@@ -300,8 +300,8 @@ public class MobSkill {
 		monster.setMp(monster.getMp() - getMpCon());
 	}
 
-	private List<MapleCharacter> getPlayersInRange(MapleMonster monster, MapleCharacter player) {
-		List<MapleCharacter> players = new ArrayList<MapleCharacter>();
+	private List<GameCharacter> getPlayersInRange(MapleMonster monster, GameCharacter player) {
+		List<GameCharacter> players = new ArrayList<GameCharacter>();
 		players.add(player);
 		return monster.getMap().getPlayersInRange(calculateBoundingBox(monster.getPosition(), monster.isFacingLeft()), players);
 	}

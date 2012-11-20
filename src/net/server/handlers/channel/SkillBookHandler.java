@@ -29,7 +29,7 @@ import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.ISkill;
 import client.SkillFactory;
 import tools.Randomizer;
@@ -45,7 +45,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
 		slea.readInt();
 		byte slot = (byte) slea.readShort();
 		int itemId = slea.readInt();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() == 1) {
 			if (toUse.getItemId() != itemId) {

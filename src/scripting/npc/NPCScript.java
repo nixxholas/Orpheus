@@ -20,12 +20,12 @@
  */
 package scripting.npc;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 
 public interface NPCScript {
 	public void start();
 
-	public void start(MapleCharacter chr);
+	public void start(GameCharacter chr);
 
 	public void action(byte mode, byte type, int selection);
 }

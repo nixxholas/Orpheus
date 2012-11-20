@@ -23,8 +23,8 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.ISkill;
 import client.MapleBuffStat;
-import client.MapleCharacter;
-import client.MapleCharacter.CancelCooldownAction;
+import client.GameCharacter;
+import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -52,7 +52,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, true);
 		if (attack.skill == Buccaneer.ENERGY_ORB || attack.skill == ThunderBreaker.SPARK || attack.skill == Shadower.TAUNT || attack.skill == NightLord.TAUNT) {
 			player.getMap().broadcastMessage(player, MaplePacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);

@@ -20,7 +20,7 @@
  */
 package server.events.gm;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import server.TimerManager;
@@ -39,13 +39,13 @@ public class MapleSnowball {
 	private boolean hittable = false;
 	private int team;
 	private boolean winner = false;
-	List<MapleCharacter> characters = new LinkedList<MapleCharacter>();
+	List<GameCharacter> characters = new LinkedList<GameCharacter>();
 
 	public MapleSnowball(int team, MapleMap map) {
 		this.map = map;
 		this.team = team;
 
-		for (MapleCharacter chr : map.getCharacters()) {
+		for (GameCharacter chr : map.getCharacters()) {
 			if (chr.getTeam() == team)
 				characters.add(chr);
 		}
@@ -55,7 +55,7 @@ public class MapleSnowball {
 		if (hittable == true)
 			return;
 
-		for (MapleCharacter chr : characters) {
+		for (GameCharacter chr : characters) {
 			if (chr != null) {
 				chr.announce(MaplePacketCreator.rollSnowBall(false, 1, map.getSnowball(0), map.getSnowball(1)));
 				chr.announce(MaplePacketCreator.getClock(600));
@@ -66,13 +66,13 @@ public class MapleSnowball {
 			@Override
 			public void run() {
 				if (map.getSnowball(team).getPosition() > map.getSnowball(team == 0 ? 1 : 0).getPosition()) {
-					for (MapleCharacter chr : characters) {
+					for (GameCharacter chr : characters) {
 						if (chr != null)
 							chr.announce(MaplePacketCreator.rollSnowBall(false, 3, map.getSnowball(0), map.getSnowball(0)));
 					}
 					winner = true;
 				} else if (map.getSnowball(team == 0 ? 1 : 0).getPosition() > map.getSnowball(team).getPosition()) {
-					for (MapleCharacter chr : characters) {
+					for (GameCharacter chr : characters) {
 						if (chr != null)
 							chr.announce(MaplePacketCreator.rollSnowBall(false, 4, map.getSnowball(0), map.getSnowball(0)));
 					}
@@ -142,7 +142,7 @@ public class MapleSnowball {
 	}
 
 	public void message(int message) {
-		for (MapleCharacter chr : characters) {
+		for (GameCharacter chr : characters) {
 			if (chr != null)
 				chr.announce(MaplePacketCreator.snowballMessage(team, message));
 		}

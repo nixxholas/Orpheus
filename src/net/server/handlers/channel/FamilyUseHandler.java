@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import client.MapleCharacter;
+import client.GameCharacter;
 import net.AbstractMaplePacketHandler;
 import net.MaplePacket;
 import net.SendOpcode;
@@ -38,7 +38,7 @@ public final class FamilyUseHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int[] repCost = {3, 5, 7, 8, 10, 12, 15, 20, 25, 40, 50};
 		final int type = slea.readInt();
-		MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
+		GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
 		if (type == 0 || type == 1) {
 			victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
 			if (victim != null) {

@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.MapleMessenger;
@@ -35,7 +35,7 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		String input;
 		byte mode = slea.readByte();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
 		MapleMessenger messenger = player.getMessenger();
 		switch (mode) {
@@ -70,7 +70,7 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
 			case 0x03:
 				if (messenger.getMembers().size() < 3) {
 					input = slea.readMapleAsciiString();
-					MapleCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(input);
+					GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(input);
 					if (target != null) {
 						if (target.getMessenger() == null) {
 							target.getClient().announce(MaplePacketCreator.messengerInvite(c.getPlayer().getName(), messenger.getId()));
@@ -91,7 +91,7 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
 				break;
 			case 0x05:
 				String targeted = slea.readMapleAsciiString();
-				MapleCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(targeted);
+				GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(targeted);
 				if (target != null) {
 					if (target.getMessenger() != null) {
 						target.getClient().announce(MaplePacketCreator.messengerNote(player.getName(), 5, 0));

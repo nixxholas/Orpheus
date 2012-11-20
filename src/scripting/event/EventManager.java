@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.script.Invocable;
 import javax.script.ScriptException;
-import client.MapleCharacter;
+import client.GameCharacter;
 import com.mysql.jdbc.Connection;
 import constants.ServerConstants;
 import net.server.Channel;
@@ -178,8 +178,8 @@ public class EventManager {
 	public void updateRankings() {
 		try {
 			for (Channel chan : Server.getInstance().getAllChannels()) {
-            	for (MapleCharacter plyrs : chan.getPlayerStorage().getAllCharacters()) {
-            		plyrs.saveToDB(true);
+            	for (GameCharacter players : chan.getPlayerStorage().getAllCharacters()) {
+            		players.saveToDB(true);
             	}
         	}
 		} catch (Exception e) {

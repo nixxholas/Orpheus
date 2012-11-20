@@ -28,7 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import constants.ExpTable;
 import constants.ServerConstants;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -365,7 +365,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		}
 	}
 
-	public static MapleAlliance createAlliance(MapleCharacter chr1, MapleCharacter chr2, String name) {
+	public static MapleAlliance createAlliance(GameCharacter chr1, GameCharacter chr2, String name) {
 		int id = 0;
 		int guild1 = chr1.getGuildId();
 		int guild2 = chr2.getGuildId();
@@ -400,13 +400,13 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		return alliance;
 	}
 
-	public List<MapleCharacter> getPartyMembers() {
+	public List<GameCharacter> getPartyMembers() {
 		if (getPlayer().getParty() == null) {
 			return null;
 		}
-		List<MapleCharacter> chars = new LinkedList<MapleCharacter>();
+		List<GameCharacter> chars = new LinkedList<GameCharacter>();
 		for (Channel channel : Server.getInstance().getChannelsFromWorld(getPlayer().getWorld())) {
-			for (MapleCharacter chr : channel.getPartyMembers(getPlayer().getParty())) {
+			for (GameCharacter chr : channel.getPartyMembers(getPlayer().getParty())) {
 				if (chr != null) {
 					chars.add(chr);
 				}
@@ -416,11 +416,11 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void warpParty(int id) {
-		for (MapleCharacter mc : getPartyMembers()) {
+		for (GameCharacter player : getPartyMembers()) {
 			if (id == 925020100) {
-				mc.setDojoParty(true);
+				player.setDojoParty(true);
 			}
-			mc.changeMap(getWarpMap(id));
+			player.changeMap(getWarpMap(id));
 		}
 	}
 
@@ -449,7 +449,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
 	public int partyMembersInMap() {
 		int inMap = 0;
-		for (MapleCharacter char2 : getPlayer().getMap().getCharacters()) {
+		for (GameCharacter char2 : getPlayer().getMap().getCharacters()) {
 			if (char2.getParty() == getPlayer().getParty()) {
 				inMap++;
 			}

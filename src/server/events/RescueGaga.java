@@ -20,7 +20,7 @@
  */
 package server.events;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.SkillFactory;
 
 /**
@@ -58,7 +58,7 @@ public class RescueGaga extends MapleEvents {
 		completed++;
 	}
 
-	public void giveSkill(MapleCharacter chr) {
+	public void giveSkill(GameCharacter chr) {
 		int skillid = 0;
 		switch (chr.getJobType()) {
 			case 0:

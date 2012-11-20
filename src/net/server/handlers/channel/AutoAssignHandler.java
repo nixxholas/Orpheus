@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleStat;
 import net.AbstractMaplePacketHandler;
@@ -35,7 +35,7 @@ public class AutoAssignHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		slea.skip(8);
 		if (chr.getRemainingAp() < 1) {
 			return;
@@ -57,7 +57,7 @@ public class AutoAssignHandler extends AbstractMaplePacketHandler {
 		c.announce(MaplePacketCreator.enableActions());
 	}
 
-	private int gainStatByType(MapleCharacter chr, MapleStat type, int gain) {
+	private int gainStatByType(GameCharacter chr, MapleStat type, int gain) {
 		int newVal = 0;
 		if (type.equals(MapleStat.STR)) {
 			newVal = chr.getStr() + gain;

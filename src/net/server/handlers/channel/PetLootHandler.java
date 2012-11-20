@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MaplePet;
 import net.AbstractMaplePacketHandler;
@@ -42,7 +42,7 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		MaplePet pet = chr.getPet(chr.getPetIndex(slea.readInt()));// why would
 																	// it be an
 																	// int...?
@@ -84,7 +84,7 @@ public final class PetLootHandler extends AbstractMaplePacketHandler {
 						}
 						for (MaplePartyCharacter partymem : chr.getParty().getMembers()) {
 							if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId()) {
-								MapleCharacter somecharacter = c.getChannelServer().getPlayerStorage().getCharacterById(partymem.getId());
+								GameCharacter somecharacter = c.getChannelServer().getPlayerStorage().getCharacterById(partymem.getId());
 								if (somecharacter != null)
 									somecharacter.gainMeso(mesosamm / partynum, true, true, false);
 							}

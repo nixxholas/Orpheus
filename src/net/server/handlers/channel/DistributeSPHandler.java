@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.ISkill;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleStat;
 import client.SkillFactory;
@@ -35,7 +35,7 @@ public final class DistributeSPHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readInt();
 		int skillid = slea.readInt();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		int remainingSp = player.getRemainingSp();
 		boolean isBeginnerSkill = false;
 		if (skillid % 10000000 > 999 && skillid % 10000000 < 1003) {

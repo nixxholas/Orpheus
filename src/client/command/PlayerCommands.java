@@ -35,7 +35,7 @@ import tools.MapleLogger;
 import tools.MaplePacketCreator;
 import tools.Output;
 import tools.Pair;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import client.MapleJob;
@@ -50,9 +50,9 @@ public class PlayerCommands extends EnumeratedCommands {
 	private static final char heading = '@';
 
 	public static boolean execute(GameClient c, String[] sub, char heading) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
-		MapleCharacter victim; // For commands with targets.
+		GameCharacter victim; // For commands with targets.
 		ResultSet rs; // For commands with MySQL results.
 		int cost; // For commands with a fee.
 		
@@ -517,11 +517,11 @@ public class PlayerCommands extends EnumeratedCommands {
 		}
 	}
 
-	protected static void getHelp(MapleCharacter chr) {
+	protected static void getHelp(GameCharacter chr) {
 		PlayerCommands.getHelp(-1, chr);
 	}
 
-	protected static void getHelp(int page, MapleCharacter chr) {
+	protected static void getHelp(int page, GameCharacter chr) {
         int pageNumber = (int) (Command.values().length / ServerConstants.ENTRIES_PER_PAGE);
         if (Command.values().length % ServerConstants.ENTRIES_PER_PAGE > 0) {
         	pageNumber++;

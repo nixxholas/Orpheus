@@ -21,7 +21,7 @@
 package net.server;
 
 import java.util.Collection;
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,9 +32,9 @@ public class PlayerStorage {
 	private final ReentrantReadWriteLock locks = new ReentrantReadWriteLock();
 	private final Lock rlock = locks.readLock();
 	private final Lock wlock = locks.writeLock();
-	private final Map<Integer, MapleCharacter> storage = new LinkedHashMap<Integer, MapleCharacter>();
+	private final Map<Integer, GameCharacter> storage = new LinkedHashMap<Integer, GameCharacter>();
 
-	public void addPlayer(MapleCharacter chr) {
+	public void addPlayer(GameCharacter chr) {
 		wlock.lock();
 		try {
 			storage.put(chr.getId(), chr);
@@ -43,7 +43,7 @@ public class PlayerStorage {
 		}
 	}
 
-	public MapleCharacter removePlayer(int chr) {
+	public GameCharacter removePlayer(int chr) {
 		wlock.lock();
 		try {
 			return storage.remove(chr);
@@ -52,10 +52,10 @@ public class PlayerStorage {
 		}
 	}
 
-	public MapleCharacter getCharacterByName(String name) {
+	public GameCharacter getCharacterByName(String name) {
 		rlock.lock();
 		try {
-			for (MapleCharacter chr : storage.values()) {
+			for (GameCharacter chr : storage.values()) {
 				if (chr.getName().toLowerCase().equals(name.toLowerCase()))
 					return chr;
 			}
@@ -65,7 +65,7 @@ public class PlayerStorage {
 		}
 	}
 
-	public MapleCharacter getCharacterById(int id) {
+	public GameCharacter getCharacterById(int id) {
 		rlock.lock();
 		try {
 			return storage.get(id);
@@ -74,7 +74,7 @@ public class PlayerStorage {
 		}
 	}
 
-	public Collection<MapleCharacter> getAllCharacters() {
+	public Collection<GameCharacter> getAllCharacters() {
 		rlock.lock();
 		try {
 			return storage.values();
@@ -86,7 +86,7 @@ public class PlayerStorage {
 	public final void disconnectAll() {
 		wlock.lock();
 		try {
-			final Iterator<MapleCharacter> chrit = storage.values().iterator();
+			final Iterator<GameCharacter> chrit = storage.values().iterator();
 			while (chrit.hasNext()) {
 				chrit.next().getClient().disconnect();
 				chrit.remove();

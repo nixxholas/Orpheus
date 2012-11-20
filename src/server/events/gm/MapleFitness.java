@@ -20,7 +20,7 @@
  */
 package server.events.gm;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.concurrent.ScheduledFuture;
 import server.TimerManager;
 import tools.MaplePacketCreator;
@@ -30,13 +30,13 @@ import tools.MaplePacketCreator;
  * @author kevintjuh93
  */
 public class MapleFitness {
-	private MapleCharacter chr;
+	private GameCharacter chr;
 	private long time = 0;
 	private long timeStarted = 0;
 	private ScheduledFuture<?> schedule = null;
 	private ScheduledFuture<?> schedulemsg = null;
 
-	public MapleFitness(final MapleCharacter chr) {
+	public MapleFitness(final GameCharacter chr) {
 		this.chr = chr;
 		this.schedule = TimerManager.getInstance().schedule(new Runnable() {
 			@Override

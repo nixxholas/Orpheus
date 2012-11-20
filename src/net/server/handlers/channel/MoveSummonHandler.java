@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import java.awt.Point;
 import java.util.Collection;
 import java.util.List;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import server.maps.MapleSummon;
 import server.movement.LifeMovementFragment;
@@ -37,7 +37,7 @@ public final class MoveSummonHandler extends AbstractMovementPacketHandler {
 		int oid = slea.readInt();
 		Point startPos = new Point(slea.readShort(), slea.readShort());
 		List<LifeMovementFragment> res = parseMovement(slea);
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		Collection<MapleSummon> summons = player.getSummons().values();
 		MapleSummon summon = null;
 		for (MapleSummon sum : summons) {

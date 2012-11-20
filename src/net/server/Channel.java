@@ -27,7 +27,7 @@ import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import client.MapleCharacter;
+import client.GameCharacter;
 import constants.ServerConstants;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -147,7 +147,7 @@ public final class Channel {
 		return world;
 	}
 
-	public void addPlayer(MapleCharacter chr) {
+	public void addPlayer(GameCharacter chr) {
 		players.addPlayer(chr);
 		chr.announce(MaplePacketCreator.serverMessage(serverMessage));
 	}
@@ -156,7 +156,7 @@ public final class Channel {
 		return players;
 	}
 
-	public void removePlayer(MapleCharacter chr) {
+	public void removePlayer(GameCharacter chr) {
 		players.removePlayer(chr.getId());
 	}
 
@@ -165,7 +165,7 @@ public final class Channel {
 	}
 
 	public void broadcastPacket(MaplePacket data) {
-		for (MapleCharacter chr : players.getAllCharacters()) {
+		for (GameCharacter chr : players.getAllCharacters()) {
 			chr.announce(data);
 		}
 	}
@@ -191,7 +191,7 @@ public final class Channel {
 	}
 
 	public void broadcastGMPacket(MaplePacket data) {
-		for (MapleCharacter chr : players.getAllCharacters()) {
+		for (GameCharacter chr : players.getAllCharacters()) {
 			if (chr.isGM()) {
 				chr.announce(data);
 			}
@@ -199,30 +199,30 @@ public final class Channel {
 	}
 
 	public void broadcastGMPacket(MaplePacket data, String exclude) {
-		for (MapleCharacter chr : players.getAllCharacters()) {
-			if (chr.isGM() && !chr.getName().equals(exclude)) {
-				chr.announce(data);
+		for (GameCharacter character : players.getAllCharacters()) {
+			if (character.isGM() && !character.getName().equals(exclude)) {
+				character.announce(data);
 			}
 		}
 	}
 
 	public void yellowWorldMessage(String msg) {
-		for (MapleCharacter mc : getPlayerStorage().getAllCharacters()) {
-			mc.announce(MaplePacketCreator.sendYellowTip(msg));
+		for (GameCharacter character : getPlayerStorage().getAllCharacters()) {
+			character.announce(MaplePacketCreator.sendYellowTip(msg));
 		}
 	}
 
 	public void worldMessage(String msg) {
-		for (MapleCharacter mc : getPlayerStorage().getAllCharacters()) {
-			mc.dropMessage(msg);
+		for (GameCharacter character : getPlayerStorage().getAllCharacters()) {
+			character.dropMessage(msg);
 		}
 	}
 
-	public List<MapleCharacter> getPartyMembers(MapleParty party) {
-		List<MapleCharacter> partym = new ArrayList<MapleCharacter>(8);
+	public List<GameCharacter> getPartyMembers(MapleParty party) {
+		List<GameCharacter> partym = new ArrayList<GameCharacter>(8);
 		for (MaplePartyCharacter partychar : party.getMembers()) {
 			if (partychar.getChannel() == getId()) {
-				MapleCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
+				GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
 				if (chr != null) {
 					partym.add(chr);
 				}
@@ -270,7 +270,7 @@ public final class Channel {
 		List<Integer> ret = new ArrayList<Integer>(characterIds.length);
 		PlayerStorage playerStorage = getPlayerStorage();
 		for (int characterId : characterIds) {
-			MapleCharacter chr = playerStorage.getCharacterById(characterId);
+			GameCharacter chr = playerStorage.getCharacterById(characterId);
 			if (chr != null) {
 				if (chr.getBuddylist().containsVisible(charIdFrom)) {
 					ret.add(characterId);

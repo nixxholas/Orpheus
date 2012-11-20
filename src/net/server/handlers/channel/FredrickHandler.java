@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,7 +43,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		byte operation = slea.readByte();
 
 		switch (operation) {
@@ -82,7 +82,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	private static boolean check(MapleCharacter chr, List<ItemInventoryEntry> entries) {
+	private static boolean check(GameCharacter chr, List<ItemInventoryEntry> entries) {
 		if (chr.getMeso() + chr.getMerchantMeso() < 0) {
 			return false;
 		}
@@ -95,7 +95,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 		return true;
 	}
 
-	private static boolean deleteItems(MapleCharacter chr) {
+	private static boolean deleteItems(GameCharacter chr) {
 		try {
 			Connection con = DatabaseConnection.getConnection();
 			PreparedStatement ps = con.prepareStatement("DELETE FROM `inventoryitems` WHERE `type` = ? AND `characterid` = ?");

@@ -22,7 +22,7 @@ package server.quest;
 
 import java.util.Calendar;
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.MaplePet;
@@ -49,7 +49,7 @@ public class MapleQuestRequirement {
 		this.quest = quest;
 	}
 
-	boolean check(MapleCharacter c, Integer npcid) {
+	boolean check(GameCharacter c, Integer npcid) {
 		switch (getType()) {
 			case END_DATE:
 				String timeStr = MapleDataTool.getString(getData());

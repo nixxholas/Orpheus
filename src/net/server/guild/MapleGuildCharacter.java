@@ -20,7 +20,7 @@
  */
 package net.server.guild;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.io.Serializable;
 
 public class MapleGuildCharacter implements Serializable {
@@ -35,7 +35,7 @@ public class MapleGuildCharacter implements Serializable {
 	private boolean online;
 	private String name;
 
-	public MapleGuildCharacter(MapleCharacter c) {
+	public MapleGuildCharacter(GameCharacter c) {
 		this.name = c.getName();
 		this.level = c.getLevel();
 		this.id = c.getId();

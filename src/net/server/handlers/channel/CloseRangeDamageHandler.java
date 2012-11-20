@@ -22,8 +22,8 @@ package net.server.handlers.channel;
 
 import client.ISkill;
 import client.MapleBuffStat;
-import client.MapleCharacter;
-import client.MapleCharacter.CancelCooldownAction;
+import client.GameCharacter;
+import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.MapleJob;
 import client.MapleStat;
@@ -53,7 +53,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
 		player.getMap().broadcastMessage(player, MaplePacketCreator.closeRangeAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.speed, attack.direction, attack.display), false, true);
 		int numFinisherOrbs = 0;

@@ -24,7 +24,7 @@ import client.BuddylistEntry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleFamily;
 import client.MapleInventoryType;
@@ -61,10 +61,10 @@ public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		final int cid = slea.readInt();
 		final Server server = Server.getInstance();
-		MapleCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(cid);
+		GameCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(cid);
 		if (player == null) {
 			try {
-				player = MapleCharacter.loadCharFromDB(cid, c, true);
+				player = GameCharacter.loadCharFromDB(cid, c, true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

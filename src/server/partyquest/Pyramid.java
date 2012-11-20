@@ -20,7 +20,7 @@
  */
 package server.partyquest;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.concurrent.ScheduledFuture;
 import net.server.MapleParty;
 import server.MapleItemInformationProvider;
@@ -147,7 +147,7 @@ public class Pyramid extends PartyQuest {
 	}
 
 	public void warp(int mapid) {
-		for (MapleCharacter chr : getParticipants()) {
+		for (GameCharacter chr : getParticipants()) {
 			chr.changeMap(mapid);
 		}
 		if (stage > -1) {
@@ -160,7 +160,7 @@ public class Pyramid extends PartyQuest {
 	}
 
 	public void broadcastInfo(String info, int amount) {
-		for (MapleCharacter chr : getParticipants()) {
+		for (GameCharacter chr : getParticipants()) {
 			chr.announce(MaplePacketCreator.getEnergy("massacre_" + info, amount));
 			chr.announce(MaplePacketCreator.pyramidGauge(count));
 		}
@@ -180,14 +180,14 @@ public class Pyramid extends PartyQuest {
 		if (buffcount == 0 && total >= 250) {
 			buffcount++;
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-			for (MapleCharacter chr : getParticipants())
+			for (GameCharacter chr : getParticipants())
 				ii.getItemEffect(2022585).applyTo(chr);
 
 		} else if (buffcount == 1 && total >= 500) {
 			buffcount++;
 			skill++;
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-			for (MapleCharacter chr : getParticipants()) {
+			for (GameCharacter chr : getParticipants()) {
 				chr.announce(MaplePacketCreator.getEnergy("massacre_skill", skill));
 				ii.getItemEffect(2022586).applyTo(chr);
 			}
@@ -195,7 +195,7 @@ public class Pyramid extends PartyQuest {
 			buffcount++;
 			skill++;
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-			for (MapleCharacter chr : getParticipants()) {
+			for (GameCharacter chr : getParticipants()) {
 				chr.announce(MaplePacketCreator.getEnergy("massacre_skill", skill));
 				ii.getItemEffect(2022587).applyTo(chr);
 			}
@@ -206,7 +206,7 @@ public class Pyramid extends PartyQuest {
 			buffcount++;
 			skill++;
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-			for (MapleCharacter chr : getParticipants()) {
+			for (GameCharacter chr : getParticipants()) {
 				chr.announce(MaplePacketCreator.getEnergy("massacre_skill", skill));
 				ii.getItemEffect(2022588).applyTo(chr);
 			}
@@ -219,7 +219,7 @@ public class Pyramid extends PartyQuest {
 		}
 	}
 
-	public void sendScore(MapleCharacter chr) {
+	public void sendScore(GameCharacter chr) {
 		if (exp == 0) {
 			int totalkills = (kill + cool);
 			if (stage == 5) {

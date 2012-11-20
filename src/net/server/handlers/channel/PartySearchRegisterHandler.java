@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -33,7 +33,7 @@ public class PartySearchRegisterHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		int min = slea.readInt();
 		int max = slea.readInt();
 		if (chr.getLevel() < min || chr.getLevel() > max || (max - min) > 30 || min > max) { // Client

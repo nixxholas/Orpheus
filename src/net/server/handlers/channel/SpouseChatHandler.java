@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-//import client.MapleCharacter;
+//import client.GameCharacter;
 import client.GameClient;
 //import client.command.CommandProcessor;
 import net.AbstractMaplePacketHandler;
@@ -37,7 +37,7 @@ public final class SpouseChatHandler extends AbstractMaplePacketHandler {
 		// String msg = slea.readMapleAsciiString();
 		// if (!CommandProcessor.processCommand(c, msg))
 		// if (c.getPlayer().isMarried()) {
-		// MapleCharacter wife =
+		// GameCharacter wife =
 		// c.getChannelServer().getPlayerStorage().getCharacterById(c.getPlayer().getPartnerId());
 		// if (wife != null) {
 		// wife.getClient().announce(MaplePacketCreator.sendSpouseChat(c.getPlayer(),

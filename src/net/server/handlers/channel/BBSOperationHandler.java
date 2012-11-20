@@ -24,7 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import tools.DatabaseConnection;
 import tools.Output;
@@ -144,7 +144,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	private static void editBBSThread(GameClient client, String title, String text, int icon, int localthreadid) {
-		MapleCharacter c = client.getPlayer();
+		GameCharacter c = client.getPlayer();
 		if (c.getGuildId() < 1) {
 			return;
 		}
@@ -167,7 +167,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	private static void newBBSThread(GameClient client, String title, String text, int icon, boolean bNotice) {
-		MapleCharacter c = client.getPlayer();
+		GameCharacter c = client.getPlayer();
 		if (c.getGuildId() <= 0) {
 			return;
 		}
@@ -202,14 +202,14 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	public static void deleteBBSThread(GameClient client, int localthreadid) {
-		MapleCharacter mc = client.getPlayer();
-		if (mc.getGuildId() <= 0) {
+		GameCharacter player = client.getPlayer();
+		if (player.getGuildId() <= 0) {
 			return;
 		}
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT threadid, postercid FROM bbs_threads WHERE guildid = ? AND localthreadid = ?");
-			ps.setInt(1, mc.getGuildId());
+			ps.setInt(1, player.getGuildId());
 			ps.setInt(2, localthreadid);
 			ResultSet threadRS = ps.executeQuery();
 			if (!threadRS.next()) {
@@ -217,7 +217,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 				ps.close();
 				return;
 			}
-			if (mc.getId() != threadRS.getInt("postercid") && mc.getGuildRank() > 2) {
+			if (player.getId() != threadRS.getInt("postercid") && player.getGuildRank() > 2) {
 				threadRS.close();
 				ps.close();
 				return;
@@ -239,8 +239,8 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	public static void deleteBBSReply(GameClient client, int replyid) {
-		MapleCharacter mc = client.getPlayer();
-		if (mc.getGuildId() <= 0) {
+		GameCharacter player = client.getPlayer();
+		if (player.getGuildId() <= 0) {
 			return;
 		}
 		int threadid;
@@ -254,7 +254,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 				ps.close();
 				return;
 			}
-			if (mc.getId() != rs.getInt("postercid") && mc.getGuildRank() > 2) {
+			if (player.getId() != rs.getInt("postercid") && player.getGuildRank() > 2) {
 				rs.close();
 				ps.close();
 				return;
@@ -281,14 +281,14 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	public static void displayThread(GameClient client, int threadid, boolean bIsThreadIdLocal) {
-		MapleCharacter mc = client.getPlayer();
-		if (mc.getGuildId() <= 0) {
+		GameCharacter player = client.getPlayer();
+		if (player.getGuildId() <= 0) {
 			return;
 		}
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT * FROM bbs_threads WHERE guildid = ? AND " + (bIsThreadIdLocal ? "local" : "") + "threadid = ?");
-			ps.setInt(1, mc.getGuildId());
+			ps.setInt(1, player.getGuildId());
 			ps.setInt(2, threadid);
 			ResultSet threadRS = ps.executeQuery();
 			if (!threadRS.next()) {

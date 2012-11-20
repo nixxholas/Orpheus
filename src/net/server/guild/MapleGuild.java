@@ -29,7 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import java.util.LinkedList;
 import tools.DatabaseConnection;
@@ -508,14 +508,14 @@ public class MapleGuild {
 	}
 
 	public static MapleGuildResponse sendInvite(GameClient c, String targetName) {
-		MapleCharacter mc = c.getChannelServer().getPlayerStorage().getCharacterByName(targetName);
-		if (mc == null) {
+		GameCharacter character = c.getChannelServer().getPlayerStorage().getCharacterByName(targetName);
+		if (character == null) {
 			return MapleGuildResponse.NOT_IN_CHANNEL;
 		}
-		if (mc.getGuildId() > 0) {
+		if (character.getGuildId() > 0) {
 			return MapleGuildResponse.ALREADY_IN_GUILD;
 		}
-		mc.getClient().getSession().write(MaplePacketCreator.guildInvite(c.getPlayer().getGuildId(), c.getPlayer().getName()));
+		character.getClient().getSession().write(MaplePacketCreator.guildInvite(c.getPlayer().getGuildId(), c.getPlayer().getName()));
 		return null;
 	}
 

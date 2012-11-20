@@ -20,7 +20,7 @@
  */
 package gm.server.handler;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import gm.GMPacketCreator;
 import gm.GMPacketHandler;
 import java.util.ArrayList;
@@ -41,9 +41,9 @@ public class PlayerListHandler implements GMPacketHandler {
 	public void handlePacket(SeekableLittleEndianAccessor slea, IoSession session) {
 		List<String> playerList = new ArrayList<String>();
 		for (Channel ch : Server.getInstance().getAllChannels()) {
-			Collection<MapleCharacter> list = ch.getPlayerStorage().getAllCharacters();
+			Collection<GameCharacter> list = ch.getPlayerStorage().getAllCharacters();
 			synchronized (list) {
-				for (MapleCharacter chr : list) {
+				for (GameCharacter chr : list) {
 					if (!chr.isGM()) {
 						playerList.add(chr.getName());
 					}

@@ -67,7 +67,7 @@ public class MapleRing implements Comparable<MapleRing> {
 		}
 	}
 
-	public static int createRing(int itemid, final MapleCharacter partner1, final MapleCharacter partner2) {
+	public static int createRing(int itemid, final GameCharacter partner1, final GameCharacter partner2) {
 		try {
 			if (partner1 == null) {
 				return -2;

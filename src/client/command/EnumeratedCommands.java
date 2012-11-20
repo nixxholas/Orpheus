@@ -20,18 +20,18 @@
  */
 package client.command;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.command.external.Commands;
 
 /**
  * @author Aaron Weiss
  */
 public abstract class EnumeratedCommands extends Commands {
-	protected static void getHelp(MapleCharacter chr) {
+	protected static void getHelp(GameCharacter chr) {
 		EnumeratedCommands.getHelp(-1, chr);
 	}
 	
-	protected static void getHelp(int page, MapleCharacter chr) {
+	protected static void getHelp(int page, GameCharacter chr) {
 		chr.dropMessage("Command.getHelp() was not overridden.");
 	}
 	

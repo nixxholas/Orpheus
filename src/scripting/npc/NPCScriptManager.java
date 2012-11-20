@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.script.Invocable;
 import client.GameClient;
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.lang.reflect.UndeclaredThrowableException;
 import scripting.AbstractScriptManager;
 import tools.Output;
@@ -42,7 +42,7 @@ public class NPCScriptManager extends AbstractScriptManager {
 		return instance;
 	}
 
-	public void start(GameClient c, int npc, String filename, MapleCharacter chr) {
+	public void start(GameClient c, int npc, String filename, GameCharacter chr) {
 		try {
 			NPCConversationManager cm = new NPCConversationManager(c, npc);
 			if (cms.containsKey(c)) {

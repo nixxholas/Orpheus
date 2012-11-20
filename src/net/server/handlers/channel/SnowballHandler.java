@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.events.gm.MapleSnowball;
@@ -36,7 +36,7 @@ public final class SnowballHandler extends AbstractMaplePacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		// D3 00 02 00 00 A5 01
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		MapleMap map = chr.getMap();
 		final MapleSnowball snowball = map.getSnowball(chr.getTeam());
 		final MapleSnowball othersnowball = map.getSnowball(chr.getTeam() == 0 ? (byte) 1 : 0);

@@ -39,7 +39,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import net.server.Channel;
 import net.server.Server;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 
 /**
@@ -51,9 +51,9 @@ public class DeveloperCommands extends EnumeratedCommands {
 	private static final char heading = '!';
 	
 	public static boolean execute(GameClient c, String[] sub, char heading) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
-		MapleCharacter victim; // For commands with targets.
+		GameCharacter victim; // For commands with targets.
 		ResultSet rs; // For commands with MySQL results.
         MapleNPC npc;
 		int npcId = 0;
@@ -77,16 +77,16 @@ public class DeveloperCommands extends EnumeratedCommands {
 		            break;
 				case droprate:
 					c.getWorldServer().setDropRate(Integer.parseInt(sub[1]));
-					for (MapleCharacter mc : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
-						mc.setRates();
+					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
+						character.setRates();
 					}
 					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case exprate:
 					c.getWorldServer().setExpRate(Integer.parseInt(sub[1]));
-					for (MapleCharacter mc : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
-						mc.setRates();
+					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
+						character.setRates();
 					}
 					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
@@ -114,8 +114,8 @@ public class DeveloperCommands extends EnumeratedCommands {
 					break;
 				case mesorate:
 					c.getWorldServer().setMesoRate(Integer.parseInt(sub[1]));
-					for (MapleCharacter mc : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
-						mc.setRates();
+					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
+						character.setRates();
 					}
 					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
@@ -341,11 +341,11 @@ public class DeveloperCommands extends EnumeratedCommands {
 		}	
 	}
 	
-	protected static void getHelp(MapleCharacter chr) {
+	protected static void getHelp(GameCharacter chr) {
 		DeveloperCommands.getHelp(-1, chr);
 	}
 
-	protected static void getHelp(int page, MapleCharacter chr) {
+	protected static void getHelp(int page, GameCharacter chr) {
 		int pageNumber = (int) (Command.values().length / ServerConstants.ENTRIES_PER_PAGE);
 		if (Command.values().length % ServerConstants.ENTRIES_PER_PAGE > 0) {
     		pageNumber++;

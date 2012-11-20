@@ -32,7 +32,7 @@ import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import net.server.Channel;
 import net.server.Server;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleJob;
 import client.MaplePet;
@@ -47,10 +47,10 @@ public class SupportCommands extends EnumeratedCommands {
 	
 	@SuppressWarnings("unused")
 	public static boolean execute(GameClient c, String[] sub, char heading) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		Channel cserv = c.getChannelServer();
 		Server serv = Server.getInstance();
-		MapleCharacter victim; // For commands with targets.
+		GameCharacter victim; // For commands with targets.
 		ResultSet rs; // For commands with MySQL results.
 
 		try {
@@ -111,8 +111,8 @@ public class SupportCommands extends EnumeratedCommands {
 					for (Channel ch : serv.getChannelsFromWorld(chr.getWorld())) {
 						String s = "Characters Online (Channel " + ch.getId() + " Online: " + ch.getPlayerStorage().getAllCharacters().size() + ") : ";
 						if (ch.getPlayerStorage().getAllCharacters().size() < 50) {
-							for (MapleCharacter pc : ch.getPlayerStorage().getAllCharacters()) {
-								s += MapleCharacter.makeMapleReadable(pc.getName()) + ", ";
+							for (GameCharacter character : ch.getPlayerStorage().getAllCharacters()) {
+								s += GameCharacter.makeMapleReadable(character.getName()) + ", ";
 							}
 							chr.dropMessage(s.substring(0, s.length() - 2));
 						}
@@ -191,11 +191,11 @@ public class SupportCommands extends EnumeratedCommands {
 		}
 	}
 	
-	protected static void getHelp(MapleCharacter chr) {
+	protected static void getHelp(GameCharacter chr) {
 		SupportCommands.getHelp(-1, chr);
 	}
 
-	protected static void getHelp(int page, MapleCharacter chr) {
+	protected static void getHelp(int page, GameCharacter chr) {
         int pageNumber = (int) (Command.values().length / ServerConstants.ENTRIES_PER_PAGE);
         if (Command.values().length % ServerConstants.ENTRIES_PER_PAGE > 0) {
         	pageNumber++;

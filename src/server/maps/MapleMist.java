@@ -21,7 +21,7 @@
 package server.maps;
 
 import client.ISkill;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
 import java.awt.Point;
@@ -38,7 +38,7 @@ import tools.MaplePacketCreator;
  */
 public class MapleMist extends AbstractMapleMapObject {
 	private Rectangle mistPosition;
-	private MapleCharacter owner = null;
+	private GameCharacter owner = null;
 	private MapleMonster mob = null;
 	private MapleStatEffect source;
 	private MobSkill skill;
@@ -54,7 +54,7 @@ public class MapleMist extends AbstractMapleMapObject {
 		skillDelay = 0;
 	}
 
-	public MapleMist(Rectangle mistPosition, MapleCharacter owner, MapleStatEffect source) {
+	public MapleMist(Rectangle mistPosition, GameCharacter owner, MapleStatEffect source) {
 		this.mistPosition = mistPosition;
 		this.owner = owner;
 		this.source = source;
@@ -102,7 +102,7 @@ public class MapleMist extends AbstractMapleMapObject {
 		return mob;
 	}
 
-	public MapleCharacter getOwner() {
+	public GameCharacter getOwner() {
 		return owner;
 	}
 

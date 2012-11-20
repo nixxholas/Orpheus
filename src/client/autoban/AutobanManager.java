@@ -20,7 +20,7 @@
  */
 package client.autoban;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ import java.util.Map;
  * @author kevintjuh93
  */
 public class AutobanManager {
-	private MapleCharacter chr;
+	private GameCharacter chr;
 	private Map<AutobanFactory, Integer> points = new HashMap<AutobanFactory, Integer>();
 	private Map<AutobanFactory, Long> lastTime = new HashMap<AutobanFactory, Long>();
 	private int misses = 0;
@@ -39,7 +39,7 @@ public class AutobanManager {
 	private int timestamp[] = new int[20];
 	private byte timestampcounter[] = new byte[20];
 
-	public AutobanManager(MapleCharacter chr) {
+	public AutobanManager(GameCharacter chr) {
 		this.chr = chr;
 	}
 

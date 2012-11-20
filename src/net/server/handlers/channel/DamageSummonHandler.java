@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
 import net.AbstractMaplePacketHandler;
@@ -38,7 +38,7 @@ public final class DamageSummonHandler extends AbstractMaplePacketHandler {
 		int damage = slea.readInt();
 		int monsterIdFrom = slea.readInt();
 		if (SkillFactory.getSkill(skillid) != null) {
-			MapleCharacter player = c.getPlayer();
+			GameCharacter player = c.getPlayer();
 			MapleSummon summon = player.getSummons().get(skillid);
 			if (summon != null) {
 				summon.addHP(-damage);

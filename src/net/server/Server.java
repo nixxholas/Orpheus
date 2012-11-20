@@ -20,7 +20,7 @@
  */
 package net.server;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.SkillFactory;
 import client.command.external.CommandLoader;
 import constants.ParanoiaConstants;
@@ -538,10 +538,10 @@ public class Server implements Runnable {
 
 	public void reloadGuildCharacters(byte world) {
 		World worlda = getWorld(world);
-		for (MapleCharacter mc : worlda.getPlayerStorage().getAllCharacters()) {
-			if (mc.getGuildId() > 0) {
-				setGuildMemberOnline(mc.getMGC(), true, worlda.getId());
-				memberLevelJobUpdate(mc.getMGC());
+		for (GameCharacter character : worlda.getPlayerStorage().getAllCharacters()) {
+			if (character.getGuildId() > 0) {
+				setGuildMemberOnline(character.getMGC(), true, worlda.getId());
+				memberLevelJobUpdate(character.getMGC());
 			}
 		}
 		worlda.reloadGuildSummary();

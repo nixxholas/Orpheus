@@ -23,7 +23,7 @@ package server;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.MaplePacket;
 import server.maps.AbstractMapleMapObject;
@@ -35,8 +35,8 @@ import tools.MaplePacketCreator;
  * @author Matze
  */
 public class MapleMiniGame extends AbstractMapleMapObject {
-	private MapleCharacter owner;
-	private MapleCharacter visitor;
+	private GameCharacter owner;
+	private GameCharacter visitor;
 	private String GameType = null;
 	private int[] piece = new int[250];
 	private List<Integer> list4x3 = new ArrayList<Integer>();
@@ -50,7 +50,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 	private int ownerpoints = 0;
 	private int matchestowin = 0;
 
-	public MapleMiniGame(MapleCharacter owner, String description) {
+	public MapleMiniGame(GameCharacter owner, String description) {
 		this.owner = owner;
 		this.description = description;
 	}
@@ -59,11 +59,11 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		return visitor == null;
 	}
 
-	public boolean isOwner(MapleCharacter c) {
+	public boolean isOwner(GameCharacter c) {
 		return owner.equals(c);
 	}
 
-	public void addVisitor(MapleCharacter challenger) {
+	public void addVisitor(GameCharacter challenger) {
 		visitor = challenger;
 		if (GameType.equals("omok")) {
 			this.getOwner().getClient().announce(MaplePacketCreator.getMiniGameNewVisitor(challenger, 1));
@@ -75,7 +75,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		}
 	}
 
-	public void removeVisitor(MapleCharacter challenger) {
+	public void removeVisitor(GameCharacter challenger) {
 		if (visitor == challenger) {
 			visitor = null;
 			this.getOwner().getClient().announce(MaplePacketCreator.getMiniGameRemoveVisitor());
@@ -88,7 +88,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		}
 	}
 
-	public boolean isVisitor(MapleCharacter challenger) {
+	public boolean isVisitor(GameCharacter challenger) {
 		return visitor == challenger;
 	}
 
@@ -227,15 +227,15 @@ public class MapleMiniGame extends AbstractMapleMapObject {
 		c.announce(MaplePacketCreator.getMatchCard(c, this, isOwner(c.getPlayer()), type));
 	}
 
-	public MapleCharacter getOwner() {
+	public GameCharacter getOwner() {
 		return owner;
 	}
 
-	public MapleCharacter getVisitor() {
+	public GameCharacter getVisitor() {
 		return visitor;
 	}
 
-	public void setPiece(int move1, int move2, int type, MapleCharacter chr) {
+	public void setPiece(int move1, int move2, int type, GameCharacter chr) {
 		int slot = move2 * 15 + move1 + 1;
 		if (piece[slot] == 0) {
 			piece[slot] = type;

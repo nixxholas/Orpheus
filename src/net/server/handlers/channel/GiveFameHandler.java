@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleStat;
 import net.AbstractMaplePacketHandler;
@@ -31,10 +31,10 @@ public final class GiveFameHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter target = (MapleCharacter) c.getPlayer().getMap().getMapObject(slea.readInt());
+		GameCharacter target = (GameCharacter) c.getPlayer().getMap().getMapObject(slea.readInt());
 		int mode = slea.readByte();
 		int famechange = 2 * mode - 1;
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		if ((target == player || player.getLevel() < 15)) {
 			return;
 		}

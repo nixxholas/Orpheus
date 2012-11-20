@@ -29,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import client.MapleCharacter;
+import client.GameCharacter;
 import tools.DatabaseConnection;
 import net.server.MapleParty;
 import net.server.MaplePartyCharacter;
@@ -44,9 +44,9 @@ import server.maps.MapleMapFactory;
  * @author Matze
  */
 public class EventInstanceManager {
-	private List<MapleCharacter> chars = new ArrayList<MapleCharacter>();
+	private List<GameCharacter> chars = new ArrayList<GameCharacter>();
 	private List<MapleMonster> mobs = new LinkedList<MapleMonster>();
-	private Map<MapleCharacter, Integer> killCount = new HashMap<MapleCharacter, Integer>();
+	private Map<GameCharacter, Integer> killCount = new HashMap<GameCharacter, Integer>();
 	private EventManager em;
 	private MapleMapFactory mapFactory;
 	private String name;
@@ -66,7 +66,7 @@ public class EventInstanceManager {
 		return em;
 	}
 
-	public void registerPlayer(MapleCharacter chr) {
+	public void registerPlayer(GameCharacter chr) {
 		try {
 			chars.add(chr);
 			chr.setEventInstance(this);
@@ -91,12 +91,12 @@ public class EventInstanceManager {
 
 	public void registerParty(MapleParty party, MapleMap map) {
 		for (MaplePartyCharacter pc : party.getMembers()) {
-			MapleCharacter c = map.getCharacterById(pc.getId());
+			GameCharacter c = map.getCharacterById(pc.getId());
 			registerPlayer(c);
 		}
 	}
 
-	public void unregisterPlayer(MapleCharacter chr) {
+	public void unregisterPlayer(GameCharacter chr) {
 		chars.remove(chr);
 		chr.setEventInstance(null);
 	}
@@ -105,8 +105,8 @@ public class EventInstanceManager {
 		return chars.size();
 	}
 
-	public List<MapleCharacter> getPlayers() {
-		return new ArrayList<MapleCharacter>(chars);
+	public List<GameCharacter> getPlayers() {
+		return new ArrayList<GameCharacter>(chars);
 	}
 
 	public void registerMonster(MapleMonster mob) {
@@ -126,7 +126,7 @@ public class EventInstanceManager {
 		}
 	}
 
-	public void playerKilled(MapleCharacter chr) {
+	public void playerKilled(GameCharacter chr) {
 		try {
 			em.getIv().invokeFunction("playerDead", this, chr);
 		} catch (Exception ex) {
@@ -134,7 +134,7 @@ public class EventInstanceManager {
 		}
 	}
 
-	public boolean revivePlayer(MapleCharacter chr) {
+	public boolean revivePlayer(GameCharacter chr) {
 		try {
 			Object b = em.getIv().invokeFunction("playerRevive", this, chr);
 			if (b instanceof Boolean) {
@@ -146,7 +146,7 @@ public class EventInstanceManager {
 		return true;
 	}
 
-	public void playerDisconnected(MapleCharacter chr) {
+	public void playerDisconnected(GameCharacter chr) {
 		try {
 			em.getIv().invokeFunction("playerDisconnected", this, chr);
 		} catch (Exception ex) {
@@ -159,7 +159,7 @@ public class EventInstanceManager {
 	 * @param chr
 	 * @param mob
 	 */
-	public void monsterKilled(MapleCharacter chr, MapleMonster mob) {
+	public void monsterKilled(GameCharacter chr, MapleMonster mob) {
 		try {
 			Integer kc = killCount.get(chr);
 			int inc = ((Double) em.getIv().invokeFunction("monsterValue", this, mob.getId())).intValue();
@@ -174,7 +174,7 @@ public class EventInstanceManager {
 		}
 	}
 
-	public int getKillCount(MapleCharacter chr) {
+	public int getKillCount(GameCharacter chr) {
 		Integer kc = killCount.get(chr);
 		if (kc == null) {
 			return 0;
@@ -212,7 +212,7 @@ public class EventInstanceManager {
 		return name;
 	}
 
-	public void saveWinner(MapleCharacter chr) {
+	public void saveWinner(GameCharacter chr) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO eventstats (event, instance, characterid, channel) VALUES (?, ?, ?, ?)");
 			ps.setString(1, em.getName());
@@ -248,7 +248,7 @@ public class EventInstanceManager {
 		return props.getProperty(key);
 	}
 
-	public void leftParty(MapleCharacter chr) {
+	public void leftParty(GameCharacter chr) {
 		try {
 			em.getIv().invokeFunction("leftParty", this, chr);
 		} catch (Exception ex) {
@@ -272,7 +272,7 @@ public class EventInstanceManager {
 		}
 	}
 
-	public void removePlayer(MapleCharacter chr) {
+	public void removePlayer(GameCharacter chr) {
 		try {
 			em.getIv().invokeFunction("playerExit", this, chr);
 		} catch (Exception ex) {
@@ -280,7 +280,7 @@ public class EventInstanceManager {
 		}
 	}
 
-	public boolean isLeader(MapleCharacter chr) {
+	public boolean isLeader(GameCharacter chr) {
 		return (chr.getParty().getLeader().getId() == chr.getId());
 	}
 }

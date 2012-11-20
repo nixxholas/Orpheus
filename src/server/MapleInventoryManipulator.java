@@ -27,7 +27,7 @@ import client.Equip;
 import client.IItem;
 import client.Item;
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
@@ -40,7 +40,7 @@ import tools.Output;
  * @author Matze
  */
 public class MapleInventoryManipulator {
-	public static boolean addRing(MapleCharacter chr, int itemId, int ringId) {
+	public static boolean addRing(GameCharacter chr, int itemId, int ringId) {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		MapleInventoryType type = ii.getInventoryType(itemId);
 		IItem nEquip = ii.getEquipById(itemId, ringId);

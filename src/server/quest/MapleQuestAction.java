@@ -23,7 +23,7 @@ package server.quest;
 import java.util.HashMap;
 import java.util.Map;
 import client.ISkill;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.MapleQuestStatus;
@@ -54,7 +54,7 @@ public class MapleQuestAction {
 		this.quest = quest;
 	}
 
-	public boolean check(MapleCharacter c) { // LOL WTF IS THIS CRAP
+	public boolean check(GameCharacter c) { // LOL WTF IS THIS CRAP
 		switch (type) {
 			case MESO:
 				int mesos = MapleDataTool.getInt(data);
@@ -68,7 +68,7 @@ public class MapleQuestAction {
 		}
 	}
 
-	private boolean canGetItem(MapleData item, MapleCharacter c) {
+	private boolean canGetItem(MapleData item, GameCharacter c) {
 		if (item.getChildByPath("gender") != null) {
 			int gender = MapleDataTool.getInt(item.getChildByPath("gender"));
 			if (gender != 2 && gender != c.getGender()) {
@@ -88,7 +88,7 @@ public class MapleQuestAction {
 		return true;
 	}
 
-	public void run(MapleCharacter c, Integer extSelection) {
+	public void run(GameCharacter c, Integer extSelection) {
 		MapleQuestStatus status;
 		switch (type) {
 			case EXP:

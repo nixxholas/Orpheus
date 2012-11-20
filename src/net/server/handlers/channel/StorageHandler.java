@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
@@ -40,7 +40,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		byte mode = slea.readByte();
 		final MapleStorage storage = chr.getStorage();

@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.autoban.AutobanFactory;
 import client.autoban.AutobanManager;
@@ -31,7 +31,7 @@ public final class HealOvertimeHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		AutobanManager abm = chr.getAutobanManager();
 		abm.setTimestamp(0, slea.readInt());
 		slea.skip(4);

@@ -27,7 +27,7 @@ import constants.ExpTable;
 import client.IEquip;
 import client.IItem;
 import client.ISkill;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import client.MapleJob;
@@ -55,7 +55,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		if (System.currentTimeMillis() - player.getLastUsedCashItem() < 3000) {
 			return;
 		}
@@ -288,7 +288,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 					int tvType = itemId % 10;
 					boolean megassenger = false;
 					boolean ear = false;
-					MapleCharacter victim = null;
+					GameCharacter victim = null;
 					if (tvType != 1) {
 						if (tvType >= 3) {
 							megassenger = true;
@@ -372,8 +372,8 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 			remove(c, itemId);
 		} else if (itemType == 512) {
 			if (ii.getStateChangeItem(itemId) != 0) {
-				for (MapleCharacter mChar : c.getPlayer().getMap().getCharacters()) {
-					ii.getItemEffect(ii.getStateChangeItem(itemId)).applyTo(mChar);
+				for (GameCharacter character : c.getPlayer().getMap().getCharacters()) {
+					ii.getItemEffect(ii.getStateChangeItem(itemId)).applyTo(character);
 				}
 			}
 			player.getMap().startMapEffect(ii.getMsg(itemId).replaceFirst("%s", c.getPlayer().getName()).replaceFirst("%s", slea.readMapleAsciiString()), itemId);
@@ -407,7 +407,7 @@ public final class UseCashItemHandler extends AbstractMaplePacketHandler {
 				}
 			} else {
 				String name = slea.readMapleAsciiString();
-				MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(name);
+				GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(name);
 				boolean success = false;
 				if (victim != null) {
 					MapleMap target = victim.getMap();

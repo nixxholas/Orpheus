@@ -75,7 +75,7 @@ public class GameClient {
 	private MapleAESOFB send;
 	private MapleAESOFB receive;
 	private IoSession session;
-	private MapleCharacter player;
+	private GameCharacter player;
 	private byte channel = 1;
 	private int accId = 1;
 	private boolean loggedIn = false;
@@ -114,11 +114,11 @@ public class GameClient {
 		return session;
 	}
 
-	public MapleCharacter getPlayer() {
+	public GameCharacter getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(MapleCharacter player) {
+	public void setPlayer(GameCharacter player) {
 		this.player = player;
 	}
 
@@ -126,11 +126,11 @@ public class GameClient {
 		this.session.write(MaplePacketCreator.getCharList(this, server));
 	}
 
-	public List<MapleCharacter> loadCharacters(int serverId) {
-		List<MapleCharacter> chars = new ArrayList<MapleCharacter>(15);
+	public List<GameCharacter> loadCharacters(int serverId) {
+		List<GameCharacter> chars = new ArrayList<GameCharacter>(15);
 		try {
 			for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
-				chars.add(MapleCharacter.loadCharFromDB(cni.id, this, false));
+				chars.add(GameCharacter.loadCharFromDB(cni.id, this, false));
 			}
 		} catch (Exception e) {
 		}
@@ -178,7 +178,7 @@ public class GameClient {
 	}
 	
 	public boolean isCharacterInGuild(int cid) {
-		return (MapleCharacter.getGuildIdById(cid) != 0);
+		return (GameCharacter.getGuildIdById(cid) != 0);
 	}
 	
 	private List<CharacterNameAndId> loadCharactersInternal(int serverId) {

@@ -25,7 +25,7 @@ import java.util.List;
 import client.Equip;
 import client.IItem;
 import client.ISkill;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -63,7 +63,7 @@ public class AbstractPlayerInteraction {
 		return c;
 	}
 
-	public MapleCharacter getPlayer() {
+	public GameCharacter getPlayer() {
 		return c.getPlayer();
 	}
 
@@ -80,8 +80,8 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void warpMap(int map) {
-		for (MapleCharacter mc : getPlayer().getMap().getCharacters()) {
-			mc.changeMap(getWarpMap(map), getWarpMap(map).getPortal(0));
+		for (GameCharacter player : getPlayer().getMap().getCharacters()) {
+			player.changeMap(getWarpMap(map), getWarpMap(map).getPortal(0));
 		}
 	}
 
@@ -237,8 +237,8 @@ public class AbstractPlayerInteraction {
 		return getParty().getLeader().equals(getPlayer().getMPC());
 	}
 
-	public void givePartyItems(int id, short quantity, List<MapleCharacter> party) {
-		for (MapleCharacter chr : party) {
+	public void givePartyItems(int id, short quantity, List<GameCharacter> party) {
+		for (GameCharacter chr : party) {
 			GameClient cl = chr.getClient();
 			if (quantity >= 0) {
 				MapleInventoryManipulator.addById(cl, id, quantity);
@@ -249,14 +249,14 @@ public class AbstractPlayerInteraction {
 		}
 	}
 
-	public void givePartyExp(int amount, List<MapleCharacter> party) {
-		for (MapleCharacter chr : party) {
+	public void givePartyExp(int amount, List<GameCharacter> party) {
+		for (GameCharacter chr : party) {
 			chr.gainExp((amount * chr.getExpRate()), true, true);
 		}
 	}
 
-	public void removeFromParty(int id, List<MapleCharacter> party) {
-		for (MapleCharacter chr : party) {
+	public void removeFromParty(int id, List<GameCharacter> party) {
+		for (GameCharacter chr : party) {
 			GameClient cl = chr.getClient();
 			MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(id);
 			MapleInventory iv = cl.getPlayer().getInventory(type);

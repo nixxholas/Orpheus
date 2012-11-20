@@ -20,7 +20,7 @@
  */
 package server.events.gm;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import tools.Randomizer;
 import java.io.File;
 import provider.MapleDataProvider;
@@ -47,7 +47,7 @@ public final class MapleOxQuiz {
 		this.question = 1;
 	}
 
-	private boolean isCorrectAnswer(MapleCharacter chr, int answer) {
+	private boolean isCorrectAnswer(GameCharacter chr, int answer) {
 		double x = chr.getPosition().getX();
 		double y = chr.getPosition().getY();
 		if ((x > -234 && y > -26 && answer == 0) || (x < -234 && y > -26 && answer == 1)) {
@@ -59,8 +59,8 @@ public final class MapleOxQuiz {
 
 	public void sendQuestion() {
 		int gm = 0;
-		for (MapleCharacter mc : map.getCharacters()) {
-			if (mc.gmLevel() > 0) {
+		for (GameCharacter player : map.getCharacters()) {
+			if (player.gmLevel() > 0) {
 				gm++;
 			}
 		}
@@ -70,7 +70,7 @@ public final class MapleOxQuiz {
 			@Override
 			public void run() {
 				map.broadcastMessage(MaplePacketCreator.showOXQuiz(round, question, true));
-				for (MapleCharacter chr : map.getCharacters()) {
+				for (GameCharacter chr : map.getCharacters()) {
 					if (chr != null) // make sure they aren't null... maybe
 										// something can happen in 12 seconds.
 					{

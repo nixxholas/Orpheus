@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleJob;
 import client.MapleStat;
@@ -84,7 +84,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 	}
 
 	static int addHP(GameClient c) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		MapleJob job = player.getJob();
 		int MaxHP = player.getMaxHp();
 		if (player.getHpMpApUsed() > 9999 || MaxHP >= 30000) {
@@ -105,7 +105,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 	}
 
 	static int addMP(GameClient c) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		int MaxMP = player.getMaxMp();
 		MapleJob job = player.getJob();
 		if (player.getHpMpApUsed() > 9999 || player.getMaxMp() >= 30000) {
@@ -125,14 +125,14 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 		return MaxMP;
 	}
 
-	static void addHP(MapleCharacter player, int MaxHP) {
+	static void addHP(GameCharacter player, int MaxHP) {
 		MaxHP = Math.min(30000, MaxHP);
 		player.setHpMpApUsed(player.getHpMpApUsed() + 1);
 		player.setMaxHp(MaxHP);
 		player.updateSingleStat(MapleStat.MAXHP, MaxHP);
 	}
 
-	static void addMP(MapleCharacter player, int MaxMP) {
+	static void addMP(GameCharacter player, int MaxMP) {
 		MaxMP = Math.min(30000, MaxMP);
 		player.setHpMpApUsed(player.getHpMpApUsed() + 1);
 		player.setMaxMp(MaxMP);

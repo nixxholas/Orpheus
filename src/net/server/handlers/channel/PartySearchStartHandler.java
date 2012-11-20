@@ -27,7 +27,7 @@ import server.maps.MapleMap;
 import server.maps.MapleMapObject;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleJob;
 
@@ -44,15 +44,15 @@ public class PartySearchStartHandler extends AbstractMaplePacketHandler {
 		int max = slea.readInt();
 		slea.readInt(); // members
 		int jobs = slea.readInt();
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		MapleMap map = chr.getMap();
 		Collection<MapleMapObject> mapobjs = map.getAllPlayer();
 		for (MapleMapObject mapobj : mapobjs) {
 			if (chr.getParty().getMembers().size() > 5) {
 				break;
 			}
-			if (mapobj instanceof MapleCharacter) {
-				MapleCharacter tchar = (MapleCharacter) mapobj;
+			if (mapobj instanceof GameCharacter) {
+				GameCharacter tchar = (GameCharacter) mapobj;
 				int charlvl = tchar.getLevel();
 				if (charlvl >= min && charlvl <= max && isValidJob(tchar.getJob(), jobs)) {
 					if (c.getPlayer().getParty() == null) {

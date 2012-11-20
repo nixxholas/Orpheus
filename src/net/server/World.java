@@ -24,7 +24,7 @@ import client.BuddyList;
 import client.BuddyList.BuddyAddResult;
 import client.BuddyList.BuddyOperation;
 import client.BuddylistEntry;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleFamily;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -132,7 +132,7 @@ public class World {
 		return players;
 	}
 
-	public void removePlayer(MapleCharacter chr) {
+	public void removePlayer(GameCharacter chr) {
 		channels.get(chr.getClient().getChannel() - 1).removePlayer(chr);
 		players.removePlayer(chr.getId());
 	}
@@ -220,22 +220,22 @@ public class World {
 	}
 
 	public void setGuildAndRank(int cid, int guildid, int rank) {
-		MapleCharacter mc = getPlayerStorage().getCharacterById(cid);
-		if (mc == null) {
+		GameCharacter player = getPlayerStorage().getCharacterById(cid);
+		if (player == null) {
 			return;
 		}
 		boolean bDifferentGuild;
 		if (guildid == -1 && rank == -1) {
 			bDifferentGuild = true;
 		} else {
-			bDifferentGuild = guildid != mc.getGuildId();
-			mc.setGuildId(guildid);
-			mc.setGuildRank(rank);
-			mc.saveGuildStatus();
+			bDifferentGuild = guildid != player.getGuildId();
+			player.setGuildId(guildid);
+			player.setGuildRank(rank);
+			player.saveGuildStatus();
 		}
 		if (bDifferentGuild) {
-			mc.getMap().broadcastMessage(mc, MaplePacketCreator.removePlayerFromMap(cid), false);
-			mc.getMap().broadcastMessage(mc, MaplePacketCreator.spawnPlayerMapobject(mc), false);
+			player.getMap().broadcastMessage(player, MaplePacketCreator.removePlayerFromMap(cid), false);
+			player.getMap().broadcastMessage(player, MaplePacketCreator.spawnPlayerMapobject(player), false);
 		}
 	}
 
@@ -246,7 +246,7 @@ public class World {
 	}
 
 	public void sendPacket(List<Integer> targetIds, MaplePacket packet, int exception) {
-		MapleCharacter c;
+		GameCharacter c;
 		for (int i : targetIds) {
 			if (i == exception) {
 				continue;
@@ -275,7 +275,7 @@ public class World {
 
 	public void updateParty(MapleParty party, PartyOperation operation, MaplePartyCharacter target) {
 		for (MaplePartyCharacter partychar : party.getMembers()) {
-			MapleCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
+			GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
 			if (chr != null) {
 				if (operation == PartyOperation.DISBAND) {
 					chr.setParty(null);
@@ -290,7 +290,7 @@ public class World {
 		switch (operation) {
 			case LEAVE:
 			case EXPEL:
-				MapleCharacter chr = getPlayerStorage().getCharacterByName(target.getName());
+				GameCharacter chr = getPlayerStorage().getCharacterByName(target.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(MaplePacketCreator.updateParty(chr.getClient().getChannel(), party, operation, target));
 					chr.setParty(null);
@@ -332,7 +332,7 @@ public class World {
 
 	public byte find(String name) {
 		byte channel = -1;
-		MapleCharacter chr = getPlayerStorage().getCharacterByName(name);
+		GameCharacter chr = getPlayerStorage().getCharacterByName(name);
 		if (chr != null) {
 			channel = chr.getClient().getChannel();
 		}
@@ -341,7 +341,7 @@ public class World {
 
 	public byte find(int id) {
 		byte channel = -1;
-		MapleCharacter chr = getPlayerStorage().getCharacterById(id);
+		GameCharacter chr = getPlayerStorage().getCharacterById(id);
 		if (chr != null) {
 			channel = chr.getClient().getChannel();
 		}
@@ -351,7 +351,7 @@ public class World {
 	public void partyChat(MapleParty party, String chattext, String namefrom) {
 		for (MaplePartyCharacter partychar : party.getMembers()) {
 			if (!(partychar.getName().equals(namefrom))) {
-				MapleCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
+				GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(MaplePacketCreator.multiChat(namefrom, chattext, 1));
 				}
@@ -362,7 +362,7 @@ public class World {
 	public void buddyChat(int[] recipientCharacterIds, int cidFrom, String nameFrom, String chattext) {
 		PlayerStorage playerStorage = getPlayerStorage();
 		for (int characterId : recipientCharacterIds) {
-			MapleCharacter chr = playerStorage.getCharacterById(characterId);
+			GameCharacter chr = playerStorage.getCharacterById(characterId);
 			if (chr != null) {
 				if (chr.getBuddylist().containsVisible(cidFrom)) {
 					chr.getClient().getSession().write(MaplePacketCreator.multiChat(nameFrom, chattext, 0));
@@ -400,10 +400,10 @@ public class World {
 			MapleMessenger messenger = getPlayerStorage().getCharacterByName(target).getMessenger();
 			if (messenger == null) {
 				getPlayerStorage().getCharacterByName(target).getClient().getSession().write(MaplePacketCreator.messengerInvite(sender, messengerid));
-				MapleCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(sender);
+				GameCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(sender);
 				from.getClient().getSession().write(MaplePacketCreator.messengerNote(target, 4, 1));
 			} else {
-				MapleCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(sender);
+				GameCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(sender);
 				from.getClient().getSession().write(MaplePacketCreator.messengerChat(sender + " : " + target + " is already using Maple Messenger"));
 			}
 		}
@@ -412,14 +412,14 @@ public class World {
 	public void addMessengerPlayer(MapleMessenger messenger, String namefrom, byte fromchannel, int position) {
 		for (MapleMessengerCharacter messengerchar : messenger.getMembers()) {
 			if (!(messengerchar.getName().equals(namefrom))) {
-				MapleCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
+				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
-					MapleCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(namefrom);
+					GameCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(namefrom);
 					chr.getClient().getSession().write(MaplePacketCreator.addMessengerPlayer(namefrom, from, position, (byte) (fromchannel - 1)));
 					from.getClient().getSession().write(MaplePacketCreator.addMessengerPlayer(chr.getName(), chr, messengerchar.getPosition(), (byte) (messengerchar.getChannel() - 1)));
 				}
 			} else if ((messengerchar.getName().equals(namefrom))) {
-				MapleCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
+				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(MaplePacketCreator.joinMessenger(messengerchar.getPosition()));
 				}
@@ -429,7 +429,7 @@ public class World {
 
 	public void removeMessengerPlayer(MapleMessenger messenger, int position) {
 		for (MapleMessengerCharacter messengerchar : messenger.getMembers()) {
-			MapleCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
+			GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 			if (chr != null) {
 				chr.getClient().getSession().write(MaplePacketCreator.removeMessengerPlayer(position));
 			}
@@ -439,7 +439,7 @@ public class World {
 	public void messengerChat(MapleMessenger messenger, String chattext, String namefrom) {
 		for (MapleMessengerCharacter messengerchar : messenger.getMembers()) {
 			if (!(messengerchar.getName().equals(namefrom))) {
-				MapleCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
+				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(MaplePacketCreator.messengerChat(chattext));
 				}
@@ -449,7 +449,7 @@ public class World {
 
 	public void declineChat(String target, String namefrom) {
 		if (isConnected(target)) {
-			MapleCharacter chr = getPlayerStorage().getCharacterByName(target);
+			GameCharacter chr = getPlayerStorage().getCharacterByName(target);
 			if (chr != null && chr.getMessenger() != null) {
 				chr.getClient().getSession().write(MaplePacketCreator.messengerNote(namefrom, 5, 0));
 			}
@@ -466,7 +466,7 @@ public class World {
 		for (MapleMessengerCharacter messengerchar : messenger.getMembers()) {
 			Channel ch = getChannel(fromchannel);
 			if (!(messengerchar.getName().equals(namefrom))) {
-				MapleCharacter chr = ch.getPlayerStorage().getCharacterByName(messengerchar.getName());
+				GameCharacter chr = ch.getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(MaplePacketCreator.updateMessengerPlayer(namefrom, getChannel(fromchannel).getPlayerStorage().getCharacterByName(namefrom), position, (byte) (fromchannel - 1)));
 				}
@@ -517,7 +517,7 @@ public class World {
 	}
 
 	public BuddyAddResult requestBuddyAdd(String addName, byte channelFrom, int cidFrom, String nameFrom) {
-		MapleCharacter addChar = getPlayerStorage().getCharacterByName(addName);
+		GameCharacter addChar = getPlayerStorage().getCharacterByName(addName);
 		if (addChar != null) {
 			BuddyList buddylist = addChar.getBuddylist();
 			if (buddylist.isFull()) {
@@ -533,7 +533,7 @@ public class World {
 	}
 
 	public void buddyChanged(int cid, int cidFrom, String name, byte channel, BuddyOperation operation) {
-		MapleCharacter addChar = getPlayerStorage().getCharacterById(cid);
+		GameCharacter addChar = getPlayerStorage().getCharacterById(cid);
 		if (addChar != null) {
 			BuddyList buddylist = addChar.getBuddylist();
 			switch (operation) {
@@ -564,7 +564,7 @@ public class World {
 	private void updateBuddies(int characterId, byte channel, int[] buddies, boolean offline) {
 		PlayerStorage playerStorage = getPlayerStorage();
 		for (int buddy : buddies) {
-			MapleCharacter chr = playerStorage.getCharacterById(buddy);
+			GameCharacter chr = playerStorage.getCharacterById(buddy);
 			if (chr != null) {
 				BuddylistEntry ble = chr.getBuddylist().get(characterId);
 				if (ble != null && ble.isVisible()) {
@@ -590,7 +590,7 @@ public class World {
 	}
 
 	public void broadcastPacket(MaplePacket data) {
-		for (MapleCharacter chr : players.getAllCharacters()) {
+		for (GameCharacter chr : players.getAllCharacters()) {
 			chr.announce(data);
 		}
 	}

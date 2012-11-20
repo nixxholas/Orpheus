@@ -29,7 +29,7 @@ public class AranComboHandler extends AbstractMaplePacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		/*
-		 * MapleCharacter player = c.getPlayer(); if
+		 * GameCharacter player = c.getPlayer(); if
 		 * (player.getJob().equals(MapleJob.LEGEND) ||
 		 * player.getJob().isA(MapleJob.ARAN4)) { final long currentTime =
 		 * System.currentTimeMillis(); short combo = player.getCombo(); if

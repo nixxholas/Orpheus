@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 //import java.sql.Connection;
 //import java.sql.PreparedStatement;
 import client.GameClient;
-import client.MapleCharacter;
+import client.GameCharacter;
 //import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -39,11 +39,11 @@ public final class RingActionHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		byte mode = slea.readByte();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		switch (mode) {
 			case 0: // Send
 				String partnerName = slea.readMapleAsciiString();
-				MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(partnerName);
+				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(partnerName);
 				if (partnerName.equalsIgnoreCase(player.getName())) {
 					c.getPlayer().dropMessage(1, "You cannot put your own name in it.");
 					return;

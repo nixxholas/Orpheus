@@ -20,7 +20,7 @@
  */
 package server;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleJob;
 import net.StringValueHolder;
 import net.server.MaplePartyCharacter;
@@ -45,7 +45,7 @@ public class FourthJobQuestsPortalHandler {
 		}
 	}
 
-	public static boolean handlePortal(String name, MapleCharacter c) {
+	public static boolean handlePortal(String name, GameCharacter c) {
 		if (name.equals(FourthJobQuests.RUSH.getValue())) {
 			if (!(c.getParty().getLeader().getId() == c.getId()) && !checkRush(c)) {
 				c.dropMessage("You step into the portal, but it swiftly kicks you out.");
@@ -75,7 +75,7 @@ public class FourthJobQuestsPortalHandler {
 		return false;
 	}
 
-	private static boolean checkRush(MapleCharacter c) {
+	private static boolean checkRush(GameCharacter c) {
 		for (MaplePartyCharacter mpc : c.getParty().getMembers()) {
 			if (mpc.getJobId() % 100 != 2 || !mpc.getJob().isA(MapleJob.WARRIOR)) {
 				return false;

@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.MaplePortal;
@@ -36,7 +36,7 @@ public final class ChangeMapSpecialHandler extends AbstractMaplePacketHandler {
 		final String startwp = slea.readMapleAsciiString();
 		slea.readShort();
 		
-		final MapleCharacter player = c.getPlayer();
+		final GameCharacter player = c.getPlayer();
 		final MaplePortal portal = player.getMap().getPortal(startwp);
 		if (player.portalDelay() > System.currentTimeMillis()
 				|| player.getBlockedPortals().contains(portal.getScriptName())) {

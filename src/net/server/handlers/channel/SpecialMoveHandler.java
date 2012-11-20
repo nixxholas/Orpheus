@@ -23,8 +23,8 @@ package net.server.handlers.channel;
 import java.awt.Point;
 import java.util.concurrent.ScheduledFuture;
 import client.ISkill;
-import client.MapleCharacter;
-import client.MapleCharacter.CancelCooldownAction;
+import client.GameCharacter;
+import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.MapleStat;
 import client.SkillFactory;
@@ -50,7 +50,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MapleCharacter chr = c.getPlayer();
+		GameCharacter chr = c.getPlayer();
 		chr.getAutobanManager().setTimestamp(4, slea.readInt());
 		int skillid = slea.readInt();
 		Point pos = null;

@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import client.BuddyList;
 import client.BuddylistEntry;
 import client.CharacterNameAndId;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.BuddyList.BuddyAddResult;
 import client.BuddyList.BuddyOperation;
@@ -81,7 +81,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int mode = slea.readByte();
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		BuddyList buddylist = player.getBuddylist();
 		if (mode == 1) { // add
 			String addName = slea.readMapleAsciiString();
@@ -99,7 +99,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 					World world = c.getWorldServer();
 					CharacterIdNameBuddyCapacity charWithId = null;
 					byte channel;
-					MapleCharacter otherChar = c.getChannelServer().getPlayerStorage().getCharacterByName(addName);
+					GameCharacter otherChar = c.getChannelServer().getPlayerStorage().getCharacterByName(addName);
 					if (otherChar != null) {
 						channel = c.getChannel();
 						charWithId = new CharacterIdNameBuddyCapacity(otherChar.getId(), otherChar.getName(), otherChar.getBuddylist().getCapacity());
@@ -164,7 +164,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 				try {
 					byte channel = c.getWorldServer().find(otherCid);// worldInterface.find(otherCid);
 					String otherName = null;
-					MapleCharacter otherChar = c.getChannelServer().getPlayerStorage().getCharacterById(otherCid);
+					GameCharacter otherChar = c.getChannelServer().getPlayerStorage().getCharacterById(otherCid);
 					if (otherChar == null) {
 						Connection con = DatabaseConnection.getConnection();
 						try (PreparedStatement ps = getSelectCharacterNameById(con, otherCid);
@@ -205,7 +205,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 	}
 
 	private PreparedStatement getInsertPendingBunny(Connection con,
-			MapleCharacter player, CharacterIdNameBuddyCapacity charWithId)
+			GameCharacter player, CharacterIdNameBuddyCapacity charWithId)
 			throws SQLException {
 		PreparedStatement ps = con.prepareStatement("INSERT INTO buddies (characterid, `buddyid`, `pending`) VALUES (?, ?, 1)");
 		ps.setInt(1, charWithId.id);
@@ -214,7 +214,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 	}
 
 	private PreparedStatement getSelectPendingBuddy(Connection con,
-			MapleCharacter player, CharacterIdNameBuddyCapacity charWithId)
+			GameCharacter player, CharacterIdNameBuddyCapacity charWithId)
 			throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT pending FROM buddies WHERE characterid = ? AND buddyid = ?");
 		ps.setInt(1, charWithId.id);
@@ -231,7 +231,7 @@ public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
 	}
 
 	private void notifyRemoteChannel(GameClient c, int remoteChannel, int otherCid, BuddyOperation operation) {
-		MapleCharacter player = c.getPlayer();
+		GameCharacter player = c.getPlayer();
 		if (remoteChannel != -1) {
 			c.getWorldServer().buddyChanged(otherCid, player.getId(), player.getName(), c.getChannel(), operation);
 		}

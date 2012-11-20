@@ -20,7 +20,7 @@
  */
 package net.server;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 
 public class MapleMessengerCharacter {
 	private String name;
@@ -28,18 +28,18 @@ public class MapleMessengerCharacter {
 	private byte channel;
 	private boolean online;
 
-	public MapleMessengerCharacter(MapleCharacter maplechar) {
-		this.name = maplechar.getName();
-		this.channel = maplechar.getClient().getChannel();
-		this.id = maplechar.getId();
+	public MapleMessengerCharacter(GameCharacter character) {
+		this.name = character.getName();
+		this.channel = character.getClient().getChannel();
+		this.id = character.getId();
 		this.online = true;
 		this.position = 0;
 	}
 
-	public MapleMessengerCharacter(MapleCharacter maplechar, int position) {
-		this.name = maplechar.getName();
-		this.channel = maplechar.getClient().getChannel();
-		this.id = maplechar.getId();
+	public MapleMessengerCharacter(GameCharacter character, int position) {
+		this.name = character.getName();
+		this.channel = character.getClient().getChannel();
+		this.id = character.getId();
 		this.online = true;
 		this.position = position;
 	}

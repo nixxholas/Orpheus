@@ -27,7 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 import server.MaplePortal;
 import tools.MaplePacketCreator;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 
 /**
@@ -35,13 +35,13 @@ import client.GameClient;
  * @author Matze
  */
 public class MapleDoor extends AbstractMapleMapObject {
-	private MapleCharacter owner;
+	private GameCharacter owner;
 	private MapleMap town;
 	private MaplePortal townPortal;
 	private MapleMap target;
 	private Point targetPosition;
 
-	public MapleDoor(MapleCharacter owner, Point targetPosition) {
+	public MapleDoor(GameCharacter owner, Point targetPosition) {
 		super();
 		this.owner = owner;
 		this.target = owner.getMap();
@@ -111,7 +111,7 @@ public class MapleDoor extends AbstractMapleMapObject {
 		}
 	}
 
-	public void warp(MapleCharacter chr, boolean toTown) {
+	public void warp(GameCharacter chr, boolean toTown) {
 		if (chr == owner || owner.getParty() != null && owner.getParty().containsMembers(chr.getMPC())) {
 			if (!toTown) {
 				chr.changeMap(target, targetPosition);
@@ -123,7 +123,7 @@ public class MapleDoor extends AbstractMapleMapObject {
 		}
 	}
 
-	public MapleCharacter getOwner() {
+	public GameCharacter getOwner() {
 		return owner;
 	}
 

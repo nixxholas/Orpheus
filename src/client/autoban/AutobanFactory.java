@@ -20,7 +20,7 @@
  */
 package client.autoban;
 
-import client.MapleCharacter;
+import client.GameCharacter;
 
 /**
  * 
@@ -58,7 +58,7 @@ public enum AutobanFactory {
 		ban.addPoint(this, reason);
 	}
 
-	public void autoban(MapleCharacter chr, String value) {
+	public void autoban(GameCharacter chr, String value) {
 		chr.autoban("Autobanned for (" + this.name() + ": " + value + ")", 1);
 		chr.sendPolice("You have been blocked by #bMooplePolice#k for the HACK reason.");
 	}

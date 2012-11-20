@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
@@ -44,13 +44,13 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		final MapleCharacter player = c.getPlayer();
+		final GameCharacter player = c.getPlayer();
 		if (!player.isGM()) {
 			return;
 		}
 		byte mode = slea.readByte();
 		String victim;
-		MapleCharacter target;
+		GameCharacter target;
 		switch (mode) {
 			case 0x00: // Level1~Level8 & Package1~Package2
 				int[][] toSpawn = MapleItemInformationProvider.getInstance().getSummonMobs(slea.readInt());
@@ -83,13 +83,13 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 				String reason = victim + " permanent banned by " + player.getName();
 				target = c.getChannelServer().getPlayerStorage().getCharacterByName(victim);
 				if (target != null) {
-					String readableTargetName = MapleCharacter.makeMapleReadable(target.getName());
+					String readableTargetName = GameCharacter.makeMapleReadable(target.getName());
 					String ip = target.getClient().getSession().getRemoteAddress().toString().split(":")[0];
 					reason += readableTargetName + " (IP: " + ip + ")";
 					target.ban(reason);
 					target.sendPolice("You have been blocked by #b" + player.getName() + " #kfor the HACK reason.");
 					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
-				} else if (MapleCharacter.ban(victim, reason, false)) {
+				} else if (GameCharacter.ban(victim, reason, false)) {
 					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
 				} else {
 					c.announce(MaplePacketCreator.getGMEffect(6, (byte) 1));
@@ -103,7 +103,7 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 				reason = player.getName() + " used /ban to ban";
 				target = c.getChannelServer().getPlayerStorage().getCharacterByName(victim);
 				if (target != null) {
-					String readableTargetName = MapleCharacter.makeMapleReadable(target.getName());
+					String readableTargetName = GameCharacter.makeMapleReadable(target.getName());
 					String ip = target.getClient().getSession().getRemoteAddress().toString().split(":")[0];
 					reason += readableTargetName + " (IP: " + ip + ")";
 					if (duration == -1) {
@@ -112,7 +112,7 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 						// target.tempban(reason, duration, type);
 					}
 					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
-				} else if (MapleCharacter.ban(victim, reason, false)) {
+				} else if (GameCharacter.ban(victim, reason, false)) {
 					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
 				} else {
 					c.announce(MaplePacketCreator.getGMEffect(6, (byte) 1));
@@ -120,8 +120,8 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 				break;
 			case 0x10: // /h, information by vana
 				StringBuilder sb = new StringBuilder("USERS ON THIS MAP: ");
-				for (MapleCharacter mc : player.getMap().getCharacters()) {
-					sb.append(mc.getName());
+				for (GameCharacter character : player.getMap().getCharacters()) {
+					sb.append(character.getName());
 					sb.append(" ");
 				}
 				player.message(sb.toString());

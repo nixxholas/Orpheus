@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.Equip;
 import client.IItem;
 import client.Item;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
@@ -265,7 +265,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 		}
 	}
 
-	public static List<DueyPackages> loadItems(MapleCharacter chr) {
+	public static List<DueyPackages> loadItems(GameCharacter chr) {
 		List<DueyPackages> packages = new LinkedList<DueyPackages>();
 		Connection con = DatabaseConnection.getConnection();
 		try {

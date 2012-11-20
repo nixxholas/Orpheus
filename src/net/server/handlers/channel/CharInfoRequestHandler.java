@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import constants.ServerConstants;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
@@ -33,7 +33,7 @@ public final class CharInfoRequestHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.readInt();
 		int cid = slea.readInt();
-		MapleCharacter player = (MapleCharacter) c.getPlayer().getMap().getMapObject(cid);
+		GameCharacter player = (GameCharacter) c.getPlayer().getMap().getMapObject(cid);
 		if (player.isHidden() && !c.getPlayer().isGM())
 			return;
 		else if (player.isGM() && !c.getPlayer().isGM() && !ServerConstants.ALLOW_INFO_ON_GMS)

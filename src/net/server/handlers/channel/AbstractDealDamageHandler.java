@@ -29,7 +29,7 @@ import java.util.List;
 import client.ISkill;
 import client.Item;
 import client.MapleBuffStat;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.MapleStat;
@@ -96,7 +96,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
         public boolean isHH = false;
         public int speed = 4;
 
-        public MapleStatEffect getAttackEffect(MapleCharacter chr, ISkill theSkill) {
+        public MapleStatEffect getAttackEffect(GameCharacter chr, ISkill theSkill) {
             ISkill mySkill = theSkill;
             if (mySkill == null) {
                 mySkill = SkillFactory.getSkill(skill);
@@ -122,7 +122,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
         }
     }
 
-	protected synchronized void applyAttack(AttackInfo attack, final MapleCharacter player, int attackCount) {
+	protected synchronized void applyAttack(AttackInfo attack, final GameCharacter player, int attackCount) {
         ISkill theSkill = null;
         MapleStatEffect attackEffect = null;
         try {
@@ -374,7 +374,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
         }
     }
 
-    protected AttackInfo parseDamage(LittleEndianAccessor lea, MapleCharacter chr, boolean ranged) {
+    protected AttackInfo parseDamage(LittleEndianAccessor lea, GameCharacter chr, boolean ranged) {
         AttackInfo ret = new AttackInfo();
         lea.readByte();
         ret.numAttackedAndDamage = lea.readByte();

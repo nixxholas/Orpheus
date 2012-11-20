@@ -25,7 +25,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import constants.ServerConstants;
-import client.MapleCharacter;
+import client.GameCharacter;
 import client.GameClient;
 import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
@@ -46,7 +46,7 @@ public final class ViewCharHandler extends AbstractMaplePacketHandler {
 			ps.setInt(1, c.getAccID());
 			short charsNum = 0;
 			List<Byte> worlds = new ArrayList<Byte>();
-			List<MapleCharacter> chars = new ArrayList<MapleCharacter>();
+			List<GameCharacter> chars = new ArrayList<GameCharacter>();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				byte cworld = rs.getByte("world");
@@ -59,7 +59,7 @@ public final class ViewCharHandler extends AbstractMaplePacketHandler {
 				if (!inside) {
 					worlds.add(cworld);
 				}
-				MapleCharacter chr = MapleCharacter.loadCharFromDB(rs.getInt("id"), c, false);
+				GameCharacter chr = GameCharacter.loadCharFromDB(rs.getInt("id"), c, false);
 				chars.add(chr);
 				charsNum++;
 			}
@@ -68,8 +68,8 @@ public final class ViewCharHandler extends AbstractMaplePacketHandler {
 			int unk = charsNum + 3 - charsNum % 3;
 			c.announce(MaplePacketCreator.showAllCharacter(charsNum, unk));
 			for (byte w : worlds) {
-				List<MapleCharacter> chrsinworld = new ArrayList<MapleCharacter>();
-				for (MapleCharacter chr : chars) {
+				List<GameCharacter> chrsinworld = new ArrayList<GameCharacter>();
+				for (GameCharacter chr : chars) {
 					if (chr.getWorld() == w) {
 						chrsinworld.add(chr);
 					}
