@@ -38,9 +38,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import tools.DatabaseConnection;
 import tools.Output;
 import net.GamePacket;
-import net.MapleServerHandler;
+import net.GameServerHandler;
 import net.PacketProcessor;
-import net.mina.MapleCodecFactory;
+import net.mina.GameCodecFactory;
 import provider.MapleDataProviderFactory;
 import scripting.event.EventScriptManager;
 import server.TimerManager;
@@ -96,9 +96,9 @@ public final class Channel {
 			IoBuffer.setAllocator(new SimpleBufferAllocator());
 			acceptor = new NioSocketAcceptor();
 			TimerManager.getInstance().register(new respawnMaps(), 10000);
-			acceptor.setHandler(new MapleServerHandler(PacketProcessor.getProcessor(), channel, world));
+			acceptor.setHandler(new GameServerHandler(PacketProcessor.getProcessor(), channel, world));
 			acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
-			acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
+			acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new GameCodecFactory()));
 			acceptor.bind(new InetSocketAddress(port));
 			((SocketSessionConfig) acceptor.getSessionConfig()).setTcpNoDelay(true);
 

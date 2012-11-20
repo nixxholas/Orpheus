@@ -41,9 +41,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.GamePacket;
 import tools.DatabaseConnection;
-import net.MapleServerHandler;
+import net.GameServerHandler;
 import net.PacketProcessor;
-import net.mina.MapleCodecFactory;
+import net.mina.GameCodecFactory;
 import net.server.guild.MapleAlliance;
 import net.server.guild.MapleGuild;
 import net.server.guild.MapleGuildCharacter;
@@ -159,7 +159,7 @@ public class Server implements Runnable {
 		IoBuffer.setUseDirectBuffer(false);
 		IoBuffer.setAllocator(new SimpleBufferAllocator());
 		acceptor = new NioSocketAcceptor();
-		acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
+		acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new GameCodecFactory()));
 		TimerManager tMan = TimerManager.getInstance();
 		tMan.start();
 		tMan.register(tMan.purge(), 300000);// Purging ftw...
@@ -199,7 +199,7 @@ public class Server implements Runnable {
 			System.exit(0);
 		}
 		acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
-		acceptor.setHandler(new MapleServerHandler(PacketProcessor.getProcessor()));
+		acceptor.setHandler(new GameServerHandler(PacketProcessor.getProcessor()));
 		try {
 			acceptor.bind(new InetSocketAddress(8484));
 		} catch (IOException ex) {
