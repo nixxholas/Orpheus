@@ -17,13 +17,13 @@
  */
 package client;
 
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.life.Element;
 
 public interface ISkill {
 	int getId();
 
-	MapleStatEffect getEffect(int level);
+	StatEffect getEffect(int level);
 
 	int getMaxLevel();
 

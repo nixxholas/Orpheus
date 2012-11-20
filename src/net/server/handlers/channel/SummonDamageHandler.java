@@ -28,7 +28,7 @@ import client.GameClient;
 import client.SkillFactory;
 import client.status.MonsterStatusEffect;
 import net.AbstractPacketHandler;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.life.MapleMonster;
 import server.maps.Summon;
 import tools.PacketCreator;
@@ -70,7 +70,7 @@ public final class SummonDamageHandler extends AbstractPacketHandler {
 			return;
 		}
 		ISkill summonSkill = SkillFactory.getSkill(summon.getSkill());
-		MapleStatEffect summonEffect = summonSkill.getEffect(summon.getSkillLevel());
+		StatEffect summonEffect = summonSkill.getEffect(summon.getSkillLevel());
 		slea.skip(4);
 		List<SummonAttackEntry> allDamage = new ArrayList<SummonAttackEntry>();
 		byte direction = slea.readByte();

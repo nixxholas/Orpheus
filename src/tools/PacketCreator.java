@@ -81,7 +81,7 @@ import server.CashShop.SpecialCashItem;
 import server.DueyPackages;
 import server.GiftEntry;
 import server.MTSItemInfo;
-import server.MapleBuffStatDelta;
+import server.BuffStatDelta;
 import server.ItemInfoProvider;
 import server.Minigame;
 import server.PlayerShop;
@@ -2613,12 +2613,12 @@ public class PacketCreator {
 	// 8E AA 4F 00 00 C2 EB 0B E0 01 8E AA 4F 00 00 C2 EB 0B 0C 00 8E AA 4F 00
 	// 00 C2 EB 0B 44 02 8E AA 4F 00 00 C2 EB 0B 44 02 8E AA 4F 00 00 C2 EB 0B
 	// 00 00 E0 7A 1D 00 8E AA 4F 00 00 00 00 00 00 00 00 03
-	public static GamePacket giveBuff(int buffid, int bufflength, List<MapleBuffStatDelta> statups) {
+	public static GamePacket giveBuff(int buffid, int bufflength, List<BuffStatDelta> statups) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_BUFF.getValue());
 		boolean special = false;
 		writeLongMask(w, statups);
-		for (MapleBuffStatDelta statup : statups) {
+		for (BuffStatDelta statup : statups) {
 			if (statup.stat.equals(BuffStat.MONSTER_RIDING) || statup.stat.equals(BuffStat.HOMING_BEACON)) {
 				special = true;
 			}
@@ -2789,12 +2789,12 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket giveForeignBuff(int cid, List<MapleBuffStatDelta> statups) {
+	public static GamePacket giveForeignBuff(int cid, List<BuffStatDelta> statups) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_FOREIGN_BUFF.getValue());
 		w.writeInt(cid);
 		writeLongMask(w, statups);
-		for (MapleBuffStatDelta statup : statups) {
+		for (BuffStatDelta statup : statups) {
 			w.writeShort(statup.delta);
 		}
 		w.writeInt(0);
@@ -2818,10 +2818,10 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	private static void writeLongMask(PacketWriter w, List<MapleBuffStatDelta> statups) {
+	private static void writeLongMask(PacketWriter w, List<BuffStatDelta> statups) {
 		long firstmask = 0;
 		long secondmask = 0;
-		for (MapleBuffStatDelta statup : statups) {
+		for (BuffStatDelta statup : statups) {
 			if (statup.stat.isFirst()) {
 				firstmask |= statup.stat.getValue();
 			} else {
@@ -5223,12 +5223,12 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket givePirateBuff(List<MapleBuffStatDelta> statups, int buffid, int duration) {
+	public static GamePacket givePirateBuff(List<BuffStatDelta> statups, int buffid, int duration) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_BUFF.getValue());
 		writeLongMask(w, statups);
 		w.writeShort(0);
-		for (MapleBuffStatDelta stat : statups) {
+		for (BuffStatDelta stat : statups) {
 			w.writeInt(stat.delta);
 			w.writeInt(buffid);
 			w.write0(5);
@@ -5238,13 +5238,13 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket giveForeignDash(int cid, int buffid, int time, List<MapleBuffStatDelta> statups) {
+	public static GamePacket giveForeignDash(int cid, int buffid, int time, List<BuffStatDelta> statups) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_FOREIGN_BUFF.getValue());
 		w.writeInt(cid);
 		writeLongMask(w, statups);
 		w.writeShort(0);
-		for (MapleBuffStatDelta statup : statups) {
+		for (BuffStatDelta statup : statups) {
 			w.writeInt(statup.delta);
 			w.writeInt(buffid);
 			w.write0(5);

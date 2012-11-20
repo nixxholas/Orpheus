@@ -26,7 +26,7 @@ import client.InventoryType;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.MapleStatEffect;
+import server.StatEffect;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -50,7 +50,7 @@ public final class PetAutoPotHandler extends AbstractPacketHandler {
 				return;
 			}
 			InventoryManipulator.removeFromSlot(c, InventoryType.USE, slot, (short) 1, false);
-			MapleStatEffect stat = ItemInfoProvider.getInstance().getItemEffect(toUse.getItemId());
+			StatEffect stat = ItemInfoProvider.getInstance().getItemEffect(toUse.getItemId());
 			stat.applyTo(c.getPlayer());
 			if (stat.getMp() > 0) {
 				c.announce(PacketCreator.sendAutoMpPot(itemId));

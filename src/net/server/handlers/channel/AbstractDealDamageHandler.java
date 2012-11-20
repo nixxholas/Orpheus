@@ -71,9 +71,9 @@ import constants.skills.Spearman;
 import java.util.HashMap;
 import java.util.Map;
 
-import server.MapleBuffStatDelta;
+import server.BuffStatDelta;
 import server.ItemInfoProvider;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.TimerManager;
 import server.life.Element;
 import server.life.ElementalEffectiveness;
@@ -96,7 +96,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
         public boolean isHH = false;
         public int speed = 4;
 
-        public MapleStatEffect getAttackEffect(GameCharacter chr, ISkill theSkill) {
+        public StatEffect getAttackEffect(GameCharacter chr, ISkill theSkill) {
             ISkill mySkill = theSkill;
             if (mySkill == null) {
                 mySkill = SkillFactory.getSkill(skill);
@@ -124,7 +124,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
 
 	protected synchronized void applyAttack(AttackInfo attack, final GameCharacter player, int attackCount) {
         ISkill theSkill = null;
-        MapleStatEffect attackEffect = null;
+        StatEffect attackEffect = null;
         try {
             if (player.isBanned()) {
                 return;
@@ -253,7 +253,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         monster.setTempEffectiveness(Element.FIRE, ElementalEffectiveness.WEAK, SkillFactory.getSkill(ILArchMage.ICE_DEMON).getEffect(player.getSkillLevel(SkillFactory.getSkill(ILArchMage.ICE_DEMON))).getDuration() * 1000);
                     } else if (attack.skill == Outlaw.HOMING_BEACON || attack.skill == Corsair.BULLSEYE) {
                         player.setMarkedMonster(monster.getObjectId());
-                        player.announce(PacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new MapleBuffStatDelta(BuffStat.HOMING_BEACON, monster.getObjectId()))));
+                        player.announce(PacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new BuffStatDelta(BuffStat.HOMING_BEACON, monster.getObjectId()))));
                     }
                     if (player.getBuffedValue(BuffStat.HAMSTRING) != null) {
                         ISkill hamstring = SkillFactory.getSkill(Bowmaster.HAMSTRING);
@@ -285,7 +285,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         ISkill skill;
                         if (player.getBuffedValue(BuffStat.BODY_PRESSURE) != null) {
                             skill = SkillFactory.getSkill(21101003);
-                            final MapleStatEffect eff = skill.getEffect(player.getSkillLevel(skill));
+                            final StatEffect eff = skill.getEffect(player.getSkillLevel(skill));
 
                             if (eff.makeChanceResult()) {
                                 monster.applyStatus(player, new MonsterStatusEffect(Collections.singletonMap(MonsterStatus.NEUTRALISE, 1), skill, null, false), false, eff.getX() * 1000, false);
@@ -299,7 +299,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     } else if (id == 412 || id == 422 || id == 1411) {
                         ISkill type = SkillFactory.getSkill(player.getJob().getId() == 412 ? 4120005 : (player.getJob().getId() == 1411 ? 14110004 : 4220005));
                         if (player.getSkillLevel(type) > 0) {
-                            MapleStatEffect venomEffect = type.getEffect(player.getSkillLevel(type));
+                            StatEffect venomEffect = type.getEffect(player.getSkillLevel(type));
                             for (int i = 0; i < attackCount; i++) {
                                 if (venomEffect.makeChanceResult()) {
                                     if (monster.getVenomMulti() < 3) {

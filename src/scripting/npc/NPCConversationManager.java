@@ -55,7 +55,7 @@ import scripting.AbstractPlayerInteraction;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.ShopFactory;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.events.gm.MapleEvent;
 import server.expeditions.Expedition;
 import server.maps.GameMap;
@@ -288,7 +288,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		return Job.getById(id);
 	}
 
-	public MapleStatEffect getItemEffect(int itemId) {
+	public StatEffect getItemEffect(int itemId) {
 		return ItemInfoProvider.getInstance().getItemEffect(itemId);
 	}
 

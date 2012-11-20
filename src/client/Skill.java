@@ -19,12 +19,12 @@ package client;
 
 import java.util.ArrayList;
 import java.util.List;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.life.Element;
 
 public class Skill implements ISkill {
 	public int id;
-	public List<MapleStatEffect> effects = new ArrayList<MapleStatEffect>();
+	public List<StatEffect> effects = new ArrayList<StatEffect>();
 	public Element element;
 	public int animationTime;
 	public boolean action;
@@ -39,7 +39,7 @@ public class Skill implements ISkill {
 	}
 
 	@Override
-	public MapleStatEffect getEffect(int level) {
+	public StatEffect getEffect(int level) {
 		return effects.get(level - 1);
 	}
 

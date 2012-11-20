@@ -61,14 +61,14 @@ import net.server.guild.Guild;
 import net.server.guild.GuildCharacter;
 import scripting.event.EventInstanceManager;
 import server.CashShop;
-import server.MapleBuffStatDelta;
+import server.BuffStatDelta;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.Minigame;
 import server.PlayerShop;
 import server.Portal;
 import server.Shop;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.MapleStocks;
 import server.Storage;
 import server.Trade;
@@ -657,14 +657,14 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		cancelEffect(ItemInfoProvider.getInstance().getItemEffect(itemId), false, -1);
 	}
 
-	public void cancelEffect(MapleStatEffect effect, boolean overwrite, long startTime) {
+	public void cancelEffect(StatEffect effect, boolean overwrite, long startTime) {
 		List<BuffStat> buffstats;
 		if (!overwrite) {
 			buffstats = getBuffStats(effect, startTime);
 		} else {
-			List<MapleBuffStatDelta> statups = effect.getStatups();
+			List<BuffStatDelta> statups = effect.getStatups();
 			buffstats = new ArrayList<BuffStat>(statups.size());
-			for (MapleBuffStatDelta statup : statups) {
+			for (BuffStatDelta statup : statups) {
 				buffstats.add(statup.stat);
 			}
 		}
@@ -1545,7 +1545,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return mbsvh.effect.getSourceId();
 	}
 
-	private List<BuffStat> getBuffStats(MapleStatEffect effect, long startTime) {
+	private List<BuffStat> getBuffStats(StatEffect effect, long startTime) {
 		List<BuffStat> stats = new ArrayList<BuffStat>();
 		for (Entry<BuffStat, BuffStatValueHolder> stateffect : effects.entrySet()) {
 			if (stateffect.getValue().effect.sameSource(effect) && (startTime == -1 || startTime == stateffect.getValue().startTime)) {
@@ -2185,7 +2185,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return i;
 	}
 
-	public MapleStatEffect getStatForBuff(BuffStat effect) {
+	public StatEffect getStatForBuff(BuffStat effect) {
 		BuffStatValueHolder mbsvh = effects.get(effect);
 		if (mbsvh == null) {
 			return null;
@@ -2315,7 +2315,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void handleEnergyChargeGain() { // to get here energychargelevel has
 											// to be > 0
 		ISkill energycharge = isCygnus() ? SkillFactory.getSkill(ThunderBreaker.ENERGY_CHARGE) : SkillFactory.getSkill(Marauder.ENERGY_CHARGE);
-		MapleStatEffect ceffect = null;
+		StatEffect ceffect = null;
 		ceffect = energycharge.getEffect(getSkillLevel(energycharge));
 		TimerManager tMan = TimerManager.getInstance();
 		if (energybar < 10000) {
@@ -2323,7 +2323,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			if (energybar > 10000) {
 				energybar = 10000;
 			}
-			List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(BuffStat.ENERGY_CHARGE, energybar));
+			List<BuffStatDelta> stat = Collections.singletonList(new BuffStatDelta(BuffStat.ENERGY_CHARGE, energybar));
 			setBuffedValue(BuffStat.ENERGY_CHARGE, energybar);
 			client.announce(PacketCreator.giveBuff(energybar, 0, stat));
 			client.announce(PacketCreator.showOwnBuffEffect(energycharge.getId(), 2));
@@ -2338,7 +2338,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				@Override
 				public void run() {
 					energybar = 0;
-					List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(BuffStat.ENERGY_CHARGE, energybar));
+					List<BuffStatDelta> stat = Collections.singletonList(new BuffStatDelta(BuffStat.ENERGY_CHARGE, energybar));
 					setBuffedValue(BuffStat.ENERGY_CHARGE, energybar);
 					client.announce(PacketCreator.giveBuff(energybar, 0, stat));
 					getMap().broadcastMessage(chr, PacketCreator.giveForeignBuff(energybar, stat));
@@ -2350,7 +2350,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void handleOrbconsume() {
 		int skillid = isCygnus() ? DawnWarrior.COMBO : Crusader.COMBO;
 		ISkill combo = SkillFactory.getSkill(skillid);
-		List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(BuffStat.COMBO, 1));
+		List<BuffStatDelta> stat = Collections.singletonList(new BuffStatDelta(BuffStat.COMBO, 1));
 		setBuffedValue(BuffStat.COMBO, 1);
 		client.announce(PacketCreator.giveBuff(skillid, combo.getEffect(getSkillLevel(combo)).getDuration() + (int) ((getBuffedStarttime(BuffStat.COMBO) - System.currentTimeMillis())), stat));
 		getMap().broadcastMessage(this, PacketCreator.giveForeignBuff(getId(), stat), false);
@@ -2931,12 +2931,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	private static class BuffStatValueHolder {
 
-		public MapleStatEffect effect;
+		public StatEffect effect;
 		public long startTime;
 		public int value;
 		public ScheduledFuture<?> schedule;
 
-		public BuffStatValueHolder(MapleStatEffect effect, long startTime, ScheduledFuture<?> schedule, int value) {
+		public BuffStatValueHolder(StatEffect effect, long startTime, ScheduledFuture<?> schedule, int value) {
 			super();
 			this.effect = effect;
 			this.startTime = startTime;
@@ -3109,7 +3109,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		client.announce(PacketCreator.enableActions());
 	}
 
-	private void prepareDragonBlood(final MapleStatEffect bloodEffect) {
+	private void prepareDragonBlood(final StatEffect bloodEffect) {
 		if (dragonBloodSchedule != null) {
 			dragonBloodSchedule.cancel(false);
 		}
@@ -3215,7 +3215,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void registerEffect(MapleStatEffect effect, long starttime, ScheduledFuture<?> schedule) {
+	public void registerEffect(StatEffect effect, long starttime, ScheduledFuture<?> schedule) {
 		if (effect.isDragonBlood()) {
 			prepareDragonBlood(effect);
 		} else if (effect.isBerserk()) {
@@ -3231,7 +3231,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ISkill bHealing = SkillFactory.getSkill(DarkKnight.AURA_OF_BEHOLDER);
 			int bHealingLvl = getSkillLevel(bHealing);
 			if (bHealingLvl > 0) {
-				final MapleStatEffect healEffect = bHealing.getEffect(bHealingLvl);
+				final StatEffect healEffect = bHealing.getEffect(bHealingLvl);
 				int healInterval = healEffect.getX() * 1000;
 				beholderHealingSchedule = TimerManager.getInstance().register(new Runnable() {
 
@@ -3246,7 +3246,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 			ISkill bBuff = SkillFactory.getSkill(DarkKnight.HEX_OF_BEHOLDER);
 			if (getSkillLevel(bBuff) > 0) {
-				final MapleStatEffect buffEffect = bBuff.getEffect(getSkillLevel(bBuff));
+				final StatEffect buffEffect = bBuff.getEffect(getSkillLevel(bBuff));
 				int buffInterval = buffEffect.getX() * 1000;
 				beholderBuffSchedule = TimerManager.getInstance().register(new Runnable() {
 
@@ -3271,7 +3271,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 			}, 5000, 5000);
 		}
-		for (MapleBuffStatDelta statup : effect.getStatups()) {
+		for (BuffStatDelta statup : effect.getStatups()) {
 			effects.put(statup.stat, new BuffStatValueHolder(effect, starttime, schedule, statup.delta));
 		}
 		recalcLocalStats();

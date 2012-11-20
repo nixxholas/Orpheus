@@ -40,7 +40,7 @@ import net.server.Channel;
 import net.server.Party;
 import net.server.PartyCharacter;
 import net.server.Server;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.TimerManager;
 import server.life.MapleMonster;
 import tools.PacketCreator;
@@ -65,7 +65,7 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 		if (skillLevel == 0 || skillLevel != __skillLevel)
 			return;
 
-		MapleStatEffect effect = skill.getEffect(skillLevel);
+		StatEffect effect = skill.getEffect(skillLevel);
 		if (effect.getCooldown() > 0) {
 			if (chr.skillisCooling(skillid)) {
 				return;
@@ -107,7 +107,7 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 			chr.removeAllCooldownsExcept(Buccaneer.TIME_LEAP);
 		} else if (skillid == Brawler.MP_RECOVERY) {// MP Recovery
 			ISkill s = SkillFactory.getSkill(skillid);
-			MapleStatEffect ef = s.getEffect(chr.getSkillLevel(s));
+			StatEffect ef = s.getEffect(chr.getSkillLevel(s));
 			int lose = chr.getMaxHp() / ef.getX();
 			chr.setHp(chr.getHp() - lose);
 			chr.updateSingleStat(Stat.HP, chr.getHp());

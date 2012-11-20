@@ -71,7 +71,7 @@ public class ItemInfoProvider {
 	protected MapleData petStringData;
 	protected Map<Integer, InventoryType> inventoryTypeCache = new HashMap<Integer, InventoryType>();
 	protected Map<Integer, Short> slotMaxCache = new HashMap<Integer, Short>();
-	protected Map<Integer, MapleStatEffect> itemEffects = new HashMap<Integer, MapleStatEffect>();
+	protected Map<Integer, StatEffect> itemEffects = new HashMap<Integer, StatEffect>();
 	protected Map<Integer, Map<String, Integer>> equipStatsCache = new HashMap<Integer, Map<String, Integer>>();
 	protected Map<Integer, Equip> equipCache = new HashMap<Integer, Equip>();
 	protected Map<Integer, Double> priceCache = new HashMap<Integer, Double>();
@@ -670,15 +670,15 @@ public class ItemInfoProvider {
 		return equip;
 	}
 
-	public MapleStatEffect getItemEffect(int itemId) {
-		MapleStatEffect ret = itemEffects.get(Integer.valueOf(itemId));
+	public StatEffect getItemEffect(int itemId) {
+		StatEffect ret = itemEffects.get(Integer.valueOf(itemId));
 		if (ret == null) {
 			MapleData item = getItemData(itemId);
 			if (item == null) {
 				return null;
 			}
 			MapleData spec = item.getChildByPath("spec");
-			ret = MapleStatEffect.loadItemEffectFromData(spec, itemId);
+			ret = StatEffect.loadItemEffectFromData(spec, itemId);
 			itemEffects.put(Integer.valueOf(itemId), ret);
 		}
 		return ret;

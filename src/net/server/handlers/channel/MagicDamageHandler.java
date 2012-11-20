@@ -26,7 +26,7 @@ import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.SkillFactory;
 import net.GamePacket;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.TimerManager;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -42,9 +42,9 @@ public final class MagicDamageHandler extends AbstractDealDamageHandler {
 			packet = PacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);
 		}
 		player.getMap().broadcastMessage(player, packet, false, true);
-		MapleStatEffect effect = attack.getAttackEffect(player, null);
+		StatEffect effect = attack.getAttackEffect(player, null);
 		ISkill skill = SkillFactory.getSkill(attack.skill);
-		MapleStatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
+		StatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
 		if (effect_.getCooldown() > 0) {
 			if (player.skillisCooling(attack.skill)) {
 				return;

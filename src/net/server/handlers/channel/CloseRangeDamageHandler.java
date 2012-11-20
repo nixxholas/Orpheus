@@ -39,8 +39,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import server.MapleBuffStatDelta;
-import server.MapleStatEffect;
+import server.BuffStatDelta;
+import server.StatEffect;
 import server.TimerManager;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -70,7 +70,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 				int advcomboid = player.isCygnus() ? DawnWarrior.ADVANCED_COMBO : Hero.ADVANCED_COMBO;
 				ISkill combo = SkillFactory.getSkill(oid);
 				ISkill advcombo = SkillFactory.getSkill(advcomboid);
-				MapleStatEffect ceffect = null;
+				StatEffect ceffect = null;
 				int advComboSkillLevel = player.getSkillLevel(advcombo);
 				if (advComboSkillLevel > 0) {
 					ceffect = advcombo.getEffect(advComboSkillLevel);
@@ -86,7 +86,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 						}
 					}
 					int duration = combo.getEffect(player.getSkillLevel(oid)).getDuration();
-					List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(BuffStat.COMBO, neworbcount));
+					List<BuffStatDelta> stat = Collections.singletonList(new BuffStatDelta(BuffStat.COMBO, neworbcount));
 					player.setBuffedValue(BuffStat.COMBO, neworbcount);
 					duration -= (int) (System.currentTimeMillis() - player.getBuffedStarttime(BuffStat.COMBO));
 					c.announce(PacketCreator.giveBuff(oid, duration, stat));
@@ -140,7 +140,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 		
 		if (attack.skill > 0) {
 			ISkill skill = SkillFactory.getSkill(attack.skill);
-			MapleStatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
+			StatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
 			if (effect_.getCooldown() > 0) {
 				if (player.skillisCooling(attack.skill)) {
 					return;

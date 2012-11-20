@@ -27,7 +27,7 @@ import client.SkillFactory;
 import java.awt.Point;
 import java.awt.Rectangle;
 import net.GamePacket;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.life.MapleMonster;
 import server.life.MobSkill;
 import tools.PacketCreator;
@@ -40,7 +40,7 @@ public class Mist extends AbstractGameMapObject {
 	private Rectangle mistPosition;
 	private GameCharacter owner = null;
 	private MapleMonster mob = null;
-	private MapleStatEffect source;
+	private StatEffect source;
 	private MobSkill skill;
 	private boolean isMobMist, isPoisonMist;
 	private int skillDelay;
@@ -54,7 +54,7 @@ public class Mist extends AbstractGameMapObject {
 		skillDelay = 0;
 	}
 
-	public Mist(Rectangle mistPosition, GameCharacter owner, MapleStatEffect source) {
+	public Mist(Rectangle mistPosition, GameCharacter owner, StatEffect source) {
 		this.mistPosition = mistPosition;
 		this.owner = owner;
 		this.source = source;

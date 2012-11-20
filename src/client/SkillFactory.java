@@ -76,7 +76,7 @@ import provider.MapleDataFileEntry;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
-import server.MapleStatEffect;
+import server.StatEffect;
 import server.life.Element;
 
 public class SkillFactory {
@@ -354,7 +354,7 @@ public class SkillFactory {
 			}
 		}
 		for (MapleData level : data.getChildByPath("level")) {
-			ret.effects.add(MapleStatEffect.loadSkillEffectFromData(level, id, isBuff));
+			ret.effects.add(StatEffect.loadSkillEffectFromData(level, id, isBuff));
 		}
 		ret.animationTime = 0;
 		if (effect != null) {
