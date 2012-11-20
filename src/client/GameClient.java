@@ -56,7 +56,7 @@ import server.MapleTrade;
 import server.TimerManager;
 import server.maps.HiredMerchant;
 import tools.HashCreator;
-import tools.MapleAESOFB;
+import tools.AesCrypto;
 import tools.PacketCreator;
 import tools.HexTool;
 import tools.Output;
@@ -72,8 +72,8 @@ public class GameClient {
 	public static final int LOGIN_SERVER_TRANSITION = 1;
 	public static final int LOGIN_LOGGEDIN = 2;
 	public static final String CLIENT_KEY = "CLIENT";
-	private MapleAESOFB send;
-	private MapleAESOFB receive;
+	private AesCrypto send;
+	private AesCrypto receive;
 	private IoSession session;
 	private GameCharacter player;
 	private byte channel = 1;
@@ -96,17 +96,17 @@ public class GameClient {
 	private int picattempt = 0;
 	private byte gender = -1;
 
-	public GameClient(MapleAESOFB send, MapleAESOFB receive, IoSession session) {
+	public GameClient(AesCrypto send, AesCrypto receive, IoSession session) {
 		this.send = send;
 		this.receive = receive;
 		this.session = session;
 	}
 
-	public synchronized MapleAESOFB getReceiveCrypto() {
+	public synchronized AesCrypto getReceiveCrypto() {
 		return receive;
 	}
 
-	public synchronized MapleAESOFB getSendCrypto() {
+	public synchronized AesCrypto getSendCrypto() {
 		return send;
 	}
 
