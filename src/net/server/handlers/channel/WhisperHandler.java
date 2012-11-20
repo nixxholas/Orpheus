@@ -31,7 +31,7 @@ import constants.ServerConstants;
 import net.AbstractPacketHandler;
 import net.server.World;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -55,7 +55,7 @@ public final class WhisperHandler extends AbstractPacketHandler {
 					}
 				}
 				if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_CHAT_LOGGER && ParanoiaConstants.LOG_WHISPERS) {
-					MapleLogger.printFormatted(MapleLogger.PARANOIA_CHAT, "[Whisper] [" + c.getPlayer().getName() + " > " + recipient + "] " + text);
+					GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[Whisper] [" + c.getPlayer().getName() + " > " + recipient + "] " + text);
 				}
 				if (text.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
 					player.getClient().announce(PacketCreator.getWhisper(c.getPlayer().getName(), c.getChannel(), text));

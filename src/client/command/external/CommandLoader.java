@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import tools.MapleLogger;
+import tools.GameLogger;
 
 /**
  * @author Aaron Weiss
@@ -111,12 +111,12 @@ public class CommandLoader {
 						throw new CommandLoaderException(4, "CommandLoader: Invalid loadType.");
 					}
 				} catch (NoSuchMethodException ex) {
-					MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
+					GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex);
 					throw new CommandLoaderException(2, "CommandLoader: Constructor missing from AbstractCommandProcessor.");
 				} catch (CommandLoaderException ex) { // because otherwise the part after would be huge...
 					throw new CommandLoaderException(ex.getIdentifier(), ex.getMessage()); // throw 'er up
 				} catch (Exception ex) {
-					MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
+					GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex);
 					throw new CommandLoaderException(-1, "CommandLoader: Unknown error occurred while loading: " + file.getName());
 				}
     		} else if (!ignoreIncorrectFiles) {
@@ -139,7 +139,7 @@ public class CommandLoader {
 					commands.add(cmdClass);
 				}
 			} catch (ClassNotFoundException ex) {
-				MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex); // something stupid happened.
+				GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex); // something stupid happened.
 			} catch (ClassCastException ex) {
 				continue; // don't worry about it.
 			}
@@ -161,7 +161,7 @@ public class CommandLoader {
 					commandProcessor = cpConstructor.newInstance();
 				}
 			} catch (ClassNotFoundException ex) {
-				MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex); // something stupid happened.
+				GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex); // something stupid happened.
 			} catch (ClassCastException ex) {
 				continue; // don't worry about it.
 			}

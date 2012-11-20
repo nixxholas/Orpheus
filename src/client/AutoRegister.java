@@ -24,7 +24,7 @@ import java.sql.ResultSet;
 import java.security.NoSuchAlgorithmException;
 import tools.DatabaseConnection;
 import tools.HashCreator;
-import tools.MapleLogger;
+import tools.GameLogger;
 
 public class AutoRegister {
 	private static final int ACCOUNTS_PER_IP = 4;
@@ -55,7 +55,7 @@ public class AutoRegister {
 		try {
 			con = DatabaseConnection.getConnection();
 		} catch (Exception e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
 			return false;
 		}
 		
@@ -68,7 +68,7 @@ public class AutoRegister {
 			}
 			
 		} catch (SQLException e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
 			return false;
 		}		
 
@@ -78,10 +78,10 @@ public class AutoRegister {
 			return true;
 			
 		} catch (NoSuchAlgorithmException e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
 			return false;
 		} catch (SQLException ex) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + ex);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + ex);
 			return false;
 		}
 	}

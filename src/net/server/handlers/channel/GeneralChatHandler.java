@@ -24,7 +24,7 @@ import paranoia.BlacklistHandler;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import client.GameCharacter;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -70,7 +70,7 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 						Output.print("Loading completed in " + ((System.currentTimeMillis() - startTime)) + "ms.");
 					} catch (Exception e) {
 						Output.print("Failed to load commands.");
-						MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+						GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 					}
 				} else if (CommandLoader.isInitialized() && CommandLoader.getInstance().getCommandProcessor() != null) {
 					CommandLoader.getInstance().getCommandProcessor().execute(c, sp, heading);
@@ -127,7 +127,7 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 				}
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_CHAT_LOGGER && ParanoiaConstants.LOG_GENERAL_CHAT) {
-				MapleLogger.printFormatted(MapleLogger.PARANOIA_CHAT, "[General] [" + c.getPlayer().getName() + "] " + s);
+				GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[General] [" + c.getPlayer().getName() + "] " + s);
 			}
 			if (!chr.isHidden()) {
 				if (s.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {

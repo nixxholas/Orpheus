@@ -41,7 +41,7 @@ import server.maps.GameMap;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import client.IItem;
 import client.ISkill;
@@ -449,7 +449,7 @@ public class GMCommands extends EnumeratedCommands {
 					break;
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_COMMAND_LOGGER && ParanoiaConstants.LOG_GM_COMMANDS) {
-				MapleLogger.printFormatted(MapleLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
+				GameLogger.printFormatted(GameLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
 			}
 			return true;
 		} catch (IllegalArgumentException e) {

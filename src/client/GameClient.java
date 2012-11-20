@@ -64,7 +64,7 @@ import org.apache.mina.core.session.IoSession;
 import constants.ServerConstants;
 import server.MapleMiniGame;
 import server.quest.Quest;
-import tools.MapleLogger;
+import tools.GameLogger;
 
 public class GameClient {
 
@@ -668,7 +668,7 @@ public class GameClient {
 			}
 			player.cancelAllDebuffs();
 		} catch (final Throwable t) {
-			MapleLogger.print(MapleLogger.ACCOUNT_STUCK, t);
+			GameLogger.print(GameLogger.ACCOUNT_STUCK, t);
 		}
 	}
 
@@ -1015,7 +1015,7 @@ public class GameClient {
 		try {
 			con = DatabaseConnection.getConnection();
 		} catch (Exception e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 			return;
 		}
 		try {
@@ -1025,7 +1025,7 @@ public class GameClient {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}
 	}
 	

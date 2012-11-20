@@ -34,7 +34,7 @@ import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.MapleNPC;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import net.server.Channel;
@@ -308,7 +308,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					break;
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_COMMAND_LOGGER && ParanoiaConstants.LOG_DEVELOPER_COMMANDS) {
-				MapleLogger.printFormatted(MapleLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
+				GameLogger.printFormatted(GameLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
 			}
 			return true;
 		} catch (IllegalArgumentException e) {
@@ -337,7 +337,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 				n++;
 			}
 		} catch (SQLException e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}	
 	}
 	

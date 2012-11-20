@@ -31,7 +31,7 @@ import scripting.npc.NPCScriptManager;
 import server.InventoryManipulator;
 import server.MapleStocks;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import tools.Output;
 import tools.Pair;
@@ -263,7 +263,7 @@ public class PlayerCommands extends EnumeratedCommands {
 							i++;
 						}
 					} catch (SQLException e) {
-						MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+						GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 					}
 					if (ServerConstants.ENABLE_HARDCORE_MODE) {
 						chr.dropMessage("Note: [H] means Hardcore Character, [HD] means Dead Hardcore Character.");
@@ -461,7 +461,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						} catch (Exception e) {
 							chr.message("We apologize! Something went seriously wrong! D:");
 							Output.print("MapleStocks experienced an error with " + chr.getName() + ".");
-							MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+							GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 						}
 					} else if (!ServerConstants.USE_MAPLE_STOCKS) {
 						chr.message("MapleStocks is disabled by the server.");
@@ -474,7 +474,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					break;
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_COMMAND_LOGGER && ParanoiaConstants.LOG_PLAYER_COMMANDS) {
-				MapleLogger.printFormatted(MapleLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
+				GameLogger.printFormatted(GameLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
 			}
 			return true;
 		} catch (IllegalArgumentException e) {
@@ -488,7 +488,7 @@ public class PlayerCommands extends EnumeratedCommands {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT `name`, `gm` FROM `characters` WHERE `gm` > 2 ORDER BY `gm` DESC, `name` DESC");
 			return ps.executeQuery();
 		} catch (SQLException ex) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex);
 			return null;
 		}
 	}
@@ -512,7 +512,7 @@ public class PlayerCommands extends EnumeratedCommands {
 			}
 			return ps.executeQuery();
 		} catch (SQLException ex) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex);
 			return null;
 		}
 	}

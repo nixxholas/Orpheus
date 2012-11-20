@@ -21,7 +21,7 @@
 package client.command;
 
 import java.sql.ResultSet;
-import tools.MapleLogger;
+import tools.GameLogger;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import net.server.Channel;
@@ -49,9 +49,9 @@ public class AdminCommands extends EnumeratedCommands {
 					return false;
 				case clearlogs:
 					if (ParanoiaConstants.ALLOW_CLEARLOGS_COMMAND) {
-						if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER) MapleLogger.clearLog(MapleLogger.PARANOIA_CONSOLE);
-						if (ParanoiaConstants.PARANOIA_CHAT_LOGGER) MapleLogger.clearLog(MapleLogger.PARANOIA_CHAT);
-						if (ParanoiaConstants.PARANOIA_COMMAND_LOGGER) MapleLogger.clearLog(MapleLogger.PARANOIA_COMMAND);
+						if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_CONSOLE);
+						if (ParanoiaConstants.PARANOIA_CHAT_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_CHAT);
+						if (ParanoiaConstants.PARANOIA_COMMAND_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_COMMAND);
 						chr.message("Done.");
 					} else {
 						chr.dropMessage("Paranoia Log Clearing is forbidden by the server.");
@@ -81,7 +81,7 @@ public class AdminCommands extends EnumeratedCommands {
 					break;
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_COMMAND_LOGGER && ParanoiaConstants.LOG_ADMIN_COMMANDS) {
-				MapleLogger.printFormatted(MapleLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
+				GameLogger.printFormatted(GameLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
 			}
 			return true;
 		} catch (IllegalArgumentException e) {

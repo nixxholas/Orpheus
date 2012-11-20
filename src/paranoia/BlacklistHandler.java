@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import client.GameClient;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.Output;
 
 /**
@@ -40,7 +40,7 @@ public class BlacklistHandler {
 	private static ArrayList<Integer> cache;
 
 	public static void printBlacklistLog(String s, Integer accountId) {
-		MapleLogger.printFormatted(MapleLogger.PARANOIA_BLACKLIST + GameClient.getAccountNameById(accountId) + ".log", s);
+		GameLogger.printFormatted(GameLogger.PARANOIA_BLACKLIST + GameClient.getAccountNameById(accountId) + ".log", s);
 	}
 
 	public static void addToBlacklist(Integer accountId) {
@@ -49,7 +49,7 @@ public class BlacklistHandler {
 			out.write(accountId.byteValue());
 		} catch (IOException e) {
 			Output.print("Something went wrong while updating the blacklist.");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}
 	}
 
@@ -90,10 +90,10 @@ public class BlacklistHandler {
 			}
 		} catch (FileNotFoundException e) {
 			Output.print("blacklist.csv is missing.");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		} catch (IOException e) {
 			Output.print("Something went wrong while loading the blacklist.");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}
 		return (Integer[]) cache.toArray();
 	}

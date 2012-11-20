@@ -46,7 +46,7 @@ import net.server.World;
 import net.server.guild.MapleAlliance;
 import net.server.guild.MapleGuild;
 import tools.PacketCreator;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -89,7 +89,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 							sb.append("[" + Output.now() + "] ").append(player.getName()).append(" failed to login.\r\n");
 							sb.append("[" + Output.now() + "] The player ").append((c.getWorldServer().isConnected(charName)) ? "is" : "isn't").append(" connected to the world server.\r\n");
 							sb.append("[" + Output.now() + "] The player has character ").append(charName).append(" connected.\r\n");
-							MapleLogger.print(MapleLogger.ACCOUNT_STUCK, sb.toString());
+							GameLogger.print(GameLogger.ACCOUNT_STUCK, sb.toString());
 							if (ServerConstants.AUTO_UNSTUCK_ACCOUNTS) {
 								ch.removePlayer(ch.getPlayerStorage().getCharacterByName(charName)); // unstuck
 							}

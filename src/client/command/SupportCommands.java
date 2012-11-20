@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.ResultSet;
 import server.InventoryManipulator;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import constants.ItemConstants;
 import constants.ParanoiaConstants;
@@ -161,7 +161,7 @@ public class SupportCommands extends EnumeratedCommands {
 					break;
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_COMMAND_LOGGER && ParanoiaConstants.LOG_SUPPORT_COMMANDS) {
-				MapleLogger.printFormatted(MapleLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
+				GameLogger.printFormatted(GameLogger.PARANOIA_COMMAND, "[" + c.getPlayer().getName() + "] Used " + heading + sub[0] + ((sub.length > 1) ? " with parameters: " + joinStringFrom(sub, 1) : "."));
 			}
 			return true;
 		} catch (IllegalArgumentException e) {

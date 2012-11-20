@@ -61,7 +61,7 @@ import server.CashShop.CashItemFactory;
 import server.MapleItemInformationProvider;
 import server.MapleStocks;
 import server.WorldRecommendation;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.PacketCreator;
 import tools.Output;
 
@@ -134,13 +134,13 @@ public class Server implements Runnable {
 	public void run() {
 		long loadingStartTime = System.currentTimeMillis();
 		if (ServerConstants.CLEAR_ERROR_LOGS_ON_BOOT) {
-			if (new File(MapleLogger.ACCOUNT_STUCK).exists()) MapleLogger.clearLog(MapleLogger.ACCOUNT_STUCK);
-			if (new File(MapleLogger.EXCEPTION_CAUGHT).exists()) MapleLogger.clearLog(MapleLogger.EXCEPTION_CAUGHT);
+			if (new File(GameLogger.ACCOUNT_STUCK).exists()) GameLogger.clearLog(GameLogger.ACCOUNT_STUCK);
+			if (new File(GameLogger.EXCEPTION_CAUGHT).exists()) GameLogger.clearLog(GameLogger.EXCEPTION_CAUGHT);
 		}
 		if (ParanoiaConstants.CLEAR_LOGS_ON_STARTUP) {
-			if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER) MapleLogger.clearLog(MapleLogger.PARANOIA_CONSOLE);
-			if (ParanoiaConstants.PARANOIA_CHAT_LOGGER) MapleLogger.clearLog(MapleLogger.PARANOIA_CHAT);
-			if (ParanoiaConstants.PARANOIA_COMMAND_LOGGER) MapleLogger.clearLog(MapleLogger.PARANOIA_COMMAND);
+			if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_CONSOLE);
+			if (ParanoiaConstants.PARANOIA_CHAT_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_CHAT);
+			if (ParanoiaConstants.PARANOIA_COMMAND_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_COMMAND);
 		}
 		Properties p = new Properties();
 		try {
@@ -239,7 +239,7 @@ public class Server implements Runnable {
 				Output.print("Loading completed in " + ((System.currentTimeMillis() - startTime)) + "ms.");
 			} catch (Exception e) {
 				Output.print("Failed to load commands.");
-				MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+				GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 			}
 		}
 		Output.print("Server is now online! (Took " + ((System.currentTimeMillis() - loadingStartTime)) + "ms)");

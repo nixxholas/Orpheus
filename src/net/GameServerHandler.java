@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
-import tools.MapleLogger;
+import tools.GameLogger;
 
 public class GameServerHandler extends IoHandlerAdapter {
 
@@ -66,7 +66,7 @@ public class GameServerHandler extends IoHandlerAdapter {
 		 * client.disconnect(); } }
 		 */
 		session.close(true);
-		MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, cause);
+		GameLogger.print(GameLogger.EXCEPTION_CAUGHT, cause);
 		// sessionClosed should be called
 	}
 

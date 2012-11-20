@@ -35,14 +35,14 @@ public class Output {
 	public static void print(String message, boolean newLine) {
 		System.out.print("[OrpheusMS] [" + now() + "] " + message + ((newLine) ? "\n" : ""));
 		if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER) {
-			MapleLogger.printFormatted(MapleLogger.PARANOIA_CONSOLE, "[OrpheusMS] " + message, newLine);
+			GameLogger.printFormatted(GameLogger.PARANOIA_CONSOLE, "[OrpheusMS] " + message, newLine);
 		}
 	}
 
 	public static void printNewLine() {
 		System.out.print("\n");
 		if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER && ParanoiaConstants.REPLICATE_CONSOLE_EXACTLY) {
-			MapleLogger.printFormatted(MapleLogger.PARANOIA_CONSOLE, "");
+			GameLogger.printFormatted(GameLogger.PARANOIA_CONSOLE, "");
 		}
 	}
 	

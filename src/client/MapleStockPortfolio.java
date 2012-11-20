@@ -27,7 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import server.MapleStocks;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.Output;
 import tools.Pair;
 
@@ -141,7 +141,7 @@ public class MapleStockPortfolio {
 				}
 			} catch (SQLException e) {
 				Output.print("Something went wrong while saving a MapleStockPortfolio.");
-				MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+				GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 			}
 		}
 	}
@@ -158,7 +158,7 @@ public class MapleStockPortfolio {
 			}
 		} catch (SQLException e) {
 			Output.print("Failed to load MapleStockPortfolio " + cid + ".");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}
 		return ret;
 	}

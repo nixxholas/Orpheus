@@ -29,7 +29,7 @@ import constants.ParanoiaConstants;
 /**
  * @author Aaron Weiss
  */
-public class MapleLogger {
+public class GameLogger {
 	public static final String ACCOUNT_STUCK = "accountstuck.log";
 	public static final String EXCEPTION_CAUGHT = "exceptions.log";
 	public static final String PARANOIA_CHAT = "chat.log";
@@ -75,7 +75,7 @@ public class MapleLogger {
 	}
 	
 	public static void printFormatted(final String file, final String s) {
-		MapleLogger.printFormatted(file, s, true);
+		GameLogger.printFormatted(file, s, true);
 	}
 	
 	public static void printFormatted(final String file, final String s, final boolean newLine) {

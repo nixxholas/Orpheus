@@ -43,7 +43,7 @@ import server.MapleStocks;
 import server.TimerManager;
 import server.maps.GameMap;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 
 /**
  * 
@@ -183,7 +183,7 @@ public class EventManager {
             	}
         	}
 		} catch (Exception e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e); // Log it.
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e); // Log it.
 		}
 		// they're seperate, because if we fail to save, we may as well still continue updating.
 		try {
@@ -202,7 +202,7 @@ public class EventManager {
 				n++;
 			}
 		} catch (SQLException e) {
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}	
 	}
 	

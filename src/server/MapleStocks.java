@@ -32,7 +32,7 @@ import client.MapleStock;
 import com.mysql.jdbc.Connection;
 import constants.ServerConstants;
 import tools.DatabaseConnection;
-import tools.MapleLogger;
+import tools.GameLogger;
 import tools.Output;
 import tools.Pair;
 
@@ -59,7 +59,7 @@ public class MapleStocks {
 			ps.setInt(5, ms.getChange());
 		} catch (SQLException e) {
 			Output.print("MapleStocks failed to add a new stock. Check exceptions.log.");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, e);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}
 		stocks.add(ms);
 	}
@@ -148,7 +148,7 @@ public class MapleStocks {
 			}
 		} catch (SQLException ex) {
 			Output.print("MapleStocks failed to load. Check exceptions.log.");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex);
 		}
 	}
 	
@@ -211,7 +211,7 @@ public class MapleStocks {
 			}
 		} catch (SQLException ex) {
 			Output.print("MapleStocks failed to update. Check exceptions.log.");
-			MapleLogger.print(MapleLogger.EXCEPTION_CAUGHT, ex);
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, ex);
 		}
 	}
 	
