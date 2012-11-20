@@ -28,7 +28,7 @@ import java.sql.ResultSet;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -74,17 +74,17 @@ public final class CouponCodeHandler extends AbstractMaplePacketHandler {
 					break;
 				case 4:
 					MapleInventoryManipulator.addById(c, item, (short) 1, null, -1, -1);
-					c.announce(MaplePacketCreator.showCouponRedeemedItem(item));
+					c.announce(PacketCreator.showCouponRedeemedItem(item));
 					break;
 				case 5:
 					c.getPlayer().getCashShop().gainCash(0, item);
 					break;
 			}
-			c.announce(MaplePacketCreator.showCash(c.getPlayer()));
+			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else {
-			// c.announce(MaplePacketCreator.wrongCouponCode());
+			// c.announce(PacketCreator.wrongCouponCode());
 		}
-		c.announce(MaplePacketCreator.enableCSUse());
+		c.announce(PacketCreator.enableCSUse());
 	}
 
 	private int getNXCode(String code, String type) {

@@ -26,7 +26,7 @@ import scripting.npc.NPCScriptManager;
 import server.life.MapleNPC;
 import server.maps.MapleMapObject;
 import server.maps.PlayerNPCs;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class NPCTalkHandler extends AbstractMaplePacketHandler {
@@ -34,7 +34,7 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		}
 		int oid = slea.readInt();
@@ -42,7 +42,7 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
 		if (obj instanceof MapleNPC) {
 			MapleNPC npc = (MapleNPC) obj;
 			if (npc.getId() == 9010009) {
-				c.announce(MaplePacketCreator.sendDuey((byte) 8, DueyHandler.loadItems(c.getPlayer())));
+				c.announce(PacketCreator.sendDuey((byte) 8, DueyHandler.loadItems(c.getPlayer())));
 			} else if (npc.hasShop()) {
 				if (c.getPlayer().getShop() != null) {
 					return;
@@ -50,7 +50,7 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
 				npc.sendShop(c);
 			} else {
 				if (c.getCM() != null || c.getQM() != null) {
-					c.announce(MaplePacketCreator.enableActions());
+					c.announce(PacketCreator.enableActions());
 					return;
 				}
 				NPCScriptManager.getInstance().start(c, npc.getId(), null, null);

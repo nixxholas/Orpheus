@@ -26,7 +26,7 @@ import client.GameClient;
 import client.SkillFactory;
 import net.AbstractMaplePacketHandler;
 import server.maps.MapleSummon;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DamageSummonHandler extends AbstractMaplePacketHandler {
@@ -46,7 +46,7 @@ public final class DamageSummonHandler extends AbstractMaplePacketHandler {
 					player.cancelEffectFromBuffStat(MapleBuffStat.PUPPET);
 				}
 			}
-			player.getMap().broadcastMessage(player, MaplePacketCreator.damageSummon(player.getId(), skillid, damage, unkByte, monsterIdFrom), summon.getPosition());
+			player.getMap().broadcastMessage(player, PacketCreator.damageSummon(player.getId(), skillid, damage, unkByte, monsterIdFrom), summon.getPosition());
 		}
 	}
 }

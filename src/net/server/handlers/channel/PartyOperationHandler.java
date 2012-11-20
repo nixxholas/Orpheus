@@ -27,7 +27,7 @@ import net.server.MapleParty;
 import net.server.MaplePartyCharacter;
 import net.server.PartyOperation;
 import net.server.World;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PartyOperationHandler extends AbstractMaplePacketHandler {
@@ -46,9 +46,9 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 					party = world.createParty(partyplayer);
 					player.setParty(party);
 					player.setMPC(partyplayer);
-					c.announce(MaplePacketCreator.partyCreated());
+					c.announce(PacketCreator.partyCreated());
 				} else {
-					c.announce(MaplePacketCreator.serverNotice(5, "You can't create a party as you are already in one."));
+					c.announce(PacketCreator.serverNotice(5, "You can't create a party as you are already in one."));
 				}
 				break;
 			}
@@ -80,13 +80,13 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 							player.receivePartyMemberHP();
 							player.updatePartyMemberHP();
 						} else {
-							c.announce(MaplePacketCreator.partyStatusMessage(17));
+							c.announce(PacketCreator.partyStatusMessage(17));
 						}
 					} else {
-						c.announce(MaplePacketCreator.serverNotice(5, "The person you have invited to the party is already in one."));
+						c.announce(PacketCreator.serverNotice(5, "The person you have invited to the party is already in one."));
 					}
 				} else {
-					c.announce(MaplePacketCreator.serverNotice(5, "You can't join the party as you are already in one."));
+					c.announce(PacketCreator.serverNotice(5, "You can't join the party as you are already in one."));
 				}
 				break;
 			}
@@ -96,15 +96,15 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
 				if (invited != null) {
 					if (invited.getParty() == null) {
 						if (party.getMembers().size() < 6) {
-							invited.getClient().announce(MaplePacketCreator.partyInvite(player));
+							invited.getClient().announce(PacketCreator.partyInvite(player));
 						} else {
-							c.announce(MaplePacketCreator.partyStatusMessage(16));
+							c.announce(PacketCreator.partyStatusMessage(16));
 						}
 					} else {
-						c.announce(MaplePacketCreator.partyStatusMessage(17));
+						c.announce(PacketCreator.partyStatusMessage(17));
 					}
 				} else {
-					c.announce(MaplePacketCreator.partyStatusMessage(19));
+					c.announce(PacketCreator.partyStatusMessage(19));
 				}
 				break;
 			}

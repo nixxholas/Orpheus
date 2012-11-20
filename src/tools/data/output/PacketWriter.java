@@ -21,7 +21,7 @@
 package tools.data.output;
 
 import java.io.ByteArrayOutputStream;
-import net.ByteArrayMaplePacket;
+import net.ByteArrayGamePacket;
 import net.GamePacket;
 import tools.HexTool;
 
@@ -32,13 +32,13 @@ import tools.HexTool;
  * @version 1.0
  * @since Revision 352
  */
-public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
+public class PacketWriter extends GenericLittleEndianWriter {
 	private ByteArrayOutputStream baos;
 
 	/**
 	 * Constructor - initializes this stream with a default size.
 	 */
-	public MaplePacketLittleEndianWriter() {
+	public PacketWriter() {
 		this(32);
 	}
 
@@ -48,7 +48,7 @@ public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
 	 * @param size
 	 *            The size of the underlying stream.
 	 */
-	public MaplePacketLittleEndianWriter(int size) {
+	public PacketWriter(int size) {
 		this.baos = new ByteArrayOutputStream(size);
 		setByteOutputStream(new BAOSByteOutputStream(baos));
 	}
@@ -60,7 +60,7 @@ public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {
 	 * @return A <code>GamePacket</code> with the bytes in this stream.
 	 */
 	public GamePacket getPacket() {
-		return new ByteArrayMaplePacket(baos.toByteArray());
+		return new ByteArrayGamePacket(baos.toByteArray());
 	}
 
 	/**

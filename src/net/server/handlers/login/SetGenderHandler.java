@@ -23,7 +23,7 @@ package net.server.handlers.login;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -39,7 +39,7 @@ public class SetGenderHandler extends AbstractMaplePacketHandler {
 		if (type == 0x01 && c.getGender() == 10) { 
 			// Packet shouldn't come if Gender isn't 10.
 			c.setGender(slea.readByte());
-			c.announce(MaplePacketCreator.getAuthSuccess(c));
+			c.announce(PacketCreator.getAuthSuccess(c));
 			final GameClient client = c;
 			c.setIdleTask(TimerManager.getInstance().schedule(new Runnable() {
 				@Override

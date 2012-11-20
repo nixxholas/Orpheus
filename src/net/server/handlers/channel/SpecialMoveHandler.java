@@ -43,7 +43,7 @@ import net.server.Server;
 import server.MapleStatEffect;
 import server.TimerManager;
 import server.life.MapleMonster;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
@@ -60,7 +60,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
 		if (skillid % 10000000 == 1010 || skillid % 10000000 == 1011) {
 			skillLevel = 1;
 			chr.setDojoEnergy(0);
-			c.announce(MaplePacketCreator.getEnergy("energy", 0));
+			c.announce(PacketCreator.getEnergy("energy", 0));
 		}
 		if (skillLevel == 0 || skillLevel != __skillLevel)
 			return;
@@ -70,7 +70,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
 			if (chr.skillisCooling(skillid)) {
 				return;
 			} else if (skillid != Corsair.BATTLE_SHIP) {
-				c.announce(MaplePacketCreator.skillCooldown(skillid, effect.getCooldown()));
+				c.announce(PacketCreator.skillCooldown(skillid, effect.getCooldown()));
 				ScheduledFuture<?> timer = TimerManager.getInstance().schedule(new CancelCooldownAction(c.getPlayer(), skillid), effect.getCooldown() * 1000);
 				chr.addCooldown(skillid, System.currentTimeMillis(), effect.getCooldown() * 1000, timer);
 			}
@@ -83,15 +83,15 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
 			for (int i = 0; i < num; i++) {
 				mobId = slea.readInt();
 				success = slea.readByte();
-				chr.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showMagnet(mobId, success), false);
+				chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.showMagnet(mobId, success), false);
 				MapleMonster monster = chr.getMap().getMonsterByOid(mobId);
 				if (monster != null) {
 					monster.switchController(c.getPlayer(), monster.isControllerHasAggro());
 				}
 			}
 			byte direction = slea.readByte();
-			chr.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showBuffeffect(chr.getId(), skillid, chr.getSkillLevel(skillid), direction), false);
-			c.announce(MaplePacketCreator.enableActions());
+			chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.showBuffeffect(chr.getId(), skillid, chr.getSkillLevel(skillid), direction), false);
+			c.announce(PacketCreator.enableActions());
 			return;
 		} else if (skillid == Buccaneer.TIME_LEAP) { // Timeleap
 			MapleParty p = chr.getParty();
@@ -125,10 +125,10 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
 				skill.getEffect(skillLevel).applyTo(c.getPlayer(), pos);
 			} else {
 				chr.message("Please wait 5 seconds before casting Mystic Door again");
-				c.announce(MaplePacketCreator.enableActions());
+				c.announce(PacketCreator.enableActions());
 			}
 		} else {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 		}
 	}
 }

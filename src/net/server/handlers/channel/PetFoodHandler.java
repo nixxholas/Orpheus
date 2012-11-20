@@ -30,7 +30,7 @@ import client.autoban.AutobanManager;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PetFoodHandler extends AbstractMaplePacketHandler {
@@ -40,13 +40,13 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 		GameCharacter chr = c.getPlayer();
 		AutobanManager abm = chr.getAutobanManager();
 		if (abm.getLastSpam(2) + 500 > System.currentTimeMillis()) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		}
 		abm.spam(2);
 		abm.setTimestamp(1, slea.readInt());
 		if (chr.getNoPets() == 0) {
-			c.getSession().write(MaplePacketCreator.enableActions());
+			c.getSession().write(PacketCreator.enableActions());
 			return;
 		}
 		int previousFullness = 100;
@@ -83,11 +83,11 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 				pet.setCloseness(newCloseness);
 				if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel())) {
 					pet.setLevel((byte) (pet.getLevel() + 1));
-					c.announce(MaplePacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
-					chr.getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(c.getPlayer(), chr.getPetIndex(pet)));
+					c.announce(PacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
+					chr.getMap().broadcastMessage(PacketCreator.showPetLevelUp(c.getPlayer(), chr.getPetIndex(pet)));
 				}
 			}
-			chr.getMap().broadcastMessage(MaplePacketCreator.commandResponse(chr.getId(), slot, 1, true));
+			chr.getMap().broadcastMessage(PacketCreator.commandResponse(chr.getId(), slot, 1, true));
 		} else {
 			if (gainCloseness) {
 				int newCloseness = pet.getCloseness() - 1;
@@ -99,11 +99,11 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
 					pet.setLevel((byte) (pet.getLevel() - 1));
 				}
 			}
-			chr.getMap().broadcastMessage(MaplePacketCreator.commandResponse(chr.getId(), slot, 0, false));
+			chr.getMap().broadcastMessage(PacketCreator.commandResponse(chr.getId(), slot, 0, false));
 		}
 		MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, pos, (short) 1, false);
 		IItem petz = chr.getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
-		c.announce(MaplePacketCreator.updateSlot(petz));
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.updateSlot(petz));
+		c.announce(PacketCreator.enableActions());
 	}
 }

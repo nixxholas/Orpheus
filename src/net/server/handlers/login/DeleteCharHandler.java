@@ -23,7 +23,7 @@ package net.server.handlers.login;
 import constants.ServerConstants;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DeleteCharHandler extends AbstractMaplePacketHandler {
@@ -33,10 +33,10 @@ public final class DeleteCharHandler extends AbstractMaplePacketHandler {
 		String pic = slea.readMapleAsciiString();
 		int cid = slea.readInt();
 		if (c.checkPic(pic) || !ServerConstants.ENABLE_PIC) {
-			c.announce(MaplePacketCreator.deleteCharResponse(cid, 0));
+			c.announce(PacketCreator.deleteCharResponse(cid, 0));
 			c.deleteCharacter(cid);
 		} else {
-			c.announce(MaplePacketCreator.deleteCharResponse(cid, 0x14));
+			c.announce(PacketCreator.deleteCharResponse(cid, 0x14));
 		}
 	}
 }

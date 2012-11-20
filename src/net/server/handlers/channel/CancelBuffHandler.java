@@ -32,7 +32,7 @@ import constants.skills.WindArcher;
 import net.AbstractMaplePacketHandler;
 import net.MaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public final class CancelBuffHandler extends AbstractMaplePacketHandler implements MaplePacketHandler {
 
@@ -47,7 +47,7 @@ public final class CancelBuffHandler extends AbstractMaplePacketHandler implemen
 			case Marksman.PIERCING_ARROW:
 			case Corsair.RAPID_FIRE:
 			case WindArcher.HURRICANE:
-				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.skillCancel(c.getPlayer(), sourceid), false);
+				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.skillCancel(c.getPlayer(), sourceid), false);
 				break;
 			default:
 				c.getPlayer().cancelEffect(SkillFactory.getSkill(sourceid).getEffect(1), false, -1);

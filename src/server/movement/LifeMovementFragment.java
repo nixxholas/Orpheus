@@ -24,7 +24,7 @@ import java.awt.Point;
 import tools.data.output.LittleEndianWriter;
 
 public interface LifeMovementFragment {
-	void serialize(LittleEndianWriter lew);
+	void serialize(LittleEndianWriter w);
 
 	Point getPosition();
 }

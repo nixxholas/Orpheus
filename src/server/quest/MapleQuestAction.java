@@ -35,7 +35,7 @@ import provider.MapleData;
 import provider.MapleDataTool;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Randomizer;
 
 /**
@@ -136,13 +136,13 @@ public class MapleQuestAction {
 						MapleInventoryType iType = ii.getInventoryType(itemId);
 						short quantity = (short) (MapleDataTool.getInt(iEntry.getChildByPath("count"), 0) * -1);
 						MapleInventoryManipulator.removeById(c.getClient(), iType, itemId, quantity, true, false);
-						c.getClient().getSession().write(MaplePacketCreator.getShowItemGain(itemId, (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0), true));
+						c.getClient().getSession().write(PacketCreator.getShowItemGain(itemId, (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0), true));
 					} else { // add items
 						int itemId = MapleDataTool.getInt(iEntry.getChildByPath("id"));
 						short quantity = (short) MapleDataTool.getInt(iEntry.getChildByPath("count"), 0);
 						if (c.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(itemId)).getNextFreeSlot() > -1) {
 							MapleInventoryManipulator.addById(c.getClient(), itemId, quantity);
-							c.getClient().getSession().write(MaplePacketCreator.getShowItemGain(itemId, quantity, true));
+							c.getClient().getSession().write(PacketCreator.getShowItemGain(itemId, quantity, true));
 						} else {
 							c.dropMessage(1, "Inventory Full");
 						}
@@ -155,7 +155,7 @@ public class MapleQuestAction {
 				if (status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
 					break;
 				}
-				c.getClient().getSession().write(MaplePacketCreator.updateQuestFinish((short) quest.getId(), status.getNpc(), (short) nextQuest));
+				c.getClient().getSession().write(PacketCreator.updateQuestFinish((short) quest.getId(), status.getNpc(), (short) nextQuest));
 				break;
 			case MESO:
 				status = c.getQuest(quest);
@@ -204,7 +204,7 @@ public class MapleQuestAction {
 				c.addFame(MapleDataTool.getInt(data));
 				c.updateSingleStat(MapleStat.FAME, c.getFame());
 				int fameGain = MapleDataTool.getInt(data);
-				c.getClient().getSession().write(MaplePacketCreator.getShowFameGain(fameGain));
+				c.getClient().getSession().write(PacketCreator.getShowFameGain(fameGain));
 				break;
 			case BUFF:
 				status = c.getQuest(quest);

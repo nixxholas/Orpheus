@@ -23,7 +23,7 @@ package server.life;
 import client.GameClient;
 import server.MapleShopFactory;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class MapleNPC extends AbstractLoadedMapleLife {
 	private MapleNPCStats stats;
@@ -45,17 +45,17 @@ public class MapleNPC extends AbstractLoadedMapleLife {
 	public void sendSpawnData(GameClient client) {
 		if (!this.isHidden()) {
 			if (this.getId() > 9010010 && this.getId() < 9010014) {
-				client.getSession().write(MaplePacketCreator.spawnNPCRequestController(this, false));
+				client.getSession().write(PacketCreator.spawnNPCRequestController(this, false));
 			} else {
-				client.getSession().write(MaplePacketCreator.spawnNPC(this));
-				client.getSession().write(MaplePacketCreator.spawnNPCRequestController(this, true));
+				client.getSession().write(PacketCreator.spawnNPC(this));
+				client.getSession().write(PacketCreator.spawnNPCRequestController(this, true));
 			}
 		}
 	}
 
 	@Override
 	public void sendDestroyData(GameClient client) {
-		client.getSession().write(MaplePacketCreator.removeNPC(getObjectId()));
+		client.getSession().write(PacketCreator.removeNPC(getObjectId()));
 	}
 
 	@Override

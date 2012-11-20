@@ -24,7 +24,7 @@ import client.GameCharacter;
 import java.util.LinkedList;
 import java.util.List;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * @author Rob //Thanks :3 - LOST MOTIVATION >=(
@@ -131,7 +131,7 @@ public class MonsterCarnivalParty {
 		final String effect = winner ? "quest/carnival/win" : "quest/carnival/lose";
 
 		for (final GameCharacter chr : members) {
-			chr.announce(MaplePacketCreator.showEffect(effect));
+			chr.announce(PacketCreator.showEffect(effect));
 		}
 	}
 

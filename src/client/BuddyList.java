@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class BuddyList {
 	public enum BuddyOperation {
@@ -146,7 +146,7 @@ public class BuddyList {
 	public void addBuddyRequest(GameClient c, int cidFrom, String nameFrom, byte channelFrom) {
 		put(new BuddylistEntry(nameFrom, "Default Group", cidFrom, channelFrom, false));
 		if (pendingRequests.isEmpty()) {
-			c.getSession().write(MaplePacketCreator.requestBuddylistAdd(cidFrom, c.getPlayer().getId(), nameFrom));
+			c.getSession().write(PacketCreator.requestBuddylistAdd(cidFrom, c.getPlayer().getId(), nameFrom));
 		} else {
 			pendingRequests.push(new CharacterNameAndId(cidFrom, nameFrom));
 		}

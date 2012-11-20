@@ -30,7 +30,7 @@ import client.PetCommand;
 import client.PetDataFactory;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PetCommandHandler extends AbstractMaplePacketHandler {
@@ -64,13 +64,13 @@ public final class PetCommandHandler extends AbstractMaplePacketHandler {
 				pet.setCloseness(newCloseness);
 				if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel())) {
 					pet.setLevel((byte) (pet.getLevel() + 1));
-					c.announce(MaplePacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
-					chr.getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(c.getPlayer(), chr.getPetIndex(pet)));
+					c.announce(PacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
+					chr.getMap().broadcastMessage(PacketCreator.showPetLevelUp(c.getPlayer(), chr.getPetIndex(pet)));
 				}
 				IItem petz = chr.getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
-				c.announce(MaplePacketCreator.updateSlot(petz));
+				c.announce(PacketCreator.updateSlot(petz));
 			}
 		}
-		chr.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.commandResponse(chr.getId(), petIndex, command, success), true);
+		chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.commandResponse(chr.getId(), petIndex, command, success), true);
 	}
 }

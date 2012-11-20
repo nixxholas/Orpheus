@@ -45,7 +45,7 @@ import provider.MapleDataProviderFactory;
 import scripting.event.EventScriptManager;
 import server.TimerManager;
 import server.maps.MapleMapFactory;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.buffer.SimpleBufferAllocator;
 import org.apache.mina.core.filterchain.IoFilter;
@@ -149,7 +149,7 @@ public final class Channel {
 
 	public void addPlayer(GameCharacter chr) {
 		players.addPlayer(chr);
-		chr.announce(MaplePacketCreator.serverMessage(serverMessage));
+		chr.announce(PacketCreator.serverMessage(serverMessage));
 	}
 
 	public PlayerStorage getPlayerStorage() {
@@ -208,7 +208,7 @@ public final class Channel {
 
 	public void yellowWorldMessage(String msg) {
 		for (GameCharacter character : getPlayerStorage().getAllCharacters()) {
-			character.announce(MaplePacketCreator.sendYellowTip(msg));
+			character.announce(PacketCreator.sendYellowTip(msg));
 		}
 	}
 
@@ -307,6 +307,6 @@ public final class Channel {
 
 	public void setServerMessage(String message) {
 		this.serverMessage = message;
-		broadcastPacket(MaplePacketCreator.serverMessage(message));
+		broadcastPacket(PacketCreator.serverMessage(message));
 	}
 }

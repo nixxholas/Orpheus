@@ -37,7 +37,7 @@ import tools.Output;
 import net.GamePacket;
 import net.server.Channel;
 import net.server.Server;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class MapleGuild {
 	public final static int CREATE_GUILD_COST = 1500000;
@@ -170,7 +170,7 @@ public class MapleGuild {
 				ps.setInt(1, this.id);
 				ps.execute();
 				ps.close();
-				this.broadcast(MaplePacketCreator.guildDisband(this.id));
+				this.broadcast(PacketCreator.guildDisband(this.id));
 			}
 		} catch (SQLException se) {
 		}
@@ -298,13 +298,13 @@ public class MapleGuild {
 			}
 		}
 		if (bBroadcast) {
-			this.broadcast(MaplePacketCreator.guildMemberOnline(id, cid, online), cid);
+			this.broadcast(PacketCreator.guildMemberOnline(id, cid, online), cid);
 		}
 		bDirty = true;
 	}
 
 	public void guildChat(String name, int cid, String msg) {
-		this.broadcast(MaplePacketCreator.multiChat(name, msg, 2), cid);
+		this.broadcast(PacketCreator.multiChat(name, msg, 2), cid);
 	}
 
 	public String getRankTitle(int rank) {
@@ -356,12 +356,12 @@ public class MapleGuild {
 				}
 			}
 		}
-		this.broadcast(MaplePacketCreator.newGuildMember(mgc));
+		this.broadcast(PacketCreator.newGuildMember(mgc));
 		return 1;
 	}
 
 	public void leaveGuild(MapleGuildCharacter mgc) {
-		this.broadcast(MaplePacketCreator.memberLeft(mgc, false));
+		this.broadcast(PacketCreator.memberLeft(mgc, false));
 		synchronized (members) {
 			members.remove(mgc);
 			bDirty = true;
@@ -375,7 +375,7 @@ public class MapleGuild {
 			while (itr.hasNext()) {
 				mgc = itr.next();
 				if (mgc.getId() == cid && initiator.getGuildRank() < mgc.getGuildRank()) {
-					this.broadcast(MaplePacketCreator.memberLeft(mgc, true));
+					this.broadcast(PacketCreator.memberLeft(mgc, true));
 					itr.remove();
 					bDirty = true;
 					try {
@@ -420,7 +420,7 @@ public class MapleGuild {
 					return;
 				}
 				mgc.setGuildRank(newRank);
-				this.broadcast(MaplePacketCreator.changeRank(mgc));
+				this.broadcast(PacketCreator.changeRank(mgc));
 				return;
 			}
 		}
@@ -429,7 +429,7 @@ public class MapleGuild {
 	public void setGuildNotice(String notice) {
 		this.notice = notice;
 		writeToDB(false);
-		this.broadcast(MaplePacketCreator.guildNotice(this.id, notice));
+		this.broadcast(PacketCreator.guildNotice(this.id, notice));
 	}
 
 	public void memberLevelJobUpdate(MapleGuildCharacter mgc) {
@@ -437,7 +437,7 @@ public class MapleGuild {
 			if (mgc.equals(member)) {
 				member.setJobId(mgc.getJobId());
 				member.setLevel(mgc.getLevel());
-				this.broadcast(MaplePacketCreator.guildMemberLevelJobUpdate(mgc));
+				this.broadcast(PacketCreator.guildMemberLevelJobUpdate(mgc));
 				break;
 			}
 		}
@@ -464,7 +464,7 @@ public class MapleGuild {
 		for (int i = 0; i < 5; i++) {
 			rankTitles[i] = ranks[i];
 		}
-		this.broadcast(MaplePacketCreator.rankTitleChange(this.id, ranks));
+		this.broadcast(PacketCreator.rankTitleChange(this.id, ranks));
 		this.writeToDB(false);
 	}
 
@@ -497,14 +497,14 @@ public class MapleGuild {
 		}
 		capacity += 5;
 		this.writeToDB(false);
-		this.broadcast(MaplePacketCreator.guildCapacityChange(this.id, this.capacity));
+		this.broadcast(PacketCreator.guildCapacityChange(this.id, this.capacity));
 		return true;
 	}
 
 	public void gainGP(int amount) {
 		this.gp += amount;
 		this.writeToDB(false);
-		this.guildMessage(MaplePacketCreator.updateGP(this.id, this.gp));
+		this.guildMessage(PacketCreator.updateGP(this.id, this.gp));
 	}
 
 	public static MapleGuildResponse sendInvite(GameClient c, String targetName) {
@@ -515,7 +515,7 @@ public class MapleGuild {
 		if (character.getGuildId() > 0) {
 			return MapleGuildResponse.ALREADY_IN_GUILD;
 		}
-		character.getClient().getSession().write(MaplePacketCreator.guildInvite(c.getPlayer().getGuildId(), c.getPlayer().getName()));
+		character.getClient().getSession().write(PacketCreator.guildInvite(c.getPlayer().getGuildId(), c.getPlayer().getName()));
 		return null;
 	}
 
@@ -523,7 +523,7 @@ public class MapleGuild {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `name`, `GP`, `logoBG`, `logoBGColor`, " + "`logo`, `logoColor` FROM `guilds` ORDER BY `GP` DESC LIMIT 50");
 			ResultSet rs = ps.executeQuery();
-			c.getSession().write(MaplePacketCreator.showGuildRanks(npcid, rs));
+			c.getSession().write(PacketCreator.showGuildRanks(npcid, rs));
 			ps.close();
 			rs.close();
 		} catch (SQLException e) {

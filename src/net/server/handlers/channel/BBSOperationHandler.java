@@ -29,7 +29,7 @@ import client.GameClient;
 import tools.DatabaseConnection;
 import tools.Output;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class BBSOperationHandler extends AbstractMaplePacketHandler {
@@ -100,7 +100,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM bbs_threads WHERE guildid = ? ORDER BY localthreadid DESC");
 			ps.setInt(1, c.getPlayer().getGuildId());
 			ResultSet rs = ps.executeQuery();
-			c.announce(MaplePacketCreator.BBSThreadList(rs, start));
+			c.announce(PacketCreator.BBSThreadList(rs, start));
 			rs.close();
 			ps.close();
 		} catch (SQLException se) {
@@ -303,7 +303,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
 				ps2.setInt(1, !bIsThreadIdLocal ? threadid : threadRS.getInt("threadid"));
 				repliesRS = ps2.executeQuery();
 			}
-			client.announce(MaplePacketCreator.showThread(bIsThreadIdLocal ? threadid : threadRS.getInt("localthreadid"), threadRS, repliesRS));
+			client.announce(PacketCreator.showThread(bIsThreadIdLocal ? threadid : threadRS.getInt("localthreadid"), threadRS, repliesRS));
 			repliesRS.close();
 			ps.close();
 			if (ps2 != null) {

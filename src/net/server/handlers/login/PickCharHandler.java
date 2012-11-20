@@ -25,7 +25,7 @@ import java.net.UnknownHostException;
 import client.GameClient;
 import net.server.Server;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -55,9 +55,9 @@ public final class PickCharHandler extends AbstractMaplePacketHandler {
 			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
 			if (channelServerIP.equals("0.0.0.0")) {
 				String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
-				c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
+				c.announce(PacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
 			} else {
-				c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":")[1]), charId));
+				c.announce(PacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":")[1]), charId));
 			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

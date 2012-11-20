@@ -31,7 +31,7 @@ import server.life.MobSkillFactory;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MoveLifeHandler extends AbstractMovementPacketHandler {
@@ -88,15 +88,15 @@ public final class MoveLifeHandler extends AbstractMovementPacketHandler {
 		}
 		boolean aggro = monster.isControllerHasAggro();
 		if (toUse != null) {
-			c.announce(MaplePacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro, toUse.getSkillId(), toUse.getSkillLevel()));
+			c.announce(PacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro, toUse.getSkillId(), toUse.getSkillLevel()));
 		} else {
-			c.announce(MaplePacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro));
+			c.announce(PacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro));
 		}
 		if (aggro) {
 			monster.setControllerKnowsAboutAggro(true);
 		}
 		if (res != null) {
-			c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.moveMonster(skillByte, skill, skill_1, skill_2, skill_3, skill_4, objectid, startPos, res), monster.getPosition());
+			c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.moveMonster(skillByte, skill, skill_1, skill_2, skill_3, skill_4, objectid, startPos, res), monster.getPosition());
 			updatePosition(res, monster, -1);
 			c.getPlayer().getMap().moveMonster(monster, monster.getPosition());
 		}

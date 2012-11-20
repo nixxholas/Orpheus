@@ -42,7 +42,7 @@ import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import client.IItem;
 import client.ISkill;
 import client.Item;
@@ -93,7 +93,7 @@ public class GMCommands extends EnumeratedCommands {
 						if (victim != null) {
 							String ip = victim.getClient().getSession().getRemoteAddress().toString().split(":")[0];
 							chr.dropMessage(victim.getName() + "'s IP was " + ip + "."); // print the IP just for the banner.
-							serv.broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(6, victim.getName() + " has been banned for " + reason + "."));
+							serv.broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(6, victim.getName() + " has been banned for " + reason + "."));
 							reason += " (IP: " + ip + ")"; // Add the IP afterward, no need to share that with everyone.
 							victim.ban(reason);
 						} else {
@@ -152,7 +152,7 @@ public class GMCommands extends EnumeratedCommands {
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						NPCScriptManager.getInstance().dispose(victim.getClient());
-						victim.getClient().announce(MaplePacketCreator.enableActions());
+						victim.getClient().announce(PacketCreator.enableActions());
 						chr.message("Done.");
 					} else {
 						chr.message("Usage: !dispose playerName");
@@ -359,7 +359,7 @@ public class GMCommands extends EnumeratedCommands {
 					chr.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(8510000), chr.getPosition());
 					break;
 				case notice:
-					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(6, "[Notice] " + joinStringFrom(sub, 1)));
+					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(6, "[Notice] " + joinStringFrom(sub, 1)));
 					break;
 				case saveall:
 					for (Channel chan : Server.getInstance().getAllChannels()) {

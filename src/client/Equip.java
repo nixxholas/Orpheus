@@ -22,7 +22,7 @@ import java.util.List;
 
 import server.EquipLevelUpStat;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class Equip extends Item implements IEquip {
 	private byte upgradeSlots;
@@ -279,8 +279,8 @@ public class Equip extends Item implements IEquip {
 				skill3 = stat.amount;
 		}
 		this.itemLevel++;
-		c.announce(MaplePacketCreator.showEquipmentLevelUp());
-		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showForeignEffect(c.getPlayer().getId(), 15));
+		c.announce(PacketCreator.showEquipmentLevelUp());
+		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.showForeignEffect(c.getPlayer().getId(), 15));
 		c.getPlayer().forceUpdateItem(MapleInventoryType.EQUIPPED, this);
 	}
 

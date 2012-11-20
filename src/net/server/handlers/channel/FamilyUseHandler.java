@@ -26,7 +26,7 @@ import net.AbstractMaplePacketHandler;
 import net.GamePacket;
 import net.SendOpcode;
 import tools.data.input.SeekableLittleEndianAccessor;
-import tools.data.output.MaplePacketLittleEndianWriter;
+import tools.data.output.PacketWriter;
 
 /**
  * 
@@ -65,17 +65,17 @@ public final class FamilyUseHandler extends AbstractMaplePacketHandler {
 	 * [65 00][02][08 00 00 00][C8 00 00 00][00 00 00 00][00][40 77 1B 00]
 	 */
 	private static GamePacket useRep(int mode, int type, int erate, int drate, int time) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(0x60);// noty
-		mplew.write(mode);
-		mplew.writeInt(type);
+		PacketWriter w = new PacketWriter();
+		w.writeShort(0x60);// noty
+		w.write(mode);
+		w.writeInt(type);
 		if (mode < 4) {
-			mplew.writeInt(erate);
-			mplew.writeInt(drate);
+			w.writeInt(erate);
+			w.writeInt(drate);
 		}
-		mplew.write(0);
-		mplew.writeInt(time);
-		return mplew.getPacket();
+		w.write(0);
+		w.writeInt(time);
+		return w.getPacket();
 	}
 
 	// 20 00
@@ -90,10 +90,10 @@ public final class FamilyUseHandler extends AbstractMaplePacketHandler {
 	// 40 0D 03 00 00 00 00 00 02
 	@SuppressWarnings("unused")
 	private static GamePacket giveBuff() {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendOpcode.GIVE_BUFF.getValue());
-		mplew.writeInt(0);
-		mplew.writeLong(0);
+		PacketWriter w = new PacketWriter();
+		w.writeShort(SendOpcode.GIVE_BUFF.getValue());
+		w.writeInt(0);
+		w.writeLong(0);
 
 		return null;
 	}

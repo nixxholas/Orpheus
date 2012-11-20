@@ -57,7 +57,7 @@ import server.TimerManager;
 import server.maps.HiredMerchant;
 import tools.HashCreator;
 import tools.MapleAESOFB;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.HexTool;
 import tools.Output;
 import org.apache.mina.core.session.IoSession;
@@ -123,7 +123,7 @@ public class GameClient {
 	}
 
 	public void sendCharList(int server) {
-		this.session.write(MaplePacketCreator.getCharList(this, server));
+		this.session.write(PacketCreator.getCharList(this, server));
 	}
 
 	public List<GameCharacter> loadCharacters(int serverId) {
@@ -685,8 +685,8 @@ public class GameClient {
 				if (game != null) {
 					player.setMiniGame(null);
 					if (game.isOwner(player)) {
-						player.getMap().broadcastMessage(MaplePacketCreator.removeCharBox(player));
-						game.broadcastToVisitor(MaplePacketCreator.getMiniGameClose());
+						player.getMap().broadcastMessage(PacketCreator.removeCharBox(player));
+						game.broadcastToVisitor(PacketCreator.getMiniGameClose());
 					} else {
 						game.removeVisitor(player);
 					}
@@ -740,7 +740,7 @@ public class GameClient {
 					Server.getInstance().setGuildMemberOnline(player.getMGC(), false, (byte) -1);
 					int allianceId = player.getGuild().getAllianceId();
 					if (allianceId > 0) {
-						Server.getInstance().allianceMessage(allianceId, MaplePacketCreator.allianceMemberOnline(player, false), player.getId(), -1);
+						Server.getInstance().allianceMessage(allianceId, PacketCreator.allianceMemberOnline(player, false), player.getId(), -1);
 					}
 				}
 			}
@@ -851,7 +851,7 @@ public class GameClient {
 
 	public void sendPing() {
 		final long then = System.currentTimeMillis();
-		announce(MaplePacketCreator.getPing());
+		announce(PacketCreator.getPing());
 		TimerManager.getInstance().schedule(new Runnable() {
 
 			@Override

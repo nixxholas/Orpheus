@@ -62,7 +62,7 @@ import server.MapleItemInformationProvider;
 import server.MapleStocks;
 import server.WorldRecommendation;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 
 public class Server implements Runnable {
@@ -563,7 +563,7 @@ public class Server implements Runnable {
 
 	public void gmChat(String message, String exclude) {
 		GMServer server = GMServer.getInstance();
-		server.broadcastInGame(MaplePacketCreator.serverNotice(6, message));
+		server.broadcastInGame(PacketCreator.serverNotice(6, message));
 		server.broadcastOutGame(GMPacketCreator.chat(message), exclude);
 	}
 

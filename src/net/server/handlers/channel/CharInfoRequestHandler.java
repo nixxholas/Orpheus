@@ -24,7 +24,7 @@ import constants.ServerConstants;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CharInfoRequestHandler extends AbstractMaplePacketHandler {
@@ -38,6 +38,6 @@ public final class CharInfoRequestHandler extends AbstractMaplePacketHandler {
 			return;
 		else if (player.isGM() && !c.getPlayer().isGM() && !ServerConstants.ALLOW_INFO_ON_GMS)
 			return;
-		c.announce(MaplePacketCreator.charInfo(player));
+		c.announce(PacketCreator.charInfo(player));
 	}
 }

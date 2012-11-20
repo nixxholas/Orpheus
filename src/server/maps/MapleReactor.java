@@ -26,7 +26,7 @@ import java.util.List;
 import net.GamePacket;
 import scripting.reactor.ReactorScriptManager;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -111,7 +111,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 	}
 
 	public GamePacket makeDestroyData() {
-		return MaplePacketCreator.destroyReactor(this);
+		return PacketCreator.destroyReactor(this);
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 	}
 
 	public GamePacket makeSpawnData() {
-		return MaplePacketCreator.spawnReactor(this);
+		return PacketCreator.spawnReactor(this);
 	}
 
 	public void delayedHitReactor(final GameClient c, long delay) {
@@ -172,14 +172,14 @@ public class MapleReactor extends AbstractMapleMapObject {
 								if (delay > 0) {
 									map.destroyReactor(getObjectId());
 								} else {// trigger as normal
-									map.broadcastMessage(MaplePacketCreator.triggerReactor(this, stance));
+									map.broadcastMessage(PacketCreator.triggerReactor(this, stance));
 								}
 							} else {// item-triggered on final step
-								map.broadcastMessage(MaplePacketCreator.triggerReactor(this, stance));
+								map.broadcastMessage(PacketCreator.triggerReactor(this, stance));
 							}
 							ReactorScriptManager.getInstance().act(c, this);
 						} else { // reactor not broken yet
-							map.broadcastMessage(MaplePacketCreator.triggerReactor(this, stance));
+							map.broadcastMessage(PacketCreator.triggerReactor(this, stance));
 							if (state == stats.getNextState(state, b)) {// current
 																		// state
 																		// =
@@ -195,7 +195,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 				}
 			} else {
 				state++;
-				map.broadcastMessage(MaplePacketCreator.triggerReactor(this, stance));
+				map.broadcastMessage(PacketCreator.triggerReactor(this, stance));
 				ReactorScriptManager.getInstance().act(c, this);
 			}
 		} catch (Exception e) {

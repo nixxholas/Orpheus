@@ -30,7 +30,7 @@ import net.server.Server;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleItemInformationProvider.RewardItem;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Pair;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -50,7 +50,7 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 		Pair<Integer, List<RewardItem>> rewards = ii.getItemReward(itemId);
 		for (RewardItem reward : rewards.getRight()) {
 			if (!MapleInventoryManipulator.checkSpace(c, reward.itemid, reward.quantity, "")) {
-				c.announce(MaplePacketCreator.showInventoryFull());
+				c.announce(PacketCreator.showInventoryFull());
 				break;
 			}
 			if (Randomizer.nextInt(rewards.getLeft()) < reward.prob) {
@@ -69,11 +69,11 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
 					String msg = reward.worldmsg;
 					msg.replaceAll("/name", c.getPlayer().getName());
 					msg.replaceAll("/item", ii.getName(reward.itemid));
-					Server.getInstance().broadcastMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, msg));
+					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(6, msg));
 				}
 				break;
 			}
 		}
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 }

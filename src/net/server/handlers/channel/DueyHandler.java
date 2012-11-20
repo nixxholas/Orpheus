@@ -39,7 +39,7 @@ import net.server.Channel;
 import server.DueyPackages;
 import server.MapleInventoryManipulator;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DueyHandler extends AbstractMaplePacketHandler {
@@ -112,16 +112,16 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 				if (accid != -1) {
 					if (accid != c.getAccID()) {
 						c.getPlayer().gainMeso(-finalcost, false);
-						c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_SUCCESSFULLY_SENT.getCode()));
+						c.announce(PacketCreator.sendDueyMSG(Actions.TOCLIENT_SUCCESSFULLY_SENT.getCode()));
 						send = true;
 					} else {
-						c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_SAMEACC_ERROR.getCode()));
+						c.announce(PacketCreator.sendDueyMSG(Actions.TOCLIENT_SAMEACC_ERROR.getCode()));
 					}
 				} else {
-					c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_NAME_DOES_NOT_EXIST.getCode()));
+					c.announce(PacketCreator.sendDueyMSG(Actions.TOCLIENT_NAME_DOES_NOT_EXIST.getCode()));
 				}
 			} else {
-				c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_NOT_ENOUGH_MESOS.getCode()));
+				c.announce(PacketCreator.sendDueyMSG(Actions.TOCLIENT_NOT_ENOUGH_MESOS.getCode()));
 			}
 			boolean recipientOn = false;
 			GameClient rClient = null;
@@ -149,14 +149,14 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 					addMesoToDB(mesos, c.getPlayer().getName(), getAccIdFromCNAME(recipient, false));
 				}
 				if (recipientOn && rClient != null) {
-					rClient.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_PACKAGE_MSG.getCode()));
+					rClient.announce(PacketCreator.sendDueyMSG(Actions.TOCLIENT_PACKAGE_MSG.getCode()));
 				}
 				c.getPlayer().gainMeso(-fee, false);
 			}
 		} else if (operation == Actions.TOSERVER_REMOVE_PACKAGE.getCode()) {
 			int packageid = slea.readInt();
 			removeItemFromDB(packageid);
-			c.announce(MaplePacketCreator.removeItemFromDuey(true, packageid));
+			c.announce(PacketCreator.removeItemFromDuey(true, packageid));
 		} else if (operation == Actions.TOSERVER_CLAIM_PACKAGE.getCode()) {
 			int packageid = slea.readInt();
 			List<DueyPackages> packages = new LinkedList<DueyPackages>();
@@ -184,7 +184,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 			if (dp.getItem() != null) {
 				if (!MapleInventoryManipulator.checkSpace(c, dp.getItem().getItemId(), dp.getItem().getQuantity(), dp.getItem().getOwner())) {
 					c.getPlayer().dropMessage(1, "Your inventory is full");
-					c.announce(MaplePacketCreator.enableActions());
+					c.announce(PacketCreator.enableActions());
 					return;
 				} else {
 					MapleInventoryManipulator.addFromDrop(c, dp.getItem(), false);
@@ -200,7 +200,7 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
 				c.getPlayer().gainMeso(gainmesos, false);
 			}
 			removeItemFromDB(packageid);
-			c.announce(MaplePacketCreator.removeItemFromDuey(false, packageid));
+			c.announce(PacketCreator.removeItemFromDuey(false, packageid));
 		}
 	}
 

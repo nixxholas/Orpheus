@@ -24,7 +24,7 @@ import client.GameClient;
 import constants.ServerConstants;
 import net.server.Server;
 import tools.MapleAESOFB;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.ByteArrayByteStream;
 import tools.data.input.GenericSeekableLittleEndianAccessor;
@@ -95,7 +95,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
 		GameClient client = new GameClient(sendCypher, recvCypher, session);
 		client.setWorld(world);
 		client.setChannel(channel);
-		session.write(MaplePacketCreator.getHello(ServerConstants.VERSION, ivSend, ivRecv));
+		session.write(PacketCreator.getHello(ServerConstants.VERSION, ivSend, ivRecv));
 		session.setAttribute(GameClient.CLIENT_KEY, client);
 	}
 

@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -37,7 +37,7 @@ public final class DenyGuildRequestHandler extends AbstractMaplePacketHandler {
 		slea.readByte();
 		GameCharacter cfrom = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
 		if (cfrom != null) {
-			cfrom.getClient().announce(MaplePacketCreator.denyGuildInvitation(c.getPlayer().getName()));
+			cfrom.getClient().announce(PacketCreator.denyGuildInvitation(c.getPlayer().getName()));
 		}
 	}
 }

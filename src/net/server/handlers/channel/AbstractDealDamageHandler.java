@@ -84,7 +84,7 @@ import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import server.partyquest.Pyramid;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.LittleEndianAccessor;
 
 public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandler {
@@ -134,7 +134,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                 theSkill = SkillFactory.getSkill(attack.skill);
                 attackEffect = attack.getAttackEffect(player, theSkill);
                 if (attackEffect == null) {
-                    player.getClient().announce(MaplePacketCreator.enableActions());
+                    player.getClient().announce(PacketCreator.enableActions());
                     return;
                 }
 
@@ -146,7 +146,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                     if (player.isAlive()) {
                         attackEffect.applyTo(player);
                     } else {
-                        player.getClient().announce(MaplePacketCreator.enableActions());
+                        player.getClient().announce(PacketCreator.enableActions());
                     }
                 }
                 int mobCount = attackEffect.getMobCount();
@@ -187,7 +187,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                                     @Override
                                     public void run() {
                                         map.removeMapObject(mapitem);
-                                        map.broadcastMessage(MaplePacketCreator.removeItemFromMap(mapitem.getObjectId(), 4, 0), mapitem.getPosition());
+                                        map.broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 4, 0), mapitem.getPosition());
                                         mapitem.setPickedUp(true);
                                     }
                                 }, delay);
@@ -253,7 +253,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                         monster.setTempEffectiveness(Element.FIRE, ElementalEffectiveness.WEAK, SkillFactory.getSkill(ILArchMage.ICE_DEMON).getEffect(player.getSkillLevel(SkillFactory.getSkill(ILArchMage.ICE_DEMON))).getDuration() * 1000);
                     } else if (attack.skill == Outlaw.HOMING_BEACON || attack.skill == Corsair.BULLSEYE) {
                         player.setMarkedMonster(monster.getObjectId());
-                        player.announce(MaplePacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.HOMING_BEACON, monster.getObjectId()))));
+                        player.announce(PacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.HOMING_BEACON, monster.getObjectId()))));
                     }
                     if (player.getBuffedValue(MapleBuffStat.HAMSTRING) != null) {
                         ISkill hamstring = SkillFactory.getSkill(Bowmaster.HAMSTRING);

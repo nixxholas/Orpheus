@@ -29,7 +29,7 @@ import client.GameCharacter;
 import client.GameClient;
 import tools.DatabaseConnection;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ViewCharHandler extends AbstractMaplePacketHandler {
@@ -66,7 +66,7 @@ public final class ViewCharHandler extends AbstractMaplePacketHandler {
 			rs.close();
 			ps.close();
 			int unk = charsNum + 3 - charsNum % 3;
-			c.announce(MaplePacketCreator.showAllCharacter(charsNum, unk));
+			c.announce(PacketCreator.showAllCharacter(charsNum, unk));
 			for (byte w : worlds) {
 				List<GameCharacter> chrsinworld = new ArrayList<GameCharacter>();
 				for (GameCharacter chr : chars) {
@@ -74,7 +74,7 @@ public final class ViewCharHandler extends AbstractMaplePacketHandler {
 						chrsinworld.add(chr);
 					}
 				}
-				c.announce(MaplePacketCreator.showAllCharacterInfo(w, chrsinworld));
+				c.announce(PacketCreator.showAllCharacterInfo(w, chrsinworld));
 			}
 		} catch (Exception e) {
 		}

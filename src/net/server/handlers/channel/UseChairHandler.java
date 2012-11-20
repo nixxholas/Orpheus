@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class UseChairHandler extends AbstractMaplePacketHandler {
@@ -35,7 +35,7 @@ public final class UseChairHandler extends AbstractMaplePacketHandler {
 			return;
 		}
 		c.getPlayer().setChair(itemId);
-		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showChair(c.getPlayer().getId(), itemId), false);
-		c.announce(MaplePacketCreator.enableActions());
+		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.showChair(c.getPlayer().getId(), itemId), false);
+		c.announce(PacketCreator.enableActions());
 	}
 }

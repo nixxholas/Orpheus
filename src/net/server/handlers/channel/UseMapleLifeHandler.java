@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -33,6 +33,6 @@ public class UseMapleLifeHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		c.announce(MaplePacketCreator.charNameResponse(slea.readMapleAsciiString(), false));
+		c.announce(PacketCreator.charNameResponse(slea.readMapleAsciiString(), false));
 	}
 }

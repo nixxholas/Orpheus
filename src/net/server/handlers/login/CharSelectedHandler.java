@@ -24,7 +24,7 @@ import java.net.InetAddress;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CharSelectedHandler extends AbstractMaplePacketHandler {
@@ -46,10 +46,10 @@ public final class CharSelectedHandler extends AbstractMaplePacketHandler {
 			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
 			if (channelServerIP.equals("0.0.0.0")) {
 				String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
-				c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
+				c.announce(PacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
 			} else {
 				String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
-				c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(socket[1]), charId));
+				c.announce(PacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(socket[1]), charId));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

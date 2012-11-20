@@ -42,7 +42,7 @@ import java.util.List;
 import server.MapleBuffStatDelta;
 import server.MapleStatEffect;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
@@ -55,7 +55,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
-		player.getMap().broadcastMessage(player, MaplePacketCreator.closeRangeAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.speed, attack.direction, attack.display), false, true);
+		player.getMap().broadcastMessage(player, PacketCreator.closeRangeAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.speed, attack.direction, attack.display), false, true);
 		int numFinisherOrbs = 0;
 		Integer comboBuff = player.getBuffedValue(MapleBuffStat.COMBO);
 		if (isFinisher(attack.skill)) {
@@ -89,8 +89,8 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 					List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.COMBO, neworbcount));
 					player.setBuffedValue(MapleBuffStat.COMBO, neworbcount);
 					duration -= (int) (System.currentTimeMillis() - player.getBuffedStarttime(MapleBuffStat.COMBO));
-					c.announce(MaplePacketCreator.giveBuff(oid, duration, stat));
-					player.getMap().broadcastMessage(player, MaplePacketCreator.giveForeignBuff(player.getId(), stat), false);
+					c.announce(PacketCreator.giveBuff(oid, duration, stat));
+					player.getMap().broadcastMessage(player, PacketCreator.giveForeignBuff(player.getId(), stat), false);
 				}
 			} else if (player.getSkillLevel(player.isCygnus() ? SkillFactory.getSkill(15100004) : SkillFactory.getSkill(5110001)) > 0 && (player.getJob().isA(MapleJob.MARAUDER) || player.getJob().isA(MapleJob.THUNDERBREAKER2))) {
 				for (int i = 0; i < attack.numAttacked; i++) {
@@ -145,7 +145,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 				if (player.skillisCooling(attack.skill)) {
 					return;
 				} else {
-					c.announce(MaplePacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
+					c.announce(PacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
 					player.addCooldown(attack.skill, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill), effect_.getCooldown() * 1000));
 				}
 			}

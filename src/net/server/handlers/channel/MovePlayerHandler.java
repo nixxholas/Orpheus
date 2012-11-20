@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import java.util.List;
 import client.GameClient;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MovePlayerHandler extends AbstractMovementPacketHandler {
@@ -36,9 +36,9 @@ public final class MovePlayerHandler extends AbstractMovementPacketHandler {
 			updatePosition(res, c.getPlayer(), 0);
 			c.getPlayer().getMap().movePlayer(c.getPlayer(), c.getPlayer().getPosition());
 			if (c.getPlayer().isHidden()) {
-				c.getPlayer().getMap().broadcastGMMessage(c.getPlayer(), MaplePacketCreator.movePlayer(c.getPlayer().getId(), res), false);
+				c.getPlayer().getMap().broadcastGMMessage(c.getPlayer(), PacketCreator.movePlayer(c.getPlayer().getId(), res), false);
 			} else {
-				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.movePlayer(c.getPlayer().getId(), res), false);
+				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.movePlayer(c.getPlayer().getId(), res), false);
 			}
 		}
 	}

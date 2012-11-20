@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledFuture;
 import server.TimerManager;
 import server.maps.MapleMap;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -52,7 +52,7 @@ public class MonsterCarnival {
 		this.blue = blue1;
 		this.timeStarted = System.currentTimeMillis();
 		this.time = 600000;
-		map.broadcastMessage(MaplePacketCreator.getClock((int) (time / 1000)));
+		map.broadcastMessage(PacketCreator.getClock((int) (time / 1000)));
 
 		for (GameCharacter chr : red.getMembers())
 			chr.setCarnival(this);
@@ -134,7 +134,7 @@ public class MonsterCarnival {
 	}
 
 	public void playerLeft(GameCharacter chr) {
-		map.broadcastMessage(chr, MaplePacketCreator.leaveCPQ(chr));
+		map.broadcastMessage(chr, PacketCreator.leaveCPQ(chr));
 	}
 
 	private void warpOut() {

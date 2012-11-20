@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import client.autoban.AutobanFactory;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -39,6 +39,6 @@ public class UseGachaExpHandler extends AbstractMaplePacketHandler {
 			AutobanFactory.GACHA_EXP.autoban(c.getPlayer(), "Packet editing is for faggots like this nib.");
 		}
 		c.getPlayer().gainGachaExp();
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 }

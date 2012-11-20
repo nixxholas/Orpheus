@@ -27,7 +27,7 @@ import java.util.Arrays;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -43,9 +43,9 @@ public final class HiredMerchantRequest extends AbstractMaplePacketHandler {
 			if (!chr.hasMerchant()) {
 				try {
 					if (ItemFactory.MERCHANT.loadItems(chr.getId(), false).isEmpty() && chr.getMerchantMeso() == 0) {
-						c.announce(MaplePacketCreator.hiredMerchantBox());
+						c.announce(PacketCreator.hiredMerchantBox());
 					} else {
-						chr.announce(MaplePacketCreator.retrieveFirstMessage());
+						chr.announce(PacketCreator.retrieveFirstMessage());
 					}
 				} catch (SQLException ex) {
 				}

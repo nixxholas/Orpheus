@@ -24,7 +24,7 @@ import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -44,14 +44,14 @@ public class EnterCashShopHandler extends AbstractMaplePacketHandler {
 			Server.getInstance().getPlayerBuffStorage().addBuffsToStorage(player.getId(), player.getAllBuffs());
 			player.cancelBuffEffects();
 			player.cancelExpirationTask();
-			c.announce(MaplePacketCreator.openCashShop(c, false));
+			c.announce(PacketCreator.openCashShop(c, false));
 			player.saveToDB(true);
 			player.getCashShop().open(true);
 			player.getMap().removePlayer(player);
-			c.announce(MaplePacketCreator.showCashInventory(c));
-			c.announce(MaplePacketCreator.showGifts(player.getCashShop().loadGifts()));
-			c.announce(MaplePacketCreator.showWishList(player, false));
-			c.announce(MaplePacketCreator.showCash(player));
+			c.announce(PacketCreator.showCashInventory(c));
+			c.announce(PacketCreator.showGifts(player.getCashShop().loadGifts()));
+			c.announce(PacketCreator.showWishList(player, false));
+			c.announce(PacketCreator.showCash(player));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

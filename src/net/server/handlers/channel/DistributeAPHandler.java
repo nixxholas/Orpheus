@@ -25,7 +25,7 @@ import client.GameClient;
 import client.MapleJob;
 import client.MapleStat;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DistributeAPHandler extends AbstractMaplePacketHandler {
@@ -41,7 +41,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 				c.getPlayer().updateSingleStat(MapleStat.AVAILABLEAP, c.getPlayer().getRemainingAp());
 			}
 		}
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 
 	static boolean addStat(GameClient c, int id) {
@@ -77,7 +77,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
 				addMP(c.getPlayer(), addMP(c));
 				break;
 			default:
-				c.announce(MaplePacketCreator.updatePlayerStats(MaplePacketCreator.EMPTY_STATUPDATE, true));
+				c.announce(PacketCreator.updatePlayerStats(PacketCreator.EMPTY_STATUPDATE, true));
 				return false;
 		}
 		return true;

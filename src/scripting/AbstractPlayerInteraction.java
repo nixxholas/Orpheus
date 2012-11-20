@@ -50,7 +50,7 @@ import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import server.partyquest.Pyramid;
 import server.quest.MapleQuest;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class AbstractPlayerInteraction {
 	public GameClient c;
@@ -121,7 +121,7 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void updateQuest(int questid, String status) {
-		c.announce(MaplePacketCreator.updateQuest((short) questid, status));
+		c.announce(PacketCreator.updateQuest((short) questid, status));
 	}
 
 	public MapleQuestStatus.Status getQuestStatus(int id) {
@@ -179,15 +179,15 @@ public class AbstractPlayerInteraction {
 		} else {
 			MapleInventoryManipulator.removeById(c, MapleItemInformationProvider.getInstance().getInventoryType(id), id, -quantity, true, false);
 		}
-		c.announce(MaplePacketCreator.getShowItemGain(id, quantity, true));
+		c.announce(PacketCreator.getShowItemGain(id, quantity, true));
 	}
 
 	public void changeMusic(String songName) {
-		getPlayer().getMap().broadcastMessage(MaplePacketCreator.musicChange(songName));
+		getPlayer().getMap().broadcastMessage(PacketCreator.musicChange(songName));
 	}
 
 	public void playerMessage(int type, String message) {
-		c.announce(MaplePacketCreator.serverNotice(type, message));
+		c.announce(PacketCreator.serverNotice(type, message));
 	}
 
 	public void message(String message) {
@@ -195,29 +195,29 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void mapMessage(int type, String message) {
-		getPlayer().getMap().broadcastMessage(MaplePacketCreator.serverNotice(type, message));
+		getPlayer().getMap().broadcastMessage(PacketCreator.serverNotice(type, message));
 	}
 
 	public void mapEffect(String path) {
-		c.announce(MaplePacketCreator.mapEffect(path));
+		c.announce(PacketCreator.mapEffect(path));
 	}
 
 	public void mapSound(String path) {
-		c.announce(MaplePacketCreator.mapSound(path));
+		c.announce(PacketCreator.mapSound(path));
 	}
 
 	public void showIntro(String path) {
-		c.announce(MaplePacketCreator.showIntro(path));
+		c.announce(PacketCreator.showIntro(path));
 	}
 
 	public void showInfo(String path) {
-		c.announce(MaplePacketCreator.showInfo(path));
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.showInfo(path));
+		c.announce(PacketCreator.enableActions());
 	}
 
 	public void guildMessage(int type, String message) {
 		if (getGuild() != null) {
-			getGuild().guildMessage(MaplePacketCreator.serverNotice(type, message));
+			getGuild().guildMessage(PacketCreator.serverNotice(type, message));
 		}
 	}
 
@@ -245,7 +245,7 @@ public class AbstractPlayerInteraction {
 			} else {
 				MapleInventoryManipulator.removeById(cl, MapleItemInformationProvider.getInstance().getInventoryType(id), id, -quantity, true, false);
 			}
-			cl.announce(MaplePacketCreator.getShowItemGain(id, quantity, true));
+			cl.announce(PacketCreator.getShowItemGain(id, quantity, true));
 		}
 	}
 
@@ -263,7 +263,7 @@ public class AbstractPlayerInteraction {
 			int possesed = iv.countById(id);
 			if (possesed > 0) {
 				MapleInventoryManipulator.removeById(c, MapleItemInformationProvider.getInstance().getInventoryType(id), id, possesed, true, false);
-				cl.announce(MaplePacketCreator.getShowItemGain(id, (short) -possesed, true));
+				cl.announce(PacketCreator.getShowItemGain(id, (short) -possesed, true));
 			}
 		}
 	}
@@ -276,7 +276,7 @@ public class AbstractPlayerInteraction {
 		int possessed = cl.getPlayer().getInventory(MapleItemInformationProvider.getInstance().getInventoryType(id)).countById(id);
 		if (possessed > 0) {
 			MapleInventoryManipulator.removeById(cl, MapleItemInformationProvider.getInstance().getInventoryType(id), id, possessed, true, false);
-			cl.announce(MaplePacketCreator.getShowItemGain(id, (short) -possessed, true));
+			cl.announce(PacketCreator.getShowItemGain(id, (short) -possessed, true));
 		}
 	}
 
@@ -289,12 +289,12 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void showInstruction(String msg, int width, int height) {
-		c.announce(MaplePacketCreator.sendHint(msg, width, height));
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.sendHint(msg, width, height));
+		c.announce(PacketCreator.enableActions());
 	}
 
 	public void disableMinimap() {
-		c.announce(MaplePacketCreator.disableMinimap());
+		c.announce(PacketCreator.disableMinimap());
 	}
 
 	public void resetMap(int mapid) {
@@ -302,17 +302,17 @@ public class AbstractPlayerInteraction {
 		getMap(mapid).killAllMonsters();
 		for (MapleMapObject i : getMap(mapid).getMapObjectsInRange(c.getPlayer().getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.ITEM))) {
 			getMap(mapid).removeMapObject(i);
-			getMap(mapid).broadcastMessage(MaplePacketCreator.removeItemFromMap(i.getObjectId(), 0, c.getPlayer().getId()));
+			getMap(mapid).broadcastMessage(PacketCreator.removeItemFromMap(i.getObjectId(), 0, c.getPlayer().getId()));
 		}
 	}
 
 	public void sendClock(GameClient d, int time) {
-		d.announce(MaplePacketCreator.getClock((int) (time - System.currentTimeMillis()) / 1000));
+		d.announce(PacketCreator.getClock((int) (time - System.currentTimeMillis()) / 1000));
 	}
 
 	public void useItem(int id) {
 		MapleItemInformationProvider.getInstance().getItemEffect(id).applyTo(c.getPlayer());
-		c.announce(MaplePacketCreator.getItemMessage(id));// Useful shet :3
+		c.announce(PacketCreator.getItemMessage(id));// Useful shet :3
 	}
 
 	public void giveTutorialSkills() {
@@ -344,33 +344,33 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void spawnGuide() {
-		c.announce(MaplePacketCreator.spawnGuide(true));
+		c.announce(PacketCreator.spawnGuide(true));
 	}
 
 	public void removeGuide() {
-		c.announce(MaplePacketCreator.spawnGuide(false));
+		c.announce(PacketCreator.spawnGuide(false));
 	}
 
 	public void displayGuide(int num) {
-		c.announce(MaplePacketCreator.showInfo("UI/tutorial.img/" + num));
+		c.announce(PacketCreator.showInfo("UI/tutorial.img/" + num));
 	}
 
 	public void talkGuide(String message) {
-		c.announce(MaplePacketCreator.talkGuide(message));
+		c.announce(PacketCreator.talkGuide(message));
 	}
 
 	public void guideHint(int hint) {
-		c.announce(MaplePacketCreator.guideHint(hint));
+		c.announce(PacketCreator.guideHint(hint));
 	}
 
 	public void updateAranIntroState(String mode) {
 		c.getPlayer().addAreaData(21002, mode);
-		c.announce(MaplePacketCreator.updateAreaInfo(mode, 21002));
+		c.announce(PacketCreator.updateAreaInfo(mode, 21002));
 	}
 
 	public void updateAranIntroState2(String mode) {
 		c.getPlayer().addAreaData(21019, mode);
-		c.announce(MaplePacketCreator.updateAreaInfo(mode, 21019));
+		c.announce(PacketCreator.updateAreaInfo(mode, 21019));
 	}
 
 	public boolean getAranIntroState(String mode) {
@@ -382,7 +382,7 @@ public class AbstractPlayerInteraction {
 
 	public void updateCygnusIntroState(String mode) {
 		c.getPlayer().addAreaData(20021, mode);
-		c.announce(MaplePacketCreator.updateAreaInfo(mode, 20021));
+		c.announce(PacketCreator.updateAreaInfo(mode, 20021));
 	}
 
 	public boolean getCygnusIntroState(String mode) {
@@ -397,29 +397,29 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void earnTitle(String msg) {
-		c.announce(MaplePacketCreator.earnTitleMessage(msg));
+		c.announce(PacketCreator.earnTitleMessage(msg));
 	}
 
 	public void showInfoText(String msg) {
-		c.announce(MaplePacketCreator.showInfoText(msg));
+		c.announce(PacketCreator.showInfoText(msg));
 	}
 
 	public void openUI(byte ui) {
-		c.announce(MaplePacketCreator.openUI(ui));
+		c.announce(PacketCreator.openUI(ui));
 	}
 
 	public void lockUI() {
-		c.announce(MaplePacketCreator.disableUI(true));
-		c.announce(MaplePacketCreator.lockUI(true));
+		c.announce(PacketCreator.disableUI(true));
+		c.announce(PacketCreator.lockUI(true));
 	}
 
 	public void unlockUI() {
-		c.announce(MaplePacketCreator.disableUI(false));
-		c.announce(MaplePacketCreator.lockUI(false));
+		c.announce(PacketCreator.disableUI(false));
+		c.announce(PacketCreator.lockUI(false));
 	}
 
 	public void environmentChange(String env, int mode) {
-		getPlayer().getMap().broadcastMessage(MaplePacketCreator.environmentChange(env, mode));
+		getPlayer().getMap().broadcastMessage(PacketCreator.environmentChange(env, mode));
 	}
 
 	public Pyramid getPyramid() {

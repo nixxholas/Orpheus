@@ -24,7 +24,7 @@ import client.GameClient;
 import constants.ServerConstants;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ServerStatusRequestHandler extends AbstractMaplePacketHandler {
@@ -45,6 +45,6 @@ public final class ServerStatusRequestHandler extends AbstractMaplePacketHandler
 		} else {
 			status = 0;
 		}
-		c.announce(MaplePacketCreator.getServerStatus(status));
+		c.announce(PacketCreator.getServerStatus(status));
 	}
 }

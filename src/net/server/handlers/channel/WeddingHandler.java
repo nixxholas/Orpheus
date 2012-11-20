@@ -26,7 +26,7 @@ import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -49,7 +49,7 @@ public class WeddingHandler extends AbstractMaplePacketHandler {
 				MapleInventoryType type = MapleItemInformationProvider.getInstance().getInventoryType(itemid);
 				IItem item = chr.getInventory(type).getItem(slot);
 				if (itemid == item.getItemId() && quantity <= item.getQuantity()) {
-					c.getSession().write(MaplePacketCreator.addItemToWeddingRegistry(chr, item));
+					c.getSession().write(PacketCreator.addItemToWeddingRegistry(chr, item));
 				}
 		}
 	}

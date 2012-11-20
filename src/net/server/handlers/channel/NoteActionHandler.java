@@ -27,7 +27,7 @@ import java.sql.SQLException;
 import tools.DatabaseConnection;
 import tools.data.input.SeekableLittleEndianAccessor;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public final class NoteActionHandler extends AbstractMaplePacketHandler {
 
@@ -39,7 +39,7 @@ public final class NoteActionHandler extends AbstractMaplePacketHandler {
 			String message = slea.readMapleAsciiString();
 			try {
 				if (c.getPlayer().getCashShop().isOpened())
-					c.announce(MaplePacketCreator.showCashInventory(c));
+					c.announce(PacketCreator.showCashInventory(c));
 
 				c.getPlayer().sendNote(charname, message, (byte) 1);
 				c.getPlayer().getCashShop().decreaseNotes();
@@ -73,7 +73,7 @@ public final class NoteActionHandler extends AbstractMaplePacketHandler {
 			}
 			if (fame > 0) {
 				c.getPlayer().gainFame(fame);
-				c.announce(MaplePacketCreator.getShowFameGain(fame));
+				c.announce(PacketCreator.getShowFameGain(fame));
 			}
 		}
 	}

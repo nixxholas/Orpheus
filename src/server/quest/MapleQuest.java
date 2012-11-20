@@ -33,7 +33,7 @@ import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -191,7 +191,7 @@ public class MapleQuest {
 			return;
 		}
 		if (timeLimit > 0) {
-			c.announce(MaplePacketCreator.removeQuestTimeLimit(id));
+			c.announce(PacketCreator.removeQuestTimeLimit(id));
 		}
 		MapleQuestStatus newStatus = new MapleQuestStatus(this, MapleQuestStatus.Status.NOT_STARTED);
 		newStatus.setForfeited(c.getQuest(this).getForfeited() + 1);
@@ -221,8 +221,8 @@ public class MapleQuest {
 		MapleQuestStatus newStatus = new MapleQuestStatus(this, MapleQuestStatus.Status.COMPLETED, npc);
 		newStatus.setForfeited(c.getQuest(this).getForfeited());
 		newStatus.setCompletionTime(System.currentTimeMillis());
-		c.announce(MaplePacketCreator.showSpecialEffect(9));
-		c.getMap().broadcastMessage(c, MaplePacketCreator.showForeignEffect(c.getId(), 9), false);
+		c.announce(PacketCreator.showSpecialEffect(9));
+		c.getMap().broadcastMessage(c, PacketCreator.showForeignEffect(c.getId(), 9), false);
 		c.updateQuest(newStatus);
 
 		return true;

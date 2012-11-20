@@ -37,7 +37,7 @@ import server.life.MapleMonster;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import server.quest.MapleQuest;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class AdminCommandHandler extends AbstractMaplePacketHandler {
@@ -60,7 +60,7 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 						player.getMap().spawnMonsterOnGroudBelow(MapleLifeFactory.getMonster(toSpawnChild[0]), player.getPosition());
 					}
 				}
-				c.announce(MaplePacketCreator.enableActions());
+				c.announce(PacketCreator.enableActions());
 				break;
 			case 0x01: { // /d (inv)
 				final byte typeByte = slea.readByte();
@@ -88,11 +88,11 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 					reason += readableTargetName + " (IP: " + ip + ")";
 					target.ban(reason);
 					target.sendPolice("You have been blocked by #b" + player.getName() + " #kfor the HACK reason.");
-					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
+					c.announce(PacketCreator.getGMEffect(4, (byte) 0));
 				} else if (GameCharacter.ban(victim, reason, false)) {
-					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
+					c.announce(PacketCreator.getGMEffect(4, (byte) 0));
 				} else {
-					c.announce(MaplePacketCreator.getGMEffect(6, (byte) 1));
+					c.announce(PacketCreator.getGMEffect(6, (byte) 1));
 				}
 				break;
 			case 0x04: // Block
@@ -111,11 +111,11 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 					} else {
 						// target.tempban(reason, duration, type);
 					}
-					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
+					c.announce(PacketCreator.getGMEffect(4, (byte) 0));
 				} else if (GameCharacter.ban(victim, reason, false)) {
-					c.announce(MaplePacketCreator.getGMEffect(4, (byte) 0));
+					c.announce(PacketCreator.getGMEffect(4, (byte) 0));
 				} else {
-					c.announce(MaplePacketCreator.getGMEffect(6, (byte) 1));
+					c.announce(PacketCreator.getGMEffect(6, (byte) 1));
 				}
 				break;
 			case 0x10: // /h, information by vana
@@ -169,10 +169,10 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
 				String message = slea.readMapleAsciiString();
 				target = c.getChannelServer().getPlayerStorage().getCharacterByName(victim);
 				if (target != null) {
-					target.getClient().announce(MaplePacketCreator.serverNotice(1, message));
-					c.announce(MaplePacketCreator.getGMEffect(0x1E, (byte) 1));
+					target.getClient().announce(PacketCreator.serverNotice(1, message));
+					c.announce(PacketCreator.getGMEffect(0x1E, (byte) 1));
 				} else {
-					c.announce(MaplePacketCreator.getGMEffect(0x1E, (byte) 0));
+					c.announce(PacketCreator.getGMEffect(0x1E, (byte) 0));
 				}
 				break;
 			case 0x77: // Testing purpose

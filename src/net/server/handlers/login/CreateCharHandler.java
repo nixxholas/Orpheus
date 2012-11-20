@@ -30,7 +30,7 @@ import client.MapleJob;
 import client.MapleSkinColor;
 import net.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -97,6 +97,6 @@ public final class CreateCharHandler extends AbstractMaplePacketHandler {
 		eq_weapon.setPosition((byte) -11);
 		equip.addFromDB(eq_weapon.copy());
 		newchar.saveToDB(false);
-		c.announce(MaplePacketCreator.addNewCharEntry(newchar));
+		c.announce(PacketCreator.addNewCharEntry(newchar));
 	}
 }

@@ -24,7 +24,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 //import client.command.CommandProcessor;
 import net.AbstractMaplePacketHandler;
-//import tools.MaplePacketCreator;
+//import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -40,9 +40,9 @@ public final class SpouseChatHandler extends AbstractMaplePacketHandler {
 		// GameCharacter wife =
 		// c.getChannelServer().getPlayerStorage().getCharacterById(c.getPlayer().getPartnerId());
 		// if (wife != null) {
-		// wife.getClient().announce(MaplePacketCreator.sendSpouseChat(c.getPlayer(),
+		// wife.getClient().announce(PacketCreator.sendSpouseChat(c.getPlayer(),
 		// msg));
-		// c.announce(MaplePacketCreator.sendSpouseChat(c.getPlayer(), msg));
+		// c.announce(PacketCreator.sendSpouseChat(c.getPlayer(), msg));
 		// } else
 		// try {
 		// if
@@ -50,7 +50,7 @@ public final class SpouseChatHandler extends AbstractMaplePacketHandler {
 		// {
 		// c.getChannelServer().getWorldInterface().sendSpouseChat(c.getPlayer().getName(),
 		// wife.getName(), msg);
-		// c.announce(MaplePacketCreator.sendSpouseChat(c.getPlayer(), msg));
+		// c.announce(PacketCreator.sendSpouseChat(c.getPlayer(), msg));
 		// } else
 		// c.getPlayer().message("You are either not married or your spouse is currently offline.");
 		// } catch (Exception e) {

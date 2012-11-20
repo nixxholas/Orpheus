@@ -37,7 +37,7 @@ import server.CashShop.CashItem;
 import server.CashShop.CashItemFactory;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -48,7 +48,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 		GameCharacter chr = c.getPlayer();
 		CashShop cs = chr.getCashShop();
 		if (!cs.isOpened()) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		}
 		final int action = slea.readByte();
@@ -63,16 +63,16 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 			if (action == 0x03) { // Item
 				IItem item = cItem.toItem();
 				cs.addToInventory(item);
-				c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
+				c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
 			} else { // Package
 				List<IItem> cashPackage = CashItemFactory.getPackage(cItem.getItemId());
 				for (IItem item : cashPackage) {
 					cs.addToInventory(item);
 				}
-				c.announce(MaplePacketCreator.showBoughtCashPackage(cashPackage, c.getAccID()));
+				c.announce(PacketCreator.showBoughtCashPackage(cashPackage, c.getAccID()));
 			}
 			cs.gainCash(useNX, -cItem.getPrice());
-			c.announce(MaplePacketCreator.showCash(chr));
+			c.announce(PacketCreator.showCash(chr));
 		} else if (action == 0x04) {// TODO check for gender
 			int birthday = slea.readInt();
 			CashItem cItem = CashItemFactory.getItem(slea.readInt());
@@ -82,19 +82,19 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 				return;
 			}
 			if (!checkBirthday(c, birthday)) {
-				c.announce(MaplePacketCreator.showCashShopMessage((byte) 0xC4));
+				c.announce(PacketCreator.showCashShopMessage((byte) 0xC4));
 				return;
 			} else if (recipient == null) {
-				c.announce(MaplePacketCreator.showCashShopMessage((byte) 0xA9));
+				c.announce(PacketCreator.showCashShopMessage((byte) 0xA9));
 				return;
 			} else if (recipient.get("accountid").equals(String.valueOf(c.getAccID()))) {
-				c.announce(MaplePacketCreator.showCashShopMessage((byte) 0xA8));
+				c.announce(PacketCreator.showCashShopMessage((byte) 0xA8));
 				return;
 			}
 			cs.gift(Integer.parseInt(recipient.get("id")), chr.getName(), message, cItem.getSN());
-			c.announce(MaplePacketCreator.showGiftSucceed(recipient.get("name"), cItem));
+			c.announce(PacketCreator.showGiftSucceed(recipient.get("name"), cItem));
 			cs.gainCash(4, -cItem.getPrice());
-			c.announce(MaplePacketCreator.showCash(chr));
+			c.announce(PacketCreator.showCash(chr));
 			try {
 				chr.sendNote(recipient.get("name"), chr.getName() + " has sent you a gift! Go check out the Cash Shop.", (byte) 0); // fame
 																																	// or
@@ -113,7 +113,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					cs.addToWishList(sn);
 				}
 			}
-			c.announce(MaplePacketCreator.showWishList(chr, true));
+			c.announce(PacketCreator.showWishList(chr, true));
 		} else if (action == 0x06) { // Increase Inventory Slots
 			slea.skip(1);
 			int cash = slea.readInt();
@@ -124,9 +124,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					return;
 				}
 				if (chr.gainSlots(type, 4, false)) {
-					c.announce(MaplePacketCreator.showBoughtInventorySlots(type, chr.getSlots(type)));
+					c.announce(PacketCreator.showBoughtInventorySlots(type, chr.getSlots(type)));
 					cs.gainCash(cash, -4000);
-					c.announce(MaplePacketCreator.showCash(chr));
+					c.announce(PacketCreator.showCash(chr));
 				}
 			} else {
 				CashItem cItem = CashItemFactory.getItem(slea.readInt());
@@ -135,9 +135,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					return;
 				}
 				if (chr.gainSlots(type, 8, false)) {
-					c.announce(MaplePacketCreator.showBoughtInventorySlots(type, chr.getSlots(type)));
+					c.announce(PacketCreator.showBoughtInventorySlots(type, chr.getSlots(type)));
 					cs.gainCash(cash, -cItem.getPrice());
-					c.announce(MaplePacketCreator.showCash(chr));
+					c.announce(PacketCreator.showCash(chr));
 				}
 			}
 		} else if (action == 0x07) { // Increase Storage Slots
@@ -149,9 +149,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					return;
 				}
 				if (chr.getStorage().gainSlots(4)) {
-					c.announce(MaplePacketCreator.showBoughtStorageSlots(chr.getStorage().getSlots()));
+					c.announce(PacketCreator.showBoughtStorageSlots(chr.getStorage().getSlots()));
 					cs.gainCash(cash, -4000);
-					c.announce(MaplePacketCreator.showCash(chr));
+					c.announce(PacketCreator.showCash(chr));
 				}
 			} else {
 				CashItem cItem = CashItemFactory.getItem(slea.readInt());
@@ -160,9 +160,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					return;
 				}
 				if (chr.getStorage().gainSlots(8)) {
-					c.announce(MaplePacketCreator.showBoughtStorageSlots(chr.getStorage().getSlots()));
+					c.announce(PacketCreator.showBoughtStorageSlots(chr.getStorage().getSlots()));
 					cs.gainCash(cash, -cItem.getPrice());
-					c.announce(MaplePacketCreator.showCash(chr));
+					c.announce(PacketCreator.showCash(chr));
 				}
 			}
 		} else if (action == 0x08) { // Increase Character Slots
@@ -174,9 +174,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 				return;
 
 			if (c.gainCharacterSlot()) {
-				c.announce(MaplePacketCreator.showBoughtCharacterSlot(c.getCharacterSlots()));
+				c.announce(PacketCreator.showBoughtCharacterSlot(c.getCharacterSlots()));
 				cs.gainCash(cash, -cItem.getPrice());
-				c.announce(MaplePacketCreator.showCash(chr));
+				c.announce(PacketCreator.showCash(chr));
 			}
 		} else if (action == 0x0D) { // Take from Cash Inventory
 			IItem item = cs.findByCashId(slea.readInt());
@@ -185,7 +185,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 			}
 			if (chr.getInventory(MapleItemInformationProvider.getInstance().getInventoryType(item.getItemId())).addItem(item) != -1) {
 				cs.removeFromInventory(item);
-				c.announce(MaplePacketCreator.takeFromCashInventory(item));
+				c.announce(PacketCreator.takeFromCashInventory(item));
 			}
 		} else if (action == 0x0E) { // Put into Cash Inventory
 			int cashId = slea.readInt();
@@ -197,7 +197,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 			}
 			cs.addToInventory(item);
 			mi.removeSlot(item.getPosition());
-			c.announce(MaplePacketCreator.putIntoCashInventory(item, c.getAccID()));
+			c.announce(PacketCreator.putIntoCashInventory(item, c.getAccID()));
 		} else if (action == 0x1D) { // crush ring (action 28)
 			if (checkBirthday(c, slea.readInt())) {
 				int toCharge = slea.readInt();
@@ -207,7 +207,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 				CashItem ring = CashItemFactory.getItem(SN);
 				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 				if (partner == null) {
-					chr.getClient().announce(MaplePacketCreator.serverNotice(1, "The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel."));
+					chr.getClient().announce(PacketCreator.serverNotice(1, "The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel."));
 				} else {
 					if (partner.getGender() == chr.getGender()) {
 						chr.dropMessage("You and your partner are the same gender, please buy a friendship ring.");
@@ -217,7 +217,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
 					item.setRingId(ringid);
 					cs.addToInventory(item);
-					c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
+					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(toCharge, -ring.getPrice());
 					chr.addCrushRing(MapleRing.loadFromDb(ringid));
@@ -230,17 +230,17 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 			} else {
 				chr.dropMessage("The birthday you entered was incorrect.");
 			}
-			c.announce(MaplePacketCreator.showCash(c.getPlayer()));
+			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else if (action == 0x20) { // everything is 1 meso...
 			int itemId = CashItemFactory.getItem(slea.readInt()).getItemId();
 			if (chr.getMeso() > 0) {
 				if (itemId == 4031180 || itemId == 4031192 || itemId == 4031191) {
 					chr.gainMeso(-1, false);
 					MapleInventoryManipulator.addById(c, itemId, (short) 1);
-					c.announce(MaplePacketCreator.showBoughtQuestItem(itemId));
+					c.announce(PacketCreator.showBoughtQuestItem(itemId));
 				}
 			}
-			c.announce(MaplePacketCreator.showCash(c.getPlayer()));
+			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else if (action == 0x23) { // Friendship :3
 			if (checkBirthday(c, slea.readInt())) {
 				int payment = slea.readByte();
@@ -259,7 +259,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 					int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
 					item.setRingId(ringid);
 					cs.addToInventory(item);
-					c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
+					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(payment, -ring.getPrice());
 					chr.addFriendshipRing(MapleRing.loadFromDb(ringid));
@@ -272,7 +272,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
 			} else {
 				chr.dropMessage("The birthday you entered was incorrect.");
 			}
-			c.announce(MaplePacketCreator.showCash(c.getPlayer()));
+			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else {
 			Output.print(slea.toString());
 		}

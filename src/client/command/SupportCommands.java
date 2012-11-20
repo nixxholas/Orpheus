@@ -26,7 +26,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import server.MapleInventoryManipulator;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import constants.ItemConstants;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
@@ -61,7 +61,7 @@ public class SupportCommands extends EnumeratedCommands {
 					return false;
 				case announce:
 					String message = joinStringFrom(sub, 1);
-					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(6, chr.getName() + " (" + MapleRank.getById(chr.gmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
+					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(6, chr.getName() + " (" + MapleRank.getById(chr.gmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
 					break;
 				case cleardrops:
 					chr.getMap().clearDrops(chr);

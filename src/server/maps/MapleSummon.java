@@ -24,7 +24,7 @@ import java.awt.Point;
 import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -49,12 +49,12 @@ public class MapleSummon extends AbstractAnimatedMapleMapObject {
 
 	public void sendSpawnData(GameClient client) {
 		if (this != null)
-			client.getSession().write(MaplePacketCreator.spawnSummon(this, false));
+			client.getSession().write(PacketCreator.spawnSummon(this, false));
 
 	}
 
 	public void sendDestroyData(GameClient client) {
-		client.getSession().write(MaplePacketCreator.removeSummon(this, true));
+		client.getSession().write(PacketCreator.removeSummon(this, true));
 	}
 
 	public GameCharacter getOwner() {

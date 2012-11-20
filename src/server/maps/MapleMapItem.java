@@ -25,7 +25,7 @@ import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
 import java.util.concurrent.locks.ReentrantLock;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class MapleMapItem extends AbstractMapleMapObject {
 
@@ -118,12 +118,12 @@ public class MapleMapItem extends AbstractMapleMapObject {
 	@Override
 	public void sendSpawnData(final GameClient client) {
 		if (questid <= 0 || (client.getPlayer().getQuestStatus(questid) == 1 && client.getPlayer().needQuestItem(questid, item.getItemId()))) {
-			client.announce(MaplePacketCreator.dropItemFromMapObject(this, null, getPosition(), (byte) 2));
+			client.announce(PacketCreator.dropItemFromMapObject(this, null, getPosition(), (byte) 2));
 		}
 	}
 
 	@Override
 	public void sendDestroyData(final GameClient client) {
-		client.announce(MaplePacketCreator.removeItemFromMap(getObjectId(), 1, 0));
+		client.announce(PacketCreator.removeItemFromMap(getObjectId(), 1, 0));
 	}
 }

@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class FaceExpressionHandler extends AbstractMaplePacketHandler {
@@ -37,6 +37,6 @@ public final class FaceExpressionHandler extends AbstractMaplePacketHandler {
 				return;
 			}
 		}
-		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.facialExpression(c.getPlayer(), emote), false);
+		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.facialExpression(c.getPlayer(), emote), false);
 	}
 }

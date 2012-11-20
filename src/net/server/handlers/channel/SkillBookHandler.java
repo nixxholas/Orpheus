@@ -27,7 +27,7 @@ import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameCharacter;
 import client.ISkill;
@@ -39,7 +39,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		}
 		slea.readInt();
@@ -75,7 +75,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
 			} else {
 				canuse = false;
 			}
-			player.getClient().announce(MaplePacketCreator.skillBookSuccess(player, skill, maxlevel, canuse, success));
+			player.getClient().announce(PacketCreator.skillBookSuccess(player, skill, maxlevel, canuse, success));
 		}
 	}
 }

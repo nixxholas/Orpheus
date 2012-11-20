@@ -32,7 +32,7 @@ import net.AbstractMaplePacketHandler;
 import net.server.World;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -58,8 +58,8 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 					MapleLogger.printFormatted(MapleLogger.PARANOIA_CHAT, "[Whisper] [" + c.getPlayer().getName() + " > " + recipient + "] " + text);
 				}
 				if (text.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
-					player.getClient().announce(MaplePacketCreator.getWhisper(c.getPlayer().getName(), c.getChannel(), text));
-					c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 1));
+					player.getClient().announce(PacketCreator.getWhisper(c.getPlayer().getName(), c.getChannel(), text));
+					c.announce(PacketCreator.getWhisperReply(recipient, (byte) 1));
 				} else {
 					player.dropMessage("Your message was too long.");
 				}
@@ -67,9 +67,9 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 				World world = c.getWorldServer();
 				if (world.isConnected(recipient)) {
 					world.whisper(c.getPlayer().getName(), recipient, c.getChannel(), text);
-					c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 1));
+					c.announce(PacketCreator.getWhisperReply(recipient, (byte) 1));
 				} else {
-					c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
+					c.announce(PacketCreator.getWhisperReply(recipient, (byte) 0));
 				}
 			}
 		} else if (mode == 5) { // - /find
@@ -77,12 +77,12 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 			GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 			if (victim != null && c.getPlayer().gmLevel() >= victim.gmLevel()) {
 				if (victim.getCashShop().isOpened()) {
-					c.announce(MaplePacketCreator.getFindReply(victim.getName(), -1, 2));
+					c.announce(PacketCreator.getFindReply(victim.getName(), -1, 2));
 					// } else if (victim.inMTS()) {
-					// c.announce(MaplePacketCreator.getFindReply(victim.getName(),
+					// c.announce(PacketCreator.getFindReply(victim.getName(),
 					// -1, 0));
 				} else {
-					c.announce(MaplePacketCreator.getFindReply(victim.getName(), victim.getMap().getId(), 1));
+					c.announce(PacketCreator.getFindReply(victim.getName(), victim.getMap().getId(), 1));
 				}
 			} else { // not found
 				try {
@@ -91,7 +91,7 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 					ResultSet rs = ps.executeQuery();
 					if (rs.next()) {
 						if (rs.getInt("gm") > c.getPlayer().gmLevel()) {
-							c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
+							c.announce(PacketCreator.getWhisperReply(recipient, (byte) 0));
 							return;
 						}
 					}
@@ -99,9 +99,9 @@ public final class WhisperHandler extends AbstractMaplePacketHandler {
 					ps.close();
 					byte channel = (byte) (c.getWorldServer().find(recipient) - 1);
 					if (channel > -1) {
-						c.announce(MaplePacketCreator.getFindReply(recipient, channel, 3));
+						c.announce(PacketCreator.getFindReply(recipient, channel, 3));
 					} else {
-						c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
+						c.announce(PacketCreator.getWhisperReply(recipient, (byte) 0));
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();

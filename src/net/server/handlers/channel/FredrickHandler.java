@@ -32,7 +32,7 @@ import java.util.List;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -48,14 +48,14 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 
 		switch (operation) {
 			case 0x19: // Will never come...
-				// c.announce(MaplePacketCreator.getFredrick((byte) 0x24));
+				// c.announce(PacketCreator.getFredrick((byte) 0x24));
 				break;
 			case 0x1A:
 				List<ItemInventoryEntry> items;
 				try {
 					items = ItemFactory.MERCHANT.loadItems(chr.getId(), false);
 					if (!check(chr, items)) {
-						c.announce(MaplePacketCreator.fredrickMessage((byte) 0x21));
+						c.announce(PacketCreator.fredrickMessage((byte) 0x21));
 						return;
 					}
 
@@ -65,7 +65,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
 						for (int i = 0; i < items.size(); i++) {
 							MapleInventoryManipulator.addFromDrop(c, items.get(i).item, false);
 						}
-						c.announce(MaplePacketCreator.fredrickMessage((byte) 0x1E));
+						c.announce(PacketCreator.fredrickMessage((byte) 0x1E));
 					} else {
 						chr.message("An unknown error has occured.");
 						return;

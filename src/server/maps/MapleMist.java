@@ -30,7 +30,7 @@ import net.GamePacket;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
 import server.life.MobSkill;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -116,21 +116,21 @@ public class MapleMist extends AbstractMapleMapObject {
 	}
 
 	public GamePacket makeDestroyData() {
-		return MaplePacketCreator.removeMist(getObjectId());
+		return PacketCreator.removeMist(getObjectId());
 	}
 
 	public GamePacket makeSpawnData() {
 		if (owner != null) {
-			return MaplePacketCreator.spawnMist(getObjectId(), owner.getId(), getSourceSkill().getId(), owner.getSkillLevel(SkillFactory.getSkill(source.getSourceId())), this);
+			return PacketCreator.spawnMist(getObjectId(), owner.getId(), getSourceSkill().getId(), owner.getSkillLevel(SkillFactory.getSkill(source.getSourceId())), this);
 		}
-		return MaplePacketCreator.spawnMist(getObjectId(), mob.getId(), skill.getSkillId(), skill.getSkillLevel(), this);
+		return PacketCreator.spawnMist(getObjectId(), mob.getId(), skill.getSkillId(), skill.getSkillLevel(), this);
 	}
 
 	public GamePacket makeFakeSpawnData(int level) {
 		if (owner != null) {
-			return MaplePacketCreator.spawnMist(getObjectId(), owner.getId(), getSourceSkill().getId(), level, this);
+			return PacketCreator.spawnMist(getObjectId(), owner.getId(), getSourceSkill().getId(), level, this);
 		}
-		return MaplePacketCreator.spawnMist(getObjectId(), mob.getId(), skill.getSkillId(), skill.getSkillLevel(), this);
+		return PacketCreator.spawnMist(getObjectId(), mob.getId(), skill.getSkillId(), skill.getSkillLevel(), this);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class UseDeathItemHandler extends AbstractMaplePacketHandler {
@@ -31,6 +31,6 @@ public final class UseDeathItemHandler extends AbstractMaplePacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		int itemId = slea.readInt();
 		c.getPlayer().setItemEffect(itemId);
-		c.announce(MaplePacketCreator.itemEffect(c.getPlayer().getId(), itemId));
+		c.announce(PacketCreator.itemEffect(c.getPlayer().getId(), itemId));
 	}
 }

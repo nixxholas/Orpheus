@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -33,7 +33,7 @@ public class LeftKnockbackHandler extends AbstractMaplePacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, final GameClient c) {
-		c.announce(MaplePacketCreator.leftKnockBack());
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.leftKnockBack());
+		c.announce(PacketCreator.enableActions());
 	}
 }

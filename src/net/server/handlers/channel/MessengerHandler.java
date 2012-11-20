@@ -26,7 +26,7 @@ import net.AbstractMaplePacketHandler;
 import net.server.MapleMessenger;
 import net.server.MapleMessengerCharacter;
 import net.server.World;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MessengerHandler extends AbstractMaplePacketHandler {
@@ -73,20 +73,20 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
 					GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(input);
 					if (target != null) {
 						if (target.getMessenger() == null) {
-							target.getClient().announce(MaplePacketCreator.messengerInvite(c.getPlayer().getName(), messenger.getId()));
-							c.announce(MaplePacketCreator.messengerNote(input, 4, 1));
+							target.getClient().announce(PacketCreator.messengerInvite(c.getPlayer().getName(), messenger.getId()));
+							c.announce(PacketCreator.messengerNote(input, 4, 1));
 						} else {
-							c.announce(MaplePacketCreator.messengerChat(player.getName() + " : " + input + " is already using Maple Messenger"));
+							c.announce(PacketCreator.messengerChat(player.getName() + " : " + input + " is already using Maple Messenger"));
 						}
 					} else {
 						if (world.find(input) > -1) {
 							world.messengerInvite(c.getPlayer().getName(), messenger.getId(), input, c.getChannel());
 						} else {
-							c.announce(MaplePacketCreator.messengerNote(input, 4, 0));
+							c.announce(PacketCreator.messengerNote(input, 4, 0));
 						}
 					}
 				} else {
-					c.announce(MaplePacketCreator.messengerChat(player.getName() + " : You cannot have more than 3 people in the Maple Messenger"));
+					c.announce(PacketCreator.messengerChat(player.getName() + " : You cannot have more than 3 people in the Maple Messenger"));
 				}
 				break;
 			case 0x05:
@@ -94,7 +94,7 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
 				GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(targeted);
 				if (target != null) {
 					if (target.getMessenger() != null) {
-						target.getClient().announce(MaplePacketCreator.messengerNote(player.getName(), 5, 0));
+						target.getClient().announce(PacketCreator.messengerNote(player.getName(), 5, 0));
 					}
 				} else {
 					world.declineChat(targeted, player.getName());

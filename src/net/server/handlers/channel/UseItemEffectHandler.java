@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameClient;
 import client.MapleInventoryType;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class UseItemEffectHandler extends AbstractMaplePacketHandler {
@@ -43,6 +43,6 @@ public final class UseItemEffectHandler extends AbstractMaplePacketHandler {
 				return;
 		}
 		c.getPlayer().setItemEffect(itemId);
-		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.itemEffect(c.getPlayer().getId(), itemId), false);
+		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.itemEffect(c.getPlayer().getId(), itemId), false);
 	}
 }

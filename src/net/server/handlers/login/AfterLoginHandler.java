@@ -22,7 +22,7 @@ package net.server.handlers.login;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class AfterLoginHandler extends AbstractMaplePacketHandler {
@@ -36,23 +36,23 @@ public final class AfterLoginHandler extends AbstractMaplePacketHandler {
 		}
 		if (c2 == 1 && c3 == 1) {
 			if (c.getPin() == null) {
-				c.announce(MaplePacketCreator.registerPin());
+				c.announce(PacketCreator.registerPin());
 			} else {
-				c.announce(MaplePacketCreator.requestPin());
+				c.announce(PacketCreator.requestPin());
 			}
 		} else if (c2 == 1 && c3 == 0) {
 			String pin = slea.readMapleAsciiString();
 			if (c.checkPin(pin)) {
-				c.announce(MaplePacketCreator.pinAccepted());
+				c.announce(PacketCreator.pinAccepted());
 			} else {
-				c.announce(MaplePacketCreator.requestPinAfterFailure());
+				c.announce(PacketCreator.requestPinAfterFailure());
 			}
 		} else if (c2 == 2 && c3 == 0) {
 			String pin = slea.readMapleAsciiString();
 			if (c.checkPin(pin)) {
-				c.announce(MaplePacketCreator.registerPin());
+				c.announce(PacketCreator.registerPin());
 			} else {
-				c.announce(MaplePacketCreator.requestPinAfterFailure());
+				c.announce(PacketCreator.requestPinAfterFailure());
 			}
 		} else if (c2 == 0 && c3 == 5) {
 			c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);

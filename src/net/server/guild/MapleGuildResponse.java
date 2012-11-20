@@ -20,7 +20,7 @@
  */
 package net.server.guild;
 
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import net.GamePacket;
 
 public enum MapleGuildResponse {
@@ -32,6 +32,6 @@ public enum MapleGuildResponse {
 	}
 
 	public GamePacket getPacket() {
-		return MaplePacketCreator.genericGuildMessage((byte) value);
+		return PacketCreator.genericGuildMessage((byte) value);
 	}
 }

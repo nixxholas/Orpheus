@@ -32,7 +32,7 @@ import client.GameClient;
 import client.MapleInventoryType;
 import constants.ItemConstants;
 import constants.ServerConstants;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 
 /**
@@ -48,7 +48,7 @@ public class MapleInventoryManipulator {
 		if (newSlot == -1) {
 			return false;
 		}
-		chr.getClient().announce(MaplePacketCreator.addInventorySlot(type, nEquip));
+		chr.getClient().announce(PacketCreator.addInventorySlot(type, nEquip));
 		return true;
 	}
 
@@ -87,7 +87,7 @@ public class MapleInventoryManipulator {
 								quantity -= (newQ - oldQ);
 								eItem.setQuantity(newQ);
 								eItem.setExpiration(expiration);
-								c.announce(MaplePacketCreator.updateInventorySlot(type, eItem));
+								c.announce(PacketCreator.updateInventorySlot(type, eItem));
 							}
 						} else {
 							break;
@@ -103,19 +103,19 @@ public class MapleInventoryManipulator {
 						nItem.setExpiration(expiration);
 						byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 						if (newSlot == -1) {
-							c.announce(MaplePacketCreator.getInventoryFull());
-							c.announce(MaplePacketCreator.getShowInventoryFull());
+							c.announce(PacketCreator.getInventoryFull());
+							c.announce(PacketCreator.getShowInventoryFull());
 							return false;
 						}
 						if (owner != null) {
 							nItem.setOwner(owner);
 						}
-						c.announce(MaplePacketCreator.addInventorySlot(type, nItem));
+						c.announce(PacketCreator.addInventorySlot(type, nItem));
 						if ((ItemConstants.isRechargable(itemId)) && quantity == 0) {
 							break;
 						}
 					} else {
-						c.announce(MaplePacketCreator.enableActions());
+						c.announce(PacketCreator.enableActions());
 						return false;
 					}
 				}
@@ -125,12 +125,12 @@ public class MapleInventoryManipulator {
 				nItem.setExpiration(expiration);
 				byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 				if (newSlot == -1) {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return false;
 				}
-				c.announce(MaplePacketCreator.addInventorySlot(type, nItem));
-				c.announce(MaplePacketCreator.enableActions());
+				c.announce(PacketCreator.addInventorySlot(type, nItem));
+				c.announce(PacketCreator.enableActions());
 			}
 		} else if (quantity == 1) {
 			IItem nEquip = ii.getEquipById(itemId);
@@ -141,11 +141,11 @@ public class MapleInventoryManipulator {
 			}
 			byte newSlot = c.getPlayer().getInventory(type).addItem(nEquip);
 			if (newSlot == -1) {
-				c.announce(MaplePacketCreator.getInventoryFull());
-				c.announce(MaplePacketCreator.getShowInventoryFull());
+				c.announce(PacketCreator.getInventoryFull());
+				c.announce(PacketCreator.getShowInventoryFull());
 				return false;
 			}
-			c.announce(MaplePacketCreator.addInventorySlot(type, nEquip));
+			c.announce(PacketCreator.addInventorySlot(type, nEquip));
 		} else {
 			throw new RuntimeException("Trying to create equip with non-one quantity");
 		}
@@ -156,8 +156,8 @@ public class MapleInventoryManipulator {
 		MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 		MapleInventoryType type = ii.getInventoryType(item.getItemId());
 		if (ii.isPickupRestricted(item.getItemId()) && c.getPlayer().getItemQuantity(item.getItemId(), true) > 0) {
-			c.announce(MaplePacketCreator.getInventoryFull());
-			c.announce(MaplePacketCreator.showItemUnavailable());
+			c.announce(PacketCreator.getInventoryFull());
+			c.announce(PacketCreator.showItemUnavailable());
 			return false;
 		}
 		short quantity = item.getQuantity();
@@ -176,7 +176,7 @@ public class MapleInventoryManipulator {
 								short newQ = (short) Math.min(oldQ + quantity, slotMax);
 								quantity -= (newQ - oldQ);
 								eItem.setQuantity(newQ);
-								c.announce(MaplePacketCreator.updateInventorySlot(type, eItem, true));
+								c.announce(PacketCreator.updateInventorySlot(type, eItem, true));
 							}
 						} else {
 							break;
@@ -191,12 +191,12 @@ public class MapleInventoryManipulator {
 					nItem.setOwner(item.getOwner());
 					byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 					if (newSlot == -1) {
-						c.announce(MaplePacketCreator.getInventoryFull());
-						c.announce(MaplePacketCreator.getShowInventoryFull());
+						c.announce(PacketCreator.getInventoryFull());
+						c.announce(PacketCreator.getShowInventoryFull());
 						item.setQuantity((short) (quantity + newQ));
 						return false;
 					}
-					c.announce(MaplePacketCreator.addInventorySlot(type, nItem, true));
+					c.announce(PacketCreator.addInventorySlot(type, nItem, true));
 					if ((ItemConstants.isRechargable(item.getItemId())) && quantity == 0) {
 						break;
 					}
@@ -205,26 +205,26 @@ public class MapleInventoryManipulator {
 				Item nItem = new Item(item.getItemId(), (byte) 0, quantity);
 				byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 				if (newSlot == -1) {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return false;
 				}
-				c.announce(MaplePacketCreator.addInventorySlot(type, nItem));
-				c.announce(MaplePacketCreator.enableActions());
+				c.announce(PacketCreator.addInventorySlot(type, nItem));
+				c.announce(PacketCreator.enableActions());
 			}
 		} else if (quantity == 1) {
 			byte newSlot = c.getPlayer().getInventory(type).addItem(item);
 			if (newSlot == -1) {
-				c.announce(MaplePacketCreator.getInventoryFull());
-				c.announce(MaplePacketCreator.getShowInventoryFull());
+				c.announce(PacketCreator.getInventoryFull());
+				c.announce(PacketCreator.getShowInventoryFull());
 				return false;
 			}
-			c.announce(MaplePacketCreator.addInventorySlot(type, item, true));
+			c.announce(PacketCreator.addInventorySlot(type, item, true));
 		} else {
 			return false;
 		}
 		if (show) {
-			c.announce(MaplePacketCreator.getShowItemGain(item.getItemId(), item.getQuantity()));
+			c.announce(PacketCreator.getShowItemGain(item.getItemId(), item.getQuantity()));
 		}
 		return true;
 	}
@@ -275,9 +275,9 @@ public class MapleInventoryManipulator {
 		boolean allowZero = consume && ItemConstants.isRechargable(item.getItemId());
 		c.getPlayer().getInventory(type).removeItem(slot, quantity, allowZero);
 		if (item.getQuantity() == 0 && !allowZero) {
-			c.announce(MaplePacketCreator.clearInventoryItem(type, item.getPosition(), fromDrop));
+			c.announce(PacketCreator.clearInventoryItem(type, item.getPosition(), fromDrop));
 		} else {
-			c.announce(MaplePacketCreator.updateInventorySlot(type, (Item) item, fromDrop));
+			c.announce(PacketCreator.updateInventorySlot(type, (Item) item, fromDrop));
 		}
 	}
 
@@ -318,12 +318,12 @@ public class MapleInventoryManipulator {
 		c.getPlayer().getInventory(type).move(src, dst, slotMax);
 		if (!type.equals(MapleInventoryType.EQUIP) && initialTarget != null && initialTarget.getItemId() == source.getItemId() && !ItemConstants.isRechargable(source.getItemId())) {
 			if ((olddstQ + oldsrcQ) > slotMax) {
-				c.announce(MaplePacketCreator.moveAndMergeWithRestInventoryItem(type, src, dst, (short) ((olddstQ + oldsrcQ) - slotMax), slotMax));
+				c.announce(PacketCreator.moveAndMergeWithRestInventoryItem(type, src, dst, (short) ((olddstQ + oldsrcQ) - slotMax), slotMax));
 			} else {
-				c.announce(MaplePacketCreator.moveAndMergeInventoryItem(type, src, dst, ((Item) c.getPlayer().getInventory(type).getItem(dst)).getQuantity()));
+				c.announce(PacketCreator.moveAndMergeInventoryItem(type, src, dst, ((Item) c.getPlayer().getInventory(type).getItem(dst)).getQuantity()));
 			}
 		} else {
-			c.announce(MaplePacketCreator.moveInventoryItem(type, src, dst));
+			c.announce(PacketCreator.moveInventoryItem(type, src, dst));
 		}
 	}
 
@@ -331,7 +331,7 @@ public class MapleInventoryManipulator {
 		Equip source = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIP).getItem(src);
 		Equip target = (Equip) c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem(dst);
 		if (source == null || !MapleItemInformationProvider.getInstance().canWearEquipment(c.getPlayer(), source)) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		} else if ((((source.getItemId() >= 1902000 && source.getItemId() <= 1902002) || source.getItemId() == 1912000) && c.getPlayer().isCygnus()) || ((source.getItemId() >= 1902005 && source.getItemId() <= 1902007) || source.getItemId() == 1912005) && !c.getPlayer().isCygnus()) {// Adventurer
 																																																																							// taming
@@ -348,8 +348,8 @@ public class MapleInventoryManipulator {
 			IItem top = c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -5);
 			if (top != null && isOverall(top.getItemId())) {
 				if (c.getPlayer().getInventory(MapleInventoryType.EQUIP).isFull()) {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
 				unequip(c, (byte) -5, c.getPlayer().getInventory(MapleInventoryType.EQUIP).getNextFreeSlot());
@@ -358,8 +358,8 @@ public class MapleInventoryManipulator {
 			final IItem bottom = c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -6);
 			if (bottom != null && isOverall(source.getItemId())) {
 				if (c.getPlayer().getInventory(MapleInventoryType.EQUIP).isFull()) {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
 				unequip(c, (byte) -6, c.getPlayer().getInventory(MapleInventoryType.EQUIP).getNextFreeSlot());
@@ -368,8 +368,8 @@ public class MapleInventoryManipulator {
 			IItem weapon = c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -11);
 			if (weapon != null && MapleItemInformationProvider.getInstance().isTwoHanded(weapon.getItemId())) {
 				if (c.getPlayer().getInventory(MapleInventoryType.EQUIP).isFull()) {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
 				unequip(c, (byte) -11, c.getPlayer().getInventory(MapleInventoryType.EQUIP).getNextFreeSlot());
@@ -378,8 +378,8 @@ public class MapleInventoryManipulator {
 			IItem shield = c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -10);
 			if (shield != null && MapleItemInformationProvider.getInstance().isTwoHanded(source.getItemId())) {
 				if (c.getPlayer().getInventory(MapleInventoryType.EQUIP).isFull()) {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
 				unequip(c, (byte) -10, c.getPlayer().getInventory(MapleInventoryType.EQUIP).getNextFreeSlot());
@@ -409,7 +409,7 @@ public class MapleInventoryManipulator {
 		if (c.getPlayer().getBuffedValue(MapleBuffStat.BOOSTER) != null && isWeapon(source.getItemId())) {
 			c.getPlayer().cancelBuffStats(MapleBuffStat.BOOSTER);
 		}
-		c.announce(MaplePacketCreator.moveInventoryItem(MapleInventoryType.EQUIP, src, dst, (byte) 2));
+		c.announce(PacketCreator.moveInventoryItem(MapleInventoryType.EQUIP, src, dst, (byte) 2));
 		c.getPlayer().forceUpdateItem(MapleInventoryType.EQUIPPED, source);
 		c.getPlayer().equipChanged();
 	}
@@ -424,7 +424,7 @@ public class MapleInventoryManipulator {
 			return;
 		}
 		if (target != null && src <= 0) {
-			c.announce(MaplePacketCreator.getInventoryFull());
+			c.announce(PacketCreator.getInventoryFull());
 			return;
 		}
 		if (source.getItemId() == 1122017) {
@@ -443,7 +443,7 @@ public class MapleInventoryManipulator {
 			target.setPosition(src);
 			c.getPlayer().getInventory(MapleInventoryType.EQUIPPED).addFromDB(target);
 		}
-		c.announce(MaplePacketCreator.moveInventoryItem(MapleInventoryType.EQUIP, src, dst, (byte) 1));
+		c.announce(PacketCreator.moveInventoryItem(MapleInventoryType.EQUIP, src, dst, (byte) 1));
 		c.getPlayer().equipChanged();
 	}
 
@@ -462,7 +462,7 @@ public class MapleInventoryManipulator {
 		}
 		if (c.getPlayer().getItemEffect() == itemId && source.getQuantity() == 1) {
 			c.getPlayer().setItemEffect(0);
-			c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.itemEffect(c.getPlayer().getId(), 0));
+			c.getPlayer().getMap().broadcastMessage(PacketCreator.itemEffect(c.getPlayer().getId(), 0));
 		} else if (itemId == 5370000 || itemId == 5370001) {
 			if (c.getPlayer().getItemQuantity(itemId, false) == 1) {
 				c.getPlayer().setChalkboard(null);
@@ -476,7 +476,7 @@ public class MapleInventoryManipulator {
 			IItem target = source.copy();
 			target.setQuantity(quantity);
 			source.setQuantity((short) (source.getQuantity() - quantity));
-			c.announce(MaplePacketCreator.dropInventoryItemUpdate(type, source));
+			c.announce(PacketCreator.dropInventoryItemUpdate(type, source));
 			boolean weddingRing = source.getItemId() == 1112803 || source.getItemId() == 1112806 || source.getItemId() == 1112807 || source.getItemId() == 1112809;
 			if (weddingRing) {
 				c.getPlayer().getMap().disappearingItemDrop(c.getPlayer(), c.getPlayer(), target, dropPos);
@@ -493,7 +493,7 @@ public class MapleInventoryManipulator {
 			}
 		} else {
 			c.getPlayer().getInventory(type).removeSlot(src);
-			c.announce(MaplePacketCreator.dropInventoryItem((src < 0 ? MapleInventoryType.EQUIP : type), src));
+			c.announce(PacketCreator.dropInventoryItem((src < 0 ? MapleInventoryType.EQUIP : type), src));
 			if (src < 0) {
 				c.getPlayer().equipChanged();
 			}

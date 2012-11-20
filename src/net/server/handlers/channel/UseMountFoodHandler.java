@@ -25,7 +25,7 @@ import client.MapleInventoryType;
 import constants.ExpTable;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -46,7 +46,7 @@ public final class UseMountFoodHandler extends AbstractMaplePacketHandler {
 				if (levelup) {
 					c.getPlayer().getMount().setLevel(level + 1);
 				}
-				c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.updateMount(c.getPlayer().getId(), c.getPlayer().getMount(), levelup));
+				c.getPlayer().getMap().broadcastMessage(PacketCreator.updateMount(c.getPlayer().getId(), c.getPlayer().getMount(), levelup));
 				MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemid, 1, true, false);
 			}
 		}

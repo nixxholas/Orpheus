@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DenyPartyRequestHandler extends AbstractMaplePacketHandler {
@@ -33,7 +33,7 @@ public final class DenyPartyRequestHandler extends AbstractMaplePacketHandler {
 		slea.readByte();
 		GameCharacter cfrom = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
 		if (cfrom != null) {
-			cfrom.getClient().announce(MaplePacketCreator.partyStatusMessage(23, c.getPlayer().getName()));
+			cfrom.getClient().announce(PacketCreator.partyStatusMessage(23, c.getPlayer().getName()));
 		}
 	}
 }

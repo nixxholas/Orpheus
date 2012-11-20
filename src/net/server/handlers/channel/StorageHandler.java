@@ -29,7 +29,7 @@ import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStorage;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -51,11 +51,11 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 			IItem item = storage.getItem(slot);
 			if (item != null) {
 				if (MapleItemInformationProvider.getInstance().isPickupRestricted(item.getItemId()) && chr.getItemQuantity(item.getItemId(), true) > 0) {
-					c.announce(MaplePacketCreator.getStorageError((byte) 0x0C));
+					c.announce(PacketCreator.getStorageError((byte) 0x0C));
 				}
 				if (chr.getMap().getId() == 910000000) {
 					if (chr.getMeso() < 1000) {
-						c.announce(MaplePacketCreator.getStorageError((byte) 0x0B));
+						c.announce(PacketCreator.getStorageError((byte) 0x0B));
 						return;
 					} else
 						chr.gainMeso(-1000, false);
@@ -72,7 +72,7 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 					MapleInventoryManipulator.addFromDrop(c, item, false);
 					storage.sendTakenOut(c, ii.getInventoryType(item.getItemId()));
 				} else
-					c.announce(MaplePacketCreator.getStorageError((byte) 0x0A));
+					c.announce(PacketCreator.getStorageError((byte) 0x0A));
 			}
 		} else if (mode == 5) { // store
 			byte slot = (byte) slea.readShort();
@@ -82,12 +82,12 @@ public final class StorageHandler extends AbstractMaplePacketHandler {
 				return;
 			}
 			if (storage.isFull()) {
-				c.announce(MaplePacketCreator.getStorageError((byte) 0x11));
+				c.announce(PacketCreator.getStorageError((byte) 0x11));
 				return;
 			}
 			short meso = (short) (chr.getMap().getId() == 910000000 ? -500 : -100);
 			if (chr.getMeso() < meso) {
-				c.announce(MaplePacketCreator.getStorageError((byte) 0x0B));
+				c.announce(PacketCreator.getStorageError((byte) 0x0B));
 			} else {
 				MapleInventoryType type = ii.getInventoryType(itemId);
 				IItem item = chr.getInventory(type).getItem(slot).copy();

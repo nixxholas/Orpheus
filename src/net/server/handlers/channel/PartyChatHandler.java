@@ -29,7 +29,7 @@ import net.AbstractMaplePacketHandler;
 import net.server.Server;
 import net.server.World;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PartyChatHandler extends AbstractMaplePacketHandler {
@@ -90,7 +90,7 @@ public final class PartyChatHandler extends AbstractMaplePacketHandler {
 						BlacklistHandler.printBlacklistLog("[Alliance] [" + c.getPlayer().getName() + "] " + chattext, c.getAccID());
 					}
 				}
-				Server.getInstance().allianceMessage(allianceId, MaplePacketCreator.multiChat(player.getName(), chattext, 3), player.getId(), -1);
+				Server.getInstance().allianceMessage(allianceId, PacketCreator.multiChat(player.getName(), chattext, 3), player.getId(), -1);
 			}
 		}
 	}

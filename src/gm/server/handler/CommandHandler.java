@@ -26,7 +26,7 @@ import gm.GMPacketHandler;
 import net.server.Server;
 import net.server.World;
 import org.apache.mina.core.session.IoSession;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -41,7 +41,7 @@ public class CommandHandler implements GMPacketHandler {
 		switch (command) {
 			case 0: {// notice
 				for (World world : Server.getInstance().getWorlds()) {
-					world.broadcastPacket(MaplePacketCreator.serverNotice(0, slea.readMapleAsciiString()));
+					world.broadcastPacket(PacketCreator.serverNotice(0, slea.readMapleAsciiString()));
 				}
 				break;
 			}

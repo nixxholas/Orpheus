@@ -26,7 +26,7 @@ import net.AbstractMaplePacketHandler;
 import net.server.Channel;
 import net.server.Server;
 import server.maps.HiredMerchant;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -44,15 +44,15 @@ public class RemoteStoreHandler extends AbstractMaplePacketHandler {
 				hm.setOpen(false);
 				hm.removeAllVisitors("");
 				chr.setHiredMerchant(hm);
-				chr.announce(MaplePacketCreator.getHiredMerchant(chr, hm, false));
+				chr.announce(PacketCreator.getHiredMerchant(chr, hm, false));
 			} else {
-				c.announce(MaplePacketCreator.remoteChannelChange((byte) (hm.getChannel() - 1)));
+				c.announce(PacketCreator.remoteChannelChange((byte) (hm.getChannel() - 1)));
 			}
 			return;
 		} else {
 			chr.dropMessage(1, "You don't have a Merchant open");
 		}
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 
 	public HiredMerchant getMerchant(GameClient c) {

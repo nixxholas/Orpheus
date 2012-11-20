@@ -27,7 +27,7 @@ import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class PetAutoPotHandler extends AbstractMaplePacketHandler {
@@ -35,7 +35,7 @@ public final class PetAutoPotHandler extends AbstractMaplePacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		}
 		slea.readByte();
@@ -46,17 +46,17 @@ public final class PetAutoPotHandler extends AbstractMaplePacketHandler {
 		IItem toUse = c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() > 0) {
 			if (toUse.getItemId() != itemId) {
-				c.announce(MaplePacketCreator.enableActions());
+				c.announce(PacketCreator.enableActions());
 				return;
 			}
 			MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, slot, (short) 1, false);
 			MapleStatEffect stat = MapleItemInformationProvider.getInstance().getItemEffect(toUse.getItemId());
 			stat.applyTo(c.getPlayer());
 			if (stat.getMp() > 0) {
-				c.announce(MaplePacketCreator.sendAutoMpPot(itemId));
+				c.announce(PacketCreator.sendAutoMpPot(itemId));
 			}
 			if (stat.getHp() > 0) {
-				c.announce(MaplePacketCreator.sendAutoHpPot(itemId));
+				c.announce(PacketCreator.sendAutoHpPot(itemId));
 			}
 		}
 	}

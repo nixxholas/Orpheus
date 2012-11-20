@@ -26,7 +26,7 @@ import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import java.util.Iterator;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import client.GameCharacter;
 import net.server.Server;
@@ -45,8 +45,8 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 	}
 
 	private void respawnPlayer(GameCharacter player) {
-		player.getMap().broadcastMessage(player, MaplePacketCreator.removePlayerFromMap(player.getId()), false);
-		player.getMap().broadcastMessage(player, MaplePacketCreator.spawnPlayerMapobject(player), false);
+		player.getMap().broadcastMessage(player, PacketCreator.removePlayerFromMap(player.getId()), false);
+		player.getMap().broadcastMessage(player, PacketCreator.spawnPlayerMapobject(player), false);
 	}
 
 	private class Invited {
@@ -98,7 +98,7 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 		byte type = slea.readByte();
 		switch (type) {
 			case 0x00:
-				// c.announce(MaplePacketCreator.showGuildInfo(mc));
+				// c.announce(PacketCreator.showGuildInfo(mc));
 				break;
 			case 0x02:
 				if (player.getGuildId() > 0 || player.getMapId() != 200000301) {
@@ -118,14 +118,14 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 
 				gid = Server.getInstance().createGuild(player.getId(), guildName);
 				if (gid == 0) {
-					c.announce(MaplePacketCreator.genericGuildMessage((byte) 0x1c));
+					c.announce(PacketCreator.genericGuildMessage((byte) 0x1c));
 					return;
 				}
 				player.gainMeso(-MapleGuild.CREATE_GUILD_COST, true, false, true);
 				player.setGuildId(gid);
 				player.setGuildRank(1);
 				player.saveGuildStatus();
-				c.announce(MaplePacketCreator.showGuildInfo(player));
+				c.announce(PacketCreator.showGuildInfo(player));
 				c.getPlayer().dropMessage(1, "You have successfully created a Guild.");
 				respawnPlayer(player);
 				break;
@@ -180,7 +180,7 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 					player.setGuildId(0);
 					return;
 				}
-				c.announce(MaplePacketCreator.showGuildInfo(player));
+				c.announce(PacketCreator.showGuildInfo(player));
 				player.saveGuildStatus(); // update database
 				respawnPlayer(player);
 				break;
@@ -193,7 +193,7 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 				}
 
 				Server.getInstance().leaveGuild(player.getMGC());
-				c.announce(MaplePacketCreator.showGuildInfo(null));
+				c.announce(PacketCreator.showGuildInfo(null));
 				player.setGuildId(0);
 				player.saveGuildStatus();
 				respawnPlayer(player);
@@ -238,7 +238,7 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
 					return;
 				}
 				if (player.getMeso() < MapleGuild.CHANGE_EMBLEM_COST) {
-					c.announce(MaplePacketCreator.serverNotice(1, "You do not have enough mesos to create a Guild."));
+					c.announce(PacketCreator.serverNotice(1, "You do not have enough mesos to create a Guild."));
 					return;
 				}
 				short bg = slea.readShort();

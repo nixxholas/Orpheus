@@ -28,7 +28,7 @@ import java.util.Map;
 import client.GameClient;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -117,7 +117,7 @@ public class PlayerNPCs extends AbstractMapleMapObject {
 
 	@Override
 	public void sendSpawnData(GameClient client) {
-		client.getSession().write(MaplePacketCreator.spawnPlayerNPC(this));
-		client.getSession().write(MaplePacketCreator.getPlayerNPC(this));
+		client.getSession().write(PacketCreator.spawnPlayerNPC(this));
+		client.getSession().write(PacketCreator.getPlayerNPC(this));
 	}
 }

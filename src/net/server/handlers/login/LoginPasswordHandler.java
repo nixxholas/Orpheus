@@ -27,7 +27,7 @@ import net.MaplePacketHandler;
 import net.server.Server;
 import server.TimerManager;
 import tools.DateUtil;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class LoginPasswordHandler implements MaplePacketHandler {
@@ -54,28 +54,28 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
 		}
 
 		if (c.hasBannedIP() || c.hasBannedMac()) {
-			c.announce(MaplePacketCreator.getLoginFailed(3));
+			c.announce(PacketCreator.getLoginFailed(3));
 		}
 		Calendar tempban = c.getTempBanCalendar();
 		if (tempban != null) {
 			if (tempban.getTimeInMillis() > System.currentTimeMillis()) {
 				long till = DateUtil.getFileTimestamp(tempban.getTimeInMillis());
-				c.announce(MaplePacketCreator.getTempBan(till, c.getGReason()));
+				c.announce(PacketCreator.getTempBan(till, c.getGReason()));
 				return;
 			}
 		}
 		if (loginok == 3) {
-			c.announce(MaplePacketCreator.getPermBan(c.getGReason()));
+			c.announce(PacketCreator.getPermBan(c.getGReason()));
 			return;
 		} else if (loginok != 0) {
-			c.announce(MaplePacketCreator.getLoginFailed(loginok));
+			c.announce(PacketCreator.getLoginFailed(loginok));
 			return;
 		}
 		if (!c.isDeveloper() && Server.getInstance().isDebugging()) {
-			c.announce(MaplePacketCreator.getLoginFailed(7));
+			c.announce(PacketCreator.getLoginFailed(7));
 		}
 		if (c.finishLogin() == 0) {
-			c.announce(MaplePacketCreator.getAuthSuccess(c));
+			c.announce(PacketCreator.getAuthSuccess(c));
 			final GameClient client = c;
 			client.saveLastKnownIP();
 			c.setIdleTask(TimerManager.getInstance().schedule(new Runnable() {
@@ -85,7 +85,7 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
 				}
 			}, 600000));
 		} else {
-			c.announce(MaplePacketCreator.getLoginFailed(7));
+			c.announce(PacketCreator.getLoginFailed(7));
 		}
 	}
 }

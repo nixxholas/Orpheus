@@ -48,14 +48,14 @@ public class AbsoluteLifeMovement extends AbstractLifeMovement {
 	}
 
 	@Override
-	public void serialize(LittleEndianWriter lew) {
-		lew.write(getType());
-		lew.writeShort(getPosition().x);
-		lew.writeShort(getPosition().y);
-		lew.writeShort(pixelsPerSecond.x);
-		lew.writeShort(pixelsPerSecond.y);
-		lew.writeShort(unk);
-		lew.write(getNewstate());
-		lew.writeShort(getDuration());
+	public void serialize(LittleEndianWriter w) {
+		w.write(getType());
+		w.writeShort(getPosition().x);
+		w.writeShort(getPosition().y);
+		w.writeShort(pixelsPerSecond.x);
+		w.writeShort(pixelsPerSecond.y);
+		w.writeShort(unk);
+		w.write(getNewstate());
+		w.writeShort(getDuration());
 	}
 }

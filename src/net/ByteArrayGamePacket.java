@@ -18,23 +18,33 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.login;
+package net;
 
-import client.GameClient;
-import net.AbstractMaplePacketHandler;
-import tools.PacketCreator;
-import tools.Output;
-import tools.data.input.SeekableLittleEndianAccessor;
+import tools.HexTool;
 
-/**
- * @author David
- */
-public final class GuestLoginHandler extends AbstractMaplePacketHandler {
-	
+public class ByteArrayGamePacket implements GamePacket {
+	private byte[] data;
+	private Runnable onSend;
+
+	public ByteArrayGamePacket(byte[] data) {
+		this.data = data;
+	}
+
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		c.announce(PacketCreator.sendGuestTOS());
-		Output.print(slea.toString());
-		new LoginPasswordHandler().handlePacket(slea, c);
+	public byte[] getBytes() {
+		return data;
+	}
+
+	@Override
+	public String toString() {
+		return HexTool.toString(data);
+	}
+
+	public Runnable getOnSend() {
+		return onSend;
+	}
+
+	public void setOnSend(Runnable onSend) {
+		this.onSend = onSend;
 	}
 }

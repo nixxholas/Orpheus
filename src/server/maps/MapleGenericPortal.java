@@ -25,7 +25,7 @@ import client.GameClient;
 import scripting.portal.PortalScriptManager;
 import server.MaplePortal;
 import server.FourthJobQuestsPortalHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public class MapleGenericPortal implements MaplePortal {
 
@@ -135,7 +135,7 @@ public class MapleGenericPortal implements MaplePortal {
 			changed = true;
 		}
 		if (!changed) {
-			c.getSession().write(MaplePacketCreator.enableActions());
+			c.getSession().write(PacketCreator.enableActions());
 		}
 	}
 

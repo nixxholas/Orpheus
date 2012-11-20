@@ -25,7 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 public final class MonsterBook {
 	private int specialCard;
@@ -34,23 +34,23 @@ public final class MonsterBook {
 	private Map<Integer, Integer> cards = new LinkedHashMap<Integer, Integer>();
 
 	public void addCard(final GameClient c, final int cardid) {
-		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showForeginCardEffect(c.getPlayer().getId()), false);
+		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.showForeginCardEffect(c.getPlayer().getId()), false);
 		for (Entry<Integer, Integer> all : cards.entrySet()) {
 			if (all.getKey() == cardid) {
 				if (all.getValue() > 4) {
-					c.getSession().write(MaplePacketCreator.addCard(true, cardid, all.getValue()));
+					c.getSession().write(PacketCreator.addCard(true, cardid, all.getValue()));
 				} else {
 					all.setValue(all.getValue() + 1);
-					c.getSession().write(MaplePacketCreator.addCard(false, cardid, all.getValue()));
-					c.getSession().write(MaplePacketCreator.showGainCard());
+					c.getSession().write(PacketCreator.addCard(false, cardid, all.getValue()));
+					c.getSession().write(PacketCreator.showGainCard());
 					calculateLevel();
 				}
 				return;
 			}
 		}
 		cards.put(cardid, 1);
-		c.getSession().write(MaplePacketCreator.addCard(false, cardid, 1));
-		c.getSession().write(MaplePacketCreator.showGainCard());
+		c.getSession().write(PacketCreator.addCard(false, cardid, 1));
+		c.getSession().write(PacketCreator.showGainCard());
 		calculateLevel();
 		c.getPlayer().saveToDB(true);
 	}

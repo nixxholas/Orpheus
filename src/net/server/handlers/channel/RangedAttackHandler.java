@@ -45,7 +45,7 @@ import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class RangedAttackHandler extends AbstractDealDamageHandler {
@@ -55,10 +55,10 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, true);
 		if (attack.skill == Buccaneer.ENERGY_ORB || attack.skill == ThunderBreaker.SPARK || attack.skill == Shadower.TAUNT || attack.skill == NightLord.TAUNT) {
-			player.getMap().broadcastMessage(player, MaplePacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
+			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
 			applyAttack(attack, player, 1);
 		} else if (attack.skill == Aran.COMBO_SMASH || attack.skill == Aran.COMBO_PENRIL || attack.skill == Aran.COMBO_TEMPEST) {
-			player.getMap().broadcastMessage(player, MaplePacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
+			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
 			if (attack.skill == Aran.COMBO_SMASH && player.getCombo() >= 30) {
 				applyAttack(attack, player, 1);
 			} else if (attack.skill == Aran.COMBO_PENRIL && player.getCombo() >= 100) {
@@ -79,7 +79,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 				effect = attack.getAttackEffect(player, null);
 				bulletCount = effect.getBulletCount();
 				if (effect.getCooldown() > 0) {
-					c.announce(MaplePacketCreator.skillCooldown(attack.skill, effect.getCooldown()));
+					c.announce(PacketCreator.skillCooldown(attack.skill, effect.getCooldown()));
 				}
 			}
 			boolean hasShadowPartner = player.getBuffedValue(MapleBuffStat.SHADOWPARTNER) != null;
@@ -153,10 +153,10 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 					case 3221001: // Pierce
 					case 5221004: // Rapid Fire
 					case 13111002: // KoC Hurricane
-						packet = MaplePacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.rangedirection, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
+						packet = PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.rangedirection, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
 						break;
 					default:
-						packet = MaplePacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
+						packet = PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
 						break;
 				}
 				player.getMap().broadcastMessage(player, packet, false, true);
@@ -178,7 +178,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 						if (player.skillisCooling(attack.skill)) {
 							return;
 						} else {
-							c.announce(MaplePacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
+							c.announce(PacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
 							player.addCooldown(attack.skill, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill), effect_.getCooldown() * 1000));
 						}
 					}

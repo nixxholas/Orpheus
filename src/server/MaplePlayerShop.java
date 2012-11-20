@@ -30,8 +30,8 @@ import net.GamePacket;
 import net.SendOpcode;
 import server.maps.AbstractMapleMapObject;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
-import tools.data.output.MaplePacketLittleEndianWriter;
+import tools.PacketCreator;
+import tools.data.output.PacketWriter;
 
 /**
  * 
@@ -66,14 +66,14 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 				visitors[i] = visitor;
 				if (this.getSlot(0) == null) {
 					this.setSlot(visitor, 0);
-					this.broadcast(MaplePacketCreator.getPlayerShopNewVisitor(visitor, 1));
+					this.broadcast(PacketCreator.getPlayerShopNewVisitor(visitor, 1));
 				} else if (this.getSlot(1) == null) {
 					this.setSlot(visitor, 1);
-					this.broadcast(MaplePacketCreator.getPlayerShopNewVisitor(visitor, 2));
+					this.broadcast(PacketCreator.getPlayerShopNewVisitor(visitor, 2));
 				} else if (this.getSlot(2) == null) {
 					this.setSlot(visitor, 2);
-					this.broadcast(MaplePacketCreator.getPlayerShopNewVisitor(visitor, 3));
-					visitor.getMap().broadcastMessage(MaplePacketCreator.addCharBox(this.getOwner(), 1));
+					this.broadcast(PacketCreator.getPlayerShopNewVisitor(visitor, 3));
+					visitor.getMap().broadcastMessage(PacketCreator.addCharBox(this.getOwner(), 1));
 				}
 				break;
 			}
@@ -91,7 +91,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 				visitors[i] = null;
 				this.setSlot(null, i);
 				visitor.setSlot(-1);
-				this.broadcast(MaplePacketCreator.getPlayerShopRemoveVisitor(slot_ + 1));
+				this.broadcast(PacketCreator.getPlayerShopRemoveVisitor(slot_ + 1));
 				return;
 			}
 		}
@@ -136,7 +136,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 							pItem.setDoesExist(false);
 							if (++boughtnumber == items.size()) {
 								owner.setPlayerShop(null);
-								owner.getMap().broadcastMessage(MaplePacketCreator.removeCharBox(owner));
+								owner.getMap().broadcastMessage(PacketCreator.removeCharBox(owner));
 								this.removeVisitors();
 								owner.dropMessage(1, "Your items are sold out, and therefore your shop is closed.");
 							}
@@ -161,7 +161,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		try {
 			for (int i = 0; i < 3; i++) {
 				if (visitors[i] != null) {
-					visitors[i].getClient().getSession().write(MaplePacketCreator.shopErrorMessage(10, 1));
+					visitors[i].getClient().getSession().write(PacketCreator.shopErrorMessage(10, 1));
 					removeVisitor(visitors[i]);
 				}
 			}
@@ -174,12 +174,12 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 	}
 
 	public static GamePacket shopErrorMessage(int error, int type) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
-		mplew.write(0x0A);
-		mplew.write(type);
-		mplew.write(error);
-		return mplew.getPacket();
+		PacketWriter w = new PacketWriter();
+		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
+		w.write(0x0A);
+		w.write(type);
+		w.write(error);
+		return w.getPacket();
 	}
 
 	public void broadcast(GamePacket packet) {
@@ -201,11 +201,11 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 				s = 0;
 			}
 		}
-		broadcast(MaplePacketCreator.getPlayerShopChat(c.getPlayer(), chat, s));
+		broadcast(PacketCreator.getPlayerShopChat(c.getPlayer(), chat, s));
 	}
 
 	public void sendShop(GameClient c) {
-		c.getSession().write(MaplePacketCreator.getPlayerShop(c, this, isOwner(c.getPlayer())));
+		c.getSession().write(PacketCreator.getPlayerShop(c, this, isOwner(c.getPlayer())));
 	}
 
 	public GameCharacter getOwner() {
@@ -246,7 +246,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 		}
 		for (int i = 0; i < 3; i++) {
 			if (visitors[i] != null && visitors[i].getName().equals(name)) {
-				visitors[i].getClient().getSession().write(MaplePacketCreator.shopErrorMessage(5, 1));
+				visitors[i].getClient().getSession().write(PacketCreator.shopErrorMessage(5, 1));
 				removeVisitor(visitors[i]);
 			}
 			return;
@@ -259,12 +259,12 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 
 	@Override
 	public void sendDestroyData(GameClient client) {
-		client.getSession().write(MaplePacketCreator.removeCharBox(this.getOwner()));
+		client.getSession().write(PacketCreator.removeCharBox(this.getOwner()));
 	}
 
 	@Override
 	public void sendSpawnData(GameClient client) {
-		client.getSession().write(MaplePacketCreator.addCharBox(this.getOwner(), 4));
+		client.getSession().write(PacketCreator.addCharBox(this.getOwner(), 4));
 	}
 
 	@Override

@@ -27,7 +27,7 @@ import client.GameCharacter;
 import client.GameClient;
 import server.maps.MapleSummon;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MoveSummonHandler extends AbstractMovementPacketHandler {
@@ -48,7 +48,7 @@ public final class MoveSummonHandler extends AbstractMovementPacketHandler {
 		}
 		if (summon != null) {
 			updatePosition(res, summon, 0);
-			player.getMap().broadcastMessage(player, MaplePacketCreator.moveSummon(player.getId(), oid, startPos, res), summon.getPosition());
+			player.getMap().broadcastMessage(player, PacketCreator.moveSummon(player.getId(), oid, startPos, res), summon.getPosition());
 		}
 	}
 }

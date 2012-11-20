@@ -25,7 +25,7 @@ import constants.ServerConstants;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
 import net.server.World;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ServerlistRequestHandler extends AbstractMaplePacketHandler {
@@ -38,11 +38,11 @@ public final class ServerlistRequestHandler extends AbstractMaplePacketHandler {
 		World world;
 		for (byte i = 0; i < Math.min(server.getLoad().size(), names.length); i++) {
 			world = server.getWorld(i);
-			c.announce(MaplePacketCreator.getServerList(i, names[i], world.getFlag(), world.getEventMessage(), server.getLoad(i)));
+			c.announce(PacketCreator.getServerList(i, names[i], world.getFlag(), world.getEventMessage(), server.getLoad(i)));
 		}
-		c.announce(MaplePacketCreator.getEndOfServerList());
-		c.announce(MaplePacketCreator.selectWorld(0));// too lazy to make a
+		c.announce(PacketCreator.getEndOfServerList());
+		c.announce(PacketCreator.selectWorld(0));// too lazy to make a
 														// check lol
-		c.announce(MaplePacketCreator.sendRecommended(server.worldRecommendedList()));
+		c.announce(PacketCreator.sendRecommended(server.worldRecommendedList()));
 	}
 }

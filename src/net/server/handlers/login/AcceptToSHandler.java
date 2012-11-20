@@ -22,7 +22,7 @@ package net.server.handlers.login;
 
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -44,10 +44,10 @@ public final class AcceptToSHandler extends AbstractMaplePacketHandler {
 			return;
 		}
 		if (c.finishLogin() == 0) {
-			c.announce(MaplePacketCreator.getAuthSuccess(c));
+			c.announce(PacketCreator.getAuthSuccess(c));
 		} else {
 			// shouldn't happen XD
-			c.announce(MaplePacketCreator.getLoginFailed(9));
+			c.announce(PacketCreator.getLoginFailed(9));
 		}
 	}
 }

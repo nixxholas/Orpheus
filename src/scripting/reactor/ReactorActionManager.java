@@ -34,7 +34,7 @@ import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
 import server.maps.MapleReactor;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import server.maps.MapMonitor;
 import server.maps.ReactorDropEntry;
 
@@ -147,7 +147,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 			npc.setRx1(pos.x - 50);
 			npc.setFh(reactor.getMap().getFootholds().findBelow(pos).getId());
 			reactor.getMap().addMapObject(npc);
-			reactor.getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc));
+			reactor.getMap().broadcastMessage(PacketCreator.spawnNPC(npc));
 		}
 	}
 

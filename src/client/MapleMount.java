@@ -19,7 +19,7 @@ package client;
 
 import java.util.concurrent.ScheduledFuture;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * @author PurpleMadness Patrick :O
@@ -87,7 +87,7 @@ public class MapleMount {
 
 	public void increaseTiredness() {
 		this.tiredness++;
-		owner.getMap().broadcastMessage(MaplePacketCreator.updateMount(owner.getId(), this, false));
+		owner.getMap().broadcastMessage(PacketCreator.updateMount(owner.getId(), this, false));
 		if (tiredness > 99) {
 			this.tiredness = 95;
 			owner.dispelSkill(owner.getJobType() * 10000000 + 1004);

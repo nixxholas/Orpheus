@@ -35,7 +35,7 @@ import server.life.MapleMonster;
 import server.life.MapleNPC;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import net.server.Channel;
 import net.server.Server;
@@ -80,7 +80,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.setRates();
 					}
-					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
+					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case exprate:
@@ -88,7 +88,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.setRates();
 					}
-					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
+					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case gc:
@@ -117,7 +117,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.setRates();
 					}
-					Server.getInstance().broadcastMessage(chr.getWorld(), MaplePacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
+					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case npc:
@@ -129,11 +129,11 @@ public class DeveloperCommands extends EnumeratedCommands {
 						npc.setRx1(chr.getPosition().x - 50);
 						npc.setFh(chr.getMap().getFootholds().findBelow(c.getPlayer().getPosition()).getId());
 						chr.getMap().addMapObject(npc);
-						chr.getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc));
+						chr.getMap().broadcastMessage(PacketCreator.spawnNPC(npc));
 					}
 					break;
 				case packet:
-					chr.getMap().broadcastMessage(MaplePacketCreator.customPacket(joinStringFrom(sub, 1)));
+					chr.getMap().broadcastMessage(PacketCreator.customPacket(joinStringFrom(sub, 1)));
 					break;
 				case paranoia:
 					if (ParanoiaConstants.ALLOW_QUERY_COMMAND) {
@@ -233,7 +233,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 							chr.dropMessage("Failed to save NPC to the database.");
 						}
 						chr.getMap().addMapObject(npc);
-						chr.getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc));
+						chr.getMap().broadcastMessage(PacketCreator.spawnNPC(npc));
 					} else {
 						chr.dropMessage("You have entered an invalid NPC id.");
 					}
@@ -252,7 +252,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						final String s = joinStringFrom(sub, 2);
-						victim.getMap().broadcastMessage(MaplePacketCreator.getChatText(victim.getId(), s, victim.isGM(), slea.readByte()));
+						victim.getMap().broadcastMessage(PacketCreator.getChatText(victim.getId(), s, victim.isGM(), slea.readByte()));
 					} else {
 						chr.message("Usage: !say playerName multi-word message");
 					}

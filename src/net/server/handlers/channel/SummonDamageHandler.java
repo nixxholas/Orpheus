@@ -31,7 +31,7 @@ import net.AbstractMaplePacketHandler;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
 import server.maps.MapleSummon;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SummonDamageHandler extends AbstractMaplePacketHandler {
@@ -82,7 +82,7 @@ public final class SummonDamageHandler extends AbstractMaplePacketHandler {
 			int damage = slea.readInt();
 			allDamage.add(new SummonAttackEntry(monsterOid, damage));
 		}
-		player.getMap().broadcastMessage(player, MaplePacketCreator.summonAttack(player.getId(), summon.getSkill(), direction, allDamage), summon.getPosition());
+		player.getMap().broadcastMessage(player, PacketCreator.summonAttack(player.getId(), summon.getSkill(), direction, allDamage), summon.getPosition());
 		for (SummonAttackEntry attackEntry : allDamage) {
 			int damage = attackEntry.getDamage();
 			MapleMonster target = player.getMap().getMonsterByOid(attackEntry.getMonsterOid());

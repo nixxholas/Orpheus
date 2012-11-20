@@ -25,7 +25,7 @@ import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import client.GameCharacter;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameClient;
@@ -131,12 +131,12 @@ public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
 			}
 			if (!chr.isHidden()) {
 				if (s.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
-					chr.getMap().broadcastMessage(MaplePacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGMText()), slea.readByte()));
+					chr.getMap().broadcastMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGMText()), slea.readByte()));
 				} else {
 					chr.dropMessage("Your message was too long.");
 				}
 			} else {
-				chr.getMap().broadcastGMMessage(MaplePacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGMText()), slea.readByte()));
+				chr.getMap().broadcastGMMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGMText()), slea.readByte()));
 			}
 		}
 	}

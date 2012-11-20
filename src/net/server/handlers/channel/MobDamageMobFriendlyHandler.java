@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import tools.Randomizer;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -42,7 +42,7 @@ public final class MobDamageMobFriendlyHandler extends AbstractMaplePacketHandle
 		if (c.getPlayer().getMap().getMonsterByOid(damaged) == null || c.getPlayer().getMap().getMonsterByOid(attacker) == null) {
 			return;
 		}
-		c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.MobDamageMobFriendly(c.getPlayer().getMap().getMonsterByOid(damaged), damage), c.getPlayer().getMap().getMonsterByOid(damaged).getPosition());
-		c.announce(MaplePacketCreator.enableActions());
+		c.getPlayer().getMap().broadcastMessage(PacketCreator.MobDamageMobFriendly(c.getPlayer().getMap().getMonsterByOid(damaged), damage), c.getPlayer().getMap().getMonsterByOid(damaged).getPosition());
+		c.announce(PacketCreator.enableActions());
 	}
 }

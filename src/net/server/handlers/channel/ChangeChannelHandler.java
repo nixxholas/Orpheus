@@ -31,7 +31,7 @@ import net.server.Server;
 import server.MapleTrade;
 import server.maps.FieldLimit;
 import server.maps.HiredMerchant;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -50,7 +50,7 @@ public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
 			return;
 		}
 		if (!chr.isAlive() || FieldLimit.CHANGECHANNEL.check(chr.getMap().getFieldLimit())) {
-			c.announce(MaplePacketCreator.enableActions());
+			c.announce(PacketCreator.enableActions());
 			return;
 		}
 		String[] socket = Server.getInstance().getIP(c.getWorld(), channel).split(":");
@@ -84,7 +84,7 @@ public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
 		server.getLoad(c.getWorld()).get(c.getChannel()).decrementAndGet();
 		chr.getClient().updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
 		try {
-			c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+			c.announce(PacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
 		} catch (IOException e) {
 		}
 	}

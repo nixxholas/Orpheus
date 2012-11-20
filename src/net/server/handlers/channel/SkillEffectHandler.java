@@ -38,7 +38,7 @@ import constants.skills.Paladin;
 import constants.skills.ThunderBreaker;
 import constants.skills.WindArcher;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -68,7 +68,7 @@ public final class SkillEffectHandler extends AbstractMaplePacketHandler {
 			case Paladin.MONSTER_MAGNET:
 			case DarkKnight.MONSTER_MAGNET:
 			case Hero.MONSTER_MAGNET:
-				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.skillEffect(c.getPlayer(), skillId, level, flags, speed, aids), false);
+				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.skillEffect(c.getPlayer(), skillId, level, flags, speed, aids), false);
 				return;
 			default:
 				Output.print(c.getPlayer() + " entered SkillEffectHandler without being handled using " + skillId + ".");

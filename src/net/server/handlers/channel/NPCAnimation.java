@@ -24,24 +24,24 @@ import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.SendOpcode;
 import tools.data.input.SeekableLittleEndianAccessor;
-import tools.data.output.MaplePacketLittleEndianWriter;
+import tools.data.output.PacketWriter;
 
 public final class NPCAnimation extends AbstractMaplePacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+		PacketWriter w = new PacketWriter();
 		int length = (int) slea.available();
 		if (length == 6) { // NPC Talk
-			mplew.writeShort(SendOpcode.NPC_ACTION.getValue());
-			mplew.writeInt(slea.readInt());
-			mplew.writeShort(slea.readShort());
-			c.announce(mplew.getPacket());
+			w.writeShort(SendOpcode.NPC_ACTION.getValue());
+			w.writeInt(slea.readInt());
+			w.writeShort(slea.readShort());
+			c.announce(w.getPacket());
 		} else if (length > 6) { // NPC Move
 			byte[] bytes = slea.read(length - 9);
-			mplew.writeShort(SendOpcode.NPC_ACTION.getValue());
-			mplew.write(bytes);
-			c.announce(mplew.getPacket());
+			w.writeShort(SendOpcode.NPC_ACTION.getValue());
+			w.write(bytes);
+			c.announce(w.getPacket());
 		}
 	}
 }

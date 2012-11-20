@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -39,11 +39,11 @@ public final class FamilyAddHandler extends AbstractMaplePacketHandler {
 		String toAdd = slea.readMapleAsciiString();
 		GameCharacter addChr = c.getChannelServer().getPlayerStorage().getCharacterByName(toAdd);
 		if (addChr != null) {
-			addChr.getClient().announce(MaplePacketCreator.sendFamilyInvite(c.getPlayer().getId(), toAdd));
+			addChr.getClient().announce(PacketCreator.sendFamilyInvite(c.getPlayer().getId(), toAdd));
 			c.getPlayer().dropMessage("The invite has been sent.");
 		} else {
 			c.getPlayer().dropMessage("The player cannot be found!");
 		}
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 }

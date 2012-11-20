@@ -96,7 +96,7 @@ import server.partyquest.MonsterCarnivalParty;
 import server.partyquest.PartyQuest;
 import server.quest.MapleQuest;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.Pair;
 import tools.Randomizer;
@@ -588,7 +588,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		} else {
 			combocounter = count;
 		}
-		announce(MaplePacketCreator.showCombo(combocounter));
+		announce(PacketCreator.showCombo(combocounter));
 	}
 
 	public void setLastCombo(long time) {
@@ -648,7 +648,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			GameCharacter realTarget = target.get();
 			if (realTarget != null) {
 				realTarget.removeCooldown(skillId);
-				realTarget.client.announce(MaplePacketCreator.skillCooldown(skillId, 0));
+				realTarget.client.announce(PacketCreator.skillCooldown(skillId, 0));
 			}
 		}
 	}
@@ -692,7 +692,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			statup.add(new MapleStatDelta(MapleStat.MP, Math.min(mp, maxmp)));
 			statup.add(new MapleStatDelta(MapleStat.MAXHP, maxhp));
 			statup.add(new MapleStatDelta(MapleStat.MAXMP, maxmp));
-			client.announce(MaplePacketCreator.updatePlayerStats(statup));
+			client.announce(PacketCreator.updatePlayerStats(statup));
 		}
 		if (effect.isMonsterRiding()) {
 			if (effect.getSourceId() != Corsair.BATTLE_SHIP) {
@@ -722,17 +722,17 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		if (isGM()) {
 			if (isHidden()) {
 				this.hidden = false;
-				announce(MaplePacketCreator.getGMEffect(0x10, (byte) 0));
-				getMap().broadcastNONGMMessage(this, MaplePacketCreator.spawnPlayerMapobject(this), false);
+				announce(PacketCreator.getGMEffect(0x10, (byte) 0));
+				getMap().broadcastNONGMMessage(this, PacketCreator.spawnPlayerMapobject(this), false);
 				updatePartyMemberHP();
 			} else {
 				this.hidden = true;
-				announce(MaplePacketCreator.getGMEffect(0x10, (byte) 1));
+				announce(PacketCreator.getGMEffect(0x10, (byte) 1));
 				if (!login) {
-					getMap().broadcastNONGMMessage(this, MaplePacketCreator.removePlayerFromMap(getId()), false);
+					getMap().broadcastNONGMMessage(this, PacketCreator.removePlayerFromMap(getId()), false);
 				}
 			}
-			announce(MaplePacketCreator.enableActions());
+			announce(PacketCreator.enableActions());
 		}
 	}
 
@@ -760,9 +760,9 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		if (client.getChannelServer().getPlayerStorage().getCharacterById(getId()) != null) {
 			recalcLocalStats();
 			enforceMaxHpMp();
-			client.announce(MaplePacketCreator.cancelBuff(buffstats));
+			client.announce(PacketCreator.cancelBuff(buffstats));
 			if (buffstats.size() > 0) {
-				getMap().broadcastMessage(this, MaplePacketCreator.cancelForeignBuff(getId(), buffstats), false);
+				getMap().broadcastMessage(this, PacketCreator.cancelForeignBuff(getId(), buffstats), false);
 			}
 		}
 	}
@@ -843,13 +843,13 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		statup.add(new MapleStatDelta(MapleStat.AVAILABLESP, remainingSp));
 		statup.add(new MapleStatDelta(MapleStat.JOB, job.getId()));
 		recalcLocalStats();
-		client.announce(MaplePacketCreator.updatePlayerStats(statup));
+		client.announce(PacketCreator.updatePlayerStats(statup));
 		silentPartyUpdate();
 		if (this.guildid > 0) {
-			getGuild().broadcast(MaplePacketCreator.jobMessage(0, job.getId(), name), this.getId());
+			getGuild().broadcast(PacketCreator.jobMessage(0, job.getId(), name), this.getId());
 		}
 		guildUpdate();
-		getMap().broadcastMessage(this, MaplePacketCreator.showForeignEffect(getId(), 8), false);
+		getMap().broadcastMessage(this, PacketCreator.showForeignEffect(getId(), 8), false);
 	}
 
 	public void changeKeybinding(int key, MapleKeyBinding keybinding) {
@@ -884,12 +884,12 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void changeMap(final MapleMap to, final MaplePortal pto) {
-		changeMapInternal(to, pto.getPosition(), MaplePacketCreator.getWarpToMap(to, pto.getId(), this));
+		changeMapInternal(to, pto.getPosition(), PacketCreator.getWarpToMap(to, pto.getId(), this));
 	}
 
 	public void changeMap(final MapleMap to, final Point pos) {
 		// Position :O (LEFT)
-		changeMapInternal(to, pos, MaplePacketCreator.getWarpToMap(to, 0x80, this));
+		changeMapInternal(to, pos, PacketCreator.getWarpToMap(to, 0x80, this));
 	}
 
 	public void changeMapBanish(int mapid, String portal, String msg) {
@@ -911,7 +911,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					if (party != null) {
 						mpc.setMapId(to.getId());
 						silentPartyUpdate();
-						client.announce(MaplePacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
+						client.announce(PacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
 						updatePartyMemberHP();
 					}
 					if (getMap().getHPDec() > 0) {
@@ -936,11 +936,11 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	public void changeSkillLevel(ISkill skill, byte newLevel, int newMasterlevel, long expiration) {
 		if (newLevel > -1) {
 			skills.put(skill, new SkillEntry(newLevel, newMasterlevel, expiration));
-			this.client.announce(MaplePacketCreator.updateSkill(skill.getId(), newLevel, newMasterlevel, expiration));
+			this.client.announce(PacketCreator.updateSkill(skill.getId(), newLevel, newMasterlevel, expiration));
 		} else {
 			skills.remove(skill);
 			// Shouldn't use expiration anymore :)
-			this.client.announce(MaplePacketCreator.updateSkill(skill.getId(), newLevel, newMasterlevel, -1)); 
+			this.client.announce(PacketCreator.updateSkill(skill.getId(), newLevel, newMasterlevel, -1)); 
 			try {
 				Connection con = DatabaseConnection.getConnection();
 				PreparedStatement ps = con.prepareStatement("DELETE FROM skills WHERE skillid = ? AND characterid = ?");
@@ -976,8 +976,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 					@Override
 					public void run() {
-						client.announce(MaplePacketCreator.showOwnBerserk(skilllevel, Berserk));
-						getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.showBerserk(getId(), skilllevel, Berserk), false);
+						client.announce(PacketCreator.showOwnBerserk(skilllevel, Berserk));
+						getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBerserk(getId(), skilllevel, Berserk), false);
 					}
 				}, 5000, 3000);
 			}
@@ -1013,7 +1013,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	public void controlMonster(MapleMonster monster, boolean aggro) {
 		monster.setController(this);
 		controlled.add(monster);
-		client.announce(MaplePacketCreator.controlMonster(monster, false, aggro));
+		client.announce(PacketCreator.controlMonster(monster, false, aggro));
 	}
 
 	public int countItem(int itemid) {
@@ -1026,12 +1026,12 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			this.battleshipHp = 0;
 			ISkill battleship = SkillFactory.getSkill(Corsair.BATTLE_SHIP);
 			int cooldown = battleship.getEffect(getSkillLevel(battleship)).getCooldown();
-			announce(MaplePacketCreator.skillCooldown(Corsair.BATTLE_SHIP, cooldown));
+			announce(PacketCreator.skillCooldown(Corsair.BATTLE_SHIP, cooldown));
 			addCooldown(Corsair.BATTLE_SHIP, System.currentTimeMillis(), cooldown, TimerManager.getInstance().schedule(new CancelCooldownAction(this, Corsair.BATTLE_SHIP), cooldown * 1000));
 			removeCooldown(5221999);
 			cancelEffectFromBuffStat(MapleBuffStat.MONSTER_RIDING);
 		} else {
-			announce(MaplePacketCreator.skillCooldown(5221999, battleshipHp / 10)); // :D
+			announce(PacketCreator.skillCooldown(5221999, battleshipHp / 10)); // :D
 			addCooldown(5221999, 0, battleshipHp, null);
 		}
 	}
@@ -1088,7 +1088,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 						int summonId = mbsvh.effect.getSourceId();
 						MapleSummon summon = summons.get(summonId);
 						if (summon != null) {
-							getMap().broadcastMessage(MaplePacketCreator.removeSummon(summon, true), summon.getPosition());
+							getMap().broadcastMessage(PacketCreator.removeSummon(summon, true), summon.getPosition());
 							getMap().removeMapObject(summon);
 							removeVisibleMapObject(summon);
 							summons.remove(summonId);
@@ -1184,16 +1184,16 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			}, skill.getDuration());
 
 			diseases.put(disease, new DiseaseValueHolder(System.currentTimeMillis(), skill.getDuration()));
-			client.getSession().write(MaplePacketCreator.giveDebuff(debuff, skill));
-			map.broadcastMessage(this, MaplePacketCreator.giveForeignDebuff(id, debuff, skill), false);
+			client.getSession().write(PacketCreator.giveDebuff(debuff, skill));
+			map.broadcastMessage(this, PacketCreator.giveForeignDebuff(id, debuff, skill), false);
 		}
 	}
 
 	public void dispelDebuff(MapleDisease debuff) {
 		if (hasDisease(debuff)) {
 			long mask = debuff.getValue();
-			announce(MaplePacketCreator.cancelDebuff(mask));
-			map.broadcastMessage(this, MaplePacketCreator.cancelForeignDebuff(id, mask), false);
+			announce(PacketCreator.cancelDebuff(mask));
+			map.broadcastMessage(this, PacketCreator.cancelForeignDebuff(id, mask), false);
 
 			diseases.remove(debuff);
 		}
@@ -1261,7 +1261,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void dropMessage(int type, String message) {
-		client.announce(MaplePacketCreator.serverNotice(type, message));
+		client.announce(PacketCreator.serverNotice(type, message));
 	}
 
 	public String emblemCost() {
@@ -1283,7 +1283,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			stats.add(new MapleStatDelta(MapleStat.HP, getHp()));
 		}
 		if (stats.size() > 0) {
-			client.announce(MaplePacketCreator.updatePlayerStats(stats));
+			client.announce(PacketCreator.updatePlayerStats(stats));
 		}
 	}
 
@@ -1299,7 +1299,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void equipChanged() {
-		getMap().broadcastMessage(this, MaplePacketCreator.updateCharLook(this), false);
+		getMap().broadcastMessage(this, PacketCreator.updateCharLook(this), false);
 		recalcLocalStats();
 		enforceMaxHpMp();
 		// saveToDB(true);
@@ -1343,7 +1343,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 								item.setExpiration(-1);
 								forceUpdateItem(inv.getType(), item); // TEST :3
 							} else if (expiration != -1 && expiration < currenttime) {
-								client.announce(MaplePacketCreator.itemExpired(item.getItemId()));
+								client.announce(PacketCreator.itemExpired(item.getItemId()));
 								toberemove.add(item);
 							}
 						}
@@ -1352,7 +1352,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 						}
 						toberemove.clear();
 					}
-					// announce(MaplePacketCreator.enableActions());
+					// announce(PacketCreator.enableActions());
 					// saveToDB(true);
 				}
 			}, 60000);
@@ -1365,8 +1365,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void forceUpdateItem(MapleInventoryType type, IItem item) {
-		client.announce(MaplePacketCreator.clearInventoryItem(type, item.getPosition(), false));
-		client.announce(MaplePacketCreator.addInventorySlot(type, item, false));
+		client.announce(PacketCreator.clearInventoryItem(type, item.getPosition(), false));
+		client.announce(PacketCreator.addInventorySlot(type, item, false));
 	}
 
 	public void gainGachaExp() {
@@ -1406,7 +1406,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			}
 			updateSingleStat(MapleStat.EXP, this.exp.addAndGet(total));
 			if (show && gain != 0) {
-				client.announce(MaplePacketCreator.getShowExpGain(gain, equip, inChat, white));
+				client.announce(PacketCreator.getShowExpGain(gain, equip, inChat, white));
 			}
 			while (level < getMaxLevel() && exp.get() >= ExpTable.getExpNeededForLevel(level)) {
                 levelUp(true);
@@ -1433,17 +1433,17 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 	public void gainMeso(int gain, boolean show, boolean enableActions, boolean inChat) {
 		if (meso.get() + gain < 0) {
-			client.announce(MaplePacketCreator.enableActions());
+			client.announce(PacketCreator.enableActions());
 			return;
 		}
 		updateSingleStat(MapleStat.MESO, meso.addAndGet(gain), enableActions);
 		if (show) {
-			client.announce(MaplePacketCreator.getShowMesoGain(gain, inChat));
+			client.announce(PacketCreator.getShowMesoGain(gain, inChat));
 		}
 	}
 
 	public void genericGuildMessage(int code) {
-		this.client.announce(MaplePacketCreator.genericGuildMessage((byte) code));
+		this.client.announce(PacketCreator.genericGuildMessage((byte) code));
 	}
 
 	public int getAccountID() {
@@ -2305,7 +2305,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			Server.getInstance().memberLevelJobUpdate(this.mgc);
 			int allianceId = getGuild().getAllianceId();
 			if (allianceId > 0) {
-				Server.getInstance().allianceMessage(allianceId, MaplePacketCreator.updateAllianceJobLevel(this), getId(), -1);
+				Server.getInstance().allianceMessage(allianceId, PacketCreator.updateAllianceJobLevel(this), getId(), -1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2325,10 +2325,10 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			}
 			List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.ENERGY_CHARGE, energybar));
 			setBuffedValue(MapleBuffStat.ENERGY_CHARGE, energybar);
-			client.announce(MaplePacketCreator.giveBuff(energybar, 0, stat));
-			client.announce(MaplePacketCreator.showOwnBuffEffect(energycharge.getId(), 2));
-			getMap().broadcastMessage(this, MaplePacketCreator.showBuffeffect(id, energycharge.getId(), 2));
-			getMap().broadcastMessage(this, MaplePacketCreator.giveForeignBuff(energybar, stat));
+			client.announce(PacketCreator.giveBuff(energybar, 0, stat));
+			client.announce(PacketCreator.showOwnBuffEffect(energycharge.getId(), 2));
+			getMap().broadcastMessage(this, PacketCreator.showBuffeffect(id, energycharge.getId(), 2));
+			getMap().broadcastMessage(this, PacketCreator.giveForeignBuff(energybar, stat));
 		}
 		if (energybar >= 10000 && energybar < 11000) {
 			energybar = 15000;
@@ -2340,8 +2340,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					energybar = 0;
 					List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.ENERGY_CHARGE, energybar));
 					setBuffedValue(MapleBuffStat.ENERGY_CHARGE, energybar);
-					client.announce(MaplePacketCreator.giveBuff(energybar, 0, stat));
-					getMap().broadcastMessage(chr, MaplePacketCreator.giveForeignBuff(energybar, stat));
+					client.announce(PacketCreator.giveBuff(energybar, 0, stat));
+					getMap().broadcastMessage(chr, PacketCreator.giveForeignBuff(energybar, stat));
 				}
 			}, ceffect.getDuration());
 		}
@@ -2352,8 +2352,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		ISkill combo = SkillFactory.getSkill(skillid);
 		List<MapleBuffStatDelta> stat = Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.COMBO, 1));
 		setBuffedValue(MapleBuffStat.COMBO, 1);
-		client.announce(MaplePacketCreator.giveBuff(skillid, combo.getEffect(getSkillLevel(combo)).getDuration() + (int) ((getBuffedStarttime(MapleBuffStat.COMBO) - System.currentTimeMillis())), stat));
-		getMap().broadcastMessage(this, MaplePacketCreator.giveForeignBuff(getId(), stat), false);
+		client.announce(PacketCreator.giveBuff(skillid, combo.getEffect(getSkillLevel(combo)).getDuration() + (int) ((getBuffedStarttime(MapleBuffStat.COMBO) - System.currentTimeMillis())), stat));
+		getMap().broadcastMessage(this, PacketCreator.giveForeignBuff(getId(), stat), false);
 	}
 
 	public boolean hasEntered(String script) {
@@ -2566,13 +2566,13 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			remainingSp += 3;
 			statup.add(new MapleStatDelta(MapleStat.AVAILABLESP, remainingSp));
 		}
-		client.announce(MaplePacketCreator.updatePlayerStats(statup));
-		getMap().broadcastMessage(this, MaplePacketCreator.showForeignEffect(getId(), 0), false);
+		client.announce(PacketCreator.updatePlayerStats(statup));
+		getMap().broadcastMessage(this, PacketCreator.showForeignEffect(getId(), 0), false);
 		recalcLocalStats();
 		setMPC(new MaplePartyCharacter(this));
 		silentPartyUpdate();
 		if (this.guildid > 0) {
-			getGuild().broadcast(MaplePacketCreator.levelUpMessage(2, level, name), this.getId());
+			getGuild().broadcast(PacketCreator.levelUpMessage(2, level, name), this.getId());
 		}
 		if (ServerConstants.PERFECT_PITCH) {
 			// milestones?
@@ -2965,7 +2965,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void yellowMessage(String m) {
-		announce(MaplePacketCreator.sendYellowTip(m));
+		announce(PacketCreator.sendYellowTip(m));
 	}
 
 	public void mobKilled(int id) {
@@ -2978,7 +2978,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				continue;
 			}
 			if (q.progress(id)) {
-				client.announce(MaplePacketCreator.updateQuest(q.getQuest().getId(), q.getQuestData()));
+				client.announce(PacketCreator.updateQuest(q.getQuest().getId(), q.getQuestData()));
 			}
 		}
 	}
@@ -3033,8 +3033,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				PlayerNPCs pn = new PlayerNPCs(rs);
 				for (Channel channel : Server.getInstance().getChannelsFromWorld(world)) {
 					MapleMap m = channel.getMapFactory().getMap(getMapId());
-					m.broadcastMessage(MaplePacketCreator.spawnPlayerNPC(pn));
-					m.broadcastMessage(MaplePacketCreator.getPlayerNPC(pn));
+					m.broadcastMessage(PacketCreator.spawnPlayerNPC(pn));
+					m.broadcastMessage(PacketCreator.getPlayerNPC(pn));
 					m.addMapObject(pn);
 				}
 			}
@@ -3067,7 +3067,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		} else if (mapid > 925020000 && mapid < 925030000) {
 			this.dojoStage = 0;
 		} else if (mapid > 980000100 && mapid < 980000700) {
-			getMap().broadcastMessage(this, MaplePacketCreator.CPQDied(this));
+			getMap().broadcastMessage(this, PacketCreator.CPQDied(this));
 		} else if (getJob() != MapleJob.BEGINNER) { // Hmm...
 			int XPdummy = ExpTable.getExpNeededForLevel(getLevel());
 			if (getMap().isTown()) {
@@ -3098,15 +3098,15 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 		if (getChair() == -1) {
 			setChair(0);
-			client.announce(MaplePacketCreator.cancelChair(-1));
-			getMap().broadcastMessage(this, MaplePacketCreator.showChair(getId(), 0), false);
+			client.announce(PacketCreator.cancelChair(-1));
+			getMap().broadcastMessage(this, PacketCreator.showChair(getId(), 0), false);
 		}
 		if (isHardcoreMode()) {
 			dead = true;
 			saveToDB(true);
 			client.disconnect();
 		}
-		client.announce(MaplePacketCreator.enableActions());
+		client.announce(PacketCreator.enableActions());
 	}
 
 	private void prepareDragonBlood(final MapleStatEffect bloodEffect) {
@@ -3118,8 +3118,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			@Override
 			public void run() {
 				addHP(-bloodEffect.getX());
-				client.announce(MaplePacketCreator.showOwnBuffEffect(bloodEffect.getSourceId(), 5));
-				getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.showBuffeffect(getId(), bloodEffect.getSourceId(), 5), false);
+				client.announce(PacketCreator.showOwnBuffEffect(bloodEffect.getSourceId(), 5));
+				getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBuffeffect(getId(), bloodEffect.getSourceId(), 5), false);
 				checkBerserk();
 			}
 		}, 4000, 4000);
@@ -3208,7 +3208,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
-						client.announce(MaplePacketCreator.updatePartyMemberHP(other.getId(), other.getHp(), other.getCurrentMaxHp()));
+						client.announce(PacketCreator.updatePartyMemberHP(other.getId(), other.getHp(), other.getCurrentMaxHp()));
 					}
 				}
 			}
@@ -3238,9 +3238,9 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					@Override
 					public void run() {
 						addHP(healEffect.getHp());
-						client.announce(MaplePacketCreator.showOwnBuffEffect(beholder, 2));
-						getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.summonSkill(getId(), beholder, 5), true);
-						getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.showOwnBuffEffect(beholder, 2), false);
+						client.announce(PacketCreator.showOwnBuffEffect(beholder, 2));
+						getMap().broadcastMessage(GameCharacter.this, PacketCreator.summonSkill(getId(), beholder, 5), true);
+						getMap().broadcastMessage(GameCharacter.this, PacketCreator.showOwnBuffEffect(beholder, 2), false);
 					}
 				}, healInterval, healInterval);
 			}
@@ -3253,9 +3253,9 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					@Override
 					public void run() {
 						buffEffect.applyTo(GameCharacter.this);
-						client.announce(MaplePacketCreator.showOwnBuffEffect(beholder, 2));
-						getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.summonSkill(getId(), beholder, (int) (Math.random() * 3) + 6), true);
-						getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.showBuffeffect(getId(), beholder, 2), false);
+						client.announce(PacketCreator.showOwnBuffEffect(beholder, 2));
+						getMap().broadcastMessage(GameCharacter.this, PacketCreator.summonSkill(getId(), beholder, (int) (Math.random() * 3) + 6), true);
+						getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBuffeffect(getId(), beholder, 2), false);
 					}
 				}, buffInterval, buffInterval);
 			}
@@ -3266,8 +3266,8 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				@Override
 				public void run() {
 					addHP(heal);
-					client.announce(MaplePacketCreator.showOwnRecovery(heal));
-					getMap().broadcastMessage(GameCharacter.this, MaplePacketCreator.showRecovery(id, heal), false);
+					client.announce(PacketCreator.showOwnRecovery(heal));
+					getMap().broadcastMessage(GameCharacter.this, PacketCreator.showRecovery(id, heal), false);
 				}
 			}, 5000, 5000);
 		}
@@ -3370,7 +3370,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 		statup.add(new MapleStatDelta(MapleStat.DEX, tdex));
 		statup.add(new MapleStatDelta(MapleStat.INT, tint));
 		statup.add(new MapleStatDelta(MapleStat.LUK, tluk));
-		announce(MaplePacketCreator.updatePlayerStats(statup));
+		announce(PacketCreator.updatePlayerStats(statup));
 	}
 
 	public void resetBattleshipHp() {
@@ -3768,7 +3768,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void sendPolice(int greason, String reason, int duration) {
-		announce(MaplePacketCreator.sendPolice(greason, reason, duration));
+		announce(PacketCreator.sendPolice(greason, reason, duration));
 		this.isbanned = true;
 		TimerManager.getInstance().schedule(new Runnable() {
 
@@ -3780,7 +3780,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void sendPolice(String text) {
-		announce(MaplePacketCreator.sendPolice(text));
+		announce(PacketCreator.sendPolice(text));
 		this.isbanned = true;
 		TimerManager.getInstance().schedule(new Runnable() {
 
@@ -3792,7 +3792,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	public void sendKeymap() {
-		client.announce(MaplePacketCreator.getKeymap(keymap));
+		client.announce(PacketCreator.getKeymap(keymap));
 	}
 
 	public void sendMacros() {
@@ -3803,7 +3803,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			}
 		}
 		if (macros) {
-			client.announce(MaplePacketCreator.getMacros(skillMacros));
+			client.announce(PacketCreator.getMacros(skillMacros));
 		}
 	}
 
@@ -3843,7 +3843,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 	public void setBuddyCapacity(int capacity) {
 		buddylist.setCapacity(capacity);
-		client.announce(MaplePacketCreator.updateBuddyCapacity(capacity));
+		client.announce(PacketCreator.updateBuddyCapacity(capacity));
 	}
 
 	public void setBuffedValue(MapleBuffStat effect, int value) {
@@ -4237,7 +4237,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 			saveToDB(true);
 			if (update) {
-				client.announce(MaplePacketCreator.updateInventorySlotLimit(type, slots));
+				client.announce(PacketCreator.updateInventorySlotLimit(type, slots));
 			}
 
 			return true;
@@ -4313,7 +4313,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			time = (dojoFinish - System.currentTimeMillis()) / 1000;
 		}
 		if (stage % 6 > 0) {
-			client.announce(MaplePacketCreator.getClock((int) time));
+			client.announce(PacketCreator.getClock((int) time));
 		}
 		boolean rightmap = true;
 		int clockid = (dojoMap.getId() / 100) % 100;
@@ -4353,7 +4353,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			rs.last();
 			int count = rs.getRow();
 			rs.first();
-			client.announce(MaplePacketCreator.showNotes(rs, count));
+			client.announce(PacketCreator.showNotes(rs, count));
 			rs.close();
 			ps.close();
 		} catch (SQLException e) {
@@ -4417,7 +4417,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 					pet.setFullness(newFullness);
 					pet.saveToDb();
 					IItem petz = getInventory(MapleInventoryType.CASH).getItem(pet.getPosition());
-					client.announce(MaplePacketCreator.updateSlot(petz));
+					client.announce(PacketCreator.updateSlot(petz));
 				}
 			}
 		}, ServerConstants.PET_FULLNESS_REPEAT_TIME, ServerConstants.PET_FULLNESS_START_DELAY);
@@ -4462,11 +4462,11 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 			this.getPet(this.getPetIndex(pet)).saveToDb();
 		}
 		cancelFullnessSchedule(getPetIndex(pet));
-		getMap().broadcastMessage(this, MaplePacketCreator.showPet(this, pet, true, hunger), true);
+		getMap().broadcastMessage(this, PacketCreator.showPet(this, pet, true, hunger), true);
 		List<Pair<MapleStat, Integer>> stats = new ArrayList<Pair<MapleStat, Integer>>();
 		stats.add(new Pair<MapleStat, Integer>(MapleStat.PET, Integer.valueOf(0)));
-		client.getSession().write(MaplePacketCreator.petStatUpdate(this));
-		client.getSession().write(MaplePacketCreator.enableActions());
+		client.getSession().write(PacketCreator.petStatUpdate(this));
+		client.getSession().write(PacketCreator.enableActions());
 		removePet(pet, shift_left);
 	}
 
@@ -4481,7 +4481,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
-						other.client.announce(MaplePacketCreator.updatePartyMemberHP(getId(), this.hp, maxhp));
+						other.client.announce(PacketCreator.updatePartyMemberHP(getId(), this.hp, maxhp));
 					}
 				}
 			}
@@ -4491,15 +4491,15 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	public void updateQuest(MapleQuestStatus quest) {
 		quests.put(quest.getQuest(), quest);
 		if (quest.getStatus().equals(MapleQuestStatus.Status.STARTED)) {
-			announce(MaplePacketCreator.questProgress((short) quest.getQuest().getId(), quest.getProgress(0)));
+			announce(PacketCreator.questProgress((short) quest.getQuest().getId(), quest.getProgress(0)));
 			if (quest.getQuest().getInfoNumber() > 0) {
-				announce(MaplePacketCreator.questProgress(quest.getQuest().getInfoNumber(), Integer.toString(quest.getMedalProgress())));
+				announce(PacketCreator.questProgress(quest.getQuest().getInfoNumber(), Integer.toString(quest.getMedalProgress())));
 			}
-			announce(MaplePacketCreator.updateQuestInfo((short) quest.getQuest().getId(), quest.getNpc()));
+			announce(PacketCreator.updateQuestInfo((short) quest.getQuest().getId(), quest.getNpc()));
 		} else if (quest.getStatus().equals(MapleQuestStatus.Status.COMPLETED)) {
-			announce(MaplePacketCreator.completeQuest((short) quest.getQuest().getId(), quest.getCompletionTime()));
+			announce(PacketCreator.completeQuest((short) quest.getQuest().getId(), quest.getCompletionTime()));
 		} else if (quest.getStatus().equals(MapleQuestStatus.Status.NOT_STARTED)) {
-			announce(MaplePacketCreator.forfeitQuest((short) quest.getQuest().getId()));
+			announce(PacketCreator.forfeitQuest((short) quest.getQuest().getId()));
 		}
 	}
 
@@ -4508,13 +4508,13 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 			@Override
 			public void run() {
-				announce(MaplePacketCreator.questExpire(quest.getId()));
+				announce(PacketCreator.questExpire(quest.getId()));
 				MapleQuestStatus newStatus = new MapleQuestStatus(quest, MapleQuestStatus.Status.NOT_STARTED);
 				newStatus.setForfeited(getQuest(quest).getForfeited() + 1);
 				updateQuest(newStatus);
 			}
 		}, time);
-		announce(MaplePacketCreator.addQuestTimeLimit(quest.getId(), time));
+		announce(PacketCreator.addQuestTimeLimit(quest.getId(), time));
 		timers.add(sf);
 	}
 
@@ -4523,7 +4523,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	}
 
 	private void updateSingleStat(MapleStat stat, int newval, boolean itemReaction) {
-		announce(MaplePacketCreator.updatePlayerStats(Collections.singletonList(new MapleStatDelta(stat, Integer.valueOf(newval))), itemReaction));
+		announce(PacketCreator.updatePlayerStats(Collections.singletonList(new MapleStatDelta(stat, Integer.valueOf(newval))), itemReaction));
 	}
 
 	public void announce(GamePacket packet) {
@@ -4542,13 +4542,13 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 
 	@Override
 	public void sendDestroyData(GameClient client) {
-		client.announce(MaplePacketCreator.removePlayerFromMap(this.getObjectId()));
+		client.announce(PacketCreator.removePlayerFromMap(this.getObjectId()));
 	}
 
 	@Override
 	public void sendSpawnData(GameClient client) {
 		if (!this.isHidden() || client.getPlayer().gmLevel() > 0) {
-			client.announce(MaplePacketCreator.spawnPlayerMapobject(this));
+			client.announce(PacketCreator.spawnPlayerMapobject(this));
 		}
 	}
 
@@ -4603,7 +4603,7 @@ public class GameCharacter extends AbstractAnimatedMapleMapObject {
 	public void blockPortal(String scriptName) {
 		if (!blockedPortals.contains(scriptName) && scriptName != null) {
 			blockedPortals.add(scriptName);
-			client.announce(MaplePacketCreator.enableActions());
+			client.announce(PacketCreator.enableActions());
 		}
 	}
 

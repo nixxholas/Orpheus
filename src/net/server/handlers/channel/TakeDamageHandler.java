@@ -41,7 +41,7 @@ import server.life.MobAttackInfoFactory;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -123,9 +123,9 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 								bouncedamage = attacker.getMaxHp() / 5;
 							}
 							map.damageMonster(player, attacker, bouncedamage);
-							map.broadcastMessage(player, MaplePacketCreator.damageMonster(oid, bouncedamage), true);
-							player.getClient().announce(MaplePacketCreator.showOwnBuffEffect(id, 5));
-							map.broadcastMessage(player, MaplePacketCreator.showBuffeffect(player.getId(), id, 5), false);
+							map.broadcastMessage(player, PacketCreator.damageMonster(oid, bouncedamage), true);
+							player.getClient().announce(PacketCreator.showOwnBuffEffect(id, 5));
+							map.broadcastMessage(player, PacketCreator.showBuffeffect(player.getId(), id, 5), false);
 						}
 					}
 				}
@@ -146,7 +146,7 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 					bouncedamage = Math.min(bouncedamage, attacker.getMaxHp() / 10);
 					map.damageMonster(player, attacker, bouncedamage);
 					damage -= bouncedamage;
-					map.broadcastMessage(player, MaplePacketCreator.damageMonster(oid, bouncedamage), false, true);
+					map.broadcastMessage(player, PacketCreator.damageMonster(oid, bouncedamage), false, true);
 					player.checkMonsterAggro(attacker);
 				}
 			}
@@ -191,13 +191,13 @@ public final class TakeDamageHandler extends AbstractMaplePacketHandler {
 			}
 		}
 		if (!player.isHidden()) {
-			map.broadcastMessage(player, MaplePacketCreator.damagePlayer(damagefrom, monsteridfrom, player.getId(), damage, fake, direction, is_pgmr, pgmr, is_pg, oid, pos_x, pos_y), false);
+			map.broadcastMessage(player, PacketCreator.damagePlayer(damagefrom, monsteridfrom, player.getId(), damage, fake, direction, is_pgmr, pgmr, is_pg, oid, pos_x, pos_y), false);
 			player.checkBerserk();
 		}
 		if (map.getId() >= 925020000 && map.getId() < 925030000) {
 			player.setDojoEnergy(player.isGM() ? 300 : player.getDojoEnergy() < 300 ? player.getDojoEnergy() + 1 : 0); // Fking
 																														// gm's
-			player.getClient().announce(MaplePacketCreator.getEnergy("energy", player.getDojoEnergy()));
+			player.getClient().announce(PacketCreator.getEnergy("energy", player.getDojoEnergy()));
 		}
 	}
 }

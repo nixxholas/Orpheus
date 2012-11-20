@@ -32,7 +32,7 @@ import server.MapleItemInformationProvider;
 import server.MapleItemInformationProvider.scriptedItem;
 import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -55,39 +55,39 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 				MapleMapItem mapitem = (MapleMapItem) ob;
 				if (mapitem.getDropper().getObjectId() == c.getPlayer().getObjectId()) {
 					if (MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), false)) {
-						chr.getMap().broadcastMessage(MaplePacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
+						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
 						chr.getMap().removeMapObject(ob);
 					} else {
-						c.announce(MaplePacketCreator.enableActions());
+						c.announce(PacketCreator.enableActions());
 						return;
 					}
 					mapitem.setPickedUp(true);
 				} else {
-					c.announce(MaplePacketCreator.getInventoryFull());
-					c.announce(MaplePacketCreator.getShowInventoryFull());
+					c.announce(PacketCreator.getInventoryFull());
+					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
-				c.announce(MaplePacketCreator.enableActions());
+				c.announce(PacketCreator.enableActions());
 				return;
 			}
 			try {
 				ob.hashCode();
 			} catch (NullPointerException e) {
-				c.announce(MaplePacketCreator.getInventoryFull());
-				c.announce(MaplePacketCreator.getShowInventoryFull());
+				c.announce(PacketCreator.getInventoryFull());
+				c.announce(PacketCreator.getShowInventoryFull());
 				return;
 			}
 			if (ob instanceof MapleMapItem) {
 				MapleMapItem mapitem = (MapleMapItem) ob;
 				synchronized (mapitem) {
 					if (mapitem.getQuest() > 0 && !chr.needQuestItem(mapitem.getQuest(), mapitem.getItemId())) {
-						c.announce(MaplePacketCreator.showItemUnavailable());
-						c.announce(MaplePacketCreator.enableActions());
+						c.announce(PacketCreator.showItemUnavailable());
+						c.announce(PacketCreator.enableActions());
 						return;
 					}
 					if (mapitem.isPickedUp()) {
-						c.announce(MaplePacketCreator.getInventoryFull());
-						c.announce(MaplePacketCreator.getShowInventoryFull());
+						c.announce(PacketCreator.getInventoryFull());
+						c.announce(PacketCreator.getShowInventoryFull());
 						return;
 					}
 					final double Distance = cpos.distanceSq(mapitem.getPosition());
@@ -130,7 +130,7 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 
 						} else {
 							if (!MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
-								c.announce(MaplePacketCreator.enableActions());
+								c.announce(PacketCreator.enableActions());
 								return;
 							}
 						}
@@ -140,18 +140,18 @@ public final class ItemPickupHandler extends AbstractMaplePacketHandler {
 						}
 					} else if (MapleInventoryManipulator.addFromDrop(c, mapitem.getItem(), true)) {
 					} else if (mapitem.getItem().getItemId() == 4031868) {
-						chr.getMap().broadcastMessage(MaplePacketCreator.updateAriantPQRanking(chr.getName(), chr.getItemQuantity(4031868, false), false));
+						chr.getMap().broadcastMessage(PacketCreator.updateAriantPQRanking(chr.getName(), chr.getItemQuantity(4031868, false), false));
 					} else {
-						c.announce(MaplePacketCreator.enableActions());
+						c.announce(PacketCreator.enableActions());
 						return;
 					}
 					mapitem.setPickedUp(true);
-					chr.getMap().broadcastMessage(MaplePacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
+					chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
 					chr.getMap().removeMapObject(ob);
 				}
 			}
 		}
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 
 	static boolean useItem(final GameClient c, final int id) {

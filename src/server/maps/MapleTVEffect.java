@@ -25,7 +25,7 @@ import client.GameCharacter;
 import java.util.ArrayList;
 import net.server.Server;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /*
  * MapleTVEffect
@@ -60,8 +60,8 @@ public class MapleTVEffect {
 		Server server = Server.getInstance();
 		setActive(active_);
 		if (active_) {
-			server.broadcastMessage(world, MaplePacketCreator.enableTV());
-			server.broadcastMessage(world, MaplePacketCreator.sendTV(user, message, type <= 2 ? type : type - 3, partner));
+			server.broadcastMessage(world, PacketCreator.enableTV());
+			server.broadcastMessage(world, PacketCreator.sendTV(user, message, type <= 2 ? type : type - 3, partner));
 			int delay = 15000;
 			if (type == 4) {
 				delay = 30000;
@@ -75,7 +75,7 @@ public class MapleTVEffect {
 				}
 			}, delay);
 		} else {
-			server.broadcastMessage(world, MaplePacketCreator.removeTV());
+			server.broadcastMessage(world, PacketCreator.removeTV());
 		}
 	}
 }

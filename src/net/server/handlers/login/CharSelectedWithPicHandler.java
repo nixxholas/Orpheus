@@ -25,7 +25,7 @@ import java.net.UnknownHostException;
 import client.GameClient;
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +57,10 @@ public class CharSelectedWithPicHandler extends AbstractMaplePacketHandler {
 				if (channelServerIP.equals("0.0.0.0")) {
 					String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
 
-					c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
+					c.announce(PacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
 				} else {
 					String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
-					c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(socket[1]), charId));
+					c.announce(PacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(socket[1]), charId));
 				}
 			} catch (UnknownHostException e) {
 				log.error("Host not found", e);
@@ -68,7 +68,7 @@ public class CharSelectedWithPicHandler extends AbstractMaplePacketHandler {
 
 		} else {
 
-			c.announce(MaplePacketCreator.wrongPic());
+			c.announce(PacketCreator.wrongPic());
 		}
 	}
 

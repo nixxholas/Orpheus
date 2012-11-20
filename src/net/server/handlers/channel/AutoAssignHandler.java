@@ -24,7 +24,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.MapleStat;
 import net.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -54,7 +54,7 @@ public class AutoAssignHandler extends AbstractMaplePacketHandler {
 		int remainingAp = (chr.getRemainingAp() - total) + extras;
 		chr.setRemainingAp(remainingAp);
 		chr.updateSingleStat(MapleStat.AVAILABLEAP, remainingAp);
-		c.announce(MaplePacketCreator.enableActions());
+		c.announce(PacketCreator.enableActions());
 	}
 
 	private int gainStatByType(GameCharacter chr, MapleStat type, int gain) {

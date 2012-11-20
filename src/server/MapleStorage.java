@@ -37,7 +37,7 @@ import client.ItemInventoryEntry;
 import client.GameClient;
 import client.MapleInventoryType;
 import tools.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 
 /**
  * 
@@ -194,15 +194,15 @@ public class MapleStorage {
 		for (MapleInventoryType type : MapleInventoryType.values()) {
 			typeItems.put(type, new ArrayList<IItem>(items));
 		}
-		c.getSession().write(MaplePacketCreator.getStorage(npcId, slots, items, meso));
+		c.getSession().write(PacketCreator.getStorage(npcId, slots, items, meso));
 	}
 
 	public void sendStored(GameClient c, MapleInventoryType type) {
-		c.getSession().write(MaplePacketCreator.storeStorage(slots, type, typeItems.get(type)));
+		c.getSession().write(PacketCreator.storeStorage(slots, type, typeItems.get(type)));
 	}
 
 	public void sendTakenOut(GameClient c, MapleInventoryType type) {
-		c.getSession().write(MaplePacketCreator.takeOutStorage(slots, type, typeItems.get(type)));
+		c.getSession().write(PacketCreator.takeOutStorage(slots, type, typeItems.get(type)));
 	}
 
 	public int getMeso() {
@@ -217,7 +217,7 @@ public class MapleStorage {
 	}
 
 	public void sendMeso(GameClient c) {
-		c.getSession().write(MaplePacketCreator.mesoStorage(slots, meso));
+		c.getSession().write(PacketCreator.mesoStorage(slots, meso));
 	}
 
 	public boolean isFull() {

@@ -30,7 +30,7 @@ import server.maps.MapleMapItem;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import net.server.Channel;
 import client.GameCharacter;
 import client.GameClient;
@@ -97,7 +97,7 @@ public class DonorCommands extends EnumeratedCommands {
 							continue;
 						}
 						mapitem.setPickedUp(true);
-						chr.getMap().broadcastMessage(MaplePacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
+						chr.getMap().broadcastMessage(PacketCreator.removeItemFromMap(mapitem.getObjectId(), 2, chr.getId()), mapitem.getPosition());
 						chr.getMap().removeMapObject(item);
 						chr.getMap().nullifyObject(item);
 					}

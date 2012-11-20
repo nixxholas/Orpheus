@@ -54,7 +54,7 @@ import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import server.maps.TimeMobEntry;
 import tools.ArrayMap;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 
 public class MapleMonster extends AbstractLoadedMapleLife {
@@ -226,7 +226,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 				for (AttackingMapleCharacter cattacker : mattacker.getAttackers()) {
 					if (cattacker.getAttacker().getMap() == from.getMap()) {
 						if (cattacker.getLastAttackTime() >= okTime) {
-							cattacker.getAttacker().getClient().getSession().write(MaplePacketCreator.showMonsterHP(getObjectId(), remhppercentage));
+							cattacker.getAttacker().getClient().getSession().write(PacketCreator.showMonsterHP(getObjectId(), remhppercentage));
 						}
 					}
 				}
@@ -245,7 +245,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 		setHp(hp2Heal);
 		setMp(mp2Heal);
-		getMap().broadcastMessage(MaplePacketCreator.healMonster(getObjectId(), hp));
+		getMap().broadcastMessage(PacketCreator.healMonster(getObjectId(), hp));
 	}
 
 	public boolean isAttackedBy(GameCharacter chr) {
@@ -304,20 +304,20 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 		if (this.getController() != null) { // this can/should only happen when
 											// a hidden gm attacks the monster
-			getController().getClient().getSession().write(MaplePacketCreator.stopControllingMonster(this.getObjectId()));
+			getController().getClient().getSession().write(PacketCreator.stopControllingMonster(this.getObjectId()));
 			getController().stopControllingMonster(this);
 		}
 		final List<Integer> toSpawn = this.getRevives();
 		if (toSpawn != null) {
 			final MapleMap reviveMap = killer.getMap();
 			if (toSpawn.contains(9300216) && reviveMap.getId() > 925000000 && reviveMap.getId() < 926000000) {
-				reviveMap.broadcastMessage(MaplePacketCreator.playSound("Dojang/clear"));
-				reviveMap.broadcastMessage(MaplePacketCreator.showEffect("dojang/end/clear"));
+				reviveMap.broadcastMessage(PacketCreator.playSound("Dojang/clear"));
+				reviveMap.broadcastMessage(PacketCreator.showEffect("dojang/end/clear"));
 			}
 			TimeMobEntry timeMob = reviveMap.getTimeMob();
 			if (timeMob != null) {
 				if (toSpawn.contains(timeMob.id)) {
-					reviveMap.broadcastMessage(MaplePacketCreator.serverNotice(6, timeMob.message));
+					reviveMap.broadcastMessage(PacketCreator.serverNotice(6, timeMob.message));
 				}
 
 				if (timeMob.id == 9300338 && (reviveMap.getId() >= 922240100 && reviveMap.getId() <= 922240119)) {
@@ -329,7 +329,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 						npc.setRx1(172 - 50);
 						npc.setFh(27);
 						reviveMap.addMapObject(npc);
-						reviveMap.broadcastMessage(MaplePacketCreator.spawnNPC(npc));
+						reviveMap.broadcastMessage(PacketCreator.spawnNPC(npc));
 					} else {
 						reviveMap.toggleHiddenNPC(9001108);
 					}
@@ -384,7 +384,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		}
 		if (controllers != null) {
 			controllers.stopControllingMonster(this);
-			controllers.getClient().getSession().write(MaplePacketCreator.stopControllingMonster(getObjectId()));
+			controllers.getClient().getSession().write(PacketCreator.stopControllingMonster(getObjectId()));
 		}
 		newController.controlMonster(this, immediateAggro);
 		setController(newController);
@@ -421,7 +421,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 	}
 
 	public GamePacket makeBossHPBarPacket() {
-		return MaplePacketCreator.showBossHP(getId(), getHp(), getMaxHp(), getTagColor(), getTagBgColor());
+		return PacketCreator.showBossHP(getId(), getHp(), getMaxHp(), getTagColor(), getTagBgColor());
 	}
 
 	public boolean hasBossHPBar() {
@@ -438,13 +438,13 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			return;
 		}
 		if (isFake()) {
-			c.getSession().write(MaplePacketCreator.spawnFakeMonster(this, 0));
+			c.getSession().write(PacketCreator.spawnFakeMonster(this, 0));
 		} else {
-			c.getSession().write(MaplePacketCreator.spawnMonster(this, false));
+			c.getSession().write(PacketCreator.spawnMonster(this, false));
 		}
 		if (stati.size() > 0) {
 			for (final MonsterStatusEffect mse : this.stati.values()) {
-				c.getSession().write(MaplePacketCreator.applyMonsterStatus(getObjectId(), mse));
+				c.getSession().write(PacketCreator.applyMonsterStatus(getObjectId(), mse));
 			}
 		}
 		if (hasBossHPBar()) {
@@ -458,7 +458,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 
 	@Override
 	public void sendDestroyData(GameClient client) {
-		client.getSession().write(MaplePacketCreator.killMonster(getObjectId(), false));
+		client.getSession().write(PacketCreator.killMonster(getObjectId(), false));
 	}
 
 	@Override
@@ -540,7 +540,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			@Override
 			public void run() {
 				if (isAlive()) {
-					GamePacket packet = MaplePacketCreator.cancelMonsterStatus(getObjectId(), status.getStati());
+					GamePacket packet = PacketCreator.cancelMonsterStatus(getObjectId(), status.getStati());
 					map.broadcastMessage(packet, getPosition());
 					if (getController() != null && !getController().isMapObjectVisible(MapleMonster.this)) {
 						getController().getClient().getSession().write(packet);
@@ -605,7 +605,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			stati.put(stat, status);
 		}
 		int animationTime = status.getSkill().getAnimationTime();
-		GamePacket packet = MaplePacketCreator.applyMonsterStatus(getObjectId(), status);
+		GamePacket packet = PacketCreator.applyMonsterStatus(getObjectId(), status);
 		map.broadcastMessage(packet, getPosition());
 		if (getController() != null && !getController().isMapObjectVisible(this)) {
 			getController().getClient().getSession().write(packet);
@@ -621,7 +621,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			@Override
 			public void run() {
 				if (isAlive()) {
-					GamePacket packet = MaplePacketCreator.cancelMonsterStatus(getObjectId(), stats);
+					GamePacket packet = PacketCreator.cancelMonsterStatus(getObjectId(), stats);
 					map.broadcastMessage(packet, getPosition());
 					if (getController() != null && !getController().isMapObjectVisible(MapleMonster.this)) {
 						getController().getClient().getSession().write(packet);
@@ -633,7 +633,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			}
 		};
 		final MonsterStatusEffect effect = new MonsterStatusEffect(stats, null, skill, true);
-		GamePacket packet = MaplePacketCreator.applyMonsterStatus(getObjectId(), effect);
+		GamePacket packet = PacketCreator.applyMonsterStatus(getObjectId(), effect);
 		map.broadcastMessage(packet, getPosition());
 		if (getController() != null && !getController().isMapObjectVisible(this)) {
 			getController().getClient().getSession().write(packet);
@@ -766,7 +766,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			if (damage >= hp) {
 				damage = hp - 1;
 				if (type == 1 || type == 2) {
-					map.broadcastMessage(MaplePacketCreator.damageMonster(getObjectId(), damage), getPosition());
+					map.broadcastMessage(PacketCreator.damageMonster(getObjectId(), damage), getPosition());
 					cancelTask.run();
 					status.getCancelTask().cancel(false);
 				}
@@ -774,7 +774,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			if (hp > 1 && damage > 0) {
 				damage(chr, damage, false);
 				if (type == 1) {
-					map.broadcastMessage(MaplePacketCreator.damageMonster(getObjectId(), damage), getPosition());
+					map.broadcastMessage(PacketCreator.damageMonster(getObjectId(), damage), getPosition());
 				}
 			}
 		}

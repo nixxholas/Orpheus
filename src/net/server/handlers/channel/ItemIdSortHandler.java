@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -62,6 +62,6 @@ public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
 		for (IItem i : itemarray) {
 			MapleInventoryManipulator.addFromDrop(c, i, false);
 		}
-		c.announce(MaplePacketCreator.finishedSort2(inv));
+		c.announce(PacketCreator.finishedSort2(inv));
 	}
 }

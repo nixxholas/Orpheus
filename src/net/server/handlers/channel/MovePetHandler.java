@@ -24,7 +24,7 @@ import java.util.List;
 import client.GameCharacter;
 import client.GameClient;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MovePetHandler extends AbstractMovementPacketHandler {
@@ -44,6 +44,6 @@ public final class MovePetHandler extends AbstractMovementPacketHandler {
 			return;
 		}
 		player.getPet(slot).updatePosition(res);
-		player.getMap().broadcastMessage(player, MaplePacketCreator.movePet(player.getId(), petId, slot, res), false);
+		player.getMap().broadcastMessage(player, PacketCreator.movePet(player.getId(), petId, slot, res), false);
 	}
 }

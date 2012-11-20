@@ -29,7 +29,7 @@ import net.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.MaplePortal;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ChangeMapHandler extends AbstractMaplePacketHandler {
@@ -49,7 +49,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 			c.getChannelServer().removePlayer(chr);
 			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
 			try {
-				c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+				c.announce(PacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
 			} catch (UnknownHostException ex) {
 			}
 		} else {
@@ -69,7 +69,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 						MapleMap to = chr.getMap();
 						if (wheel && chr.getItemQuantity(5510000, false) > 0) {
 							MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, 5510000, 1, true, false);
-							chr.announce(MaplePacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
+							chr.announce(PacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
 						} else {
 							chr.cancelAllBuffs(false);
 							to = chr.getMap().getReturnMap();
@@ -117,8 +117,8 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 					}
 				}
 				if (portal != null && !portal.getPortalStatus()) {
-					c.announce(MaplePacketCreator.blockedMessage(1));
-					c.announce(MaplePacketCreator.enableActions());
+					c.announce(PacketCreator.blockedMessage(1));
+					c.announce(PacketCreator.enableActions());
 					return;
 				}
 				if (chr.getMapId() == 109040004) {
@@ -130,7 +130,7 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 				if (portal != null) {
 					portal.enterPortal(c);
 				} else {
-					c.announce(MaplePacketCreator.enableActions());
+					c.announce(PacketCreator.enableActions());
 				}
 				chr.setRates();
 			} catch (Exception e) {

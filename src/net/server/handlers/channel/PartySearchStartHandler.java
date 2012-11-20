@@ -25,7 +25,7 @@ import net.AbstractMaplePacketHandler;
 import net.server.MapleParty;
 import server.maps.MapleMap;
 import server.maps.MapleMapObject;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameCharacter;
 import client.GameClient;
@@ -68,7 +68,7 @@ public class PartySearchStartHandler extends AbstractMaplePacketHandler {
 								c.getPlayer().receivePartyMemberHP();
 								c.getPlayer().updatePartyMemberHP();
 							} else {
-								c.announce(MaplePacketCreator.partyStatusMessage(17));
+								c.announce(PacketCreator.partyStatusMessage(17));
 							}
 						}
 					}

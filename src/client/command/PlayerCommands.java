@@ -32,7 +32,7 @@ import server.MapleInventoryManipulator;
 import server.MapleStocks;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 import tools.Pair;
 import client.GameCharacter;
@@ -162,7 +162,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					break;
 				case dispose:
 					NPCScriptManager.getInstance().dispose(c);
-					c.announce(MaplePacketCreator.enableActions());
+					c.announce(PacketCreator.enableActions());
 					chr.message("Done.");
 					break;
 				case emo:

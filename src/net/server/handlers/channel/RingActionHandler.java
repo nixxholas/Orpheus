@@ -28,7 +28,7 @@ import client.GameCharacter;
 import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 //import scripting.npc.NPCScriptManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.Output;
 
 /**
@@ -62,7 +62,7 @@ public final class RingActionHandler extends AbstractMaplePacketHandler {
 				boolean accepted = slea.readByte() > 0;
 				String proposerName = slea.readMapleAsciiString();
 				if (accepted) {
-					c.announce(MaplePacketCreator.sendEngagementRequest(proposerName));
+					c.announce(PacketCreator.sendEngagementRequest(proposerName));
 				}
 				break;
 			case 2:
@@ -93,7 +93,7 @@ public final class RingActionHandler extends AbstractMaplePacketHandler {
 				for (int i = 0; i < amount; i++) {
 					items[i] = slea.readMapleAsciiString();
 				}
-				c.announce(MaplePacketCreator.sendGroomWishlist()); // WTF<
+				c.announce(PacketCreator.sendGroomWishlist()); // WTF<
 				break;
 			default:
 				Output.print("NEW RING ACTION " + mode);

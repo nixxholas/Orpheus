@@ -28,7 +28,7 @@ import client.SkillFactory;
 import net.GamePacket;
 import server.MapleStatEffect;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MagicDamageHandler extends AbstractDealDamageHandler {
@@ -37,9 +37,9 @@ public final class MagicDamageHandler extends AbstractDealDamageHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
-		GamePacket packet = MaplePacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
+		GamePacket packet = PacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
 		if (attack.skill == 2121001 || attack.skill == 2221001 || attack.skill == 2321001) {
-			packet = MaplePacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);
+			packet = PacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);
 		}
 		player.getMap().broadcastMessage(player, packet, false, true);
 		MapleStatEffect effect = attack.getAttackEffect(player, null);
@@ -49,7 +49,7 @@ public final class MagicDamageHandler extends AbstractDealDamageHandler {
 			if (player.skillisCooling(attack.skill)) {
 				return;
 			} else {
-				c.announce(MaplePacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
+				c.announce(PacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
 				player.addCooldown(attack.skill, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill), effect_.getCooldown() * 1000));
 			}
 		}
