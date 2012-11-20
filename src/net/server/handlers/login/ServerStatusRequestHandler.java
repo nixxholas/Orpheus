@@ -22,12 +22,12 @@ package net.server.handlers.login;
 
 import client.GameClient;
 import constants.ServerConstants;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class ServerStatusRequestHandler extends AbstractMaplePacketHandler {
+public final class ServerStatusRequestHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

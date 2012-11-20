@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import scripting.npc.NPCScriptManager;
 import server.MapleItemInformationProvider;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Generic
  */
-public final class RemoteGachaponHandler extends AbstractMaplePacketHandler {
+public final class RemoteGachaponHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

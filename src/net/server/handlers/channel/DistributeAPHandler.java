@@ -24,11 +24,11 @@ import client.GameCharacter;
 import client.GameClient;
 import client.MapleJob;
 import client.MapleStat;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class DistributeAPHandler extends AbstractMaplePacketHandler {
+public final class DistributeAPHandler extends AbstractPacketHandler {
 	private static final int max = Short.MAX_VALUE;
 
 	@Override

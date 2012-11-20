@@ -21,11 +21,11 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.life.MapleMonster;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class AutoAggroHandler extends AbstractMaplePacketHandler {
+public final class AutoAggroHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

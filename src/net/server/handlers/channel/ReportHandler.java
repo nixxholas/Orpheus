@@ -25,7 +25,7 @@ import client.GameClient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 /**
  * @author BubblesDev
  */
-public final class ReportHandler extends AbstractMaplePacketHandler {
+public final class ReportHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

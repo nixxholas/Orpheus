@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import paranoia.BlacklistHandler;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.World;
 import tools.DatabaseConnection;
 import tools.MapleLogger;
@@ -39,7 +39,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class WhisperHandler extends AbstractMaplePacketHandler {
+public final class WhisperHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

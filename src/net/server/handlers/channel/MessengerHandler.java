@@ -22,14 +22,14 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.MapleMessenger;
 import net.server.MapleMessengerCharacter;
 import net.server.World;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class MessengerHandler extends AbstractMaplePacketHandler {
+public final class MessengerHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

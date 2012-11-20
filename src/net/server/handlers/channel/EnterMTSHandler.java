@@ -28,14 +28,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import constants.ServerConstants;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import server.MTSItemInfo;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.DatabaseConnection;
 
-public final class EnterMTSHandler extends AbstractMaplePacketHandler {
+public final class EnterMTSHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

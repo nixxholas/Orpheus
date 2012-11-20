@@ -24,7 +24,7 @@ import java.util.Map;
 import client.IItem;
 import client.GameClient;
 import client.InventoryType;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
@@ -34,7 +34,7 @@ import client.ISkill;
 import client.SkillFactory;
 import tools.Randomizer;
 
-public final class SkillBookHandler extends AbstractMaplePacketHandler {
+public final class SkillBookHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

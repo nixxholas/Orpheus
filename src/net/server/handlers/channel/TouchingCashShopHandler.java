@@ -21,14 +21,14 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
  * @author Acrylic (Terry Han)
  */
-public final class TouchingCashShopHandler extends AbstractMaplePacketHandler {
+public final class TouchingCashShopHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

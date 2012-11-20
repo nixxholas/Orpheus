@@ -21,12 +21,12 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class FaceExpressionHandler extends AbstractMaplePacketHandler {
+public final class FaceExpressionHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

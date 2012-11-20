@@ -25,7 +25,7 @@ import net.server.MaplePartyCharacter;
 import client.GameClient;
 import client.autoban.AutobanFactory;
 import java.awt.Point;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import scripting.item.ItemScriptManager;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -39,7 +39,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class ItemPickupHandler extends AbstractMaplePacketHandler {
+public final class ItemPickupHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(final SeekableLittleEndianAccessor slea, final GameClient c) {

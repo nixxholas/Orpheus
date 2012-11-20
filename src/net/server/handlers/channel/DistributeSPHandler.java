@@ -26,10 +26,10 @@ import client.GameClient;
 import client.MapleStat;
 import client.SkillFactory;
 import constants.skills.Aran;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class DistributeSPHandler extends AbstractMaplePacketHandler {
+public final class DistributeSPHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -30,7 +30,7 @@ import client.Inventory;
 import client.InventoryType;
 import client.IEquip.ScrollResult;
 import client.ISkill;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -39,7 +39,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  * @author Frz
  */
-public final class ScrollHandler extends AbstractMaplePacketHandler {
+public final class ScrollHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

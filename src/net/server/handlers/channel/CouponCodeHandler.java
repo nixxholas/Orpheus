@@ -25,7 +25,7 @@ import client.GameClient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Penguins (Acrylic)
  */
-public final class CouponCodeHandler extends AbstractMaplePacketHandler {
+public final class CouponCodeHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

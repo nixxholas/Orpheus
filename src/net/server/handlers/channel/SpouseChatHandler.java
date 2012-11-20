@@ -23,12 +23,12 @@ package net.server.handlers.channel;
 //import client.GameCharacter;
 import client.GameClient;
 //import client.command.CommandProcessor;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 //import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class SpouseChatHandler extends AbstractMaplePacketHandler {
+public final class SpouseChatHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

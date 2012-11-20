@@ -21,7 +21,7 @@
 package net.server.handlers.login;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -29,7 +29,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 /**
  * @author David
  */
-public final class GuestLoginHandler extends AbstractMaplePacketHandler {
+public final class GuestLoginHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.maps.FieldLimit;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -31,7 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public final class TrockAddMapHandler extends AbstractMaplePacketHandler {
+public final class TrockAddMapHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

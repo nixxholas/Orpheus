@@ -22,14 +22,14 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import client.InventoryType;
 import client.Inventory;
 import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class ItemSortHandler extends AbstractMaplePacketHandler {
+public final class ItemSortHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

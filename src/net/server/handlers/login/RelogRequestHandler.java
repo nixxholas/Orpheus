@@ -21,11 +21,11 @@
 package net.server.handlers.login;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class RelogRequestHandler extends AbstractMaplePacketHandler {
+public final class RelogRequestHandler extends AbstractPacketHandler {
 	
 	@Override
 	public boolean validateState(GameClient c) {

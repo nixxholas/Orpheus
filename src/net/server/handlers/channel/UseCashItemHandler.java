@@ -38,7 +38,7 @@ import client.SkillFactory;
 import constants.ItemConstants;
 import constants.skills.Aran;
 import java.sql.SQLException;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import scripting.npc.NPCScriptManager;
 import server.InventoryManipulator;
@@ -51,7 +51,7 @@ import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class UseCashItemHandler extends AbstractMaplePacketHandler {
+public final class UseCashItemHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

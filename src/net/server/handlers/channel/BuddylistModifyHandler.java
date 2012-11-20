@@ -33,12 +33,12 @@ import client.GameClient;
 import client.BuddyList.BuddyAddResult;
 import client.BuddyList.BuddyOperation;
 import tools.DatabaseConnection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.World;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
+public class BuddylistModifyHandler extends AbstractPacketHandler {
 
 	private static class CharacterIdNameBuddyCapacity extends CharacterNameAndId {
 		public final int buddyCapacity;

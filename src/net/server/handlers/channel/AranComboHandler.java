@@ -20,11 +20,11 @@
  */
 package net.server.handlers.channel;
 
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameClient;
 
-public class AranComboHandler extends AbstractMaplePacketHandler {
+public class AranComboHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

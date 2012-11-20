@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import client.MapleJob;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import scripting.npc.NPCScriptManager;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public class ClickGuideHandler extends AbstractMaplePacketHandler {
+public class ClickGuideHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -24,12 +24,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import client.GameClient;
 import net.server.Server;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class PickCharHandler extends AbstractMaplePacketHandler {
+public final class PickCharHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

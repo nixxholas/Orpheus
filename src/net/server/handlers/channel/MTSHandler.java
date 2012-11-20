@@ -27,7 +27,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
 import tools.DatabaseConnection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.GamePacket;
 import net.server.Channel;
 import server.ItemNameEntry;
@@ -44,7 +44,7 @@ import java.sql.SQLException;
 import java.util.*;
 import net.server.Server;
 
-public final class MTSHandler extends AbstractMaplePacketHandler {
+public final class MTSHandler extends AbstractPacketHandler {
 	
 	private static enum MtsOperationType {
 		INITIATE_SALE(2),

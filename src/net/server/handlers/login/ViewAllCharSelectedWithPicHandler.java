@@ -23,7 +23,7 @@ package net.server.handlers.login;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.Randomizer;
 
-public class ViewAllCharSelectedWithPicHandler extends AbstractMaplePacketHandler {
+public class ViewAllCharSelectedWithPicHandler extends AbstractPacketHandler {
 	
 	private static Logger log = LoggerFactory.getLogger(ViewAllCharSelectedWithPicHandler.class);
 	

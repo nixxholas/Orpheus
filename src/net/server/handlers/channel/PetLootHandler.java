@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import client.Pet;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.maps.GameMapItem;
 import server.maps.GameMapObject;
@@ -38,7 +38,7 @@ import server.MapleItemInformationProvider.scriptedItem;
 /**
  * @author TheRamon
  */
-public final class PetLootHandler extends AbstractMaplePacketHandler {
+public final class PetLootHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

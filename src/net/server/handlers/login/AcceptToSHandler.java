@@ -21,7 +21,7 @@
 package net.server.handlers.login;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -29,7 +29,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public final class AcceptToSHandler extends AbstractMaplePacketHandler {
+public final class AcceptToSHandler extends AbstractPacketHandler {
 
 	@Override
 	public boolean validateState(GameClient c) {

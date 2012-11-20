@@ -24,7 +24,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
 import client.autoban.AutobanManager;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleMonster;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
+public final class UseCatchItemHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -23,14 +23,14 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.GameClient;
 import client.InventoryType;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class PetAutoPotHandler extends AbstractMaplePacketHandler {
+public final class PetAutoPotHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

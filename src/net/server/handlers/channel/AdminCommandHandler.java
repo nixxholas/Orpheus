@@ -29,7 +29,7 @@ import tools.Output;
 import tools.Randomizer;
 import java.util.Arrays;
 import java.util.List;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
@@ -40,7 +40,7 @@ import server.quest.MapleQuest;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class AdminCommandHandler extends AbstractMaplePacketHandler {
+public final class AdminCommandHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

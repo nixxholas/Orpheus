@@ -59,7 +59,7 @@ import constants.skills.ThunderBreaker;
 import constants.skills.WindArcher;
 import server.life.MonsterDropEntry;
 import tools.Randomizer;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import client.autoban.AutobanFactory;
 import constants.skills.Aran;
 import constants.skills.Crossbowman;
@@ -87,7 +87,7 @@ import server.partyquest.Pyramid;
 import tools.PacketCreator;
 import tools.data.input.LittleEndianAccessor;
 
-public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandler {
+public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
 
     public static class AttackInfo {
 

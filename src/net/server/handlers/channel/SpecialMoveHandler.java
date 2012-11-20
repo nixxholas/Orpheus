@@ -35,7 +35,7 @@ import constants.skills.DarkKnight;
 import constants.skills.Hero;
 import constants.skills.Paladin;
 import constants.skills.Priest;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Channel;
 import net.server.MapleParty;
 import net.server.MaplePartyCharacter;
@@ -46,7 +46,7 @@ import server.life.MapleMonster;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
+public final class SpecialMoveHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

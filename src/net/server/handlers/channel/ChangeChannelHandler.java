@@ -26,7 +26,7 @@ import java.net.InetAddress;
 import client.GameClient;
 import client.InventoryType;
 import java.io.IOException;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import server.MapleTrade;
 import server.maps.FieldLimit;
@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
+public final class ChangeChannelHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

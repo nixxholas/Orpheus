@@ -22,12 +22,12 @@ package net.server.handlers.login;
 
 import java.net.InetAddress;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class CharSelectedHandler extends AbstractMaplePacketHandler {
+public final class CharSelectedHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

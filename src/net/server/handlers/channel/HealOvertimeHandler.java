@@ -24,10 +24,10 @@ import client.GameCharacter;
 import client.GameClient;
 import client.autoban.AutobanFactory;
 import client.autoban.AutobanManager;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class HealOvertimeHandler extends AbstractMaplePacketHandler {
+public final class HealOvertimeHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

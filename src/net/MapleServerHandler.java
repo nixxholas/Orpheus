@@ -121,7 +121,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
 		SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
 		short packetId = slea.readShort();
 		GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
-		MaplePacketHandler packetHandler = processor.getHandler(packetId);
+		PacketHandler packetHandler = processor.getHandler(packetId);
 
 		if (packetHandler != null && packetHandler.validateState(client)) {
 			try {

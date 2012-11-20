@@ -22,13 +22,13 @@ package net.server.handlers.login;
 
 import client.GameClient;
 import constants.ServerConstants;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import net.server.World;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class ServerlistRequestHandler extends AbstractMaplePacketHandler {
+public final class ServerlistRequestHandler extends AbstractPacketHandler {
 
 	private static final String[] names = ServerConstants.WORLD_NAMES;
 	

@@ -26,10 +26,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
 import tools.data.input.SeekableLittleEndianAccessor;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 
-public final class NoteActionHandler extends AbstractMaplePacketHandler {
+public final class NoteActionHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

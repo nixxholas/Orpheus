@@ -21,11 +21,11 @@
 package net.server.handlers;
 
 import client.GameClient;
-import net.MaplePacketHandler;
+import net.PacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public class CustomPacketHandler implements MaplePacketHandler {
+public class CustomPacketHandler implements PacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		if (slea.available() > 0 && c.gmLevel() == 4) {// w/e

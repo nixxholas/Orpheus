@@ -31,7 +31,7 @@ import client.PetDataFactory;
 import client.SkillFactory;
 import java.sql.SQLException;
 import tools.DatabaseConnection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
@@ -39,7 +39,7 @@ import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class SpawnPetHandler extends AbstractMaplePacketHandler {
+public final class SpawnPetHandler extends AbstractPacketHandler {
 	private static MapleDataProvider dataRoot = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
 
 	@Override

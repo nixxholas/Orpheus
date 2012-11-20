@@ -35,7 +35,7 @@ import java.util.List;
 import constants.ScriptableNPCConstants;
 import constants.ServerConstants;
 import tools.DatabaseConnection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Channel;
 import net.server.CharacterIdChannelPair;
 import net.server.MaplePartyCharacter;
@@ -50,7 +50,7 @@ import tools.MapleLogger;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
+public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 
 	@Override
 	public final boolean validateState(GameClient c) {

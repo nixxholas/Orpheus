@@ -21,13 +21,13 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
  * @author BubblesDev
  */
-public final class PetExcludeItemsHandler extends AbstractMaplePacketHandler {
+public final class PetExcludeItemsHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

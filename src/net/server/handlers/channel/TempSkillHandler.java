@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -29,7 +29,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Kevin
  */
-public final class TempSkillHandler extends AbstractMaplePacketHandler {
+public final class TempSkillHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

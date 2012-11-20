@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import client.InventoryType;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class ItemMoveHandler extends AbstractMaplePacketHandler {
+public final class ItemMoveHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

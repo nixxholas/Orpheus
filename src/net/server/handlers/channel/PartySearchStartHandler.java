@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import java.util.Collection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.MapleParty;
 import server.maps.GameMap;
 import server.maps.GameMapObject;
@@ -36,7 +36,7 @@ import client.MapleJob;
  * @author XoticStory
  * @author BubblesDev
  */
-public class PartySearchStartHandler extends AbstractMaplePacketHandler {
+public class PartySearchStartHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

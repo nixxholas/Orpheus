@@ -28,13 +28,13 @@ import client.Inventory;
 import client.InventoryType;
 import client.MapleJob;
 import client.MapleSkinColor;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class CreateCharHandler extends AbstractMaplePacketHandler {
+public final class CreateCharHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

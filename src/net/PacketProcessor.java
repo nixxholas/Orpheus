@@ -29,7 +29,7 @@ import net.server.handlers.LoginRequiringNoOpHandler;
 
 public final class PacketProcessor {
 	private static PacketProcessor instance;
-	private MaplePacketHandler[] handlers;
+	private PacketHandler[] handlers;
 
 	private PacketProcessor() {
 		int maxRecvOp = 0;
@@ -38,21 +38,21 @@ public final class PacketProcessor {
 				maxRecvOp = op.getValue();
 			}
 		}
-		handlers = new MaplePacketHandler[maxRecvOp + 1];
+		handlers = new PacketHandler[maxRecvOp + 1];
 	}
 
-	public MaplePacketHandler getHandler(short packetId) {
+	public PacketHandler getHandler(short packetId) {
 		if (packetId > handlers.length) {
 			return null;
 		}
-		MaplePacketHandler handler = handlers[packetId];
+		PacketHandler handler = handlers[packetId];
 		if (handler != null) {
 			return handler;
 		}
 		return null;
 	}
 
-	public void registerHandler(RecvOpcode code, MaplePacketHandler handler) {
+	public void registerHandler(RecvOpcode code, PacketHandler handler) {
 		try {
 			handlers[code.getValue()] = handler;
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -69,7 +69,7 @@ public final class PacketProcessor {
 	}
 
 	public void reset() {
-		handlers = new MaplePacketHandler[handlers.length];
+		handlers = new PacketHandler[handlers.length];
 
 		registerHandler(RecvOpcode.PONG, new KeepAliveHandler());
 		registerHandler(RecvOpcode.CUSTOM_PACKET, new CustomPacketHandler());

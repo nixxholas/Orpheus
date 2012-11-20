@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import net.server.guild.MapleGuildResponse;
 import net.server.guild.MapleGuild;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import java.util.Iterator;
 import tools.PacketCreator;
@@ -31,7 +31,7 @@ import tools.Output;
 import client.GameCharacter;
 import net.server.Server;
 
-public final class GuildOperationHandler extends AbstractMaplePacketHandler {
+public final class GuildOperationHandler extends AbstractPacketHandler {
 	private boolean isGuildNameAcceptable(String name) {
 		if (name.length() < 3 || name.length() > 12) {
 			return false;

@@ -23,9 +23,9 @@ package net.server.handlers.channel;
 import client.GameClient;
 import client.SkillMacro;
 import tools.data.input.SeekableLittleEndianAccessor;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 
-public final class SkillMacroHandler extends AbstractMaplePacketHandler {
+public final class SkillMacroHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

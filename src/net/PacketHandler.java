@@ -18,27 +18,13 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server.handlers.channel;
+package net;
 
 import client.GameClient;
-import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class CancelDebuffHandler extends AbstractPacketHandler {// TIP: BAD STUFF LOL
+public interface PacketHandler {
+	void handlePacket(SeekableLittleEndianAccessor slea, GameClient c);
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		/*
-		 * List<MapleDisease> diseases = c.getPlayer().getDiseases();
-		 * List<MapleDisease> diseases_ = new ArrayList<MapleDisease>(); for
-		 * (MapleDisease disease : diseases) { List<MapleDisease> disease_ = new
-		 * ArrayList<MapleDisease>(); disease_.add(disease);
-		 * diseases_.add(disease);
-		 * c.announce(PacketCreator.cancelDebuff(disease_));
-		 * c.getPlayer().getMap().broadcastMessage(c.getPlayer(),
-		 * PacketCreator.cancelForeignDebuff(c.getPlayer().getId(),
-		 * disease_), false); } for (MapleDisease disease : diseases_) {
-		 * c.getPlayer().removeDisease(disease); }
-		 */
-	}
+	boolean validateState(GameClient c);
 }

@@ -25,7 +25,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import client.GameCharacter;
 //import tools.DatabaseConnection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 //import scripting.npc.NPCScriptManager;
 import tools.PacketCreator;
@@ -34,7 +34,7 @@ import tools.Output;
 /**
  * @author Jvlaple
  */
-public final class RingActionHandler extends AbstractMaplePacketHandler {
+public final class RingActionHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

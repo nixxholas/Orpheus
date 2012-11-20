@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Channel;
 import net.server.Server;
 import server.maps.HiredMerchant;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93 :3
  */
-public class RemoteStoreHandler extends AbstractMaplePacketHandler {
+public class RemoteStoreHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

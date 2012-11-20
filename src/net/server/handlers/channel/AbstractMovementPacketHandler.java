@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.maps.AnimatedGameMapObject;
 import server.movement.AbsoluteLifeMovement;
 import server.movement.ChairMovement;
@@ -34,7 +34,7 @@ import server.movement.LifeMovementFragment;
 import server.movement.RelativeLifeMovement;
 import tools.data.input.LittleEndianAccessor;
 
-public abstract class AbstractMovementPacketHandler extends AbstractMaplePacketHandler {
+public abstract class AbstractMovementPacketHandler extends AbstractPacketHandler {
 	protected List<LifeMovementFragment> parseMovement(LittleEndianAccessor lea) {
 		List<LifeMovementFragment> res = new ArrayList<LifeMovementFragment>();
 		byte numCommands = lea.readByte();

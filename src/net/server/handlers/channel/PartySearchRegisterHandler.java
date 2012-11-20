@@ -22,14 +22,14 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
  * 
  * @author Quasar
  */
-public class PartySearchRegisterHandler extends AbstractMaplePacketHandler {
+public class PartySearchRegisterHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

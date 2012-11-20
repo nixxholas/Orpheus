@@ -23,11 +23,11 @@ package net.server.handlers.channel;
 import client.IItem;
 import client.GameClient;
 import client.InventoryType;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class UseItemEffectHandler extends AbstractMaplePacketHandler {
+public final class UseItemEffectHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -41,7 +41,7 @@ import client.command.external.CommandLoader;
 /**
  * @author Aaron Weiss
  */
-public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
+public final class GeneralChatHandler extends net.AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

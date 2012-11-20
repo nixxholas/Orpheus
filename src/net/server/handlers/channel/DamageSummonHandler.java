@@ -24,12 +24,12 @@ import client.MapleBuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.maps.Summon;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class DamageSummonHandler extends AbstractMaplePacketHandler {
+public final class DamageSummonHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

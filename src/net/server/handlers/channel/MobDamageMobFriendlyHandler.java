@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import tools.Randomizer;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Xotic & BubblesDev
  */
-public final class MobDamageMobFriendlyHandler extends AbstractMaplePacketHandler {
+public final class MobDamageMobFriendlyHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -21,12 +21,12 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.SendOpcode;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.data.output.PacketWriter;
 
-public final class NPCAnimation extends AbstractMaplePacketHandler {
+public final class NPCAnimation extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

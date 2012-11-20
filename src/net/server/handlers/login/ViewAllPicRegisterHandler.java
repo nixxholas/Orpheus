@@ -24,14 +24,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import net.server.Server;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.Randomizer;
 
-public final class ViewAllPicRegisterHandler extends AbstractMaplePacketHandler { 
+public final class ViewAllPicRegisterHandler extends AbstractPacketHandler { 
 
 	private static Logger log = LoggerFactory.getLogger(ViewAllPicRegisterHandler.class);
 	

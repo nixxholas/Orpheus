@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import client.autoban.AutobanFactory;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public class UseGachaExpHandler extends AbstractMaplePacketHandler {
+public class UseGachaExpHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

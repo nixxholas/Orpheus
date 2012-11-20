@@ -24,10 +24,10 @@ import client.ISkill;
 import client.GameClient;
 import client.MapleKeyBinding;
 import client.SkillFactory;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class KeymapChangeHandler extends AbstractMaplePacketHandler {
+public final class KeymapChangeHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -21,7 +21,7 @@
 package net.server.handlers.login;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.TimerManager;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public class SetGenderHandler extends AbstractMaplePacketHandler {
+public class SetGenderHandler extends AbstractPacketHandler {
 	
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

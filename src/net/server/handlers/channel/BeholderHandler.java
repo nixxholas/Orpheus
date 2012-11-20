@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import constants.skills.DarkKnight;
 import java.util.Collection;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.maps.Summon;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author BubblesDev
  */
-public final class BeholderHandler extends AbstractMaplePacketHandler {// broken
+public final class BeholderHandler extends AbstractPacketHandler {// broken
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

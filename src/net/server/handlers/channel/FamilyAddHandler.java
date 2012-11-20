@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -31,7 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Jay Estrella
  */
-public final class FamilyAddHandler extends AbstractMaplePacketHandler {
+public final class FamilyAddHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

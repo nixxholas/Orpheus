@@ -31,7 +31,7 @@ import client.status.MonsterStatus;
 import constants.skills.Corsair;
 import java.awt.Point;
 import java.util.List;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory.loseItem;
@@ -45,7 +45,7 @@ import tools.PacketCreator;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class TakeDamageHandler extends AbstractMaplePacketHandler {
+public final class TakeDamageHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

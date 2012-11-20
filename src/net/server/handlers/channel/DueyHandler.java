@@ -34,7 +34,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Channel;
 import server.DueyPackages;
 import server.InventoryManipulator;
@@ -42,7 +42,7 @@ import tools.DatabaseConnection;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class DueyHandler extends AbstractMaplePacketHandler {
+public final class DueyHandler extends AbstractPacketHandler {
 	
 	private enum Actions {
 		TOSERVER_SEND_ITEM(0x02), 

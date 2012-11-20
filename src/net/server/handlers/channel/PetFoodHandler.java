@@ -28,12 +28,12 @@ import client.InventoryType;
 import client.Pet;
 import client.autoban.AutobanManager;
 import tools.Randomizer;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class PetFoodHandler extends AbstractMaplePacketHandler {
+public final class PetFoodHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

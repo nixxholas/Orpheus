@@ -29,12 +29,12 @@ import constants.skills.FPArchMage;
 import constants.skills.ILArchMage;
 import constants.skills.Marksman;
 import constants.skills.WindArcher;
-import net.AbstractMaplePacketHandler;
-import net.MaplePacketHandler;
+import net.AbstractPacketHandler;
+import net.PacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.PacketCreator;
 
-public final class CancelBuffHandler extends AbstractMaplePacketHandler implements MaplePacketHandler {
+public final class CancelBuffHandler extends AbstractPacketHandler implements PacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameClient;
 import client.InventoryType;
 import tools.Randomizer;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.life.MapleLifeFactory;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author AngelSL
  */
-public final class UseSummonBag extends AbstractMaplePacketHandler {
+public final class UseSummonBag extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

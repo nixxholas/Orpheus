@@ -29,7 +29,7 @@ import client.InventoryType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author BubblesDev
  */
-public final class ItemIdSortHandler extends AbstractMaplePacketHandler {
+public final class ItemIdSortHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

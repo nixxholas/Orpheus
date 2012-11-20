@@ -25,7 +25,7 @@ import client.GameCharacter;
 import java.sql.SQLException;
 import java.util.Arrays;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.maps.GameMapObjectType;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author XoticStory
  */
-public final class HiredMerchantRequest extends AbstractMaplePacketHandler {
+public final class HiredMerchantRequest extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

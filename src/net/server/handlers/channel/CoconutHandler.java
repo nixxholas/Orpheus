@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.events.gm.MapleCoconut;
 import server.events.gm.MapleCoconuts;
 import server.maps.GameMap;
@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public final class CoconutHandler extends AbstractMaplePacketHandler {
+public final class CoconutHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

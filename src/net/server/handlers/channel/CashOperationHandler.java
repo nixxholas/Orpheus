@@ -31,7 +31,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.CashShop;
 import server.CashShop.CashItem;
 import server.CashShop.CashItemFactory;
@@ -41,7 +41,7 @@ import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class CashOperationHandler extends AbstractMaplePacketHandler {
+public final class CashOperationHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

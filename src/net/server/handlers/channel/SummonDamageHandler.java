@@ -27,14 +27,14 @@ import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
 import client.status.MonsterStatusEffect;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
 import server.maps.Summon;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class SummonDamageHandler extends AbstractMaplePacketHandler {
+public final class SummonDamageHandler extends AbstractPacketHandler {
 	public final class SummonAttackEntry {
 
 		private int monsterOid;

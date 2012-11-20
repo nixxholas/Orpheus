@@ -25,7 +25,7 @@ import client.GameClient;
 import client.InventoryType;
 import constants.ItemConstants;
 import java.util.List;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.server.Server;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 /**
  * @author Jay Estrella / Modified by kevintjuh93
  */
-public final class ItemRewardHandler extends AbstractMaplePacketHandler {
+public final class ItemRewardHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

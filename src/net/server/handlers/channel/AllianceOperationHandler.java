@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import net.GamePacket;
 import net.SendOpcode;
 import net.server.Server;
@@ -35,7 +35,7 @@ import tools.data.output.PacketWriter;
  * 
  * @author XoticStory
  */
-public final class AllianceOperationHandler extends AbstractMaplePacketHandler {
+public final class AllianceOperationHandler extends AbstractPacketHandler {
 	
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

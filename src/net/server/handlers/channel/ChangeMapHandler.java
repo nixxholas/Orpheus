@@ -25,14 +25,14 @@ import client.GameClient;
 import client.InventoryType;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.Portal;
 import server.maps.GameMap;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class ChangeMapHandler extends AbstractMaplePacketHandler {
+public final class ChangeMapHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

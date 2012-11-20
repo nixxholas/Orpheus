@@ -23,14 +23,14 @@ package net.server.handlers.login;
 import client.AutoRegister;
 import client.GameClient;
 import java.util.Calendar;
-import net.MaplePacketHandler;
+import net.PacketHandler;
 import net.server.Server;
 import server.TimerManager;
 import tools.DateUtil;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class LoginPasswordHandler implements MaplePacketHandler {
+public final class LoginPasswordHandler implements PacketHandler {
 	
 	@Override
 	public boolean validateState(GameClient c) {

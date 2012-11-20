@@ -21,14 +21,14 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.maps.Reactor;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
  * @author Lerk
  */
-public final class ReactorHitHandler extends AbstractMaplePacketHandler {
+public final class ReactorHitHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
 import tools.Output;
@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Kevin
  */
-public class WeddingHandler extends AbstractMaplePacketHandler {
+public class WeddingHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

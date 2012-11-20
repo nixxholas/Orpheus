@@ -21,10 +21,10 @@
 package net.server.handlers;
 
 import client.GameClient;
-import net.MaplePacketHandler;
+import net.PacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class LoginRequiringNoOpHandler implements MaplePacketHandler {
+public final class LoginRequiringNoOpHandler implements PacketHandler {
 	private static LoginRequiringNoOpHandler instance = new LoginRequiringNoOpHandler();
 
 	public static LoginRequiringNoOpHandler getInstance() {

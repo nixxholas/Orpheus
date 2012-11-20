@@ -21,10 +21,10 @@
 package net.server.handlers;
 
 import client.GameClient;
-import net.MaplePacketHandler;
+import net.PacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public class KeepAliveHandler implements MaplePacketHandler {
+public class KeepAliveHandler implements PacketHandler {
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		c.pongReceived();
 	}

@@ -24,7 +24,7 @@ import client.IItem;
 import client.GameClient;
 import client.MapleDisease;
 import client.InventoryType;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.PacketCreator;
@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 /**
  * @author Matze
  */
-public final class UseItemHandler extends AbstractMaplePacketHandler {
+public final class UseItemHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {

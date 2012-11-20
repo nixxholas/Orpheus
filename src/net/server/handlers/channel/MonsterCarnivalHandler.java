@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import java.awt.Point;
-import net.AbstractMaplePacketHandler;
+import net.AbstractPacketHandler;
 import server.partyquest.MonsterCarnival;
 import server.life.MapleLifeFactory;
 import server.maps.Reactor;
@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public final class MonsterCarnivalHandler extends AbstractMaplePacketHandler {
+public final class MonsterCarnivalHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
