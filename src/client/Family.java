@@ -28,17 +28,17 @@ import tools.DatabaseConnection;
  * 
  * @author Jay Estrella :3
  */
-public class MapleFamily {
+public class Family {
 	private static int id;
-	private static Map<Integer, MapleFamilyEntry> members = new HashMap<Integer, MapleFamilyEntry>();
+	private static Map<Integer, FamilyEntry> members = new HashMap<Integer, FamilyEntry>();
 
-	public MapleFamily(int cid) {
+	public Family(int cid) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `familyid` FROM `family_character` WHERE `cid` = ?");
 			ps.setInt(1, cid);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				MapleFamily.id = rs.getInt("familyid");
+				Family.id = rs.getInt("familyid");
 			}
 			ps.close();
 			rs.close();
@@ -53,7 +53,7 @@ public class MapleFamily {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				MapleFamilyEntry ret = new MapleFamilyEntry();
+				FamilyEntry ret = new FamilyEntry();
 				ret.setFamilyId(id);
 				ret.setRank(rs.getInt("rank"));
 				ret.setReputation(rs.getInt("reputation"));
@@ -71,14 +71,14 @@ public class MapleFamily {
 		}
 	}
 
-	public MapleFamilyEntry getMember(int cid) {
+	public FamilyEntry getMember(int cid) {
 		if (members.containsKey(cid))
 			return members.get(cid);
 
 		return null;
 	}
 
-	public Map<Integer, MapleFamilyEntry> getMembers() {
+	public Map<Integer, FamilyEntry> getMembers() {
 		return members;
 	}
 }

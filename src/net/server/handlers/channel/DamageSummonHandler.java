@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.SkillFactory;
@@ -43,7 +43,7 @@ public final class DamageSummonHandler extends AbstractPacketHandler {
 			if (summon != null) {
 				summon.addHP(-damage);
 				if (summon.getHP() <= 0) {
-					player.cancelEffectFromBuffStat(MapleBuffStat.PUPPET);
+					player.cancelEffectFromBuffStat(BuffStat.PUPPET);
 				}
 			}
 			player.getMap().broadcastMessage(player, PacketCreator.damageSummon(player.getId(), skillid, damage, unkByte, monsterIdFrom), summon.getPosition());

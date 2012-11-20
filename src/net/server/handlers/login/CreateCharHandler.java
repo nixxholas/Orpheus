@@ -26,8 +26,8 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
-import client.MapleJob;
-import client.MapleSkinColor;
+import client.Job;
+import client.SkinColor;
 import net.AbstractPacketHandler;
 import server.ItemInfoProvider;
 import tools.PacketCreator;
@@ -52,7 +52,7 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 		if (skincolor > 3) {
 			return;
 		}
-		newchar.setSkinColor(MapleSkinColor.getById(skincolor));
+		newchar.setSkinColor(SkinColor.getById(skincolor));
 		int top = slea.readInt();
 		int bottom = slea.readInt();
 		int shoes = slea.readInt();
@@ -61,12 +61,12 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 		newchar.setName(name);
 		if (!newchar.isGM()) {
 			if (job == 0) { // Knights of Cygnus
-				newchar.setJob(MapleJob.NOBLESSE);
+				newchar.setJob(Job.NOBLESSE);
 				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1));
 			} else if (job == 1) { // Adventurer
 				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1));
 			} else if (job == 2) { // Aran
-				newchar.setJob(MapleJob.LEGEND);
+				newchar.setJob(Job.LEGEND);
 				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1));
 			} else {
 				c.disconnect(); // Muhaha

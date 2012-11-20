@@ -1,9 +1,6 @@
 /*
  	OrpheusMS: MapleStory Private Server based on OdinMS
-    Copyright (C) 2012 Aaron Weiss <aaron@deviant-core.net>
-    				Patrick Huy <patrick.huy@frz.cc>
-					Matthias Butz <matze@odinms.de>
-					Jan Christian Meyer <vimes@odinms.de>
+    Copyright (C) 2012 Aaron Weiss
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -18,19 +15,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server;
+package client;
 
-import client.Disease;
+public enum WeaponType {
+	NOT_A_WEAPON(0), AXE1H(4.4), AXE2H(4.8), BLUNT1H(4.4), BLUNT2H(4.8), BOW(3.4), CLAW(3.6), CROSSBOW(3.6), DAGGER(4), GUN(3.6), KNUCKLE(4.8), POLE_ARM(5.0), SPEAR(5.0), STAFF(3.6), SWORD1H(4.0), SWORD2H(4.6), WAND(3.6);
+	private double damageMultiplier;
 
-public class PlayerDiseaseValueHolder {// Thanks Celino
+	private WeaponType(double maxDamageMultiplier) {
+		this.damageMultiplier = maxDamageMultiplier;
+	}
 
-	public long startTime;
-	public long length;
-	public Disease disease;
-
-	public PlayerDiseaseValueHolder(final Disease disease, final long startTime, final long length) {
-		this.disease = disease;
-		this.startTime = startTime;
-		this.length = length;
+	public double getMaxDamageMultiplier() {
+		return damageMultiplier;
 	}
 }

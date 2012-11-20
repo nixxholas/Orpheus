@@ -1,9 +1,6 @@
 /*
  	OrpheusMS: MapleStory Private Server based on OdinMS
-    Copyright (C) 2012 Aaron Weiss <aaron@deviant-core.net>
-    				Patrick Huy <patrick.huy@frz.cc>
-					Matthias Butz <matze@odinms.de>
-					Jan Christian Meyer <vimes@odinms.de>
+    Copyright (C) 2012 Aaron Weiss
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -18,19 +15,21 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server;
+package client;
 
-import client.Disease;
+public class KeyBinding {
+	private int type, action;
 
-public class PlayerDiseaseValueHolder {// Thanks Celino
+	public KeyBinding(int type, int action) {
+		this.type = type;
+		this.action = action;
+	}
 
-	public long startTime;
-	public long length;
-	public Disease disease;
+	public int getType() {
+		return type;
+	}
 
-	public PlayerDiseaseValueHolder(final Disease disease, final long startTime, final long length) {
-		this.disease = disease;
-		this.startTime = startTime;
-		this.length = length;
+	public int getAction() {
+		return action;
 	}
 }

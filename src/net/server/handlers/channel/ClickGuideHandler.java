@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import client.MapleJob;
+import client.Job;
 import net.AbstractPacketHandler;
 import scripting.npc.NPCScriptManager;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -34,7 +34,7 @@ public class ClickGuideHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		if (c.getPlayer().getJob().equals(MapleJob.NOBLESSE)) {
+		if (c.getPlayer().getJob().equals(Job.NOBLESSE)) {
 			NPCScriptManager.getInstance().start(c, 1101008, null, null);
 		} else {
 			NPCScriptManager.getInstance().start(c, 1202000, null, null);

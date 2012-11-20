@@ -25,9 +25,9 @@ import java.util.Map;
 import client.ISkill;
 import client.GameCharacter;
 import client.InventoryType;
-import client.MapleJob;
+import client.Job;
 import client.QuestStatus;
-import client.MapleStat;
+import client.Stat;
 import client.SkillFactory;
 import constants.ItemConstants;
 import constants.ServerConstants;
@@ -78,7 +78,7 @@ public class QuestAction {
 		if (item.getChildByPath("job") != null) {
 			int job = MapleDataTool.getInt(item.getChildByPath("job"));
 			if (job < 100) {
-				if (MapleJob.getBy5ByteEncoding(job).getId() / 100 != c.getJob().getId() / 100) {
+				if (Job.getBy5ByteEncoding(job).getId() / 100 != c.getJob().getId() / 100) {
 					return false;
 				}
 			} else if (job != c.getJob().getId()) {
@@ -180,7 +180,7 @@ public class QuestAction {
 					boolean shouldLearn = false;
 					MapleData applicableJobs = sEntry.getChildByPath("job");
 					for (MapleData applicableJob : applicableJobs) {
-						MapleJob job = MapleJob.getById(MapleDataTool.getInt(applicableJob));
+						Job job = Job.getById(MapleDataTool.getInt(applicableJob));
 						if (c.getJob() == job) {
 							shouldLearn = true;
 							break;
@@ -202,7 +202,7 @@ public class QuestAction {
 					break;
 				}
 				c.addFame(MapleDataTool.getInt(data));
-				c.updateSingleStat(MapleStat.FAME, c.getFame());
+				c.updateSingleStat(Stat.FAME, c.getFame());
 				int fameGain = MapleDataTool.getInt(data);
 				c.getClient().getSession().write(PacketCreator.getShowFameGain(fameGain));
 				break;

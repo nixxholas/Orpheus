@@ -19,12 +19,12 @@ package client;
 
 import net.IntValueHolder;
 
-public enum MapleStat implements IntValueHolder {
+public enum Stat implements IntValueHolder {
 
 	SKIN(0x1), FACE(0x2), HAIR(0x4), LEVEL(0x10), JOB(0x20), STR(0x40), DEX(0x80), INT(0x100), LUK(0x200), HP(0x400), MAXHP(0x800), MP(0x1000), MAXMP(0x2000), AVAILABLEAP(0x4000), AVAILABLESP(0x8000), EXP(0x10000), FAME(0x20000), MESO(0x40000), PET(0x180008), GACHAEXP(0x200000);
 	private final int i;
 
-	private MapleStat(int i) {
+	private Stat(int i) {
 		this.i = i;
 	}
 
@@ -76,8 +76,8 @@ public enum MapleStat implements IntValueHolder {
 		}
 	}
 
-	public static MapleStat getByValue(int value) {
-		for (MapleStat stat : MapleStat.values()) {
+	public static Stat getByValue(int value) {
+		for (Stat stat : Stat.values()) {
 			if (stat.getValue() == value) {
 				return stat;
 			}
@@ -85,7 +85,7 @@ public enum MapleStat implements IntValueHolder {
 		return null;
 	}
 
-	public static MapleStat getBy5ByteEncoding(int encoded) {
+	public static Stat getBy5ByteEncoding(int encoded) {
 		switch (encoded) {
 			case 64:
 				return STR;
@@ -99,7 +99,7 @@ public enum MapleStat implements IntValueHolder {
 		return null;
 	}
 
-	public static MapleStat getByString(String type) {
+	public static Stat getByString(String type) {
 		if (type.equals("SKIN")) {
 			return SKIN;
 		} else if (type.equals("FACE")) {

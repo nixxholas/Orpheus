@@ -26,7 +26,7 @@ import java.util.List;
 import client.Equip;
 import client.IItem;
 import client.Item;
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
@@ -406,8 +406,8 @@ public class InventoryManipulator {
 			target.setPosition(src);
 			c.getPlayer().getInventory(InventoryType.EQUIP).addFromDB(target);
 		}
-		if (c.getPlayer().getBuffedValue(MapleBuffStat.BOOSTER) != null && isWeapon(source.getItemId())) {
-			c.getPlayer().cancelBuffStats(MapleBuffStat.BOOSTER);
+		if (c.getPlayer().getBuffedValue(BuffStat.BOOSTER) != null && isWeapon(source.getItemId())) {
+			c.getPlayer().cancelBuffStats(BuffStat.BOOSTER);
 		}
 		c.announce(PacketCreator.moveInventoryItem(InventoryType.EQUIP, src, dst, (byte) 2));
 		c.getPlayer().forceUpdateItem(InventoryType.EQUIPPED, source);

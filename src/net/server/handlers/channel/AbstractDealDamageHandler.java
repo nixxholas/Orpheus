@@ -28,11 +28,11 @@ import java.util.Collections;
 import java.util.List;
 import client.ISkill;
 import client.Item;
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.InventoryType;
-import client.MapleJob;
-import client.MapleStat;
+import client.Job;
+import client.Stat;
 import client.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
@@ -211,10 +211,10 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     }
                     totDamage += totDamageToOneMonster;
                     player.checkMonsterAggro(monster);
-                    if (player.getBuffedValue(MapleBuffStat.PICKPOCKET) != null && (attack.skill == 0 || attack.skill == Rogue.DOUBLE_STAB || attack.skill == Bandit.SAVAGE_BLOW || attack.skill == ChiefBandit.ASSAULTER || attack.skill == ChiefBandit.BAND_OF_THIEVES || attack.skill == Shadower.ASSASSINATE || attack.skill == Shadower.TAUNT || attack.skill == Shadower.BOOMERANG_STEP)) {
+                    if (player.getBuffedValue(BuffStat.PICKPOCKET) != null && (attack.skill == 0 || attack.skill == Rogue.DOUBLE_STAB || attack.skill == Bandit.SAVAGE_BLOW || attack.skill == ChiefBandit.ASSAULTER || attack.skill == ChiefBandit.BAND_OF_THIEVES || attack.skill == Shadower.ASSASSINATE || attack.skill == Shadower.TAUNT || attack.skill == Shadower.BOOMERANG_STEP)) {
                         ISkill pickpocket = SkillFactory.getSkill(ChiefBandit.PICKPOCKET);
                         int delay = 0;
-                        final int maxmeso = player.getBuffedValue(MapleBuffStat.PICKPOCKET).intValue();
+                        final int maxmeso = player.getBuffedValue(BuffStat.PICKPOCKET).intValue();
                         for (final Integer eachd : onedList) {
                             if (pickpocket.getEffect(player.getSkillLevel(pickpocket)).makeChanceResult()) {
                                 TimerManager.getInstance().schedule(new Runnable() {
@@ -253,16 +253,16 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         monster.setTempEffectiveness(Element.FIRE, ElementalEffectiveness.WEAK, SkillFactory.getSkill(ILArchMage.ICE_DEMON).getEffect(player.getSkillLevel(SkillFactory.getSkill(ILArchMage.ICE_DEMON))).getDuration() * 1000);
                     } else if (attack.skill == Outlaw.HOMING_BEACON || attack.skill == Corsair.BULLSEYE) {
                         player.setMarkedMonster(monster.getObjectId());
-                        player.announce(PacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new MapleBuffStatDelta(MapleBuffStat.HOMING_BEACON, monster.getObjectId()))));
+                        player.announce(PacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new MapleBuffStatDelta(BuffStat.HOMING_BEACON, monster.getObjectId()))));
                     }
-                    if (player.getBuffedValue(MapleBuffStat.HAMSTRING) != null) {
+                    if (player.getBuffedValue(BuffStat.HAMSTRING) != null) {
                         ISkill hamstring = SkillFactory.getSkill(Bowmaster.HAMSTRING);
                         if (hamstring.getEffect(player.getSkillLevel(hamstring)).makeChanceResult()) {
                             MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(Collections.singletonMap(MonsterStatus.SPEED, hamstring.getEffect(player.getSkillLevel(hamstring)).getX()), hamstring, null, false);
                             monster.applyStatus(player, monsterStatusEffect, false, hamstring.getEffect(player.getSkillLevel(hamstring)).getY() * 1000);
                         }
                     }
-                    if (player.getBuffedValue(MapleBuffStat.BLIND) != null) {
+                    if (player.getBuffedValue(BuffStat.BLIND) != null) {
                         ISkill blind = SkillFactory.getSkill(Marksman.BLIND);
                         if (blind.getEffect(player.getSkillLevel(blind)).makeChanceResult()) {
                             MonsterStatusEffect monsterStatusEffect = new MonsterStatusEffect(Collections.singletonMap(MonsterStatus.ACC, blind.getEffect(player.getSkillLevel(blind)).getX()), blind, null, false);
@@ -273,7 +273,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     if (id == 121 || id == 122) {
                         for (int charge = 1211005; charge < 1211007; charge++) {
                             ISkill chargeSkill = SkillFactory.getSkill(charge);
-                            if (player.isBuffFrom(MapleBuffStat.WK_CHARGE, chargeSkill)) {
+                            if (player.isBuffFrom(BuffStat.WK_CHARGE, chargeSkill)) {
                                 final ElementalEffectiveness iceEffectiveness = monster.getEffectiveness(Element.ICE);
                                 if (totDamageToOneMonster > 0 && iceEffectiveness == ElementalEffectiveness.NORMAL || iceEffectiveness == ElementalEffectiveness.WEAK) {
                                     monster.applyStatus(player, new MonsterStatusEffect(Collections.singletonMap(MonsterStatus.FREEZE, 1), chargeSkill, null, false), false, chargeSkill.getEffect(player.getSkillLevel(chargeSkill)).getY() * 2000);
@@ -281,9 +281,9 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                                 break;
                             }
                         }
-                    } else if (player.getBuffedValue(MapleBuffStat.BODY_PRESSURE) != null || player.getBuffedValue(MapleBuffStat.COMBO_DRAIN) != null) {
+                    } else if (player.getBuffedValue(BuffStat.BODY_PRESSURE) != null || player.getBuffedValue(BuffStat.COMBO_DRAIN) != null) {
                         ISkill skill;
-                        if (player.getBuffedValue(MapleBuffStat.BODY_PRESSURE) != null) {
+                        if (player.getBuffedValue(BuffStat.BODY_PRESSURE) != null) {
                             skill = SkillFactory.getSkill(21101003);
                             final MapleStatEffect eff = skill.getEffect(player.getSkillLevel(skill));
 
@@ -291,10 +291,10 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                                 monster.applyStatus(player, new MonsterStatusEffect(Collections.singletonMap(MonsterStatus.NEUTRALISE, 1), skill, null, false), false, eff.getX() * 1000, false);
                             }
                         }
-                        if (player.getBuffedValue(MapleBuffStat.COMBO_DRAIN) != null) {
+                        if (player.getBuffedValue(BuffStat.COMBO_DRAIN) != null) {
                             skill = SkillFactory.getSkill(21100005);
                             player.setHp(player.getHp() + ((totDamage * skill.getEffect(player.getSkillLevel(skill)).getX()) / 100), true);
-                            player.updateSingleStat(MapleStat.HP, player.getHp());
+                            player.updateSingleStat(Stat.HP, player.getHp());
                         }
                     } else if (id == 412 || id == 422 || id == 1411) {
                         ISkill type = SkillFactory.getSkill(player.getJob().getId() == 412 ? 4120005 : (player.getJob().getId() == 1411 ? 14110004 : 4220005));
@@ -323,8 +323,8 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                             monster.applyStatus(player, new MonsterStatusEffect(attackEffect.getMonsterStati(), theSkill, null, false), attackEffect.isPoison(), attackEffect.getDuration());
                         }
                     }
-                    if (player.getJob().equals(MapleJob.LEGEND) || player.getJob().isA(MapleJob.ARAN4)) {
-                        byte comboLevel = (byte) (player.getJob().equals(MapleJob.LEGEND) ? 10 : player.getSkillLevel(Aran.COMBO_ABILITY));
+                    if (player.getJob().equals(Job.LEGEND) || player.getJob().isA(Job.ARAN4)) {
+                        byte comboLevel = (byte) (player.getJob().equals(Job.LEGEND) ? 10 : player.getSkillLevel(Aran.COMBO_ABILITY));
                         if (comboLevel > 0) {
                             final long currentTime = System.currentTimeMillis();
                             short combo = 0;
@@ -335,7 +335,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                                 combo = player.getCombo();
                                 if ((currentTime - player.getLastCombo()) > 3000 && combo > 0) {
                                     combo = 0;
-                                    player.cancelEffectFromBuffStat(MapleBuffStat.ARAN_COMBO);
+                                    player.cancelEffectFromBuffStat(BuffStat.ARAN_COMBO);
                                 }
                                 combo++;
                                 switch (combo) {

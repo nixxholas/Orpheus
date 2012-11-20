@@ -30,11 +30,11 @@ public class AranComboHandler extends AbstractPacketHandler {
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		/*
 		 * GameCharacter player = c.getPlayer(); if
-		 * (player.getJob().equals(MapleJob.LEGEND) ||
-		 * player.getJob().isA(MapleJob.ARAN4)) { final long currentTime =
+		 * (player.getJob().equals(Job.LEGEND) ||
+		 * player.getJob().isA(Job.ARAN4)) { final long currentTime =
 		 * System.currentTimeMillis(); short combo = player.getCombo(); if
 		 * ((currentTime - player.getLastCombo()) > 3000 && combo > 0) { combo =
-		 * 0; player.cancelEffectFromBuffStat(MapleBuffStat.ARAN_COMBO); }
+		 * 0; player.cancelEffectFromBuffStat(BuffStat.ARAN_COMBO); }
 		 * combo++; switch (combo) { case 10: case 20: case 30: case 40: case
 		 * 50: case 60: case 70: case 80: case 90: case 100:
 		 * SkillFactory.getSkill(21000000).getEffect(combo /

@@ -25,7 +25,7 @@ import client.BuddyList.BuddyAddResult;
 import client.BuddyList.BuddyOperation;
 import client.BuddylistEntry;
 import client.GameCharacter;
-import client.MapleFamily;
+import client.Family;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class World {
 	private AtomicInteger runningPartyId = new AtomicInteger();
 	private Map<Integer, MapleMessenger> messengers = new HashMap<Integer, MapleMessenger>();
 	private AtomicInteger runningMessengerId = new AtomicInteger();
-	private Map<Integer, MapleFamily> families = new LinkedHashMap<Integer, MapleFamily>();
+	private Map<Integer, Family> families = new LinkedHashMap<Integer, Family>();
 	private Map<Integer, MapleGuildSummary> gsStore = new HashMap<Integer, MapleGuildSummary>();
 	private PlayerStorage players = new PlayerStorage();
 
@@ -141,7 +141,7 @@ public class World {
 		return id;
 	}
 
-	public void addFamily(int id, MapleFamily f) {
+	public void addFamily(int id, Family f) {
 		synchronized (families) {
 			if (!families.containsKey(id)) {
 				families.put(id, f);
@@ -149,7 +149,7 @@ public class World {
 		}
 	}
 
-	public MapleFamily getFamily(int id) {
+	public Family getFamily(int id) {
 		synchronized (families) {
 			if (families.containsKey(id)) {
 				return families.get(id);

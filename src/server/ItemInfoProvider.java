@@ -34,8 +34,8 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
-import client.MapleJob;
-import client.MapleWeaponType;
+import client.Job;
+import client.WeaponType;
 import client.SkillFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -448,11 +448,11 @@ public class ItemInfoProvider {
 		return ret;
 	}
 
-	public MapleWeaponType getWeaponType(int itemId) {
+	public WeaponType getWeaponType(int itemId) {
 		int cat = (itemId / 10000) % 100;
-		MapleWeaponType[] type = {MapleWeaponType.SWORD1H, MapleWeaponType.AXE1H, MapleWeaponType.BLUNT1H, MapleWeaponType.DAGGER, MapleWeaponType.NOT_A_WEAPON, MapleWeaponType.NOT_A_WEAPON, MapleWeaponType.NOT_A_WEAPON, MapleWeaponType.WAND, MapleWeaponType.STAFF, MapleWeaponType.NOT_A_WEAPON, MapleWeaponType.SWORD2H, MapleWeaponType.AXE2H, MapleWeaponType.BLUNT2H, MapleWeaponType.SPEAR, MapleWeaponType.POLE_ARM, MapleWeaponType.BOW, MapleWeaponType.CROSSBOW, MapleWeaponType.CLAW, MapleWeaponType.KNUCKLE, MapleWeaponType.GUN};
+		WeaponType[] type = {WeaponType.SWORD1H, WeaponType.AXE1H, WeaponType.BLUNT1H, WeaponType.DAGGER, WeaponType.NOT_A_WEAPON, WeaponType.NOT_A_WEAPON, WeaponType.NOT_A_WEAPON, WeaponType.WAND, WeaponType.STAFF, WeaponType.NOT_A_WEAPON, WeaponType.SWORD2H, WeaponType.AXE2H, WeaponType.BLUNT2H, WeaponType.SPEAR, WeaponType.POLE_ARM, WeaponType.BOW, WeaponType.CROSSBOW, WeaponType.CLAW, WeaponType.KNUCKLE, WeaponType.GUN};
 		if (cat < 30 || cat > 49) {
-			return MapleWeaponType.NOT_A_WEAPON;
+			return WeaponType.NOT_A_WEAPON;
 		}
 		return type[cat - 30];
 	}
@@ -975,7 +975,7 @@ public class ItemInfoProvider {
 		if (inv.checked())
 			return items;
 		Collection<IItem> itemz = new LinkedList<IItem>();
-		if (chr.getJob() == MapleJob.SUPERGM || chr.getJob() == MapleJob.GM) {
+		if (chr.getJob() == Job.SUPERGM || chr.getJob() == Job.GM) {
 			for (IItem item : items) {
 				IEquip equip = (IEquip) item;
 				equip.wear(true);
@@ -993,7 +993,7 @@ public class ItemInfoProvider {
 		 * catch (SQLException ex) { }
 		 */
 		int tdex = chr.getDex(), tstr = chr.getStr(), tint = chr.getInt(), tluk = chr.getLuk(), fame = chr.getFame();
-		if (chr.getJob() != MapleJob.SUPERGM || chr.getJob() != MapleJob.GM) {
+		if (chr.getJob() != Job.SUPERGM || chr.getJob() != Job.GM) {
 			for (IItem item : inv.list()) {
 				IEquip equip = (IEquip) item;
 				tdex += equip.getDex();
@@ -1038,7 +1038,7 @@ public class ItemInfoProvider {
 	}
 
 	public boolean canWearEquipment(GameCharacter chr, Equip equip) {
-		if (chr.getJob() == MapleJob.SUPERGM || chr.getJob() == MapleJob.GM) {
+		if (chr.getJob() == Job.SUPERGM || chr.getJob() == Job.GM) {
 			equip.wear(true);
 			return true;
 		}

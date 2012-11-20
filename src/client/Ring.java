@@ -32,7 +32,7 @@ import tools.DatabaseConnection;
  * 
  * @author Danny
  */
-public class MapleRing implements Comparable<MapleRing> {
+public class Ring implements Comparable<Ring> {
 	private int ringId;
 	private int ringId2;
 	private int partnerId;
@@ -40,7 +40,7 @@ public class MapleRing implements Comparable<MapleRing> {
 	private String partnerName;
 	private boolean equipped = false;
 
-	public MapleRing(int id, int id2, int partnerId, int itemid, String partnername) {
+	public Ring(int id, int id2, int partnerId, int itemid, String partnername) {
 		this.ringId = id;
 		this.ringId2 = id2;
 		this.partnerId = partnerId;
@@ -48,15 +48,15 @@ public class MapleRing implements Comparable<MapleRing> {
 		this.partnerName = partnername;
 	}
 
-	public static MapleRing loadFromDb(int ringId) {
+	public static Ring loadFromDb(int ringId) {
 		try {
-			MapleRing ret = null;
+			Ring ret = null;
 			Connection con = DatabaseConnection.getConnection(); 
 			PreparedStatement ps = con.prepareStatement("SELECT * FROM `rings` WHERE `id` = ?"); 
 			ps.setInt(1, ringId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				ret = new MapleRing(ringId, rs.getInt("partnerRingId"), rs.getInt("partnerChrId"), rs.getInt("itemid"), rs.getString("partnerName"));
+				ret = new Ring(ringId, rs.getInt("partnerRingId"), rs.getInt("partnerChrId"), rs.getInt("itemid"), rs.getString("partnerName"));
 			}
 			rs.close();
 			ps.close();
@@ -143,8 +143,8 @@ public class MapleRing implements Comparable<MapleRing> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof MapleRing) {
-			if (((MapleRing) o).getRingId() == getRingId()) {
+		if (o instanceof Ring) {
+			if (((Ring) o).getRingId() == getRingId()) {
 				return true;
 			} else {
 				return false;
@@ -161,7 +161,7 @@ public class MapleRing implements Comparable<MapleRing> {
 	}
 
 	@Override
-	public int compareTo(MapleRing other) {
+	public int compareTo(Ring other) {
 		if (ringId < other.getRingId()) {
 			return -1;
 		} else if (ringId == other.getRingId()) {

@@ -39,7 +39,7 @@ import java.util.Calendar;
 import client.Equip;
 import client.IItem;
 import client.Item;
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
@@ -386,8 +386,8 @@ public class GameMap {
 					int mesos = Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum;
 
 					if (mesos > 0) {
-						if (chr.getBuffedValue(MapleBuffStat.MESOUP) != null) {
-							mesos = (int) (mesos * chr.getBuffedValue(MapleBuffStat.MESOUP).doubleValue() / 100.0);
+						if (chr.getBuffedValue(BuffStat.MESOUP) != null) {
+							mesos = (int) (mesos * chr.getBuffedValue(BuffStat.MESOUP).doubleValue() / 100.0);
 						}
 						spawnMesoDrop(mesos * chr.getMesoRate(), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
 					}
@@ -1227,9 +1227,9 @@ public class GameMap {
 			}
 			MapScriptManager.getInstance().getMapScript(chr.getClient(), onUserEnter, false);
 		}
-		if (FieldLimit.CANNOTUSEMOUNTS.check(fieldLimit) && chr.getBuffedValue(MapleBuffStat.MONSTER_RIDING) != null) {
-			chr.cancelEffectFromBuffStat(MapleBuffStat.MONSTER_RIDING);
-			chr.cancelBuffStats(MapleBuffStat.MONSTER_RIDING);
+		if (FieldLimit.CANNOTUSEMOUNTS.check(fieldLimit) && chr.getBuffedValue(BuffStat.MONSTER_RIDING) != null) {
+			chr.cancelEffectFromBuffStat(BuffStat.MONSTER_RIDING);
+			chr.cancelBuffStats(BuffStat.MONSTER_RIDING);
 		}
 		if (mapid == 923010000 && getMonsterById(9300102) == null) { // Kenta's
 																		// Mount
@@ -1284,7 +1284,7 @@ public class GameMap {
 		if (chr.getPlayerShop() != null) {
 			addMapObject(chr.getPlayerShop());
 		}
-		MapleStatEffect summonStat = chr.getStatForBuff(MapleBuffStat.SUMMON);
+		MapleStatEffect summonStat = chr.getStatForBuff(BuffStat.SUMMON);
 		if (summonStat != null) {
 			Summon summon = chr.getSummons().get(summonStat.getSourceId());
 			summon.setPosition(chr.getPosition());
@@ -1384,7 +1384,7 @@ public class GameMap {
 		chr.cancelMapTimeLimitTask();
 		for (Summon summon : chr.getSummons().values()) {
 			if (summon.isStationary()) {
-				chr.cancelBuffStats(MapleBuffStat.PUPPET);
+				chr.cancelBuffStats(BuffStat.PUPPET);
 			} else {
 				removeMapObject(summon);
 			}

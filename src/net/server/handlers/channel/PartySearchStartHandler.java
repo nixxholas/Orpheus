@@ -29,7 +29,7 @@ import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleJob;
+import client.Job;
 
 /**
  * 
@@ -77,7 +77,7 @@ public class PartySearchStartHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private static boolean isValidJob(MapleJob thejob, int jobs) {
+	private static boolean isValidJob(Job thejob, int jobs) {
 		int jobid = thejob.getId();
 		if (jobid == 0) {
 			return ((jobs & 2) > 0);

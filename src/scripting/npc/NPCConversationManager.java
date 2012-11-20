@@ -32,10 +32,10 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
-import client.MapleJob;
+import client.Job;
 import client.Pet;
-import client.MapleSkinColor;
-import client.MapleStat;
+import client.SkinColor;
+import client.Stat;
 import client.SkillFactory;
 import tools.Randomizer;
 import java.io.File;
@@ -215,19 +215,19 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
 	public void setHair(int hair) {
 		getPlayer().setHair(hair);
-		getPlayer().updateSingleStat(MapleStat.HAIR, hair);
+		getPlayer().updateSingleStat(Stat.HAIR, hair);
 		getPlayer().equipChanged();
 	}
 
 	public void setFace(int face) {
 		getPlayer().setFace(face);
-		getPlayer().updateSingleStat(MapleStat.FACE, face);
+		getPlayer().updateSingleStat(Stat.FACE, face);
 		getPlayer().equipChanged();
 	}
 
 	public void setSkin(int color) {
-		getPlayer().setSkinColor(MapleSkinColor.getById(color));
-		getPlayer().updateSingleStat(MapleStat.SKIN, color);
+		getPlayer().setSkinColor(SkinColor.getById(color));
+		getPlayer().updateSingleStat(Stat.SKIN, color);
 		getPlayer().equipChanged();
 	}
 
@@ -276,7 +276,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void changeJobById(int a) {
-		getPlayer().changeJob(MapleJob.getById(a));
+		getPlayer().changeJob(Job.getById(a));
 	}
 
 	public void addRandomItem(int id) {
@@ -284,8 +284,8 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		InventoryManipulator.addFromDrop(getClient(), i.randomizeStats((Equip) i.getEquipById(id)), true);
 	}
 
-	public MapleJob getJobName(int id) {
-		return MapleJob.getById(id);
+	public Job getJobName(int id) {
+		return Job.getById(id);
 	}
 
 	public MapleStatEffect getItemEffect(int itemId) {

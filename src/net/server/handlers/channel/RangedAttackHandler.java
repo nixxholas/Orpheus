@@ -22,13 +22,13 @@ package net.server.handlers.channel;
 
 import client.IItem;
 import client.ISkill;
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
-import client.MapleWeaponType;
+import client.WeaponType;
 import client.SkillFactory;
 import constants.ItemConstants;
 import constants.ServerConstants;
@@ -68,8 +68,8 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 			}
 		} else {
 			IItem weapon = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
-			MapleWeaponType type = ItemInfoProvider.getInstance().getWeaponType(weapon.getItemId());
-			if (type == MapleWeaponType.NOT_A_WEAPON) {
+			WeaponType type = ItemInfoProvider.getInstance().getWeaponType(weapon.getItemId());
+			if (type == WeaponType.NOT_A_WEAPON) {
 				return;
 			}
 			int projectile = 0;
@@ -82,7 +82,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 					c.announce(PacketCreator.skillCooldown(attack.skill, effect.getCooldown()));
 				}
 			}
-			boolean hasShadowPartner = player.getBuffedValue(MapleBuffStat.SHADOWPARTNER) != null;
+			boolean hasShadowPartner = player.getBuffedValue(BuffStat.SHADOWPARTNER) != null;
 			if (hasShadowPartner) {
 				bulletCount *= 2;
 			}
@@ -94,13 +94,13 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 					boolean bow = ItemConstants.isArrowForBow(id);
 					boolean cbow = ItemConstants.isArrowForCrossBow(id);
 					if (item.getQuantity() > (bulletCount == 1 ? 0 : bulletCount)) {
-						if (type == MapleWeaponType.CLAW && ItemConstants.isThrowingStar(id) && weapon.getItemId() != 1472063) {
+						if (type == WeaponType.CLAW && ItemConstants.isThrowingStar(id) && weapon.getItemId() != 1472063) {
 							if (((id == 2070007 || id == 2070018) && player.getLevel() < 70) || (id == 2070016 && player.getLevel() < 50)) {
 							} else {
 								projectile = id;
 								break;
 							}
-						} else if ((type == MapleWeaponType.GUN && ItemConstants.isBullet(id))) {
+						} else if ((type == WeaponType.GUN && ItemConstants.isBullet(id))) {
 							if (id == 2331000 && id == 2332000) {
 								if (player.getLevel() > 69) {
 									projectile = id;
@@ -110,15 +110,15 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 								projectile = id;
 								break;
 							}
-						} else if ((type == MapleWeaponType.BOW && bow) || (type == MapleWeaponType.CROSSBOW && cbow) || (weapon.getItemId() == 1472063 && (bow || cbow))) {
+						} else if ((type == WeaponType.BOW && bow) || (type == WeaponType.CROSSBOW && cbow) || (weapon.getItemId() == 1472063 && (bow || cbow))) {
 							projectile = id;
 							break;
 						}
 					}
 				}
 			}
-			boolean soulArrow = player.getBuffedValue(MapleBuffStat.SOULARROW) != null;
-			boolean shadowClaw = player.getBuffedValue(MapleBuffStat.SHADOW_CLAW) != null;
+			boolean soulArrow = player.getBuffedValue(BuffStat.SOULARROW) != null;
+			boolean shadowClaw = player.getBuffedValue(BuffStat.SHADOW_CLAW) != null;
 			if (!soulArrow && !shadowClaw && attack.skill != 11101004 && attack.skill != 15111007 && attack.skill != 14101006) {
 				byte bulletConsume = bulletCount;
 				if (effect != null && effect.getBulletConsume() != 0) {
@@ -183,9 +183,9 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 						}
 					}
 				}
-				if ((player.getSkillLevel(SkillFactory.getSkill(NightWalker.VANISH)) > 0 || player.getSkillLevel(SkillFactory.getSkill(WindArcher.WIND_WALK)) > 0) && player.getBuffedValue(MapleBuffStat.DARKSIGHT) != null && attack.numAttacked > 0 && player.getBuffSource(MapleBuffStat.DARKSIGHT) != 9101004) {
-					player.cancelEffectFromBuffStat(MapleBuffStat.DARKSIGHT);
-					player.cancelBuffStats(MapleBuffStat.DARKSIGHT);
+				if ((player.getSkillLevel(SkillFactory.getSkill(NightWalker.VANISH)) > 0 || player.getSkillLevel(SkillFactory.getSkill(WindArcher.WIND_WALK)) > 0) && player.getBuffedValue(BuffStat.DARKSIGHT) != null && attack.numAttacked > 0 && player.getBuffSource(BuffStat.DARKSIGHT) != 9101004) {
+					player.cancelEffectFromBuffStat(BuffStat.DARKSIGHT);
+					player.cancelBuffStats(BuffStat.DARKSIGHT);
 				}
 				applyAttack(attack, player, bulletCount);
 			}

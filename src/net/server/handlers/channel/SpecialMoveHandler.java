@@ -26,7 +26,7 @@ import client.ISkill;
 import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
-import client.MapleStat;
+import client.Stat;
 import client.SkillFactory;
 import constants.skills.Brawler;
 import constants.skills.Buccaneer;
@@ -110,10 +110,10 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 			MapleStatEffect ef = s.getEffect(chr.getSkillLevel(s));
 			int lose = chr.getMaxHp() / ef.getX();
 			chr.setHp(chr.getHp() - lose);
-			chr.updateSingleStat(MapleStat.HP, chr.getHp());
+			chr.updateSingleStat(Stat.HP, chr.getHp());
 			int gain = lose * (ef.getY() / 100);
 			chr.setMp(chr.getMp() + gain);
-			chr.updateSingleStat(MapleStat.MP, chr.getMp());
+			chr.updateSingleStat(Stat.MP, chr.getMp());
 		} else if (skillid % 10000000 == 1004) {
 			slea.readShort();
 		}

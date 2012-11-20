@@ -22,8 +22,8 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleJob;
-import client.MapleStat;
+import client.Job;
+import client.Stat;
 import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -38,7 +38,7 @@ public final class DistributeAPHandler extends AbstractPacketHandler {
 		if (c.getPlayer().getRemainingAp() > 0) {
 			if (addStat(c, num)) {
 				c.getPlayer().setRemainingAp(c.getPlayer().getRemainingAp() - 1);
-				c.getPlayer().updateSingleStat(MapleStat.AVAILABLEAP, c.getPlayer().getRemainingAp());
+				c.getPlayer().updateSingleStat(Stat.AVAILABLEAP, c.getPlayer().getRemainingAp());
 			}
 		}
 		c.announce(PacketCreator.enableActions());
@@ -85,18 +85,18 @@ public final class DistributeAPHandler extends AbstractPacketHandler {
 
 	static int addHP(GameClient c) {
 		GameCharacter player = c.getPlayer();
-		MapleJob job = player.getJob();
+		Job job = player.getJob();
 		int MaxHP = player.getMaxHp();
 		if (player.getHpMpApUsed() > 9999 || MaxHP >= 30000) {
 			return MaxHP;
 		}
-		if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
+		if (job.isA(Job.WARRIOR) || job.isA(Job.DAWNWARRIOR1) || job.isA(Job.ARAN1)) {
 			MaxHP += 20;
-		} else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
+		} else if (job.isA(Job.MAGICIAN) || job.isA(Job.BLAZEWIZARD1)) {
 			MaxHP += 6;
-		} else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1) || job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+		} else if (job.isA(Job.BOWMAN) || job.isA(Job.WINDARCHER1) || job.isA(Job.THIEF) || job.isA(Job.NIGHTWALKER1)) {
 			MaxHP += 16;
-		} else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
+		} else if (job.isA(Job.PIRATE) || job.isA(Job.THUNDERBREAKER1)) {
 			MaxHP += 18;
 		} else {
 			MaxHP += 8;
@@ -107,17 +107,17 @@ public final class DistributeAPHandler extends AbstractPacketHandler {
 	static int addMP(GameClient c) {
 		GameCharacter player = c.getPlayer();
 		int MaxMP = player.getMaxMp();
-		MapleJob job = player.getJob();
+		Job job = player.getJob();
 		if (player.getHpMpApUsed() > 9999 || player.getMaxMp() >= 30000) {
 			return MaxMP;
 		}
-		if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
+		if (job.isA(Job.WARRIOR) || job.isA(Job.DAWNWARRIOR1) || job.isA(Job.ARAN1)) {
 			MaxMP += 2;
-		} else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
+		} else if (job.isA(Job.MAGICIAN) || job.isA(Job.BLAZEWIZARD1)) {
 			MaxMP += 18;
-		} else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1) || job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+		} else if (job.isA(Job.BOWMAN) || job.isA(Job.WINDARCHER1) || job.isA(Job.THIEF) || job.isA(Job.NIGHTWALKER1)) {
 			MaxMP += 10;
-		} else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
+		} else if (job.isA(Job.PIRATE) || job.isA(Job.THUNDERBREAKER1)) {
 			MaxMP += 14;
 		} else {
 			MaxMP += 6;
@@ -129,13 +129,13 @@ public final class DistributeAPHandler extends AbstractPacketHandler {
 		MaxHP = Math.min(30000, MaxHP);
 		player.setHpMpApUsed(player.getHpMpApUsed() + 1);
 		player.setMaxHp(MaxHP);
-		player.updateSingleStat(MapleStat.MAXHP, MaxHP);
+		player.updateSingleStat(Stat.MAXHP, MaxHP);
 	}
 
 	static void addMP(GameCharacter player, int MaxMP) {
 		MaxMP = Math.min(30000, MaxMP);
 		player.setHpMpApUsed(player.getHpMpApUsed() + 1);
 		player.setMaxMp(MaxMP);
-		player.updateSingleStat(MapleStat.MAXMP, MaxMP);
+		player.updateSingleStat(Stat.MAXMP, MaxMP);
 	}
 }

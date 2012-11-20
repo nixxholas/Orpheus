@@ -24,7 +24,7 @@ import java.util.Calendar;
 import client.IItem;
 import client.GameCharacter;
 import client.InventoryType;
-import client.MapleJob;
+import client.Job;
 import client.Pet;
 import client.QuestStatus;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class QuestRequirement {
 				return true;
 			case JOB:
 				for (MapleData jobEntry : getData().getChildren()) {
-					if (c.getJob().equals(MapleJob.getById(MapleDataTool.getInt(jobEntry))) || c.isGM()) {
+					if (c.getJob().equals(Job.getById(MapleDataTool.getInt(jobEntry))) || c.isGM()) {
 						return true;
 					}
 				}

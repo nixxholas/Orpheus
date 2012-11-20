@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleStat;
+import client.Stat;
 import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -42,7 +42,7 @@ public final class GiveFameHandler extends AbstractPacketHandler {
 			case OK:
 				if (Math.abs(target.getFame() + famechange) < 30001) {
 					target.addFame(famechange);
-					target.updateSingleStat(MapleStat.FAME, target.getFame());
+					target.updateSingleStat(Stat.FAME, target.getFame());
 				}
 				if (!player.isGM()) {
 					player.hasGivenFame(target);

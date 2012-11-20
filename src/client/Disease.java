@@ -1,9 +1,6 @@
 /*
  	OrpheusMS: MapleStory Private Server based on OdinMS
-    Copyright (C) 2012 Aaron Weiss <aaron@deviant-core.net>
-    				Patrick Huy <patrick.huy@frz.cc>
-					Matthias Butz <matze@odinms.de>
-					Jan Christian Meyer <vimes@odinms.de>
+    Copyright (C) 2012 Aaron Weiss
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -18,19 +15,30 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.server;
+package client;
 
-import client.Disease;
+import net.LongValueHolder;
 
-public class PlayerDiseaseValueHolder {// Thanks Celino
+public enum Disease implements LongValueHolder {
+    NULL(0x0),
+    SLOW(0x1),
+    SEDUCE(0x80),
+    FISHABLE(0x100),
+    CONFUSE(0x80000),
+    STUN(0x2000000000000L),
+    POISON(0x4000000000000L),
+    SEAL(0x8000000000000L),
+    DARKNESS(0x10000000000000L),
+    WEAKEN(0x4000000000000000L),
+    CURSE(0x8000000000000000L);
+    private long i;
 
-	public long startTime;
-	public long length;
-	public Disease disease;
+    private Disease(long i) {
+        this.i = i;
+    }
 
-	public PlayerDiseaseValueHolder(final Disease disease, final long startTime, final long length) {
-		this.disease = disease;
-		this.startTime = startTime;
-		this.length = length;
-	}
+    @Override
+    public long getValue() {
+        return i;
+    }
 }

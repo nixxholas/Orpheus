@@ -20,7 +20,7 @@
  */
 package net.server.handlers.channel;
 
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import java.net.InetAddress;
 import client.GameClient;
@@ -71,11 +71,11 @@ public final class ChangeChannelHandler extends AbstractPacketHandler {
 		chr.cancelMagicDoor();
 		chr.saveCooldowns();
 		// Canceling mounts? Noty
-		if (chr.getBuffedValue(MapleBuffStat.PUPPET) != null) {
-			chr.cancelEffectFromBuffStat(MapleBuffStat.PUPPET);
+		if (chr.getBuffedValue(BuffStat.PUPPET) != null) {
+			chr.cancelEffectFromBuffStat(BuffStat.PUPPET);
 		}
-		if (chr.getBuffedValue(MapleBuffStat.COMBO) != null) {
-			chr.cancelEffectFromBuffStat(MapleBuffStat.COMBO);
+		if (chr.getBuffedValue(BuffStat.COMBO) != null) {
+			chr.cancelEffectFromBuffStat(BuffStat.COMBO);
 		}
 		chr.getInventory(InventoryType.EQUIPPED).checked(false); // test
 		chr.getMap().removePlayer(chr);

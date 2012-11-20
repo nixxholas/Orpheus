@@ -26,7 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleFamily;
+import client.Family;
 import client.InventoryType;
 import client.SkillFactory;
 import gm.server.GMServer;
@@ -167,9 +167,9 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.updateBuddylist(player.getBuddylist().getBuddies()));
 		c.announce(PacketCreator.loadFamily(player));
 		if (player.getFamilyId() > 0) {
-			MapleFamily f = world.getFamily(player.getFamilyId());
+			Family f = world.getFamily(player.getFamilyId());
 			if (f == null) {
-				f = new MapleFamily(player.getId());
+				f = new Family(player.getId());
 				world.addFamily(player.getFamilyId(), f);
 			}
 			player.setFamily(f);

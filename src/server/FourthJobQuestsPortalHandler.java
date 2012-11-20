@@ -21,7 +21,7 @@
 package server;
 
 import client.GameCharacter;
-import client.MapleJob;
+import client.Job;
 import net.StringValueHolder;
 import net.server.MaplePartyCharacter;
 import tools.PacketCreator;
@@ -77,7 +77,7 @@ public class FourthJobQuestsPortalHandler {
 
 	private static boolean checkRush(GameCharacter c) {
 		for (MaplePartyCharacter mpc : c.getParty().getMembers()) {
-			if (mpc.getJobId() % 100 != 2 || !mpc.getJob().isA(MapleJob.WARRIOR)) {
+			if (mpc.getJobId() % 100 != 2 || !mpc.getJob().isA(Job.WARRIOR)) {
 				return false;
 			}
 		}

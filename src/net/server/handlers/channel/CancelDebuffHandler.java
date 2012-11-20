@@ -29,15 +29,15 @@ public final class CancelDebuffHandler extends AbstractPacketHandler {// TIP: BA
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		/*
-		 * List<MapleDisease> diseases = c.getPlayer().getDiseases();
-		 * List<MapleDisease> diseases_ = new ArrayList<MapleDisease>(); for
-		 * (MapleDisease disease : diseases) { List<MapleDisease> disease_ = new
-		 * ArrayList<MapleDisease>(); disease_.add(disease);
+		 * List<Disease> diseases = c.getPlayer().getDiseases();
+		 * List<Disease> diseases_ = new ArrayList<Disease>(); for
+		 * (Disease disease : diseases) { List<Disease> disease_ = new
+		 * ArrayList<Disease>(); disease_.add(disease);
 		 * diseases_.add(disease);
 		 * c.announce(PacketCreator.cancelDebuff(disease_));
 		 * c.getPlayer().getMap().broadcastMessage(c.getPlayer(),
 		 * PacketCreator.cancelForeignDebuff(c.getPlayer().getId(),
-		 * disease_), false); } for (MapleDisease disease : diseases_) {
+		 * disease_), false); } for (Disease disease : diseases_) {
 		 * c.getPlayer().removeDisease(disease); }
 		 */
 	}

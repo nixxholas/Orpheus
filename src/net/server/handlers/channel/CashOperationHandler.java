@@ -26,7 +26,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
-import client.MapleRing;
+import client.Ring;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
@@ -214,13 +214,13 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 						return;
 					}
 					IEquip item = (IEquip) ring.toItem();
-					int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
+					int ringid = Ring.createRing(ring.getItemId(), chr, partner);
 					item.setRingId(ringid);
 					cs.addToInventory(item);
 					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(toCharge, -ring.getPrice());
-					chr.addCrushRing(MapleRing.loadFromDb(ringid));
+					chr.addCrushRing(Ring.loadFromDb(ringid));
 					try {
 						chr.sendNote(partner.getName(), text, (byte) 1);
 					} catch (SQLException ex) {
@@ -256,13 +256,13 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					chr.dropMessage("The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel.");
 				} else {
 					IEquip item = (IEquip) ring.toItem();
-					int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
+					int ringid = Ring.createRing(ring.getItemId(), chr, partner);
 					item.setRingId(ringid);
 					cs.addToInventory(item);
 					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(payment, -ring.getPrice());
-					chr.addFriendshipRing(MapleRing.loadFromDb(ringid));
+					chr.addFriendshipRing(Ring.loadFromDb(ringid));
 					try {
 						chr.sendNote(partner.getName(), text, (byte) 1);
 					} catch (SQLException ex) {

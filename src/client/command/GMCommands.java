@@ -49,8 +49,8 @@ import client.Item;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
-import client.MapleJob;
-import client.MapleStat;
+import client.Job;
+import client.Stat;
 import client.SkillFactory;
 
 /**
@@ -78,10 +78,10 @@ public class GMCommands extends EnumeratedCommands {
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						victim.setRemainingAp(Integer.parseInt(sub[2]));
-						victim.updateSingleStat(MapleStat.AVAILABLEAP, Integer.parseInt(sub[2]));
+						victim.updateSingleStat(Stat.AVAILABLEAP, Integer.parseInt(sub[2]));
 					} else if (sub.length == 2) {
 						chr.setRemainingAp(Integer.parseInt(sub[1]));
-						chr.updateSingleStat(MapleStat.AVAILABLEAP, Integer.parseInt(sub[1]));
+						chr.updateSingleStat(Stat.AVAILABLEAP, Integer.parseInt(sub[1]));
 					} else {
 						chr.message("Usage: !ap number || !ap playerName number");
 					}
@@ -177,10 +177,10 @@ public class GMCommands extends EnumeratedCommands {
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						victim.setFame(Integer.parseInt(sub[2]));
-						victim.updateSingleStat(MapleStat.FAME, Integer.parseInt(sub[2]));
+						victim.updateSingleStat(Stat.FAME, Integer.parseInt(sub[2]));
 					} else if (sub.length == 2) {
 						chr.setFame(Integer.parseInt(sub[1]));
-						chr.updateSingleStat(MapleStat.FAME, Integer.parseInt(sub[1]));
+						chr.updateSingleStat(Stat.FAME, Integer.parseInt(sub[1]));
 					} else {
 						chr.message("Usage: !fame number || !fame playerName number");
 					}
@@ -216,10 +216,10 @@ public class GMCommands extends EnumeratedCommands {
 				case job:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
-						victim.changeJob(MapleJob.getById(Integer.parseInt(sub[2])));
+						victim.changeJob(Job.getById(Integer.parseInt(sub[2])));
 						victim.equipChanged();
 					} else if (sub.length == 2) {
-						chr.changeJob(MapleJob.getById(Integer.parseInt(sub[1])));
+						chr.changeJob(Job.getById(Integer.parseInt(sub[1])));
 						chr.equipChanged();
 					} else {
 						chr.message("Usage: !job number || !job playerName number");
@@ -247,13 +247,13 @@ public class GMCommands extends EnumeratedCommands {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						victim.setLevel(Integer.parseInt(sub[2]));
 						victim.setExp(0);
-						victim.updateSingleStat(MapleStat.LEVEL, Integer.parseInt(sub[2]));
-						victim.updateSingleStat(MapleStat.EXP, 0);
+						victim.updateSingleStat(Stat.LEVEL, Integer.parseInt(sub[2]));
+						victim.updateSingleStat(Stat.EXP, 0);
 					} else if (sub.length == 2) {
 						chr.setLevel(Integer.parseInt(sub[1]));
 						chr.setExp(0);
-						chr.updateSingleStat(MapleStat.LEVEL, Integer.parseInt(sub[1]));
-						chr.updateSingleStat(MapleStat.EXP, 0);
+						chr.updateSingleStat(Stat.LEVEL, Integer.parseInt(sub[1]));
+						chr.updateSingleStat(Stat.EXP, 0);
 					} else {
 						chr.message("Usage: !level number || !level playerName number");
 					}
@@ -315,10 +315,10 @@ public class GMCommands extends EnumeratedCommands {
 						victim.setFame(Short.MAX_VALUE);
 						victim.setMaxHp(30000);
 						victim.setMaxMp(30000);
-						victim.updateSingleStat(MapleStat.LEVEL, 255);
-						victim.updateSingleStat(MapleStat.FAME, Short.MAX_VALUE);
-						victim.updateSingleStat(MapleStat.MAXHP, 30000);
-						victim.updateSingleStat(MapleStat.MAXMP, 30000);
+						victim.updateSingleStat(Stat.LEVEL, 255);
+						victim.updateSingleStat(Stat.FAME, Short.MAX_VALUE);
+						victim.updateSingleStat(Stat.MAXHP, 30000);
+						victim.updateSingleStat(Stat.MAXMP, 30000);
 					} else if (sub.length == 1) {
 						final String[] s = {"setall", String.valueOf(Short.MAX_VALUE)};
 						execute(c, s, heading);
@@ -326,10 +326,10 @@ public class GMCommands extends EnumeratedCommands {
 						chr.setFame(Short.MAX_VALUE);
 						chr.setMaxHp(30000);
 						chr.setMaxMp(30000);
-						chr.updateSingleStat(MapleStat.LEVEL, 255);
-						chr.updateSingleStat(MapleStat.FAME, Short.MAX_VALUE);
-						chr.updateSingleStat(MapleStat.MAXHP, 30000);
-						chr.updateSingleStat(MapleStat.MAXMP, 30000);
+						chr.updateSingleStat(Stat.LEVEL, 255);
+						chr.updateSingleStat(Stat.FAME, Short.MAX_VALUE);
+						chr.updateSingleStat(Stat.MAXHP, 30000);
+						chr.updateSingleStat(Stat.MAXMP, 30000);
 					} else {
 						chr.message("Usage: !maxstats || !maxstats playerName");
 					}
@@ -380,20 +380,20 @@ public class GMCommands extends EnumeratedCommands {
 						victim.setDex(x);
 						victim.setInt(x);
 						victim.setLuk(x);
-						victim.updateSingleStat(MapleStat.STR, x);
-						victim.updateSingleStat(MapleStat.DEX, x);
-						victim.updateSingleStat(MapleStat.INT, x);
-						victim.updateSingleStat(MapleStat.LUK, x);
+						victim.updateSingleStat(Stat.STR, x);
+						victim.updateSingleStat(Stat.DEX, x);
+						victim.updateSingleStat(Stat.INT, x);
+						victim.updateSingleStat(Stat.LUK, x);
 					} else if (sub.length == 2) {
 						final int x = Short.parseShort(sub[1]);
 						chr.setStr(x);
 						chr.setDex(x);
 						chr.setInt(x);
 						chr.setLuk(x);
-						chr.updateSingleStat(MapleStat.STR, x);
-						chr.updateSingleStat(MapleStat.DEX, x);
-						chr.updateSingleStat(MapleStat.INT, x);
-						chr.updateSingleStat(MapleStat.LUK, x);
+						chr.updateSingleStat(Stat.STR, x);
+						chr.updateSingleStat(Stat.DEX, x);
+						chr.updateSingleStat(Stat.INT, x);
+						chr.updateSingleStat(Stat.LUK, x);
 					} else {
 						chr.message("Usage: !setall number || !setall playerName number");
 					}
@@ -409,10 +409,10 @@ public class GMCommands extends EnumeratedCommands {
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						victim.setRemainingSp(Integer.parseInt(sub[2]));
-						victim.updateSingleStat(MapleStat.AVAILABLESP, Integer.parseInt(sub[2]));
+						victim.updateSingleStat(Stat.AVAILABLESP, Integer.parseInt(sub[2]));
 					} else if (sub.length == 2) {
 						chr.setRemainingSp(Integer.parseInt(sub[1]));
-						chr.updateSingleStat(MapleStat.AVAILABLESP, Integer.parseInt(sub[1]));
+						chr.updateSingleStat(Stat.AVAILABLESP, Integer.parseInt(sub[1]));
 					} else {
 						chr.message("Usage: !ap number || !ap playerName number");
 					}

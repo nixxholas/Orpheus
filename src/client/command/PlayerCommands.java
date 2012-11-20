@@ -38,9 +38,9 @@ import tools.Pair;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
-import client.MapleJob;
+import client.Job;
 import client.MapleRank;
-import client.MapleStat;
+import client.Stat;
 import client.MapleStock;
 
 /**
@@ -167,7 +167,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					break;
 				case emo:
 					chr.setHp(0);
-					chr.updateSingleStat(MapleStat.HP, 0);
+					chr.updateSingleStat(Stat.HP, 0);
 					break;
 				case fmnpc:
 					NPCScriptManager.getInstance().start(c, 9220020, null, null);
@@ -195,7 +195,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					if (chr.getMeso() >= cost && chr.getHp() < chr.getMaxHp()) {
 						chr.gainMeso(-cost, false);
 						chr.setHp(chr.getMaxHp());
-						chr.updateSingleStat(MapleStat.HP, chr.getMaxHp());
+						chr.updateSingleStat(Stat.HP, chr.getMaxHp());
 						chr.message("You spent " + cost + " mesos on healing.");
 					} else if (chr.getHp() >= chr.getMaxHp()) {
 						chr.message("You already have full health!");
@@ -256,9 +256,9 @@ public class PlayerCommands extends EnumeratedCommands {
 						while (rs.next()) {
 							if (ServerConstants.ENABLE_HARDCORE_MODE && rs.getInt("hardcore") == 1) {
 								String tag = (rs.getInt("dead") == 1) ? "HD" : "H";
-								chr.dropMessage(i + ". " + rs.getString("name") + " [" + tag + "] (Level " + rs.getInt("level") + " " + MapleJob.getById(rs.getInt("job")).toString() + ") - " + rs.getInt("rebirths") + " Rebirths.");
+								chr.dropMessage(i + ". " + rs.getString("name") + " [" + tag + "] (Level " + rs.getInt("level") + " " + Job.getById(rs.getInt("job")).toString() + ") - " + rs.getInt("rebirths") + " Rebirths.");
 							} else {
-								chr.dropMessage(i + ". " + rs.getString("name") + " (Level " + rs.getInt("level") + " " + MapleJob.getById(rs.getInt("job")).toString() + ") - " + rs.getInt("rebirths") + " Rebirths.");
+								chr.dropMessage(i + ". " + rs.getString("name") + " (Level " + rs.getInt("level") + " " + Job.getById(rs.getInt("job")).toString() + ") - " + rs.getInt("rebirths") + " Rebirths.");
 							}
 							i++;
 						}
@@ -320,31 +320,31 @@ public class PlayerCommands extends EnumeratedCommands {
 						String stat = sub[1];
 						int amount = Integer.parseInt(sub[2]);
 						int currentValue = 0;
-						MapleStat currentStat = MapleStat.AVAILABLEAP;
+						Stat currentStat = Stat.AVAILABLEAP;
 						if (stat.equalsIgnoreCase("str") || stat.equalsIgnoreCase("strength")) {
 							currentValue = chr.getStr();
-							currentStat = MapleStat.STR;
+							currentStat = Stat.STR;
 						} else if (stat.equalsIgnoreCase("dex") || stat.equalsIgnoreCase("dexterity")) {
 							currentValue = chr.getDex();
-							currentStat = MapleStat.DEX;
+							currentStat = Stat.DEX;
 						} else if (stat.equalsIgnoreCase("int") || stat.equalsIgnoreCase("intellect")) {
 							currentValue = chr.getInt();
-							currentStat = MapleStat.INT;
+							currentStat = Stat.INT;
 						} else if (stat.equalsIgnoreCase("luk") || stat.equalsIgnoreCase("luck")) {
 							currentValue = chr.getLuk();
-							currentStat = MapleStat.LUK;
+							currentStat = Stat.LUK;
 						} else {
 							chr.message("Stat: ");
 							chr.message(" To use this command, follow it with a stat and the amount by which to change it.");
 							chr.message(" Example: @stat dex 5");
 						}
-						if (currentStat != MapleStat.AVAILABLEAP) {
+						if (currentStat != Stat.AVAILABLEAP) {
 							if ((amount > 0 && amount <= chr.getRemainingAp()) || (amount < 0 && amount + chr.getRemainingAp() <= Short.MAX_VALUE)) {
 								if ((amount + currentValue <= Short.MAX_VALUE) && (amount + currentValue >= 4)) {
 									chr.setStat(currentStat, currentValue + amount);
 				                    chr.setRemainingAp(chr.getRemainingAp() - amount);
 				                    chr.updateSingleStat(currentStat, currentValue);
-				                    chr.updateSingleStat(MapleStat.AVAILABLEAP, chr.getRemainingAp());
+				                    chr.updateSingleStat(Stat.AVAILABLEAP, chr.getRemainingAp());
 				                    chr.message(((amount > 0) ? "Raised " : "Lowered ") + currentStat.toString() + " by " + Math.abs(amount) + ".");
 								} else if (amount + currentValue > Short.MAX_VALUE) {
 									chr.message("That would put " + currentStat.toString() + " over the maximum of " + Short.MAX_VALUE + "!");
@@ -358,7 +358,7 @@ public class PlayerCommands extends EnumeratedCommands {
 							}
 							// Let's just make sure everything is up-to-date.
 		                    chr.updateSingleStat(currentStat, currentValue);
-		                    chr.updateSingleStat(MapleStat.AVAILABLEAP, chr.getRemainingAp());
+		                    chr.updateSingleStat(Stat.AVAILABLEAP, chr.getRemainingAp());
 						} else {
 							chr.message("Stat: ");
 							chr.message(" To use this command, follow it with a stat and the amount by which to change it.");

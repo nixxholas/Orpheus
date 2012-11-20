@@ -30,10 +30,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleJob;
+import client.Job;
 import client.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
@@ -267,7 +267,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 		if (attacker.getHp() > 0) {
 			int personalExp = exp;
 			if (exp > 0) {
-				Integer holySymbol = attacker.getBuffedValue(MapleBuffStat.HOLY_SYMBOL);
+				Integer holySymbol = attacker.getBuffedValue(BuffStat.HOLY_SYMBOL);
 				if (holySymbol != null) {
 					if (numExpSharers == 1) {
 						personalExp *= 1.0 + (holySymbol.doubleValue() / 500.0);
@@ -559,7 +559,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 			status.setValue(MonsterStatus.POISON, Integer.valueOf(poisonDamage));
 			status.setDamageSchedule(timerManager.register(new DamageTask(poisonDamage, from, status, cancelTask, 0), 1000, 1000));
 		} else if (venom) {
-			if (from.getJob() == MapleJob.NIGHTLORD || from.getJob() == MapleJob.SHADOWER || from.getJob().isA(MapleJob.NIGHTWALKER3)) {
+			if (from.getJob() == Job.NIGHTLORD || from.getJob() == Job.SHADOWER || from.getJob().isA(Job.NIGHTWALKER3)) {
 				int poisonLevel = 0, matk = 0, id = from.getJob().getId();
 				int skill = (id == 412 ? 4120005 : (id == 422 ? 4220005 : 14110004));
 				poisonLevel = from.getSkillLevel(SkillFactory.getSkill(skill));

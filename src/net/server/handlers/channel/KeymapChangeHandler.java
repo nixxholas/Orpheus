@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.ISkill;
 import client.GameClient;
-import client.MapleKeyBinding;
+import client.KeyBinding;
 import client.SkillFactory;
 import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -42,7 +42,7 @@ public final class KeymapChangeHandler extends AbstractPacketHandler {
 				if (skill != null && c.getPlayer().getSkillLevel(skill) < 1) {
 					continue;
 				}
-				c.getPlayer().changeKeybinding(key, new MapleKeyBinding(type, action));
+				c.getPlayer().changeKeybinding(key, new KeyBinding(type, action));
 			}
 		}
 	}

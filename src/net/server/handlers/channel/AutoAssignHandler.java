@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleStat;
+import client.Stat;
 import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -49,38 +49,38 @@ public class AutoAssignHandler extends AbstractPacketHandler {
 				return;
 			}
 			total += tempVal;
-			extras += gainStatByType(chr, MapleStat.getBy5ByteEncoding(type), tempVal);
+			extras += gainStatByType(chr, Stat.getBy5ByteEncoding(type), tempVal);
 		}
 		int remainingAp = (chr.getRemainingAp() - total) + extras;
 		chr.setRemainingAp(remainingAp);
-		chr.updateSingleStat(MapleStat.AVAILABLEAP, remainingAp);
+		chr.updateSingleStat(Stat.AVAILABLEAP, remainingAp);
 		c.announce(PacketCreator.enableActions());
 	}
 
-	private int gainStatByType(GameCharacter chr, MapleStat type, int gain) {
+	private int gainStatByType(GameCharacter chr, Stat type, int gain) {
 		int newVal = 0;
-		if (type.equals(MapleStat.STR)) {
+		if (type.equals(Stat.STR)) {
 			newVal = chr.getStr() + gain;
 			if (newVal > 999) {
 				chr.setStr(999);
 			} else {
 				chr.setStr(newVal);
 			}
-		} else if (type.equals(MapleStat.INT)) {
+		} else if (type.equals(Stat.INT)) {
 			newVal = chr.getInt() + gain;
 			if (newVal > 999) {
 				chr.setInt(999);
 			} else {
 				chr.setInt(newVal);
 			}
-		} else if (type.equals(MapleStat.LUK)) {
+		} else if (type.equals(Stat.LUK)) {
 			newVal = chr.getLuk() + gain;
 			if (newVal > 999) {
 				chr.setLuk(999);
 			} else {
 				chr.setLuk(newVal);
 			}
-		} else if (type.equals(MapleStat.DEX)) {
+		} else if (type.equals(Stat.DEX)) {
 			newVal = chr.getDex() + gain;
 			if (newVal > 999) {
 				chr.setDex(999);

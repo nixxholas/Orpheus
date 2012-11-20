@@ -39,20 +39,20 @@ import client.ISkill;
 import client.Item;
 import client.ItemFactory;
 import client.ItemInventoryEntry;
-import client.MapleBuffStat;
+import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleDiseaseEntry;
-import client.MapleFamilyEntry;
+import client.DiseaseEntry;
+import client.FamilyEntry;
 import client.Inventory;
 import client.InventoryType;
-import client.MapleKeyBinding;
-import client.MapleMount;
+import client.KeyBinding;
+import client.Mount;
 import client.Pet;
 import client.QuestStatus;
-import client.MapleRing;
-import client.MapleStat;
-import client.MapleStatDelta;
+import client.Ring;
+import client.Stat;
+import client.StatDelta;
 import client.SkillMacro;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
@@ -112,7 +112,7 @@ import tools.data.output.PacketWriter;
 public class PacketCreator {
 
 	private final static byte[] CHAR_INFO_MAGIC = new byte[] {(byte) 0xff, (byte) 0xc9, (byte) 0x9a, 0x3b};
-	public static final List<MapleStatDelta> EMPTY_STATUPDATE = Collections.emptyList();
+	public static final List<StatDelta> EMPTY_STATUPDATE = Collections.emptyList();
 	private final static byte[] ITEM_MAGIC = new byte[] {(byte) 0x80, 0x05};
 	private final static int ITEM_YEAR2000 = -1085019342;
 	private final static long REAL_YEAR2000 = 946681229830L;
@@ -975,7 +975,7 @@ public class PacketCreator {
 	 *            The stats to update.
 	 * @return The stat update packet.
 	 */
-	public static GamePacket updatePlayerStats(List<MapleStatDelta> stats) {
+	public static GamePacket updatePlayerStats(List<StatDelta> stats) {
 		return updatePlayerStats(stats, false);
 	}
 
@@ -988,20 +988,20 @@ public class PacketCreator {
 	 *            Result of an item reaction(?)
 	 * @return The stat update packet.
 	 */
-	public static GamePacket updatePlayerStats(List<MapleStatDelta> stats, boolean itemReaction) {
+	public static GamePacket updatePlayerStats(List<StatDelta> stats, boolean itemReaction) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.UPDATE_STATS.getValue());
 		w.write(itemReaction ? 1 : 0);
 		int updateMask = 0;
-		for (MapleStatDelta statupdate : stats) {
+		for (StatDelta statupdate : stats) {
 			updateMask |= statupdate.stat.getValue();
 		}
-		List<MapleStatDelta> mystats = stats;
+		List<StatDelta> mystats = stats;
 		if (mystats.size() > 1) {
-			Collections.sort(mystats, new Comparator<MapleStatDelta>() {
+			Collections.sort(mystats, new Comparator<StatDelta>() {
 
 				@Override
-				public int compare(MapleStatDelta o1, MapleStatDelta o2) {
+				public int compare(StatDelta o1, StatDelta o2) {
 					int val1 = o1.stat.getValue();
 					int val2 = o2.stat.getValue();
 					return (val1 < val2 ? -1 : (val1 == val2 ? 0 : 1));
@@ -1009,7 +1009,7 @@ public class PacketCreator {
 			});
 		}
 		w.writeInt(updateMask);
-		for (MapleStatDelta statupdate : mystats) {
+		for (StatDelta statupdate : mystats) {
 			if (statupdate.stat.getValue() >= 1) {
 				if (statupdate.stat.getValue() == 0x1) {
 					w.writeShort(statupdate.delta);
@@ -1853,36 +1853,36 @@ public class PacketCreator {
 		w.writeShort(0); // v83
 		w.write(0xFC);
 		w.write(1);
-		if (chr.getBuffedValue(MapleBuffStat.MORPH) != null) {
+		if (chr.getBuffedValue(BuffStat.MORPH) != null) {
 			w.writeInt(2);
 		} else {
 			w.writeInt(0);
 		}
 		long buffmask = 0;
 		Integer buffvalue = null;
-		if (chr.getBuffedValue(MapleBuffStat.DARKSIGHT) != null && !chr.isHidden()) {
-			buffmask |= MapleBuffStat.DARKSIGHT.getValue();
+		if (chr.getBuffedValue(BuffStat.DARKSIGHT) != null && !chr.isHidden()) {
+			buffmask |= BuffStat.DARKSIGHT.getValue();
 		}
-		if (chr.getBuffedValue(MapleBuffStat.COMBO) != null) {
-			buffmask |= MapleBuffStat.COMBO.getValue();
-			buffvalue = Integer.valueOf(chr.getBuffedValue(MapleBuffStat.COMBO).intValue());
+		if (chr.getBuffedValue(BuffStat.COMBO) != null) {
+			buffmask |= BuffStat.COMBO.getValue();
+			buffvalue = Integer.valueOf(chr.getBuffedValue(BuffStat.COMBO).intValue());
 		}
-		if (chr.getBuffedValue(MapleBuffStat.SHADOWPARTNER) != null) {
-			buffmask |= MapleBuffStat.SHADOWPARTNER.getValue();
+		if (chr.getBuffedValue(BuffStat.SHADOWPARTNER) != null) {
+			buffmask |= BuffStat.SHADOWPARTNER.getValue();
 		}
-		if (chr.getBuffedValue(MapleBuffStat.SOULARROW) != null) {
-			buffmask |= MapleBuffStat.SOULARROW.getValue();
+		if (chr.getBuffedValue(BuffStat.SOULARROW) != null) {
+			buffmask |= BuffStat.SOULARROW.getValue();
 		}
-		if (chr.getBuffedValue(MapleBuffStat.MORPH) != null) {
-			buffvalue = Integer.valueOf(chr.getBuffedValue(MapleBuffStat.MORPH).intValue());
+		if (chr.getBuffedValue(BuffStat.MORPH) != null) {
+			buffvalue = Integer.valueOf(chr.getBuffedValue(BuffStat.MORPH).intValue());
 		}
-		if (chr.getBuffedValue(MapleBuffStat.ENERGY_CHARGE) != null) {
-			buffmask |= MapleBuffStat.ENERGY_CHARGE.getValue();
-			buffvalue = Integer.valueOf(chr.getBuffedValue(MapleBuffStat.ENERGY_CHARGE).intValue());
+		if (chr.getBuffedValue(BuffStat.ENERGY_CHARGE) != null) {
+			buffmask |= BuffStat.ENERGY_CHARGE.getValue();
+			buffvalue = Integer.valueOf(chr.getBuffedValue(BuffStat.ENERGY_CHARGE).intValue());
 		}// AREN'T THESE
 		w.writeInt((int) ((buffmask >> 32) & 0xffffffffL));
 		if (buffvalue != null) {
-			if (chr.getBuffedValue(MapleBuffStat.MORPH) != null) { // TEST
+			if (chr.getBuffedValue(BuffStat.MORPH) != null) { // TEST
 				w.writeShort(buffvalue);
 			} else {
 				w.write(buffvalue.byteValue());
@@ -1899,7 +1899,7 @@ public class PacketCreator {
 		w.writeShort(0);
 		w.write(0);
 		IItem mount = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -18);
-		if (chr.getBuffedValue(MapleBuffStat.MONSTER_RIDING) != null && mount != null) {
+		if (chr.getBuffedValue(BuffStat.MONSTER_RIDING) != null && mount != null) {
 			w.writeInt(mount.getItemId());
 			w.writeInt(1004);
 		} else {
@@ -1970,14 +1970,14 @@ public class PacketCreator {
 	}
 
 	private static void addRingLook(PacketWriter w, GameCharacter chr, boolean crush) {
-		List<MapleRing> rings;
+		List<Ring> rings;
 		if (crush) {
 			rings = chr.getCrushRings();
 		} else {
 			rings = chr.getFriendshipRings();
 		}
 		boolean yes = false;
-		for (MapleRing ring : rings) {
+		for (Ring ring : rings) {
 			if (ring.equipped()) {
 				if (yes == false) {
 					yes = true;
@@ -2601,7 +2601,7 @@ public class PacketCreator {
 
 	/**
 	 * It is important that statups is in the correct order (see decleration
-	 * order in MapleBuffStat) since this method doesn't do automagical
+	 * order in BuffStat) since this method doesn't do automagical
 	 * reordering.
 	 * 
 	 * @param buffid
@@ -2619,7 +2619,7 @@ public class PacketCreator {
 		boolean special = false;
 		writeLongMask(w, statups);
 		for (MapleBuffStatDelta statup : statups) {
-			if (statup.stat.equals(MapleBuffStat.MONSTER_RIDING) || statup.stat.equals(MapleBuffStat.HOMING_BEACON)) {
+			if (statup.stat.equals(BuffStat.MONSTER_RIDING) || statup.stat.equals(BuffStat.HOMING_BEACON)) {
 				special = true;
 			}
 			w.writeShort(statup.delta);
@@ -2643,12 +2643,12 @@ public class PacketCreator {
 	 * @param mount
 	 * @return
 	 */
-	public static GamePacket showMonsterRiding(int cid, MapleMount mount) { 
+	public static GamePacket showMonsterRiding(int cid, Mount mount) { 
 		// Gtfo with this, this is just giveForeignBuff
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_FOREIGN_BUFF.getValue());
 		w.writeInt(cid);
-		w.writeLong(MapleBuffStat.MONSTER_RIDING.getValue()); // Thanks?
+		w.writeLong(BuffStat.MONSTER_RIDING.getValue()); // Thanks?
 		w.writeLong(0);
 		w.writeShort(0);
 		w.writeInt(mount.getItemId());
@@ -2738,21 +2738,21 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	private static <E extends LongValueHolder> long getLongMaskD(List<MapleDiseaseEntry> entries) {
+	private static <E extends LongValueHolder> long getLongMaskD(List<DiseaseEntry> entries) {
 		long mask = 0;
-		for (MapleDiseaseEntry entry : entries) {
+		for (DiseaseEntry entry : entries) {
 			mask |= entry.disease.getValue();
 		}
 		return mask;
 	}
 
-	public static GamePacket giveDebuff(List<MapleDiseaseEntry> entries, MobSkill skill) {
+	public static GamePacket giveDebuff(List<DiseaseEntry> entries, MobSkill skill) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_BUFF.getValue());
 		long mask = getLongMaskD(entries);
 		w.writeLong(0);
 		w.writeLong(mask);
-		for (MapleDiseaseEntry entry : entries) {
+		for (DiseaseEntry entry : entries) {
 			w.writeShort(entry.level);
 			w.writeShort(skill.getSkillId());
 			w.writeShort(skill.getSkillLevel());
@@ -2764,7 +2764,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket giveForeignDebuff(int cid, List<MapleDiseaseEntry> entries, MobSkill skill) {
+	public static GamePacket giveForeignDebuff(int cid, List<DiseaseEntry> entries, MobSkill skill) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_FOREIGN_BUFF.getValue());
 		w.writeInt(cid);
@@ -2802,7 +2802,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket cancelForeignBuff(int cid, List<MapleBuffStat> statups) {
+	public static GamePacket cancelForeignBuff(int cid, List<BuffStat> statups) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.CANCEL_FOREIGN_BUFF.getValue());
 		w.writeInt(cid);
@@ -2810,7 +2810,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket cancelBuff(List<MapleBuffStat> statups) {
+	public static GamePacket cancelBuff(List<BuffStat> statups) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.CANCEL_BUFF.getValue());
 		writeLongMaskFromList(w, statups);
@@ -2832,10 +2832,10 @@ public class PacketCreator {
 		w.writeLong(secondmask);
 	}
 
-	private static void writeLongMaskFromList(PacketWriter w, List<MapleBuffStat> statups) {
+	private static void writeLongMaskFromList(PacketWriter w, List<BuffStat> statups) {
 		long firstmask = 0;
 		long secondmask = 0;
-		for (MapleBuffStat statup : statups) {
+		for (BuffStat statup : statups) {
 			if (statup.isFirst()) {
 				firstmask |= statup.getValue();
 			} else {
@@ -3182,12 +3182,12 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getKeymap(Map<Integer, MapleKeyBinding> keybindings) {
+	public static GamePacket getKeymap(Map<Integer, KeyBinding> keybindings) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.KEYMAP.getValue());
 		w.write(0);
 		for (int x = 0; x < 90; x++) {
-			MapleKeyBinding binding = keybindings.get(Integer.valueOf(x));
+			KeyBinding binding = keybindings.get(Integer.valueOf(x));
 			if (binding != null) {
 				w.write(binding.getType());
 				w.writeInt(binding.getAction());
@@ -4406,7 +4406,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.UPDATE_STATS.getValue());
 		int mask = 0;
-		mask |= MapleStat.PET.getValue();
+		mask |= Stat.PET.getValue();
 		w.write(0);
 		w.writeInt(mask);
 		Pet[] pets = chr.getPets();
@@ -4574,7 +4574,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket updateMount(int charid, MapleMount mount, boolean levelup) {
+	public static GamePacket updateMount(int charid, Mount mount, boolean levelup) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.UPDATE_MOUNT.getValue());
 		w.writeInt(charid);
@@ -5211,7 +5211,7 @@ public class PacketCreator {
 		// This ain't correct
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_BUFF.getValue());
-		w.writeLong(MapleBuffStat.SPEED_INFUSION.getValue());
+		w.writeLong(BuffStat.SPEED_INFUSION.getValue());
 		w.writeLong(0);
 		w.writeShort(speed);
 		w.writeInt(buffid);
@@ -5259,7 +5259,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GIVE_FOREIGN_BUFF.getValue());
 		w.writeInt(cid);
-		w.writeLong(MapleBuffStat.SPEED_INFUSION.getValue());
+		w.writeLong(BuffStat.SPEED_INFUSION.getValue());
 		w.writeLong(0);
 		w.writeShort(0);
 		w.writeInt(speed);
@@ -5603,7 +5603,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getFamilyInfo(MapleFamilyEntry f) {
+	public static GamePacket getFamilyInfo(FamilyEntry f) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.OPEN_FAMILY.getValue());
 		w.writeInt(f.getReputation()); // cur rep left
@@ -5619,7 +5619,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket showPedigree(int chrid, Map<Integer, MapleFamilyEntry> members) {
+	public static GamePacket showPedigree(int chrid, Map<Integer, FamilyEntry> members) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SHOW_PEDIGREE.getValue());
 		// Hmmm xD
@@ -6568,7 +6568,7 @@ public class PacketCreator {
 
 	private static void addRingInfo(PacketWriter w, GameCharacter chr) {
 		w.writeShort(chr.getCrushRings().size());
-		for (MapleRing ring : chr.getCrushRings()) {
+		for (Ring ring : chr.getCrushRings()) {
 			w.writeInt(ring.getPartnerChrId());
 			w.writeAsciiString(getRightPaddedStr(ring.getPartnerName(), '\0', 13));
 			w.writeInt(ring.getRingId());
@@ -6577,7 +6577,7 @@ public class PacketCreator {
 			w.writeInt(0);
 		}
 		w.writeShort(chr.getFriendshipRings().size());
-		for (MapleRing ring : chr.getFriendshipRings()) {
+		for (Ring ring : chr.getFriendshipRings()) {
 			w.writeInt(ring.getPartnerChrId());
 			w.writeAsciiString(getRightPaddedStr(ring.getPartnerName(), '\0', 13));
 			w.writeInt(ring.getRingId());

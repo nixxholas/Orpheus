@@ -30,10 +30,10 @@ import client.ISkill;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
-import client.MapleJob;
+import client.Job;
 import client.Pet;
-import client.MapleStat;
-import client.MapleStatDelta;
+import client.Stat;
+import client.StatDelta;
 import client.SkillFactory;
 import constants.ItemConstants;
 import constants.skills.Aran;
@@ -98,7 +98,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 					}
 				}
 			} else {
-				List<MapleStatDelta> statupdate = new ArrayList<MapleStatDelta>(2);
+				List<StatDelta> statupdate = new ArrayList<StatDelta>(2);
 				int APTo = slea.readInt();
 				int APFrom = slea.readInt();
 				switch (APFrom) {
@@ -168,32 +168,32 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 						}
 						player.setHp(player.getHp() + hplose);
 						player.setMaxHp(player.getMaxHp() + hplose);
-						statupdate.add(new MapleStatDelta(MapleStat.HP, player.getHp()));
-						statupdate.add(new MapleStatDelta(MapleStat.MAXHP, player.getMaxHp()));
+						statupdate.add(new StatDelta(Stat.HP, player.getHp()));
+						statupdate.add(new StatDelta(Stat.MAXHP, player.getMaxHp()));
 						break;
 					case 8192: // MP
 						int mp = player.getMp();
 						int level = player.getLevel();
-						MapleJob job = player.getJob();
+						Job job = player.getJob();
 						boolean canWash = true;
-						if (job.isA(MapleJob.SPEARMAN) && mp < 4 * level + 156) {
+						if (job.isA(Job.SPEARMAN) && mp < 4 * level + 156) {
 							canWash = false;
-						} else if (job.isA(MapleJob.FIGHTER) && mp < 4 * level + 56) {
+						} else if (job.isA(Job.FIGHTER) && mp < 4 * level + 56) {
 							canWash = false;
-						} else if (job.isA(MapleJob.THIEF) && job.getId() % 100 > 0 && mp < level * 14 - 4) {
+						} else if (job.isA(Job.THIEF) && job.getId() % 100 > 0 && mp < level * 14 - 4) {
 							canWash = false;
 						} else if (mp < level * 14 + 148) {
 							canWash = false;
 						}
 						if (canWash) {
 							int minmp = 0;
-							if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
+							if (job.isA(Job.WARRIOR) || job.isA(Job.DAWNWARRIOR1) || job.isA(Job.ARAN1)) {
 								minmp += 4;
-							} else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
+							} else if (job.isA(Job.MAGICIAN) || job.isA(Job.BLAZEWIZARD1)) {
 								minmp += 36;
-							} else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1) || job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+							} else if (job.isA(Job.BOWMAN) || job.isA(Job.WINDARCHER1) || job.isA(Job.THIEF) || job.isA(Job.NIGHTWALKER1)) {
 								minmp += 12;
-							} else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
+							} else if (job.isA(Job.PIRATE) || job.isA(Job.THUNDERBREAKER1)) {
 								minmp += 16;
 							} else {
 								minmp += 8;
@@ -201,8 +201,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 
 							player.setMp(player.getMp() - minmp);
 							player.setMaxMp(player.getMaxMp() - minmp);
-							statupdate.add(new MapleStatDelta(MapleStat.MP, player.getMp()));
-							statupdate.add(new MapleStatDelta(MapleStat.MAXMP, player.getMaxMp()));
+							statupdate.add(new StatDelta(Stat.MP, player.getMp()));
+							statupdate.add(new StatDelta(Stat.MAXMP, player.getMaxMp()));
 							break;
 						}
 					default:

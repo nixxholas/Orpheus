@@ -22,7 +22,7 @@ package net.server;
 
 import java.awt.Point;
 import java.io.Serializable;
-import client.MapleJob;
+import client.Job;
 import client.GameCharacter;
 
 public class MaplePartyCharacter implements Serializable {
@@ -37,7 +37,7 @@ public class MaplePartyCharacter implements Serializable {
 	private int doorTarget = 999999999;
 	private Point doorPosition = new Point(0, 0);
 	private boolean online;
-	private MapleJob job;
+	private Job job;
 
 	public MaplePartyCharacter(GameCharacter character) {
 		this.name = character.getName();
@@ -60,7 +60,7 @@ public class MaplePartyCharacter implements Serializable {
 		this.name = "";
 	}
 
-	public MapleJob getJob() {
+	public Job getJob() {
 		return job;
 	}
 

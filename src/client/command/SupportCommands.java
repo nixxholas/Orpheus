@@ -34,7 +34,7 @@ import net.server.Channel;
 import net.server.Server;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleJob;
+import client.Job;
 import client.Pet;
 import client.MapleRank;
 
@@ -99,7 +99,7 @@ public class SupportCommands extends EnumeratedCommands {
 					break;
 				case job:
 					if (sub.length >= 2) {
-						chr.changeJob(MapleJob.getById(Integer.parseInt(sub[1])));
+						chr.changeJob(Job.getById(Integer.parseInt(sub[1])));
 						chr.equipChanged();
 					} else {
 						chr.message("Usage: !job number");

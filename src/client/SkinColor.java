@@ -17,28 +17,24 @@
  */
 package client;
 
-import net.LongValueHolder;
+public enum SkinColor {
+	NORMAL(0), DARK(1), BLACK(2), PALE(3), BLUE(4), GREEN(5), WHITE(9), PINK(10);
+	final int id;
 
-public enum MapleDisease implements LongValueHolder {
-    NULL(0x0),
-    SLOW(0x1),
-    SEDUCE(0x80),
-    FISHABLE(0x100),
-    CONFUSE(0x80000),
-    STUN(0x2000000000000L),
-    POISON(0x4000000000000L),
-    SEAL(0x8000000000000L),
-    DARKNESS(0x10000000000000L),
-    WEAKEN(0x4000000000000000L),
-    CURSE(0x8000000000000000L);
-    private long i;
+	private SkinColor(int id) {
+		this.id = id;
+	}
 
-    private MapleDisease(long i) {
-        this.i = i;
-    }
+	public int getId() {
+		return id;
+	}
 
-    @Override
-    public long getValue() {
-        return i;
-    }
+	public static SkinColor getById(int id) {
+		for (SkinColor l : SkinColor.values()) {
+			if (l.getId() == id) {
+				return l;
+			}
+		}
+		return null;
+	}
 }

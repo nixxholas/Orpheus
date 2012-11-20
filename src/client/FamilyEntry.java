@@ -17,7 +17,7 @@
  */
 package client;
 
-public class MapleFamilyEntry {
+public class FamilyEntry {
 	private int familyId;
 	private int rank, reputation, totalReputation, todaysRep, totalJuniors,
 			juniors, chrid;

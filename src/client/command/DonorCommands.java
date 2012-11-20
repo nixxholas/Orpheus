@@ -34,7 +34,7 @@ import tools.PacketCreator;
 import net.server.Channel;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleStat;
+import client.Stat;
 
 /**
  * @author Aaron Weiss
@@ -61,17 +61,17 @@ public class DonorCommands extends EnumeratedCommands {
 					chr.setMaxHp(30000);
 					chr.setMp(30000);
 					chr.setMaxMp(30000);
-					chr.updateSingleStat(MapleStat.HP, 30000);
-					chr.updateSingleStat(MapleStat.MAXHP, 30000);
-					chr.updateSingleStat(MapleStat.MP, 30000);
-					chr.updateSingleStat(MapleStat.MAXMP, 30000);
+					chr.updateSingleStat(Stat.HP, 30000);
+					chr.updateSingleStat(Stat.MAXHP, 30000);
+					chr.updateSingleStat(Stat.MP, 30000);
+					chr.updateSingleStat(Stat.MAXMP, 30000);
 					chr.message("Who's awesome? You're awesome!");
 					break;
 				case heal:
 					chr.setHp(chr.getMaxHp());
 					chr.setMp(chr.getMaxMp());
-					chr.updateSingleStat(MapleStat.HP, chr.getMaxHp());
-					chr.updateSingleStat(MapleStat.MP, chr.getMaxMp());
+					chr.updateSingleStat(Stat.HP, chr.getMaxHp());
+					chr.updateSingleStat(Stat.MP, chr.getMaxMp());
 					chr.message("Healed for free. Thanks for your donation!");
 					break;
 				case help:

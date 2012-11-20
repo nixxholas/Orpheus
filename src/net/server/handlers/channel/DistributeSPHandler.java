@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.ISkill;
 import client.GameCharacter;
 import client.GameClient;
-import client.MapleStat;
+import client.Stat;
 import client.SkillFactory;
 import constants.skills.Aran;
 import net.AbstractPacketHandler;
@@ -52,7 +52,7 @@ public final class DistributeSPHandler extends AbstractPacketHandler {
 			if (!isBeginnerSkill) {
 				player.setRemainingSp(player.getRemainingSp() - 1);
 			}
-			player.updateSingleStat(MapleStat.AVAILABLESP, player.getRemainingSp());
+			player.updateSingleStat(Stat.AVAILABLESP, player.getRemainingSp());
 			player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
 			if (skillid == Aran.FULL_SWING) {
 				ISkill hidden1 = SkillFactory.getSkill(Aran.HIDDEN_FULL_DOUBLE);

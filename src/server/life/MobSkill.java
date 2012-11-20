@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import client.GameCharacter;
-import client.MapleDisease;
+import client.Disease;
 import client.status.MonsterStatus;
 import java.util.LinkedList;
 import java.util.Map;
@@ -102,7 +102,7 @@ public class MobSkill {
 	}
 
 	public void applyEffect(GameCharacter player, MapleMonster monster, boolean skill) {
-		MapleDisease disease = null;
+		Disease disease = null;
 		Map<MonsterStatus, Integer> stats = new ArrayMap<MonsterStatus, Integer>();
 		List<Integer> reflection = new LinkedList<Integer>();
 		switch (skillId) {
@@ -138,25 +138,25 @@ public class MobSkill {
 				}
 				break;
 			case 120:
-				disease = MapleDisease.SEAL;
+				disease = Disease.SEAL;
 				break;
 			case 121:
-				disease = MapleDisease.DARKNESS;
+				disease = Disease.DARKNESS;
 				break;
 			case 122:
-				disease = MapleDisease.WEAKEN;
+				disease = Disease.WEAKEN;
 				break;
 			case 123:
-				disease = MapleDisease.STUN;
+				disease = Disease.STUN;
 				break;
 			case 124:
-				disease = MapleDisease.CURSE;
+				disease = Disease.CURSE;
 				break;
 			case 125:
-				disease = MapleDisease.POISON;
+				disease = Disease.POISON;
 				break;
 			case 126: // Slow
-				disease = MapleDisease.SLOW;
+				disease = Disease.SLOW;
 				break;
 			case 127:
 				if (lt != null && rb != null && skill) {
@@ -168,7 +168,7 @@ public class MobSkill {
 				}
 				break;
 			case 128: // Seduce
-				disease = MapleDisease.SEDUCE;
+				disease = Disease.SEDUCE;
 				break;
 			case 129: // Banish
 				if (lt != null && rb != null && skill) {
@@ -183,7 +183,7 @@ public class MobSkill {
 				monster.getMap().spawnMist(new Mist(calculateBoundingBox(monster.getPosition(), true), monster, this), x * 10, false, false);
 				break;
 			case 132:
-				disease = MapleDisease.CONFUSE;
+				disease = Disease.CONFUSE;
 				break;
 			case 133: // zombify
 				break;
@@ -282,9 +282,9 @@ public class MobSkill {
 				int i = 0;
 				for (GameCharacter character : getPlayersInRange(monster, player)) {
 					if (!character.isActiveBuffedValue(2321005)) {
-						if (disease.equals(MapleDisease.SEDUCE)) {
+						if (disease.equals(Disease.SEDUCE)) {
 							if (i < 10) {
-								character.giveDebuff(MapleDisease.SEDUCE, this);
+								character.giveDebuff(Disease.SEDUCE, this);
 								i++;
 							}
 						} else {
