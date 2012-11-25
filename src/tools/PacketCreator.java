@@ -1069,7 +1069,7 @@ public class PacketCreator {
 		w.writeInt(townId);
 		w.writeInt(targetId);
 		if (pos != null) {
-			w.writePos(pos);
+			w.writeVector(pos);
 		}
 		return w.getPacket();
 	}
@@ -1089,7 +1089,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.SPAWN_DOOR.getValue());
 		w.writeAsByte(isTown);
 		w.writeInt(oid);
-		w.writePos(pos);
+		w.writeVector(pos);
 		return w.getPacket();
 	}
 
@@ -1133,7 +1133,7 @@ public class PacketCreator {
 		w.writeInt(summon.getSkill());
 		w.writeAsByte(0x0A); // v83
 		w.writeAsByte(summon.getSkillLevel());
-		w.writePos(summon.getPosition());
+		w.writeVector(summon.getPosition());
 		w.write0(3);
 		w.writeAsByte(summon.getMovementType().getValue()); // 0 = don't move, 1 =
 															// follow (4th mage
@@ -1488,7 +1488,7 @@ public class PacketCreator {
 		w.write0(15);
 		w.writeAsByte(0x88);
 		w.write0(6);
-		w.writePos(life.getPosition());
+		w.writeVector(life.getPosition());
 		w.writeAsByte(life.getStance());
 		w.writeAsShort(0); // Origin FH //life.getStartFh()
 		w.writeAsShort(life.getFh());
@@ -1526,7 +1526,7 @@ public class PacketCreator {
 		w.write0(15);
 		w.writeAsByte(0x88);
 		w.write0(6);
-		w.writePos(life.getPosition());
+		w.writeVector(life.getPosition());
 		w.writeAsByte(life.getStance());
 		w.writeAsShort(0);// life.getStartFh()
 		w.writeAsShort(life.getFh());
@@ -1557,7 +1557,7 @@ public class PacketCreator {
 		w.write0(15);
 		w.writeAsByte(0x88);
 		w.write0(6);
-		w.writePos(life.getPosition());
+		w.writeVector(life.getPosition());
 		w.writeAsByte(life.getStance());
 		w.writeAsShort(0);// life.getStartFh()
 		w.writeAsShort(life.getFh());
@@ -1806,11 +1806,11 @@ public class PacketCreator {
 		w.writeAsByte(drop.getDropType()); // 0 = timeout for non-owner, 1 =
 											// timeout for non-owner's party, 2
 											// = FFA, 3 = explosive/FFA
-		w.writePos(dropto);
+		w.writeVector(dropto);
 		w.writeInt(drop.getDropType() == 0 ? drop.getOwner() : 0); // test
 
 		if (mod != 2) {
-			w.writePos(dropfrom);
+			w.writeVector(dropfrom);
 			w.writeAsShort(0);// Fh?
 		}
 		if (drop.getMeso() == 0) {
@@ -1921,7 +1921,7 @@ public class PacketCreator {
 		w.writeInt(chr.getInventory(InventoryType.CASH).countById(5110000));
 		w.writeInt(chr.getItemEffect());
 		w.writeInt(chr.getChair());
-		w.writePos(chr.getPosition());
+		w.writeVector(chr.getPosition());
 		w.writeAsByte(chr.getStance());
 		w.writeAsShort(0);// chr.getFh()
 		w.writeAsByte(0);
@@ -2069,7 +2069,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.MOVE_SUMMON.getValue());
 		w.writeInt(cid);
 		w.writeInt(oid);
-		w.writePos(startPos);
+		w.writeVector(startPos);
 		serializeMovementList(w, moves);
 		return w.getPacket();
 	}
@@ -2085,7 +2085,7 @@ public class PacketCreator {
 		w.writeAsByte(skill_2);
 		w.writeAsByte(skill_3);
 		w.writeAsByte(skill_4);
-		w.writePos(startPos);
+		w.writeVector(startPos);
 		serializeMovementList(w, moves);
 		return w.getPacket();
 	}
@@ -3548,7 +3548,7 @@ public class PacketCreator {
 		w.writeAsShort(0x23);
 		w.writeInt(townId);
 		w.writeInt(targetId);
-		w.writePos(position);
+		w.writeVector(position);
 		return w.getPacket();
 	}
 
@@ -3801,7 +3801,7 @@ public class PacketCreator {
 		w.writeInt(reactor.getObjectId());
 		w.writeInt(reactor.getId());
 		w.writeAsByte(reactor.getState());
-		w.writePos(pos);
+		w.writeVector(pos);
 		w.writeAsShort(0);
 		w.writeAsByte(0);
 		return w.getPacket();
@@ -3813,7 +3813,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.REACTOR_HIT.getValue());
 		w.writeInt(reactor.getObjectId());
 		w.writeAsByte(reactor.getState());
-		w.writePos(pos);
+		w.writeVector(pos);
 		w.writeAsShort(stance);
 		w.writeAsByte(0);
 		w.writeAsByte(5); // frame delay, set to 5 since there doesn't appear to
@@ -3827,7 +3827,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.REACTOR_DESTROY.getValue());
 		w.writeInt(reactor.getObjectId());
 		w.writeAsByte(reactor.getState());
-		w.writePos(pos);
+		w.writeVector(pos);
 		return w.getPacket();
 	}
 
@@ -4320,7 +4320,7 @@ public class PacketCreator {
 		w.writeLengthString(pet.getName());
 		w.writeInt(pet.getUniqueId());
 		w.writeInt(0);
-		w.writePos(pet.getPos());
+		w.writeVector(pet.getPos());
 		w.writeAsByte(pet.getStance());
 		w.writeInt(pet.getFh());
 	}

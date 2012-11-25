@@ -107,5 +107,5 @@ public interface LittleEndianWriter {
 	 * @param s
 	 *            The Point position to write.
 	 */
-	void writePos(Point s);
+	void writeVector(Point s);
 }

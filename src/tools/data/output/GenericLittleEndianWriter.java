@@ -190,7 +190,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 *            The Point position to write.
 	 */
 	@Override
-	public void writePos(Point s) {
+	public void writeVector(Point s) {
 		writeAsShort(s.x);
 		writeAsShort(s.y);
 	}
