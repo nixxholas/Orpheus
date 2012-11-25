@@ -23,6 +23,8 @@ package tools.data.output;
 import java.awt.Point;
 import java.nio.charset.Charset;
 
+import tools.StringUtil;
+
 /**
  * Provides a generic writer of a little-endian sequence of bytes.
  * 
@@ -135,8 +137,14 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 *            The ASCII string to write.
 	 */
 	@Override
-	public void writeAsciiString(String s) {
+	public void writeString(String s) {
 		write(s.getBytes(ASCII));
+	}
+	
+	@Override
+	public void writePaddedString(String s, int padLength) {
+		final String padded = StringUtil.getRightPaddedStr(s, '\0', padLength);
+		this.writeString(padded);
 	}
 
 	/**
@@ -146,9 +154,9 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 *            The ASCII string to use maple-convention to write.
 	 */
 	@Override
-	public void writeMapleAsciiString(String s) {
+	public void writeLengthString(String s) {
 		writeShort((short) s.length());
-		writeAsciiString(s);
+		writeString(s);
 	}
 
 	/**
@@ -158,8 +166,8 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 *            The ASCII string to write.
 	 */
 	@Override
-	public void writeNullTerminatedAsciiString(String s) {
-		writeAsciiString(s);
+	public void writeNullTerminatedString(String s) {
+		writeString(s);
 		write(0);
 	}
 

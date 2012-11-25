@@ -137,7 +137,7 @@ public class PacketCreator {
 
 	private static void addCharStats(PacketWriter w, GameCharacter chr) {
 		w.writeInt(chr.getId()); // character id
-		w.writeAsciiString(StringUtil.getRightPaddedStr(chr.getName(), '\0', 13));
+		w.writePaddedString(chr.getName(), 13);
 		w.write(chr.getGender()); // gender (0 = male, 1 = female)
 		w.write(chr.getSkinColor().getId()); // skin color
 		w.writeInt(chr.getFace()); // face
@@ -192,7 +192,7 @@ public class PacketCreator {
 			w.write(0);
 		} else {
 			w.write(1);
-			w.writeMapleAsciiString(chr.getLinkedName());
+			w.writeLengthString(chr.getLinkedName());
 		}
 
 		w.writeInt(chr.getMeso());
@@ -280,10 +280,10 @@ public class PacketCreator {
 		w.writeShort(chr.getStartedQuestsSize());
 		for (QuestStatus q : chr.getStartedQuests()) {
 			w.writeShort(q.getQuest().getId());
-			w.writeMapleAsciiString(q.getQuestData());
+			w.writeLengthString(q.getQuestData());
 			if (q.getQuest().getInfoNumber() > 0) {
 				w.writeShort(q.getQuest().getInfoNumber());
-				w.writeMapleAsciiString(Integer.toString(q.getMedalProgress()));
+				w.writeLengthString(Integer.toString(q.getMedalProgress()));
 			}
 		}
 		List<QuestStatus> completed = chr.getCompletedQuests();
@@ -348,7 +348,7 @@ public class PacketCreator {
 		addExpirationTime(w, item.getExpiration());
 		if (isPet) {
 			Pet pet = item.getPet();
-			w.writeAsciiString(StringUtil.getRightPaddedStr(pet.getName(), '\0', 13));
+			w.writePaddedString(pet.getName(), 13);
 			w.write(pet.getLevel());
 			w.writeShort(pet.getCloseness());
 			w.write(pet.getFullness());
@@ -361,7 +361,7 @@ public class PacketCreator {
 		}
 		if (equip == null) {
 			w.writeShort(item.getQuantity());
-			w.writeMapleAsciiString(item.getOwner());
+			w.writeLengthString(item.getOwner());
 			w.writeShort(item.getFlag()); // flag
 
 			if (ItemConstants.isRechargable(item.getItemId())) {
@@ -387,7 +387,7 @@ public class PacketCreator {
 		w.writeShort(equip.getHands()); // hands
 		w.writeShort(equip.getSpeed()); // speed
 		w.writeShort(equip.getJump()); // jump
-		w.writeMapleAsciiString(equip.getOwner()); // owner name
+		w.writeLengthString(equip.getOwner()); // owner name
 		w.writeShort(equip.getFlag()); // Item Flags
 
 		if (isCash) {
@@ -493,7 +493,7 @@ public class PacketCreator {
 		w.write(new byte[] {(byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
 		w.writeLong(getKoreanTimestamp(System.currentTimeMillis()));
 		w.writeInt(0);
-		w.writeMapleAsciiString("http://maplefags.com");
+		w.writeLengthString("http://maplefags.com");
 		return w.getPacket();
 	}
 
@@ -609,14 +609,14 @@ public class PacketCreator {
 		w.writeInt(duration);
 		w.write(4); // Hmmm
 		w.write(reason);
-		w.writeMapleAsciiString(reasoning);
+		w.writeLengthString(reasoning);
 		return w.getPacket();
 	}
 
 	public static GamePacket sendPolice(String text) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MAPLE_ADMIN.getValue());
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		return w.getPacket();
 	}
 
@@ -662,7 +662,7 @@ public class PacketCreator {
 		w.write((c.gmLevel() > 0 ? 1 : 0)); // admin byte
 		w.write(0);
 		w.write(0);
-		w.writeMapleAsciiString(c.getAccountName());
+		w.writeLengthString(c.getAccountName());
 		w.write(0);
 		w.write(0); // isquietbanned
 		w.writeLong(0);
@@ -738,9 +738,9 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SERVERLIST.getValue());
 		w.write(serverId);
-		w.writeMapleAsciiString(serverName);
+		w.writeLengthString(serverName);
 		w.write(flag);
-		w.writeMapleAsciiString(eventmsg);
+		w.writeLengthString(eventmsg);
 		w.write(0x64); // rate modifier, don't ask O.O!
 		w.write(0x0); // event xp * 2.6 O.O!
 		w.write(0x64); // rate modifier, don't ask O.O!
@@ -762,7 +762,7 @@ public class PacketCreator {
 			} else {
 				load = ServerConstants.CHANNEL_LOAD;
 			}
-			w.writeMapleAsciiString(serverName + "-" + i);
+			w.writeLengthString(serverName + "-" + i);
 			w.writeInt(load);
 			w.write(1);
 			w.writeShort(i - 1);
@@ -916,17 +916,17 @@ public class PacketCreator {
 		w.write(partner != null ? 3 : 1);
 		w.write(type); // Heart = 2 Star = 1 Normal = 0
 		addCharLook(w, chr, false);
-		w.writeMapleAsciiString(chr.getName());
+		w.writeLengthString(chr.getName());
 		if (partner != null) {
-			w.writeMapleAsciiString(partner.getName());
+			w.writeLengthString(partner.getName());
 		} else {
 			w.writeShort(0);
 		}
 		for (int i = 0; i < messages.size(); i++) {
 			if (i == 4 && messages.get(4).length() > 15) {
-				w.writeMapleAsciiString(messages.get(4).substring(0, 15));
+				w.writeLengthString(messages.get(4).substring(0, 15));
 			} else {
-				w.writeMapleAsciiString(messages.get(i));
+				w.writeLengthString(messages.get(i));
 			}
 		}
 		w.writeInt(1337); // time limit shit lol 'Your thing still start in
@@ -1266,7 +1266,7 @@ public class PacketCreator {
 		if (servermessage) {
 			w.write(1);
 		}
-		w.writeMapleAsciiString(message);
+		w.writeLengthString(message);
 		if (type == 3) {
 			w.write(channel - 1); // channel
 			w.write(megaEar ? 1 : 0);
@@ -1297,9 +1297,9 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.AVATAR_MEGA.getValue());
 		w.writeInt(itemId);
-		w.writeMapleAsciiString(medal + chr.getName());
+		w.writeLengthString(medal + chr.getName());
 		for (String s : message) {
-			w.writeMapleAsciiString(s);
+			w.writeLengthString(s);
 		}
 		w.writeInt(channel - 1); // channel
 		w.write(ear ? 1 : 0);
@@ -1319,9 +1319,9 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SERVERMESSAGE.getValue());
 		w.write(0x0B);
-		w.writeMapleAsciiString(player.getName() + " : got a(n)");
+		w.writeLengthString(player.getName() + " : got a(n)");
 		w.writeInt(0); // random?
-		w.writeMapleAsciiString(town);
+		w.writeLengthString(town);
 		addItemInfo(w, item, true);
 		return w.getPacket();
 	}
@@ -1376,7 +1376,7 @@ public class PacketCreator {
         w.writeShort(SendOpcode.SET_NPC_SCRIPTABLE.getValue());
         w.write(1); // following structure is repeated n times
         w.writeInt(npcId);
-        w.writeMapleAsciiString(description);
+        w.writeLengthString(description);
         w.writeInt(0); // start time
         w.writeInt(Integer.MAX_VALUE); // end time
         return w.getPacket();
@@ -1393,7 +1393,7 @@ public class PacketCreator {
     	w.write(entries.size()); // following structure is repeated n times
     	for (NpcDescriptionEntry entry : entries) {
     		w.writeInt(entry.npcId);
-    		w.writeMapleAsciiString(entry.description);
+    		w.writeLengthString(entry.description);
     		w.writeInt(0); // start time
     		w.writeInt(Integer.MAX_VALUE); // end time
     	}
@@ -1643,7 +1643,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.CHATTEXT.getValue());
 		w.writeInt(cidfrom);
 		w.write(gm ? 1 : 0);
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		w.write(show);
 		return w.getPacket();
 	}
@@ -1832,20 +1832,20 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.SPAWN_PLAYER.getValue());
 		w.writeInt(chr.getId());
 		w.write(chr.getLevel()); // v83
-		w.writeMapleAsciiString(chr.getName());
+		w.writeLengthString(chr.getName());
 		if (chr.getGuildId() < 1) {
-			w.writeMapleAsciiString("");
+			w.writeLengthString("");
 			w.write(new byte[6]);
 		} else {
 			GuildSummary gs = chr.getClient().getWorldServer().getGuildSummary(chr.getGuildId());
 			if (gs != null) {
-				w.writeMapleAsciiString(gs.getName());
+				w.writeLengthString(gs.getName());
 				w.writeShort(gs.getLogoBG());
 				w.write(gs.getLogoBGColor());
 				w.writeShort(gs.getLogo());
 				w.write(gs.getLogoColor());
 			} else {
-				w.writeMapleAsciiString("");
+				w.writeLengthString("");
 				w.write(new byte[6]);
 			}
 		}
@@ -1957,7 +1957,7 @@ public class PacketCreator {
 		}
 		if (chr.getChalkboard() != null) {
 			w.write(1);
-			w.writeMapleAsciiString(chr.getChalkboard());
+			w.writeLengthString(chr.getChalkboard());
 		} else {
 			w.write(0);
 		}
@@ -2020,7 +2020,7 @@ public class PacketCreator {
 	private static void addAnnounceBox(PacketWriter w, PlayerShop shop, int availability) {
 		w.write(4);
 		w.writeInt(shop.getObjectId());
-		w.writeMapleAsciiString(shop.getDescription());
+		w.writeLengthString(shop.getDescription());
 		w.write(0);
 		w.write(0);
 		w.write(1);
@@ -2031,7 +2031,7 @@ public class PacketCreator {
 	private static void addAnnounceBox(PacketWriter w, Minigame game, int gametype, int type, int ammount, int joinable) {
 		w.write(gametype);
 		w.writeInt(game.getObjectId()); // gameid/shopid
-		w.writeMapleAsciiString(game.getDescription()); // desc
+		w.writeLengthString(game.getDescription()); // desc
 		w.write(0);
 		w.write(type);
 		w.write(ammount);
@@ -2468,7 +2468,7 @@ public class PacketCreator {
 	public static GamePacket charNameResponse(String charname, boolean nameUsed) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.CHAR_NAME_RESPONSE.getValue());
-		w.writeMapleAsciiString(charname);
+		w.writeLengthString(charname);
 		w.write(nameUsed ? 1 : 0);
 		return w.getPacket();
 	}
@@ -2510,7 +2510,7 @@ public class PacketCreator {
 		w.write(worlds.size());// size
 		for (WorldRecommendation world : worlds) {
 			w.writeInt(world.worldId);
-			w.writeMapleAsciiString(world.message);
+			w.writeLengthString(world.message);
 		}
 		return w.getPacket();
 	}
@@ -2541,8 +2541,8 @@ public class PacketCreator {
 				allianceName = alliance.getName();
 			}
 		}
-		w.writeMapleAsciiString(guildName);
-		w.writeMapleAsciiString(allianceName);
+		w.writeLengthString(guildName);
+		w.writeLengthString(allianceName);
 		w.write(0);
 		Pet[] pets = chr.getPets();
 		IItem inv = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -114);
@@ -2550,7 +2550,7 @@ public class PacketCreator {
 			if (pets[i] != null) {
 				w.write(pets[i].getUniqueId());
 				w.writeInt(pets[i].getItemId()); // petid
-				w.writeMapleAsciiString(pets[i].getName());
+				w.writeLengthString(pets[i].getName());
 				w.write(pets[i].getLevel()); // pet level
 				w.writeShort(pets[i].getCloseness()); // pet closeness
 				w.write(pets[i].getFullness()); // pet fullness
@@ -2734,7 +2734,7 @@ public class PacketCreator {
 		w.write(1);
 		w.writeShort(quest);
 		w.write(1);
-		w.writeMapleAsciiString(status);
+		w.writeLengthString(status);
 		return w.getPacket();
 	}
 
@@ -2861,7 +2861,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.CHAT.getCode());
 		w.write(PlayerInteractionHandler.Action.CHAT_THING.getCode());
 		w.write(owner ? 0 : 1);
-		w.writeMapleAsciiString(c.getName() + " : " + chat);
+		w.writeLengthString(c.getName() + " : " + chat);
 		return w.getPacket();
 	}
 
@@ -2871,7 +2871,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.VISIT.getCode());
 		w.write(slot);
 		addCharLook(w, c, false);
-		w.writeMapleAsciiString(c.getName());
+		w.writeLengthString(c.getName());
 		return w.getPacket();
 	}
 
@@ -2891,7 +2891,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.VISIT.getCode());
 		w.write(1);
 		addCharLook(w, c, false);
-		w.writeMapleAsciiString(c.getName());
+		w.writeLengthString(c.getName());
 		return w.getPacket();
 	}
 
@@ -2900,7 +2900,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.write(PlayerInteractionHandler.Action.INVITE.getCode());
 		w.write(3);
-		w.writeMapleAsciiString(c.getName());
+		w.writeLengthString(c.getName());
 		w.write(new byte[] {(byte) 0xB7, (byte) 0x50, 0, 0});
 		return w.getPacket();
 	}
@@ -2954,12 +2954,12 @@ public class PacketCreator {
 		w.write(owner ? 0 : 1);
 		w.write(0);
 		addCharLook(w, shop.getOwner(), false);
-		w.writeMapleAsciiString(shop.getOwner().getName());
+		w.writeLengthString(shop.getOwner().getName());
 		w.write(1);
 		addCharLook(w, shop.getOwner(), false);
-		w.writeMapleAsciiString(shop.getOwner().getName());
+		w.writeLengthString(shop.getOwner().getName());
 		w.write(0xFF);
-		w.writeMapleAsciiString(shop.getDescription());
+		w.writeLengthString(shop.getDescription());
 		List<PlayerShopItem> items = shop.getItems();
 		w.write(0x10);
 		w.write(items.size());
@@ -2982,11 +2982,11 @@ public class PacketCreator {
 		if (number == 1) {
 			w.write(0);
 			addCharLook(w, trade.getPartner().getChr(), false);
-			w.writeMapleAsciiString(trade.getPartner().getChr().getName());
+			w.writeLengthString(trade.getPartner().getChr().getName());
 		}
 		w.write(number);
 		addCharLook(w, c.getPlayer(), false);
-		w.writeMapleAsciiString(c.getPlayer().getName());
+		w.writeLengthString(c.getPlayer().getName());
 		w.write(0xFF);
 		return w.getPacket();
 	}
@@ -3054,7 +3054,7 @@ public class PacketCreator {
 		w.writeInt(npc);
 		w.write(msgType);
 		w.write(speaker);
-		w.writeMapleAsciiString(talk);
+		w.writeLengthString(talk);
 		w.write(HexTool.getByteArrayFromHexString(endBytes));
 		return w.getPacket();
 	}
@@ -3067,7 +3067,7 @@ public class PacketCreator {
 		w.write(0x0E);
 		w.write(0);
 		w.writeInt(0);
-		w.writeMapleAsciiString(talk);
+		w.writeLengthString(talk);
 		return w.getPacket();
 	}
 
@@ -3078,7 +3078,7 @@ public class PacketCreator {
 		w.writeInt(npc);
 		w.write(7);
 		w.write(0); // speaker
-		w.writeMapleAsciiString(talk);
+		w.writeLengthString(talk);
 		w.write(styles.length);
 		for (int i = 0; i < styles.length; i++) {
 			w.writeInt(styles[i]);
@@ -3093,7 +3093,7 @@ public class PacketCreator {
 		w.writeInt(npc);
 		w.write(3);
 		w.write(0); // speaker
-		w.writeMapleAsciiString(talk);
+		w.writeLengthString(talk);
 		w.writeInt(def);
 		w.writeInt(min);
 		w.writeInt(max);
@@ -3108,8 +3108,8 @@ public class PacketCreator {
 		w.writeInt(npc);
 		w.write(2);
 		w.write(0); // speaker
-		w.writeMapleAsciiString(talk);
-		w.writeMapleAsciiString(def);// :D
+		w.writeLengthString(talk);
+		w.writeLengthString(def);// :D
 		w.writeInt(0);
 		return w.getPacket();
 	}
@@ -3203,9 +3203,9 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.WHISPER.getValue());
 		w.write(0x12);
-		w.writeMapleAsciiString(sender);
+		w.writeLengthString(sender);
 		w.writeShort(channel - 1); // I guess this is the channel
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		return w.getPacket();
 	}
 
@@ -3221,7 +3221,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.WHISPER.getValue());
 		w.write(0x0A); // whisper?
-		w.writeMapleAsciiString(target);
+		w.writeLengthString(target);
 		w.write(reply);
 		return w.getPacket();
 	}
@@ -3355,7 +3355,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.FAME_RESPONSE.getValue());
 		w.write(0);
-		w.writeMapleAsciiString(charname);
+		w.writeLengthString(charname);
 		w.write(mode);
 		w.writeShort(newfame);
 		w.writeShort(0);
@@ -3387,7 +3387,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.FAME_RESPONSE.getValue());
 		w.write(5);
-		w.writeMapleAsciiString(charnameFrom);
+		w.writeLengthString(charnameFrom);
 		w.write(mode);
 		return w.getPacket();
 	}
@@ -3409,7 +3409,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.PARTY_OPERATION.getValue());
 		w.write(4);
 		w.writeInt(from.getParty().getId());
-		w.writeMapleAsciiString(from.getName());
+		w.writeLengthString(from.getName());
 		w.write(0);
 		return w.getPacket();
 	}
@@ -3442,7 +3442,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PARTY_OPERATION.getValue());
 		w.write(message);
-		w.writeMapleAsciiString(charname);
+		w.writeLengthString(charname);
 		return w.getPacket();
 	}
 
@@ -3455,7 +3455,7 @@ public class PacketCreator {
 			w.writeInt(partychar.getId());
 		}
 		for (PartyCharacter partychar : partymembers) {
-			w.writeAsciiString(getRightPaddedStr(partychar.getName(), '\0', 13));
+			w.writePaddedString(partychar.getName(), 13);
 		}
 		for (PartyCharacter partychar : partymembers) {
 			w.writeInt(partychar.getJobId());
@@ -3513,14 +3513,14 @@ public class PacketCreator {
 					} else {
 						w.write(0);
 					}
-					w.writeMapleAsciiString(target.getName());
+					w.writeLengthString(target.getName());
 					addPartyStatus(w, forChannel, party, false);
 				}
 				break;
 			case JOIN:
 				w.write(0xF);
 				w.writeInt(40546);
-				w.writeMapleAsciiString(target.getName());
+				w.writeLengthString(target.getName());
 				addPartyStatus(w, forChannel, party, false);
 				break;
 			case SILENT_UPDATE:
@@ -3569,8 +3569,8 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MULTICHAT.getValue());
 		w.write(mode);
-		w.writeMapleAsciiString(name);
-		w.writeMapleAsciiString(chattext);
+		w.writeLengthString(name);
+		w.writeLengthString(chattext);
 		return w.getPacket();
 	}
 
@@ -3706,10 +3706,10 @@ public class PacketCreator {
 		for (BuddylistEntry buddy : buddylist) {
 			if (buddy.isVisible()) {
 				w.writeInt(buddy.getCharacterId()); // cid
-				w.writeAsciiString(getRightPaddedStr(buddy.getName(), '\0', 13));
+				w.writePaddedString(buddy.getName(), 13);
 				w.write(0); // opposite status
 				w.writeInt(buddy.getChannel() - 1);
-				w.writeAsciiString(getRightPaddedStr(buddy.getGroup(), '\0', 13));
+				w.writePaddedString(buddy.getGroup(), 13);
 				w.writeInt(0);// mapid?
 			}
 		}
@@ -3731,14 +3731,14 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.BUDDYLIST.getValue());
 		w.write(9);
 		w.writeInt(cidFrom);
-		w.writeMapleAsciiString(nameFrom);
+		w.writeLengthString(nameFrom);
 		w.writeInt(cidFrom);
-		w.writeAsciiString(getRightPaddedStr(nameFrom, '\0', 11));
+		w.writePaddedString(nameFrom, 11);
 		w.write(0x09);
 		w.write(0xf0);
 		w.write(0x01);
 		w.writeInt(0x0f);
-		w.writeNullTerminatedAsciiString("Default Group");
+		w.writeNullTerminatedString("Default Group");
 		w.writeInt(cid);
 		return w.getPacket();
 	}
@@ -3843,7 +3843,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.BOSS_ENV.getValue());
 		w.write(mode);
-		w.writeMapleAsciiString(env);
+		w.writeLengthString(env);
 		return w.getPacket();
 	}
 
@@ -3853,7 +3853,7 @@ public class PacketCreator {
 		w.write(active ? 0 : 1);
 		w.writeInt(itemid);
 		if (active) {
-			w.writeMapleAsciiString(msg);
+			w.writeLengthString(msg);
 		}
 		return w.getPacket();
 	}
@@ -3870,7 +3870,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.BOSS_ENV.getValue());
 		w.write(3);
-		w.writeMapleAsciiString(path);
+		w.writeLengthString(path);
 		return w.getPacket();
 	}
 
@@ -3878,7 +3878,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.BOSS_ENV.getValue());
 		w.write(4);
-		w.writeMapleAsciiString(path);
+		w.writeLengthString(path);
 		return w.getPacket();
 	}
 
@@ -3899,9 +3899,9 @@ public class PacketCreator {
 		}
 		w.write(1); // bInGuild
 		w.writeInt(g.getId());
-		w.writeMapleAsciiString(g.getName());
+		w.writeLengthString(g.getName());
 		for (int i = 1; i <= 5; i++) {
-			w.writeMapleAsciiString(g.getRankTitle(i));
+			w.writeLengthString(g.getRankTitle(i));
 		}
 		Collection<GuildCharacter> members = g.getMembers();
 		w.write(members.size()); // then it is the size of all the members
@@ -3910,7 +3910,7 @@ public class PacketCreator {
 			w.writeInt(mgc.getId());
 		}
 		for (GuildCharacter mgc : members) {
-			w.writeAsciiString(getRightPaddedStr(mgc.getName(), '\0', 13));
+			w.writePaddedString(mgc.getName(), 13);
 			w.writeInt(mgc.getJobId());
 			w.writeInt(mgc.getLevel());
 			w.writeInt(mgc.getGuildRank());
@@ -3923,7 +3923,7 @@ public class PacketCreator {
 		w.write(g.getLogoBGColor());
 		w.writeShort(g.getLogo());
 		w.write(g.getLogoColor());
-		w.writeMapleAsciiString(g.getNotice());
+		w.writeLengthString(g.getNotice());
 		w.writeInt(g.getGP());
 		w.writeInt(g.getAllianceId());
 		return w.getPacket();
@@ -3944,7 +3944,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(0x05);
 		w.writeInt(gid);
-		w.writeMapleAsciiString(charName);
+		w.writeLengthString(charName);
 		return w.getPacket();
 	}
 
@@ -3958,7 +3958,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(0x37);
-		w.writeMapleAsciiString(charname);
+		w.writeLengthString(charname);
 		return w.getPacket();
 	}
 
@@ -3975,7 +3975,7 @@ public class PacketCreator {
 		w.write(0x27);
 		w.writeInt(mgc.getGuildId());
 		w.writeInt(mgc.getId());
-		w.writeAsciiString(getRightPaddedStr(mgc.getName(), '\0', 13));
+		w.writePaddedString(mgc.getName(), 13);
 		w.writeInt(mgc.getJobId());
 		w.writeInt(mgc.getLevel());
 		w.writeInt(mgc.getGuildRank()); // should be always 5 but whatevs
@@ -3993,7 +3993,7 @@ public class PacketCreator {
 		w.write(bExpelled ? 0x2f : 0x2c);
 		w.writeInt(mgc.getGuildId());
 		w.writeInt(mgc.getId());
-		w.writeMapleAsciiString(mgc.getName());
+		w.writeLengthString(mgc.getName());
 		return w.getPacket();
 	}
 
@@ -4013,7 +4013,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.write(0x44);
 		w.writeInt(gid);
-		w.writeMapleAsciiString(notice);
+		w.writeLengthString(notice);
 		return w.getPacket();
 	}
 
@@ -4034,7 +4034,7 @@ public class PacketCreator {
 		w.write(0x3E);
 		w.writeInt(gid);
 		for (int i = 0; i < 5; i++) {
-			w.writeMapleAsciiString(ranks[i]);
+			w.writeLengthString(ranks[i]);
 		}
 		return w.getPacket();
 	}
@@ -4072,7 +4072,7 @@ public class PacketCreator {
 	public static void addThread(PacketWriter w, ResultSet rs) throws SQLException {
 		w.writeInt(rs.getInt("localthreadid"));
 		w.writeInt(rs.getInt("postercid"));
-		w.writeMapleAsciiString(rs.getString("name"));
+		w.writeLengthString(rs.getString("name"));
 		w.writeLong(getKoreanTimestamp(rs.getLong("timestamp")));
 		w.writeInt(rs.getInt("icon"));
 		w.writeInt(rs.getInt("replycount"));
@@ -4117,8 +4117,8 @@ public class PacketCreator {
 		w.writeInt(localthreadid);
 		w.writeInt(threadRS.getInt("postercid"));
 		w.writeLong(getKoreanTimestamp(threadRS.getLong("timestamp")));
-		w.writeMapleAsciiString(threadRS.getString("name"));
-		w.writeMapleAsciiString(threadRS.getString("startpost"));
+		w.writeLengthString(threadRS.getString("name"));
+		w.writeLengthString(threadRS.getString("startpost"));
 		w.writeInt(threadRS.getInt("icon"));
 		if (repliesRS != null) {
 			int replyCount = threadRS.getInt("replycount");
@@ -4128,7 +4128,7 @@ public class PacketCreator {
 				w.writeInt(repliesRS.getInt("replyid"));
 				w.writeInt(repliesRS.getInt("postercid"));
 				w.writeLong(getKoreanTimestamp(repliesRS.getLong("timestamp")));
-				w.writeMapleAsciiString(repliesRS.getString("content"));
+				w.writeLengthString(repliesRS.getString("content"));
 			}
 			if (i != replyCount || repliesRS.next()) {
 				throw new RuntimeException(String.valueOf(threadRS.getInt("threadid")));
@@ -4151,7 +4151,7 @@ public class PacketCreator {
 		w.writeInt(rs.getRow()); // number of entries
 		rs.beforeFirst();
 		while (rs.next()) {
-			w.writeMapleAsciiString(rs.getString("name"));
+			w.writeLengthString(rs.getString("name"));
 			w.writeInt(rs.getInt("GP"));
 			w.writeInt(rs.getInt("logo"));
 			w.writeInt(rs.getInt("logoColor"));
@@ -4223,7 +4223,7 @@ public class PacketCreator {
 		}
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.PLAYER_HINT.getValue());
-		w.writeMapleAsciiString(hint);
+		w.writeLengthString(hint);
 		w.writeShort(width);
 		w.writeShort(height);
 		w.write(1);
@@ -4234,7 +4234,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MESSENGER.getValue());
 		w.write(0x03);
-		w.writeMapleAsciiString(from);
+		w.writeLengthString(from);
 		w.write(0);
 		w.writeInt(messengerid);
 		w.write(0);
@@ -4244,8 +4244,8 @@ public class PacketCreator {
 	public static GamePacket sendSpouseChat(GameCharacter wife, String msg) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SPOUSE_CHAT.getValue());
-		w.writeMapleAsciiString(wife.getName());
-		w.writeMapleAsciiString(msg);
+		w.writeLengthString(wife.getName());
+		w.writeLengthString(msg);
 		return w.getPacket();
 	}
 
@@ -4255,7 +4255,7 @@ public class PacketCreator {
 		w.write(0x00);
 		w.write(position);
 		addCharLook(w, chr, true);
-		w.writeMapleAsciiString(from);
+		w.writeLengthString(from);
 		w.write(channel);
 		w.write(0x00);
 		return w.getPacket();
@@ -4275,7 +4275,7 @@ public class PacketCreator {
 		w.write(0x07);
 		w.write(position);
 		addCharLook(w, chr, true);
-		w.writeMapleAsciiString(from);
+		w.writeLengthString(from);
 		w.write(channel);
 		w.write(0x00);
 		return w.getPacket();
@@ -4293,7 +4293,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MESSENGER.getValue());
 		w.write(0x06);
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		return w.getPacket();
 	}
 
@@ -4301,7 +4301,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MESSENGER.getValue());
 		w.write(mode);
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		w.write(mode2);
 		return w.getPacket();
 	}
@@ -4313,7 +4313,7 @@ public class PacketCreator {
 		}
 
 		w.writeInt(pet.getItemId());
-		w.writeMapleAsciiString(pet.getName());
+		w.writeLengthString(pet.getName());
 		w.writeInt(pet.getUniqueId());
 		w.writeInt(0);
 		w.writePos(pet.getPos());
@@ -4352,7 +4352,7 @@ public class PacketCreator {
 		w.write(index);
 		w.write(0);
 		w.write(act);
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		w.write(0);
 		return w.getPacket();
 	}
@@ -4397,7 +4397,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.PET_NAMECHANGE.getValue());
 		w.writeInt(chr.getId());
 		w.write(0);
-		w.writeMapleAsciiString(newname);
+		w.writeLengthString(newname);
 		w.write(0);
 		return w.getPacket();
 	}
@@ -4473,7 +4473,7 @@ public class PacketCreator {
 		for (int i = 0; i < 5; i++) {
 			SkillMacro macro = macros[i];
 			if (macro != null) {
-				w.writeMapleAsciiString(macro.getName());
+				w.writeLengthString(macro.getName());
 				w.write(macro.getShout());
 				w.writeInt(macro.getSkill1());
 				w.writeInt(macro.getSkill2());
@@ -4488,7 +4488,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.PLAYER_NPC.getValue());
 		w.write(0x01);
 		w.writeInt(npc.getId());
-		w.writeMapleAsciiString(npc.getName());
+		w.writeLengthString(npc.getName());
 		w.write(0); // direction
 		w.write(npc.getSkin());
 		w.writeInt(npc.getFace());
@@ -4529,7 +4529,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.ARIANT_SCORE.getValue());
 		w.write(empty ? 0 : 1);
 		if (!empty) {
-			w.writeMapleAsciiString(name);
+			w.writeLengthString(name);
 			w.writeInt(score);
 		}
 		return w.getPacket();
@@ -4601,12 +4601,12 @@ public class PacketCreator {
 		w.write(owner ? 0 : 1);
 		w.write(0);
 		addCharLook(w, minigame.getOwner(), false);
-		w.writeMapleAsciiString(minigame.getOwner().getName());
+		w.writeLengthString(minigame.getOwner().getName());
 		if (minigame.getVisitor() != null) {
 			GameCharacter visitor = minigame.getVisitor();
 			w.write(1);
 			addCharLook(w, visitor, false);
-			w.writeMapleAsciiString(visitor.getName());
+			w.writeLengthString(visitor.getName());
 		}
 		w.write(0xFF);
 		w.write(0);
@@ -4625,7 +4625,7 @@ public class PacketCreator {
 			w.writeInt(2000);
 		}
 		w.write(0xFF);
-		w.writeMapleAsciiString(minigame.getDescription());
+		w.writeLengthString(minigame.getDescription());
 		w.write(piece);
 		w.write(0);
 		return w.getPacket();
@@ -4707,7 +4707,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.VISIT.getCode());
 		w.write(slot);
 		addCharLook(w, c, false);
-		w.writeMapleAsciiString(c.getName());
+		w.writeLengthString(c.getName());
 		w.writeInt(1);
 		w.writeInt(c.getMiniGamePoints("wins", true));
 		w.writeInt(c.getMiniGamePoints("ties", true));
@@ -4788,12 +4788,12 @@ public class PacketCreator {
 		w.write(owner ? 0 : 1);
 		w.write(0);
 		addCharLook(w, minigame.getOwner(), false);
-		w.writeMapleAsciiString(minigame.getOwner().getName());
+		w.writeLengthString(minigame.getOwner().getName());
 		if (minigame.getVisitor() != null) {
 			GameCharacter visitor = minigame.getVisitor();
 			w.write(1);
 			addCharLook(w, visitor, false);
-			w.writeMapleAsciiString(visitor.getName());
+			w.writeLengthString(visitor.getName());
 		}
 		w.write(0xFF);
 		w.write(0);
@@ -4812,7 +4812,7 @@ public class PacketCreator {
 			w.writeInt(2000);
 		}
 		w.write(0xFF);
-		w.writeMapleAsciiString(minigame.getDescription());
+		w.writeLengthString(minigame.getDescription());
 		w.write(piece);
 		w.write(0);
 		return w.getPacket();
@@ -4842,7 +4842,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.VISIT.getCode());
 		w.write(slot);
 		addCharLook(w, c, false);
-		w.writeMapleAsciiString(c.getName());
+		w.writeLengthString(c.getName());
 		w.writeInt(1);
 		w.writeInt(c.getMiniGamePoints("wins", false));
 		w.writeInt(c.getMiniGamePoints("ties", false));
@@ -4962,7 +4962,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.CHAT.getCode());
 		w.write(PlayerInteractionHandler.Action.CHAT_THING.getCode());
 		w.write(slot);
-		w.writeMapleAsciiString(c.getName() + " : " + chat);
+		w.writeLengthString(c.getName() + " : " + chat);
 		return w.getPacket();
 	}
 
@@ -4972,7 +4972,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.CHAT.getCode());
 		w.write(PlayerInteractionHandler.Action.CHAT_THING.getCode());
 		w.write(owner ? 0 : 1);
-		w.writeMapleAsciiString(c.getName() + " : " + chat);
+		w.writeLengthString(c.getName() + " : " + chat);
 		return w.getPacket();
 	}
 
@@ -4993,9 +4993,9 @@ public class PacketCreator {
 		w.writeInt(hms.size());
 		for (HiredMerchant hm : hms) {
 			for (PlayerShopItem item : items) {
-				w.writeMapleAsciiString(hm.getOwner());
+				w.writeLengthString(hm.getOwner());
 				w.writeInt(hm.getMapId());
-				w.writeMapleAsciiString(hm.getDescription());
+				w.writeLengthString(hm.getDescription());
 				w.writeInt(item.getItem().getQuantity());
 				w.writeInt(item.getBundles());
 				w.writeInt(item.getPrice());
@@ -5048,25 +5048,25 @@ public class PacketCreator {
 		w.write(0x04);
 		w.writeShort(hm.getVisitorSlot(chr) + 1);
 		w.writeInt(hm.getItemId());
-		w.writeMapleAsciiString("Hired Merchant");
+		w.writeLengthString("Hired Merchant");
 		for (int i = 0; i < 3; i++) {
 			if (hm.getVisitors()[i] != null) {
 				w.write(i + 1);
 				addCharLook(w, hm.getVisitors()[i], false);
-				w.writeMapleAsciiString(hm.getVisitors()[i].getName());
+				w.writeLengthString(hm.getVisitors()[i].getName());
 			}
 		}
 		w.write(-1);
 		if (hm.isOwner(chr)) {
 			w.writeShort(hm.getMessages().size());
 			for (int i = 0; i < hm.getMessages().size(); i++) {
-				w.writeMapleAsciiString(hm.getMessages().get(i).message);
+				w.writeLengthString(hm.getMessages().get(i).message);
 				w.write(hm.getMessages().get(i).slot);
 			}
 		} else {
 			w.writeShort(0);
 		}
-		w.writeMapleAsciiString(hm.getOwner());
+		w.writeLengthString(hm.getOwner());
 		if (hm.isOwner(chr)) {
 			w.writeInt(hm.getTimeLeft());
 			w.write(firstTime ? 1 : 0);
@@ -5079,7 +5079,7 @@ public class PacketCreator {
 			 */
 			w.writeInt(chr.getMerchantMeso());// :D?
 		}
-		w.writeMapleAsciiString(hm.getDescription());
+		w.writeLengthString(hm.getDescription());
 		w.write(0x10); // SLOTS, which is 16 for most stores...slotMax
 		w.writeInt(chr.getMeso());
 		w.write(hm.getItems().size());
@@ -5117,7 +5117,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.CHAT.getCode());
 		w.write(PlayerInteractionHandler.Action.CHAT_THING.getCode());
 		w.write(slot);
-		w.writeMapleAsciiString(message);
+		w.writeLengthString(message);
 		return w.getPacket();
 	}
 
@@ -5154,7 +5154,7 @@ public class PacketCreator {
 		w.write(PlayerInteractionHandler.Action.VISIT.getCode());
 		w.write(slot);
 		addCharLook(w, chr, false);
-		w.writeMapleAsciiString(chr.getName());
+		w.writeLengthString(chr.getName());
 		return w.getPacket();
 	}
 
@@ -5166,10 +5166,10 @@ public class PacketCreator {
 		w.writeShort((short) hm.getPosition().getX());
 		w.writeShort((short) hm.getPosition().getY());
 		w.writeShort(0);
-		w.writeMapleAsciiString(hm.getOwner());
+		w.writeLengthString(hm.getOwner());
 		w.write(0x05);
 		w.writeInt(hm.getObjectId());
-		w.writeMapleAsciiString(hm.getDescription());
+		w.writeLengthString(hm.getDescription());
 		w.write(hm.getItemId() % 10);
 		w.write(new byte[] {1, 4});
 		return w.getPacket();
@@ -5202,7 +5202,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.YELLOW_TIP.getValue());
 		w.write(0xFF);
-		w.writeMapleAsciiString(tip);
+		w.writeLengthString(tip);
 		w.writeShort(0);
 		return w.getPacket();
 	}
@@ -5289,10 +5289,10 @@ public class PacketCreator {
 			w.writeInt(item.getPrice()); // price
 			w.writeLong(0);
 			w.writeInt(getQuestTimestamp(item.getEndingDate()));
-			w.writeMapleAsciiString(item.getSeller()); // account name (what
+			w.writeLengthString(item.getSeller()); // account name (what
 															// was nexon
 															// thinking?)
-			w.writeMapleAsciiString(item.getSeller()); // char name
+			w.writeLengthString(item.getSeller()); // char name
 			for (int j = 0; j < 28; j++) {
 				w.write(0);
 			}
@@ -5328,8 +5328,8 @@ public class PacketCreator {
 		for (int i = 0; i < count; i++) {
 			w.writeInt(notes.getInt("id"));
 			// Stupid nexon forgot space lol
-			w.writeMapleAsciiString(notes.getString("from") + " ");
-			w.writeMapleAsciiString(notes.getString("message"));
+			w.writeLengthString(notes.getString("from") + " ");
+			w.writeLengthString(notes.getString("message"));
 			w.writeLong(getKoreanTimestamp(notes.getLong("timestamp")));
 			w.write(notes.getByte("fame"));// FAME :D
 			notes.next();
@@ -5345,7 +5345,7 @@ public class PacketCreator {
 			w.write(0);
 		} else {
 			w.write(1);
-			w.writeMapleAsciiString(chr.getChalkboard());
+			w.writeLengthString(chr.getChalkboard());
 		}
 		return w.getPacket();
 	}
@@ -5433,9 +5433,9 @@ public class PacketCreator {
 				w.writeInt(getQuestTimestamp(item.getEndingDate()));
 				
 				// account name (what was nexon thinking?)
-				w.writeMapleAsciiString(item.getSeller()); 
+				w.writeLengthString(item.getSeller()); 
 				// char name
-				w.writeMapleAsciiString(item.getSeller()); 
+				w.writeLengthString(item.getSeller()); 
 				for (int i = 0; i < 28; i++) {
 					w.write(0);
 				}
@@ -5461,9 +5461,9 @@ public class PacketCreator {
 				w.writeInt(getQuestTimestamp(item.getEndingDate()));
 
 				// account name (what was nexon thinking?)
-				w.writeMapleAsciiString(item.getSeller()); 
+				w.writeLengthString(item.getSeller()); 
 				// char name
-				w.writeMapleAsciiString(item.getSeller());
+				w.writeLengthString(item.getSeller());
 				for (int i = 0; i < 28; i++) {
 					w.write(0);
 				}
@@ -5517,7 +5517,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.WHISPER.getValue());
 		w.write(9);
-		w.writeMapleAsciiString(target);
+		w.writeLengthString(target);
 		w.write(MTSmapCSchannel); // 0: mts 1: map 2: cs
 		w.writeInt(mapid); // -1 if mts, cs
 		if (MTSmapCSchannel == 1) {
@@ -5590,8 +5590,8 @@ public class PacketCreator {
 			w.write(i > 4 ? (i % 2) + 1 : i);
 			w.writeInt(repCost[i] * 100);
 			w.writeInt(1);
-			w.writeMapleAsciiString(title[i]);
-			w.writeMapleAsciiString(description[i]);
+			w.writeLengthString(title[i]);
+			w.writeLengthString(description[i]);
 		}
 		return w.getPacket();
 	}
@@ -5613,7 +5613,7 @@ public class PacketCreator {
 		w.writeShort(f.getTotalJuniors()); // juniors allowed
 		w.writeShort(0); // Unknown
 		w.writeInt(f.getId()); // id?
-		w.writeMapleAsciiString(f.getFamilyName());
+		w.writeLengthString(f.getFamilyName());
 		w.writeInt(0);
 		w.writeShort(0);
 		return w.getPacket();
@@ -5631,7 +5631,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.write(0x0A); // 0x0B in v95
 		w.writeShort(quest);
-		w.writeMapleAsciiString(mode);
+		w.writeLengthString(mode);
 		return w.getPacket();
 	}
 
@@ -5641,7 +5641,7 @@ public class PacketCreator {
 		w.write(1);
 		w.writeShort(id);
 		w.write(1);
-		w.writeMapleAsciiString(process);
+		w.writeLengthString(process);
 		return w.getPacket();
 	}
 
@@ -5695,7 +5695,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SHOW_ITEM_GAIN_INCHAT.getValue());
 		w.write(0x12);
-		w.writeMapleAsciiString(path);
+		w.writeLengthString(path);
 		return w.getPacket();
 	}
 
@@ -5703,7 +5703,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SHOW_ITEM_GAIN_INCHAT.getValue());
 		w.write(0x17);
-		w.writeMapleAsciiString(path);
+		w.writeLengthString(path);
 		w.writeInt(1);
 		return w.getPacket();
 	}
@@ -5746,7 +5746,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SERVERMESSAGE.getValue());
 		w.write(8);
-		w.writeMapleAsciiString(msg);
+		w.writeLengthString(msg);
 		w.write(channel - 1);
 		w.write(whisper ? 1 : 0);
 		if (item == null) {
@@ -5899,7 +5899,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.write(9);
-		w.writeMapleAsciiString(text);
+		w.writeLengthString(text);
 		return w.getPacket();
 	}
 
@@ -5932,12 +5932,12 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.SERVERMESSAGE.getValue());
 		w.write(0x0A);
 		if (messages[0] != null) {
-			w.writeMapleAsciiString(messages[0]);
+			w.writeLengthString(messages[0]);
 		}
 		w.write(messages.length);
 		for (int i = 1; i < messages.length; i++) {
 			if (messages[i] != null) {
-				w.writeMapleAsciiString(messages[i]);
+				w.writeLengthString(messages[i]);
 			}
 		}
 		for (int i = 0; i < 10; i++) {
@@ -6000,7 +6000,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.FAMILY_INVITE.getValue());
 		w.writeInt(playerId);
-		w.writeMapleAsciiString(inviter);
+		w.writeLengthString(inviter);
 		return w.getPacket();
 	}
 
@@ -6052,9 +6052,9 @@ public class PacketCreator {
 
 	private static void getGuildInfo(PacketWriter w, Guild guild) {
 		w.writeInt(guild.getId());
-		w.writeMapleAsciiString(guild.getName());
+		w.writeLengthString(guild.getName());
 		for (int i = 1; i <= 5; i++) {
-			w.writeMapleAsciiString(guild.getRankTitle(i));
+			w.writeLengthString(guild.getRankTitle(i));
 		}
 		Collection<GuildCharacter> members = guild.getMembers();
 		w.write(members.size());
@@ -6062,7 +6062,7 @@ public class PacketCreator {
 			w.writeInt(mgc.getId());
 		}
 		for (GuildCharacter mgc : members) {
-			w.writeAsciiString(getRightPaddedStr(mgc.getName(), '\0', 13));
+			w.writePaddedString(mgc.getName(), 13);
 			w.writeInt(mgc.getJobId());
 			w.writeInt(mgc.getLevel());
 			w.writeInt(mgc.getGuildRank());
@@ -6075,7 +6075,7 @@ public class PacketCreator {
 		w.write(guild.getLogoBGColor());
 		w.writeShort(guild.getLogo());
 		w.write(guild.getLogoColor());
-		w.writeMapleAsciiString(guild.getNotice());
+		w.writeLengthString(guild.getNotice());
 		w.writeInt(guild.getGP());
 		w.writeInt(guild.getAllianceId());
 	}
@@ -6086,16 +6086,16 @@ public class PacketCreator {
 		w.write(0x0C);
 		w.write(1);
 		w.writeInt(alliance.getId());
-		w.writeMapleAsciiString(alliance.getName());
+		w.writeLengthString(alliance.getName());
 		for (int i = 1; i <= 5; i++) {
-			w.writeMapleAsciiString(alliance.getRankTitle(i));
+			w.writeLengthString(alliance.getRankTitle(i));
 		}
 		w.write(alliance.getGuilds().size());
 		w.writeInt(2); // probably capacity
 		for (Integer guild : alliance.getGuilds()) {
 			w.writeInt(guild);
 		}
-		w.writeMapleAsciiString(alliance.getNotice());
+		w.writeLengthString(alliance.getNotice());
 		return w.getPacket();
 	}
 
@@ -6104,9 +6104,9 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x0F);
 		w.writeInt(alliance.getId());
-		w.writeMapleAsciiString(alliance.getName());
+		w.writeLengthString(alliance.getName());
 		for (int i = 1; i <= 5; i++) {
-			w.writeMapleAsciiString(alliance.getRankTitle(i));
+			w.writeLengthString(alliance.getRankTitle(i));
 		}
 		w.write(alliance.getGuilds().size());
 		for (Integer guild : alliance.getGuilds()) {
@@ -6136,16 +6136,16 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x12);
 		w.writeInt(alliance.getId());
-		w.writeMapleAsciiString(alliance.getName());
+		w.writeLengthString(alliance.getName());
 		for (int i = 1; i <= 5; i++) {
-			w.writeMapleAsciiString(alliance.getRankTitle(i));
+			w.writeLengthString(alliance.getRankTitle(i));
 		}
 		w.write(alliance.getGuilds().size());
 		for (Integer guild : alliance.getGuilds()) {
 			w.writeInt(guild);
 		}
 		w.writeInt(2);
-		w.writeMapleAsciiString(alliance.getNotice());
+		w.writeLengthString(alliance.getNotice());
 		w.writeInt(newGuild);
 		getGuildInfo(w, Server.getInstance().getGuild(newGuild, null));
 		return w.getPacket();
@@ -6167,7 +6167,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x1C);
 		w.writeInt(id);
-		w.writeMapleAsciiString(notice);
+		w.writeLengthString(notice);
 		return w.getPacket();
 	}
 
@@ -6177,7 +6177,7 @@ public class PacketCreator {
 		w.write(0x1A);
 		w.writeInt(alliance);
 		for (int i = 0; i < 5; i++) {
-			w.writeMapleAsciiString(ranks[i]);
+			w.writeLengthString(ranks[i]);
 		}
 		return w.getPacket();
 	}
@@ -6199,16 +6199,16 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.write(0x10);
 		w.writeInt(alliance.getId());
-		w.writeMapleAsciiString(alliance.getName());
+		w.writeLengthString(alliance.getName());
 		for (int i = 1; i <= 5; i++) {
-			w.writeMapleAsciiString(alliance.getRankTitle(i));
+			w.writeLengthString(alliance.getRankTitle(i));
 		}
 		w.write(alliance.getGuilds().size());
 		for (Integer guild : alliance.getGuilds()) {
 			w.writeInt(guild);
 		}
 		w.writeInt(2);
-		w.writeMapleAsciiString(alliance.getNotice());
+		w.writeLengthString(alliance.getNotice());
 		w.writeInt(expelledGuild);
 		getGuildInfo(w, Server.getInstance().getGuild(expelledGuild, null));
 		w.write(0x01);
@@ -6235,7 +6235,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.RING_ACTION.getValue()); 
 		// <name> has requested engagement. Will you accept this proposal?
 		w.write(0);
-		w.writeMapleAsciiString(name); // name
+		w.writeLengthString(name); // name
 		w.writeInt(10); // playerid
 		return w.getPacket();
 	}
@@ -6279,14 +6279,14 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.FAMILY_MESSAGE2.getValue());
 		w.write(accepted ? 1 : 0);
-		w.writeMapleAsciiString(added);
+		w.writeLengthString(added);
 		return w.getPacket();
 	}
 
 	public static GamePacket getSeniorMessage(String name) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.FAMILY_SENIOR_MESSAGE.getValue());
-		w.writeMapleAsciiString(name);
+		w.writeLengthString(name);
 		w.writeInt(0);
 		return w.getPacket();
 	}
@@ -6321,7 +6321,7 @@ public class PacketCreator {
 			w.write(packages.size());
 			for (DueyPackages dp : packages) {
 				w.writeInt(dp.getPackageId());
-				w.writeAsciiString(dp.getSender());
+				w.writeString(dp.getSender());
 				for (int i = dp.getSender().length(); i < 13; i++) {
 					w.write(0);
 				}
@@ -6349,7 +6349,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.BOSS_ENV.getValue());
 		w.write(firstByte);
-		w.writeMapleAsciiString(animation);
+		w.writeLengthString(animation);
 		return w.getPacket();
 	}
 
@@ -6358,7 +6358,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.write(10);
 		w.write(new byte[] {(byte) 0xB7, 4});// QUEST ID f5
-		w.writeMapleAsciiString(info);
+		w.writeLengthString(info);
 		return w.getPacket();
 	}
 
@@ -6366,7 +6366,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.write(9);
-		w.writeMapleAsciiString(message);
+		w.writeLengthString(message);
 		return w.getPacket();
 	}
 
@@ -6421,7 +6421,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.write(10);
 		w.write(new byte[] {(byte) 0xB7, 4}); // ?
-		w.writeMapleAsciiString("pt=" + chr.getDojoPoints() + ";belt=" + belt + ";tuto=" + (chr.getFinishedDojoTutorial() ? "1" : "0"));
+		w.writeLengthString("pt=" + chr.getDojoPoints() + ";belt=" + belt + ";tuto=" + (chr.getFinishedDojoTutorial() ? "1" : "0"));
 		return w.getPacket();
 	}
 
@@ -6443,7 +6443,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.LEVELUP_MSG.getValue());
 		w.write(type);
 		w.writeInt(level);
-		w.writeMapleAsciiString(charname);
+		w.writeLengthString(charname);
 
 		return w.getPacket();
 	}
@@ -6463,7 +6463,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MARRIAGE_MSG.getValue());
 		w.write(type);
-		w.writeMapleAsciiString("> " + charname); 
+		w.writeLengthString("> " + charname); 
 		// To fix the stupid packet lol
 
 		return w.getPacket();
@@ -6485,7 +6485,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.JOB_MSG.getValue());
 		w.write(type);
 		w.writeInt(job); // Why fking int?
-		w.writeMapleAsciiString("> " + charname); 
+		w.writeLengthString("> " + charname); 
 		// To fix the stupid packet lol
 
 		return w.getPacket();
@@ -6511,8 +6511,8 @@ public class PacketCreator {
 	public static GamePacket getEnergy(String info, int amount) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.ENERGY.getValue());
-		w.writeMapleAsciiString(info);
-		w.writeMapleAsciiString(Integer.toString(amount));
+		w.writeLengthString(info);
+		w.writeLengthString(Integer.toString(amount));
 		return w.getPacket();
 	}
 
@@ -6530,14 +6530,6 @@ public class PacketCreator {
 		w.write(2);
 		w.writeInt(itemid);
 		return w.getPacket();
-	}
-
-	private static String getRightPaddedStr(String in, char padchar, int length) {
-		StringBuilder builder = new StringBuilder(in);
-		for (int x = in.length(); x < length; x++) {
-			builder.append(padchar);
-		}
-		return builder.toString();
 	}
 
 	public static GamePacket MobDamageMobFriendly(Monster mob, int damage) {
@@ -6570,7 +6562,7 @@ public class PacketCreator {
 		w.writeShort(chr.getCrushRings().size());
 		for (Ring ring : chr.getCrushRings()) {
 			w.writeInt(ring.getPartnerChrId());
-			w.writeAsciiString(getRightPaddedStr(ring.getPartnerName(), '\0', 13));
+			w.writePaddedString(ring.getPartnerName(), 13);
 			w.writeInt(ring.getRingId());
 			w.writeInt(0);
 			w.writeInt(ring.getPartnerRingId());
@@ -6579,7 +6571,7 @@ public class PacketCreator {
 		w.writeShort(chr.getFriendshipRings().size());
 		for (Ring ring : chr.getFriendshipRings()) {
 			w.writeInt(ring.getPartnerChrId());
-			w.writeAsciiString(getRightPaddedStr(ring.getPartnerName(), '\0', 13));
+			w.writePaddedString(ring.getPartnerName(), 13);
 			w.writeInt(ring.getRingId());
 			w.writeInt(0);
 			w.writeInt(ring.getPartnerRingId());
@@ -6595,8 +6587,8 @@ public class PacketCreator {
 			w.writeShort(3);
 			w.writeInt(chr.getMarriageRing().getRingId());
 			w.writeInt(chr.getMarriageRing().getPartnerRingId());
-			w.writeAsciiString(getRightPaddedStr(chr.getName(), '\0', 13));
-			w.writeAsciiString(getRightPaddedStr(chr.getMarriageRing().getPartnerName(), '\0', 13));
+			w.writePaddedString(chr.getName(), 13);
+			w.writePaddedString(chr.getMarriageRing().getPartnerName(), 13);
 		}
 	}
 
@@ -6620,7 +6612,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.write(9);
-		w.writeAsciiString("Protect the Moon Bunny!!!");
+		w.writeString("Protect the Moon Bunny!!!");
 		return w.getPacket();
 	}
 
@@ -6629,7 +6621,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.MAP_EFFECT.getValue()); // not 100% sure
 		w.write(0);
 		w.writeInt(5120016);
-		w.writeAsciiString(text);
+		w.writeString(text);
 		return w.getPacket();
 	}
 
@@ -6750,7 +6742,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.TALK_GUIDE.getValue());
 		w.write(0);
-		w.writeMapleAsciiString(talk);
+		w.writeLengthString(talk);
 		w.write(new byte[] {(byte) 0xC8, 0, 0, 0, (byte) 0xA0, (byte) 0x0F, 0, 0});
 		return w.getPacket();
 	}
@@ -6786,9 +6778,9 @@ public class PacketCreator {
 			w.writeInt(item.getSN());
 			w.writeShort(item.getQuantity());
 		}
-		w.writeAsciiString(StringUtil.getRightPaddedStr(item.getGiftFrom(), '\0', 13));
+		w.writePaddedString(item.getGiftFrom(), 13);
 		if (isGift) {
-			w.writeAsciiString(StringUtil.getRightPaddedStr(giftMessage, '\0', 73));
+			w.writePaddedString(giftMessage, 73);
 			return;
 		}
 		addExpirationTime(w, item.getExpiration());
@@ -6884,7 +6876,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.CASHSHOP_OPERATION.getValue());
 
 		w.write(0x5E); // 0x5D, Couldn't be sent
-		w.writeMapleAsciiString(to);
+		w.writeLengthString(to);
 		w.writeInt(item.getItemId());
 		w.writeShort(item.getCount());
 		w.writeInt(item.getPrice());
@@ -6954,7 +6946,7 @@ public class PacketCreator {
 			w.write(1);
 		}
 
-		w.writeMapleAsciiString(c.getAccountName());
+		w.writeLengthString(c.getAccountName());
 		if (mts) {
 			w.write(new byte[] {(byte) 0x88, 19, 0, 0, 7, 0, 0, 0, (byte) 0xF4, 1, 0, 0, (byte) 0x18, 0, 0, 0, (byte) 0xA8, 0, 0, 0, (byte) 0x70, (byte) 0xAA, (byte) 0xA7, (byte) 0xC5, (byte) 0x4E, (byte) 0xC1, (byte) 0xCA, 1});
 		} else {
@@ -7016,7 +7008,7 @@ public class PacketCreator {
 	public static GamePacket earnTitleMessage(String msg) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.EARN_TITLE_MSG.getValue());
-		w.writeMapleAsciiString(msg);
+		w.writeLengthString(msg);
 		return w.getPacket();
 	}
 
@@ -7057,7 +7049,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.MONSTER_CARNIVAL_SUMMON.getValue());
 		w.write(tab); // Tab
 		w.writeShort(number); // Number of summon inside the tab
-		w.writeMapleAsciiString(name); // Name of the player that summons
+		w.writeLengthString(name); // Name of the player that summons
 		return w.getPacket();
 	}
 
@@ -7065,7 +7057,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(SendOpcode.MONSTER_CARNIVAL_SUMMON.getValue());
 		w.write(chr.getTeam()); // Team
-		w.writeMapleAsciiString(chr.getName()); // Name of the player that
+		w.writeLengthString(chr.getName()); // Name of the player that
 													// died
 		w.write(chr.getAndRemoveCP()); // Lost CP
 		return w.getPacket();
@@ -7096,7 +7088,7 @@ public class PacketCreator {
 		w.writeShort(SendOpcode.MONSTER_CARNIVAL_LEAVE.getValue());
 		w.write(0); // Something
 		w.write(chr.getTeam()); // Team
-		w.writeMapleAsciiString(chr.getName()); // Player name
+		w.writeLengthString(chr.getName()); // Player name
 		return w.getPacket();
 	}
 

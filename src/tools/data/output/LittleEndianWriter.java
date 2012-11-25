@@ -87,15 +87,17 @@ public interface LittleEndianWriter {
 	 * @param s
 	 *            The ASCII string to write.
 	 */
-	void writeAsciiString(String s);
+	void writeString(String s);
 
+	void writePaddedString(String s, int padLength);
+	
 	/**
 	 * Writes a null-terminated ASCII string to the sequence.
 	 * 
 	 * @param s
 	 *            The ASCII string to write.
 	 */
-	void writeNullTerminatedAsciiString(String s);
+	void writeNullTerminatedString(String s);
 
 	/**
 	 * Writes a maple-convention ASCII string to the sequence.
@@ -103,7 +105,7 @@ public interface LittleEndianWriter {
 	 * @param s
 	 *            The ASCII string to use maple-convention to write.
 	 */
-	void writeMapleAsciiString(String s);
+	void writeLengthString(String s);
 
 	/**
 	 * Writes a 2D 4 byte position information

@@ -42,7 +42,7 @@ public class GMPacketCreator {
 		w.writeShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
 		w.write(loginOk);
 		if (loginOk == 3) {
-			w.writeMapleAsciiString(login);
+			w.writeLengthString(login);
 		}
 		return w.getPacket();
 	}
@@ -50,7 +50,7 @@ public class GMPacketCreator {
 	public static GamePacket chat(final String msg) {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(GMSendOpcode.CHAT.getValue());
-		w.writeMapleAsciiString(msg);
+		w.writeLengthString(msg);
 		return w.getPacket();
 	}
 
@@ -59,7 +59,7 @@ public class GMPacketCreator {
 		w.writeShort(GMSendOpcode.GM_LIST.getValue());
 		w.write(0);
 		for (String name : names) {
-			w.writeMapleAsciiString(name);
+			w.writeLengthString(name);
 		}
 		return w.getPacket();
 	}
@@ -68,7 +68,7 @@ public class GMPacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(GMSendOpcode.GM_LIST.getValue());
 		w.write(1);
-		w.writeMapleAsciiString(name);
+		w.writeLengthString(name);
 
 		return w.getPacket();
 	}
@@ -77,7 +77,7 @@ public class GMPacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(GMSendOpcode.GM_LIST.getValue());
 		w.write(2);
-		w.writeMapleAsciiString(name);
+		w.writeLengthString(name);
 
 		return w.getPacket();
 	}
@@ -86,7 +86,7 @@ public class GMPacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(GMSendOpcode.SEND_PLAYER_LIST.getValue());
 		for (String s : list) {
-			w.writeMapleAsciiString(s);
+			w.writeLengthString(s);
 		}
 		return w.getPacket();
 	}
@@ -102,8 +102,8 @@ public class GMPacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
 		w.write(3);
-		w.writeMapleAsciiString(name);
-		w.writeMapleAsciiString(job);
+		w.writeLengthString(name);
+		w.writeLengthString(job);
 		w.write(level);
 		w.writeInt(exp);
 		w.writeShort(hp);

@@ -143,7 +143,7 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 		w.write(0x05);
 		w.writeInt(allianceid);
 		w.writeInt(playerid);
-		w.writeMapleAsciiString(guildname);
+		w.writeLengthString(guildname);
 		return w.getPacket();
 	}
 
