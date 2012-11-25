@@ -40,11 +40,11 @@ public class ChairMovement extends AbstractLifeMovement {
 
 	@Override
 	public void serialize(LittleEndianWriter w) {
-		w.write(getType());
-		w.writeShort(getPosition().x);
-		w.writeShort(getPosition().y);
-		w.writeShort(unk);
-		w.write(getNewstate());
-		w.writeShort(getDuration());
+		w.writeAsByte(getType());
+		w.writeAsShort(getPosition().x);
+		w.writeAsShort(getPosition().y);
+		w.writeAsShort(unk);
+		w.writeAsByte(getNewstate());
+		w.writeAsShort(getDuration());
 	}
 }

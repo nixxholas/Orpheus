@@ -130,8 +130,8 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 
 	private static GamePacket sendShowInfo(int allianceid, int playerid) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
-		w.write(0x02);
+		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
+		w.writeAsByte(0x02);
 		w.writeInt(allianceid);
 		w.writeInt(playerid);
 		return w.getPacket();
@@ -139,8 +139,8 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 
 	private static GamePacket sendInvitation(int allianceid, int playerid, final String guildname) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
-		w.write(0x05);
+		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
+		w.writeAsByte(0x05);
 		w.writeInt(allianceid);
 		w.writeInt(playerid);
 		w.writeLengthString(guildname);
@@ -149,19 +149,19 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 
 	private static GamePacket sendChangeGuild(int allianceid, int playerid, int guildid, int option) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
-		w.write(0x07);
+		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
+		w.writeAsByte(0x07);
 		w.writeInt(allianceid);
 		w.writeInt(guildid);
 		w.writeInt(playerid);
-		w.write(option);
+		w.writeAsByte(option);
 		return w.getPacket();
 	}
 
 	private static GamePacket sendChangeLeader(int allianceid, int playerid, int victim) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
-		w.write(0x08);
+		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
+		w.writeAsByte(0x08);
 		w.writeInt(allianceid);
 		w.writeInt(playerid);
 		w.writeInt(victim);
@@ -170,8 +170,8 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 
 	private static GamePacket sendChangeRank(int allianceid, int playerid, int int1, byte byte1) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.ALLIANCE_OPERATION.getValue());
-		w.write(0x09);
+		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
+		w.writeAsByte(0x09);
 		w.writeInt(allianceid);
 		w.writeInt(playerid);
 		w.writeInt(int1);

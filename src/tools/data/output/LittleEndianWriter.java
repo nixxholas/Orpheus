@@ -40,20 +40,14 @@ public interface LittleEndianWriter {
 	public void write(byte b[]);
 
 	/**
-	 * Write a byte to the sequence.
-	 * 
-	 * @param b
-	 *            The byte to write.
-	 */
-	public void write(byte b);
-
-	/**
 	 * Write a byte in integer form to the sequence.
 	 * 
 	 * @param b
 	 *            The byte as an <code>Integer</code> to write.
 	 */
-	public void write(int b);
+	public void writeAsByte(int b);
+	
+	public void writeAsByte(boolean b);
 
 	public void skip(int b);
 
@@ -71,7 +65,7 @@ public interface LittleEndianWriter {
 	 * @param s
 	 *            The short integer to write.
 	 */
-	public void writeShort(int s);
+	public void writeAsShort(int s);
 
 	/**
 	 * Write a long integer to the sequence.

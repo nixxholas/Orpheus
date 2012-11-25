@@ -175,10 +175,10 @@ public class PlayerShop extends AbstractGameMapObject {
 
 	public static GamePacket shopErrorMessage(int error, int type) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.PLAYER_INTERACTION.getValue());
-		w.write(0x0A);
-		w.write(type);
-		w.write(error);
+		w.writeAsShort(SendOpcode.PLAYER_INTERACTION.getValue());
+		w.writeAsByte(0x0A);
+		w.writeAsByte(type);
+		w.writeAsByte(error);
 		return w.getPacket();
 	}
 

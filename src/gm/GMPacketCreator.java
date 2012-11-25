@@ -32,16 +32,16 @@ public class GMPacketCreator {
 
 	public static GamePacket keyResponse(final boolean ok) {
 		PacketWriter w = new PacketWriter(3);
-		w.writeShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
-		w.write(ok ? 1 : 0);
+		w.writeAsShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
+		w.writeAsByte(ok);
 		return w.getPacket();
 	}
 
-	public static GamePacket sendLoginResponse(final byte loginOk, final String login) {
+	public static GamePacket sendLoginResponse(final byte loginResult, final String login) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
-		w.write(loginOk);
-		if (loginOk == 3) {
+		w.writeAsShort(GMSendOpcode.LOGIN_RESPONSE.getValue());
+		w.writeAsByte(loginResult);
+		if (loginResult == 3) {
 			w.writeLengthString(login);
 		}
 		return w.getPacket();
@@ -49,15 +49,15 @@ public class GMPacketCreator {
 
 	public static GamePacket chat(final String msg) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.CHAT.getValue());
+		w.writeAsShort(GMSendOpcode.CHAT.getValue());
 		w.writeLengthString(msg);
 		return w.getPacket();
 	}
 
 	public static GamePacket sendUserList(final List<String> names) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.GM_LIST.getValue());
-		w.write(0);
+		w.writeAsShort(GMSendOpcode.GM_LIST.getValue());
+		w.writeAsByte(0);
 		for (String name : names) {
 			w.writeLengthString(name);
 		}
@@ -66,8 +66,8 @@ public class GMPacketCreator {
 
 	public static GamePacket addUser(final String name) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.GM_LIST.getValue());
-		w.write(1);
+		w.writeAsShort(GMSendOpcode.GM_LIST.getValue());
+		w.writeAsByte(1);
 		w.writeLengthString(name);
 
 		return w.getPacket();
@@ -75,8 +75,8 @@ public class GMPacketCreator {
 
 	public static GamePacket removeUser(final String name) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.GM_LIST.getValue());
-		w.write(2);
+		w.writeAsShort(GMSendOpcode.GM_LIST.getValue());
+		w.writeAsByte(2);
 		w.writeLengthString(name);
 
 		return w.getPacket();
@@ -84,7 +84,7 @@ public class GMPacketCreator {
 
 	public static GamePacket sendPlayerList(final List<String> list) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.SEND_PLAYER_LIST.getValue());
+		w.writeAsShort(GMSendOpcode.SEND_PLAYER_LIST.getValue());
 		for (String s : list) {
 			w.writeLengthString(s);
 		}
@@ -93,25 +93,25 @@ public class GMPacketCreator {
 
 	public static GamePacket commandResponse(final byte op) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
-		w.write(op);
+		w.writeAsShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
+		w.writeAsByte(op);
 		return w.getPacket();
 	}
 
 	public static GamePacket playerStats(final String name, final String job, final byte level, final int exp, final short hp, final short mp, final short str, final short dex, final short int_, final short luk, final int meso) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
-		w.write(3);
+		w.writeAsShort(GMSendOpcode.COMMAND_RESPONSE.getValue());
+		w.writeAsByte(3);
 		w.writeLengthString(name);
 		w.writeLengthString(job);
-		w.write(level);
+		w.writeAsByte(level);
 		w.writeInt(exp);
-		w.writeShort(hp);
-		w.writeShort(mp);
-		w.writeShort(str);
-		w.writeShort(dex);
-		w.writeShort(int_);
-		w.writeShort(luk);
+		w.writeAsShort(hp);
+		w.writeAsShort(mp);
+		w.writeAsShort(str);
+		w.writeAsShort(dex);
+		w.writeAsShort(int_);
+		w.writeAsShort(luk);
 		w.writeInt(meso);
 		return w.getPacket();
 	}

@@ -67,17 +67,6 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	}
 
 	/**
-	 * Write a byte to the stream.
-	 * 
-	 * @param b
-	 *            The byte to write.
-	 */
-	@Override
-	public void write(byte b) {
-		bos.writeByte(b);
-	}
-
-	/**
 	 * Writes 0 times number of times.
 	 * 
 	 * @param times
@@ -95,10 +84,15 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 *            The byte as an <code>Integer</code> to write.
 	 */
 	@Override
-	public void write(int b) {
+	public void writeAsByte(int b) {
 		bos.writeByte((byte) b);
 	}
-
+	
+	@Override
+	public void writeAsByte(boolean b) {
+		this.writeAsByte(b ? 1 : 0);
+	}
+	
 	@Override
 	public void skip(int b) {
 		write(new byte[b]);
@@ -111,7 +105,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 *            The short integer to write.
 	 */
 	@Override
-	public void writeShort(int i) {
+	public void writeAsShort(int i) {
 		bos.writeByte((byte) (i & 0xFF));
 		bos.writeByte((byte) ((i >>> 8) & 0xFF));
 	}
@@ -155,7 +149,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 */
 	@Override
 	public void writeLengthString(String s) {
-		writeShort((short) s.length());
+		writeAsShort((short) s.length());
 		writeString(s);
 	}
 
@@ -168,7 +162,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	@Override
 	public void writeNullTerminatedString(String s) {
 		writeString(s);
-		write(0);
+		writeAsByte(0);
 	}
 
 	/**
@@ -197,7 +191,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 */
 	@Override
 	public void writePos(Point s) {
-		writeShort(s.x);
-		writeShort(s.y);
+		writeAsShort(s.x);
+		writeAsShort(s.y);
 	}
 }

@@ -32,8 +32,8 @@ public class ChangeEquip implements LifeMovementFragment {
 
 	@Override
 	public void serialize(LittleEndianWriter w) {
-		w.write(10);
-		w.write(wui);
+		w.writeAsByte(10);
+		w.writeAsByte(wui);
 	}
 
 	@Override

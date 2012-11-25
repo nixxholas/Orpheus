@@ -66,14 +66,14 @@ public final class FamilyUseHandler extends AbstractPacketHandler {
 	 */
 	private static GamePacket useRep(int mode, int type, int erate, int drate, int time) {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(0x60);// noty
-		w.write(mode);
+		w.writeAsShort(0x60);// noty
+		w.writeAsByte(mode);
 		w.writeInt(type);
 		if (mode < 4) {
 			w.writeInt(erate);
 			w.writeInt(drate);
 		}
-		w.write(0);
+		w.writeAsByte(0);
 		w.writeInt(time);
 		return w.getPacket();
 	}
@@ -91,7 +91,7 @@ public final class FamilyUseHandler extends AbstractPacketHandler {
 	@SuppressWarnings("unused")
 	private static GamePacket giveBuff() {
 		PacketWriter w = new PacketWriter();
-		w.writeShort(SendOpcode.GIVE_BUFF.getValue());
+		w.writeAsShort(SendOpcode.GIVE_BUFF.getValue());
 		w.writeInt(0);
 		w.writeLong(0);
 
