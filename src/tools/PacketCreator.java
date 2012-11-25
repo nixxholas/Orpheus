@@ -3918,7 +3918,7 @@ public class PacketCreator {
 			w.writeInt(mgc.getJobId());
 			w.writeInt(mgc.getLevel());
 			w.writeInt(mgc.getGuildRank());
-			w.writeInt(mgc.isOnline());
+			w.writeInt(mgc.isOnline() ? 1 : 0);
 			w.writeInt(g.getSignature());
 			w.writeInt(mgc.getAllianceRank());
 		}
@@ -3983,7 +3983,7 @@ public class PacketCreator {
 		w.writeInt(mgc.getJobId());
 		w.writeInt(mgc.getLevel());
 		w.writeInt(mgc.getGuildRank()); // should be always 5 but whatevs
-		w.writeInt(mgc.isOnline()); // should always be 1 too
+		w.writeInt(mgc.isOnline() ? 1 : 0); // should always be 1 too
 		w.writeInt(1); // ? could be guild signature, but doesn't seem to
 							// matter
 		w.writeInt(3);
@@ -4372,7 +4372,7 @@ public class PacketCreator {
 		if (animation == 1) {
 			w.writeAsByte(0);
 		} else {
-			w.writeAsShort(success);
+			w.writeAsShort(success ? 1 : 0);
 		}
 		return w.getPacket();
 	}
@@ -6071,7 +6071,7 @@ public class PacketCreator {
 			w.writeInt(mgc.getJobId());
 			w.writeInt(mgc.getLevel());
 			w.writeInt(mgc.getGuildRank());
-			w.writeInt(mgc.isOnline());
+			w.writeInt(mgc.isOnline() ? 1 : 0);
 			w.writeInt(guild.getSignature());
 			w.writeInt(mgc.getAllianceRank());
 		}
