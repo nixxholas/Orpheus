@@ -182,26 +182,32 @@ public class GameClient {
 	}
 	
 	private List<CharacterNameAndId> loadCharactersInternal(int serverId) {
-		PreparedStatement ps;
+		final Connection connection = DatabaseConnection.getConnection();
+
 		List<CharacterNameAndId> chars = new ArrayList<CharacterNameAndId>(15);
-		try {
-			if (ServerConstants.ENABLE_HARDCORE_MODE) {
-				ps = DatabaseConnection.getConnection().prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ? AND `dead` != 1");
-			} else {
-				ps = DatabaseConnection.getConnection().prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ?");
-			}
-			ps.setInt(1, this.getAccID());
-			ps.setInt(2, serverId);
-			ResultSet rs = ps.executeQuery();
+		try (PreparedStatement ps = getSelectCharacters(connection, serverId);
+				ResultSet rs = ps.executeQuery();) {
+			
 			while (rs.next()) {
 				chars.add(new CharacterNameAndId(rs.getInt("id"), rs.getString("name")));
 			}
-			rs.close();
-			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return chars;
+	}
+
+	private PreparedStatement getSelectCharacters(final Connection connection,
+			int serverId) throws SQLException {
+		PreparedStatement ps;
+		if (ServerConstants.ENABLE_HARDCORE_MODE) {
+			ps = connection.prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ? AND `dead` != 1");
+		} else {
+			ps = connection.prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ?");
+		}
+		ps.setInt(1, this.getAccID());
+		ps.setInt(2, serverId);
+		return ps;
 	}
 
 	public boolean isLoggedIn() {
@@ -210,8 +216,10 @@ public class GameClient {
 
 	public boolean hasBannedIP() {
 		boolean ret = false;
+
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM `ipbans` WHERE ? LIKE CONCAT(`ip`, '%')");
+			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM `ipbans` WHERE ? LIKE CONCAT(`ip`, '%')");
 			ps.setString(1, session.getRemoteAddress().toString());
 			ResultSet rs = ps.executeQuery();
 			rs.next();
@@ -904,31 +912,43 @@ public class GameClient {
 		return QuestScriptManager.getInstance().getQM(this);
 	}
 
-	public boolean acceptToS() {
+	public boolean acceptTermsOfService() {
 		boolean disconnectForBeingAFaggot = false;
 		if (accountName == null) {
 			return true;
 		}
-		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `tos` FROM `accounts` WHERE `id` = ?");
-			ps.setInt(1, accId);
-			ResultSet rs = ps.executeQuery();
 
+		final Connection connection = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getSelectTosById(connection);
+				ResultSet rs = ps.executeQuery();) {
+			
 			if (rs.next()) {
 				if (rs.getByte("tos") == 1) {
 					disconnectForBeingAFaggot = true;
 				}
 			}
-			ps.close();
-			rs.close();
-			rs = null;
-			ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `tos` = 1 WHERE `id` = ?");
-			ps.setInt(1, accId);
-			ps.executeUpdate();
-			ps.close();
 		} catch (SQLException e) {
 		}
+		
+		try (PreparedStatement ps = getUpdateTosById(connection)) {
+			ps.executeUpdate();
+		} catch (SQLException e) {
+		}
+
 		return disconnectForBeingAFaggot;
+	}
+
+	private PreparedStatement getUpdateTosById(final Connection connection) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("UPDATE `accounts` SET `tos` = 1 WHERE `id` = ?");
+		ps.setInt(1, accId);
+		return ps;
+	}
+
+	private PreparedStatement getSelectTosById(final Connection connection)
+			throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT `tos` FROM `accounts` WHERE `id` = ?");
+		ps.setInt(1, accId);
+		return ps;
 	}
 
 	public static boolean checkHash(String hash, String type, String password) {
@@ -964,29 +984,22 @@ public class GameClient {
 
 	public final byte getGReason() {
 		final Connection con = DatabaseConnection.getConnection();
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = con.prepareStatement("SELECT `greason` FROM `accounts` WHERE `id` = ?");
-			ps.setInt(1, accId);
-			rs = ps.executeQuery();
+		try (
+				PreparedStatement ps = getSelectBanReason(con);
+				ResultSet rs = ps.executeQuery();){
 			if (rs.next()) {
 				return rs.getByte("greason");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException e) {
-			}
 		}
 		return 0;
+	}
+
+	private PreparedStatement getSelectBanReason(final Connection con) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT `greason` FROM `accounts` WHERE `id` = ?");
+		ps.setInt(1, accId);
+		return ps;
 	}
 
 	public byte getGender() {
@@ -995,14 +1008,19 @@ public class GameClient {
 
 	public void setGender(byte m) {
 		this.gender = m;
-		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `gender` = ? WHERE `id` = ?");
-			ps.setByte(1, gender);
-			ps.setInt(2, accId);
+		Connection con = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getUpdateAccountGender(con);){			
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
 		}
+	}
+
+	private PreparedStatement getUpdateAccountGender(Connection connection) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("UPDATE `accounts` SET `gender` = ? WHERE `id` = ?");
+		ps.setByte(1, gender);
+		ps.setInt(2, accId);
+		return ps;
 	}
 
 	public void announce(GamePacket packet) {
@@ -1010,23 +1028,22 @@ public class GameClient {
 	}
 
 	public void saveLastKnownIP() {
-		String sockAddr = getSession().getRemoteAddress().toString();
-		Connection con;
-		try {
-			con = DatabaseConnection.getConnection();
-		} catch (Exception e) {
-			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
-			return;
-		}
-		try {
-			PreparedStatement ps = con.prepareStatement("UPDATE `accounts` SET `lastknownip` = ? WHERE `name` = ?");
-			ps.setString(1, sockAddr.substring(1, sockAddr.lastIndexOf(':')));
-			ps.setString(2, accountName);
+		final String sockAddr = getSession().getRemoteAddress().toString();
+		final Connection con = DatabaseConnection.getConnection();
+
+		try (PreparedStatement ps = getUpdateLastKnownIP(con, sockAddr);) {
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
 			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, e);
 		}
+	}
+
+	private PreparedStatement getUpdateLastKnownIP(Connection connection, String sockAddr) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("UPDATE `accounts` SET `lastknownip` = ? WHERE `name` = ?");
+		ps.setString(1, sockAddr.substring(1, sockAddr.lastIndexOf(':')));
+		ps.setString(2, accountName);
+		return ps;
 	}
 	
 	public boolean isGM() {
@@ -1038,21 +1055,21 @@ public class GameClient {
 	}
 	
 	public static String getAccountNameById(int id) {
-		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `name` FROM `accounts` WHERE `id` = ?");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			if (!rs.next()) {
-				rs.close();
-				ps.close();
-				return null;
+		final Connection con = DatabaseConnection.getConnection();
+		try (PreparedStatement ps = getSelectAccountById(con, id);
+			ResultSet rs = ps.executeQuery();) {			
+			if (rs.next()) {
+				String name = rs.getString("name");
+				return name;
 			}
-			String name = rs.getString("name");
-			rs.close();
-			ps.close();
-			return name;
 		} catch (Exception e) {
 		}
 		return null;
+	}
+
+	private static PreparedStatement getSelectAccountById(Connection connection, int id) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT `name` FROM `accounts` WHERE `id` = ?");
+		ps.setInt(1, id);
+		return ps;
 	}
 }

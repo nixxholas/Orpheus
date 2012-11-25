@@ -38,7 +38,7 @@ public final class AcceptToSHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		if (slea.available() == 0 || slea.readByte() != 1 || c.acceptToS()) {
+		if (slea.available() == 0 || slea.readByte() != 1 || c.acceptTermsOfService()) {
 			// Client dc's but just because I am cool I do this (:
 			c.disconnect();
 			return;

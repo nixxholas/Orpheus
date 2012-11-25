@@ -769,6 +769,8 @@ public class GameMap {
 			if (!monster.isAlive()) {
 				return;
 			}
+			
+			// FIXME: This is just asking for a race condition.
 			if (monster.getController() != null) {
 				if (monster.getController().getMap() != this) {
 					monster.getController().stopControllingMonster(monster);
@@ -789,9 +791,12 @@ public class GameMap {
 			} finally {
 				chrRLock.unlock();
 			}
-			if (newController != null) {// was a new controller found? (if not
-										// no one is on the map)
+			
+			if (newController != null) {
+				// was a new controller found? (if not no one is on the map)
 				if (monster.isFirstAttack()) {
+					// FIXME: what if the newController left the map by now?
+					// FIXME: race condition...
 					newController.controlMonster(monster, true);
 					monster.setControllerHasAggro(true);
 					monster.setControllerKnowsAboutAggro(true);
@@ -839,22 +844,22 @@ public class GameMap {
 	 * @return
 	 */
 	public Monster getMonsterByOid(int oid) {
-		GameMapObject mmo = getMapObject(oid);
-		if (mmo == null) {
+		GameMapObject mapObject = getMapObject(oid);
+		if (mapObject == null) {
 			return null;
 		}
-		if (mmo.getType() == GameMapObjectType.MONSTER) {
-			return (Monster) mmo;
+		if (mapObject.getType() == GameMapObjectType.MONSTER) {
+			return (Monster) mapObject;
 		}
 		return null;
 	}
 
 	public Reactor getReactorByOid(int oid) {
-		GameMapObject mmo = getMapObject(oid);
-		if (mmo == null) {
+		GameMapObject mapObject = getMapObject(oid);
+		if (mapObject == null) {
 			return null;
 		}
-		return mmo.getType() == GameMapObjectType.REACTOR ? (Reactor) mmo : null;
+		return mapObject.getType() == GameMapObjectType.REACTOR ? (Reactor) mapObject : null;
 	}
 
 	public Reactor getReactorByName(String name) {
@@ -984,8 +989,8 @@ public class GameMap {
 				}, selfDestruction.removeAfter() * 1000);
 			}
 		}
-		if (mapid == 910110000 && !this.allowHPQSummon) { // HPQ make monsters
-															// invisible
+		if (mapid == 910110000 && !this.allowHPQSummon) { 
+			// HPQ make monsters invisible
 			this.broadcastMessage(PacketCreator.makeMonsterInvisible(monster));
 		}
 	}
