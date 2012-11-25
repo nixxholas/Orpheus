@@ -222,11 +222,11 @@ public class Monster extends AbstractLoadedLife {
 		if (hasBossHPBar()) {
 			from.getMap().broadcastMessage(makeBossHPBarPacket(), getPosition());
 		} else if (!isBoss()) {
-			for (AttackerEntry mattacker : attackers) {
-				for (AttackingMapleCharacter cattacker : mattacker.getAttackers()) {
-					if (cattacker.getAttacker().getMap() == from.getMap()) {
-						if (cattacker.getLastAttackTime() >= okTime) {
-							cattacker.getAttacker().getClient().getSession().write(PacketCreator.showMonsterHP(getObjectId(), remhppercentage));
+			for (AttackerEntry attackerEntry : attackers) {
+				for (AttackingGameCharacter cattacker : attackerEntry.getAttackers()) {
+					if (cattacker.attacker.getMap() == from.getMap()) {
+						if (cattacker.lastAttackTime >= okTime) {
+							cattacker.attacker.getClient().getSession().write(PacketCreator.showMonsterHP(getObjectId(), remhppercentage));
 						}
 					}
 				}
@@ -784,29 +784,21 @@ public class Monster extends AbstractLoadedLife {
 		return stats.getName();
 	}
 
-	private class AttackingMapleCharacter {
+	private class AttackingGameCharacter {
 
-		private GameCharacter attacker;
-		private long lastAttackTime;
+		public final GameCharacter attacker;
+		public final long lastAttackTime;
 
-		public AttackingMapleCharacter(GameCharacter attacker, long lastAttackTime) {
+		public AttackingGameCharacter(GameCharacter attacker, long lastAttackTime) {
 			super();
 			this.attacker = attacker;
 			this.lastAttackTime = lastAttackTime;
-		}
-
-		public long getLastAttackTime() {
-			return lastAttackTime;
-		}
-
-		public GameCharacter getAttacker() {
-			return attacker;
 		}
 	}
 
 	private interface AttackerEntry {
 
-		List<AttackingMapleCharacter> getAttackers();
+		List<AttackingGameCharacter> getAttackers();
 
 		public void addDamage(GameCharacter from, int damage, boolean updateAttackTime);
 
@@ -820,18 +812,18 @@ public class Monster extends AbstractLoadedLife {
 	private class SingleAttackerEntry implements AttackerEntry {
 
 		private int damage;
-		private int chrid;
+		private int characterId;
 		private long lastAttackTime;
-		private Channel cserv;
+		private Channel channel;
 
 		public SingleAttackerEntry(GameCharacter from, Channel cserv) {
-			this.chrid = from.getId();
-			this.cserv = cserv;
+			this.characterId = from.getId();
+			this.channel = cserv;
 		}
 
 		@Override
 		public void addDamage(GameCharacter from, int damage, boolean updateAttackTime) {
-			if (chrid == from.getId()) {
+			if (characterId == from.getId()) {
 				this.damage += damage;
 			} else {
 				throw new IllegalArgumentException("Not the attacker of this entry");
@@ -842,10 +834,10 @@ public class Monster extends AbstractLoadedLife {
 		}
 
 		@Override
-		public List<AttackingMapleCharacter> getAttackers() {
-			GameCharacter chr = cserv.getPlayerStorage().getCharacterById(chrid);
+		public List<AttackingGameCharacter> getAttackers() {
+			GameCharacter chr = channel.getPlayerStorage().getCharacterById(characterId);
 			if (chr != null) {
-				return Collections.singletonList(new AttackingMapleCharacter(chr, lastAttackTime));
+				return Collections.singletonList(new AttackingGameCharacter(chr, lastAttackTime));
 			} else {
 				return Collections.emptyList();
 			}
@@ -853,7 +845,7 @@ public class Monster extends AbstractLoadedLife {
 
 		@Override
 		public boolean contains(GameCharacter chr) {
-			return chrid == chr.getId();
+			return characterId == chr.getId();
 		}
 
 		@Override
@@ -863,7 +855,7 @@ public class Monster extends AbstractLoadedLife {
 
 		@Override
 		public void killedMob(GameMap map, int baseExp, boolean mostDamage) {
-			GameCharacter chr = map.getCharacterById(chrid);
+			GameCharacter chr = map.getCharacterById(characterId);
 			if (chr != null) {
 				giveExpToCharacter(chr, baseExp, mostDamage, 1);
 			}
@@ -871,7 +863,7 @@ public class Monster extends AbstractLoadedLife {
 
 		@Override
 		public int hashCode() {
-			return chrid;
+			return characterId;
 		}
 
 		@Override
@@ -886,7 +878,7 @@ public class Monster extends AbstractLoadedLife {
 				return false;
 			}
 			final SingleAttackerEntry other = (SingleAttackerEntry) obj;
-			return chrid == other.chrid;
+			return characterId == other.characterId;
 		}
 	}
 
@@ -917,12 +909,12 @@ public class Monster extends AbstractLoadedLife {
 		}
 
 		@Override
-		public List<AttackingMapleCharacter> getAttackers() {
-			List<AttackingMapleCharacter> ret = new ArrayList<AttackingMapleCharacter>(attackers.size());
+		public List<AttackingGameCharacter> getAttackers() {
+			List<AttackingGameCharacter> ret = new ArrayList<AttackingGameCharacter>(attackers.size());
 			for (Entry<Integer, OnePartyAttacker> entry : attackers.entrySet()) {
 				GameCharacter chr = cserv.getPlayerStorage().getCharacterById(entry.getKey());
 				if (chr != null) {
-					ret.add(new AttackingMapleCharacter(chr, entry.getValue().lastAttackTime));
+					ret.add(new AttackingGameCharacter(chr, entry.getValue().lastAttackTime));
 				}
 			}
 			return ret;
