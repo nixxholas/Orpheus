@@ -31,7 +31,7 @@ import javax.management.ObjectName;
 
 public class TimerManager implements TimerManagerMBean {
 	private static TimerManager instance = new TimerManager();
-	private ScheduledThreadPoolExecutor ses;
+	private ScheduledThreadPoolExecutor executor;
 
 	private TimerManager() {
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
@@ -46,7 +46,7 @@ public class TimerManager implements TimerManagerMBean {
 	}
 
 	public void start() {
-		if (ses != null && !ses.isShutdown() && !ses.isTerminated()) {
+		if (executor != null && !executor.isShutdown() && !executor.isTerminated()) {
 			return;
 		}
 		ScheduledThreadPoolExecutor stpe = new ScheduledThreadPoolExecutor(4, new ThreadFactory() {
@@ -62,65 +62,68 @@ public class TimerManager implements TimerManagerMBean {
 		// this is a no-no, it actually does nothing..then why the fuck are you
 		// doing it?
 		stpe.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
-		ses = stpe;
+		executor = stpe;
 	}
 
 	public void stop() {
-		ses.shutdownNow();
+		executor.shutdownNow();
 	}
 
-	public Runnable purge() {// Yay?
+	public Runnable purge() {
+		// Yay?
 		return new Runnable() {
+			
+			@Override
 			public void run() {
-				ses.purge();
+				executor.purge();
 			}
 		};
 	}
 
 	public ScheduledFuture<?> register(Runnable r, long repeatTime, long delay) {
-		return ses.scheduleAtFixedRate(new LoggingSaveRunnable(r), delay, repeatTime, TimeUnit.MILLISECONDS);
+		return executor.scheduleAtFixedRate(new LoggingSaveRunnable(r), delay, repeatTime, TimeUnit.MILLISECONDS);
 	}
 
 	public ScheduledFuture<?> register(Runnable r, long repeatTime) {
-		return ses.scheduleAtFixedRate(new LoggingSaveRunnable(r), 0, repeatTime, TimeUnit.MILLISECONDS);
+		return executor.scheduleAtFixedRate(new LoggingSaveRunnable(r), 0, repeatTime, TimeUnit.MILLISECONDS);
 	}
 
 	public ScheduledFuture<?> schedule(Runnable r, long delay) {
-		return ses.schedule(new LoggingSaveRunnable(r), delay, TimeUnit.MILLISECONDS);
+		return executor.schedule(new LoggingSaveRunnable(r), delay, TimeUnit.MILLISECONDS);
 	}
 
 	public ScheduledFuture<?> scheduleAtTimestamp(Runnable r, long timestamp) {
 		return schedule(r, timestamp - System.currentTimeMillis());
 	}
-
+	
 	@Override
 	public long getActiveCount() {
-		return ses.getActiveCount();
+		return executor.getActiveCount();
 	}
 
 	@Override
 	public long getCompletedTaskCount() {
-		return ses.getCompletedTaskCount();
+		return executor.getCompletedTaskCount();
 	}
 
 	@Override
 	public int getQueuedTasks() {
-		return ses.getQueue().toArray().length;
+		return executor.getQueue().toArray().length;
 	}
 
 	@Override
 	public long getTaskCount() {
-		return ses.getTaskCount();
+		return executor.getTaskCount();
 	}
 
 	@Override
 	public boolean isShutdown() {
-		return ses.isShutdown();
+		return executor.isShutdown();
 	}
 
 	@Override
 	public boolean isTerminated() {
-		return ses.isTerminated();
+		return executor.isTerminated();
 	}
 
 	private static class LoggingSaveRunnable implements Runnable {
@@ -136,6 +139,13 @@ public class TimerManager implements TimerManagerMBean {
 				r.run();
 			} catch (Throwable t) {
 			}
+		}
+	}
+	
+	public static void cancelSafely(final ScheduledFuture<?> future, final boolean arg0) {
+		final ScheduledFuture<?> copy = future;
+		if (copy != null) {
+			copy.cancel(arg0);
 		}
 	}
 }
