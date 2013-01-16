@@ -4322,7 +4322,7 @@ public class PacketCreator {
 		w.writeInt(0);
 		w.writeVector(pet.getPos());
 		w.writeAsByte(pet.getStance());
-		w.writeInt(pet.getFh());
+		w.writeInt(pet.getFoothold());
 	}
 
 	public static GamePacket showPet(GameCharacter chr, Pet pet, boolean remove, boolean hunger) {

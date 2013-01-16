@@ -19,6 +19,7 @@ package client;
 
 import com.mysql.jdbc.Statement;
 import java.awt.Point;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,91 +36,73 @@ import server.movement.LifeMovementFragment;
  */
 public class Pet extends Item {
 	private String name;
-	private int uniqueid;
+	private int uniqueId;
 	private int closeness = 0;
 	private byte level = 1;
 	private int fullness = 100;
-	private int Fh;
+	private int foothold;
 	private Point pos;
 	private int stance;
 	private boolean summoned;
 
-	private Pet(int id, byte position, int uniqueid) {
+	private Pet(int id, byte position, int uniqueId) {
 		super(id, position, (short) 1);
-		this.uniqueid = uniqueid;
+		this.uniqueId = uniqueId;
 	}
 
-	public static Pet loadFromDb(int itemid, byte position, int petid) {
+	public static Pet loadFromDb(int itemId, byte position, int petId) {
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
-			Pet ret = new Pet(itemid, position, petid);
+			final Pet pet = new Pet(itemId, position, petId);
 			
 			// Get pet details..
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `name`, `level`, `closeness`, `fullness`, `summoned` FROM `pets` WHERE `petid` = ?"); 
-			ps.setInt(1, petid);
+			PreparedStatement ps = connection.prepareStatement("SELECT `name`, `level`, `closeness`, `fullness`, `summoned` FROM `pets` WHERE `petid` = ?"); 
+			ps.setInt(1, petId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			ret.setName(rs.getString("name"));
-			ret.setCloseness(Math.min(rs.getInt("closeness"), 30000));
-			ret.setLevel((byte) Math.min(rs.getByte("level"), 30));
-			ret.setFullness(Math.min(rs.getInt("fullness"), 100));
-			ret.setSummoned(rs.getInt("summoned") == 1);
+			pet.setName(rs.getString("name"));
+			pet.setCloseness(Math.min(rs.getInt("closeness"), 30000));
+			pet.setLevel((byte) Math.min(rs.getByte("level"), 30));
+			pet.setFullness(Math.min(rs.getInt("fullness"), 100));
+			pet.setSummoned(rs.getInt("summoned") == 1);
 			rs.close();
 			ps.close();
-			return ret;
+			return pet;
 		} catch (SQLException e) {
 			return null;
 		}
 	}
 
 	public void saveToDb() {
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `pets` SET `name` = ?, `level` = ?, `closeness` = ?, `fullness` = ?, `summoned` = ? WHERE `petid` = ?");
-			ps.setString(1, getName());
-			ps.setInt(2, getLevel());
-			ps.setInt(3, getCloseness());
-			ps.setInt(4, getFullness());
-			ps.setInt(5, isSummoned() ? 1 : 0);
-			ps.setInt(6, getUniqueId());
+			final PreparedStatement ps = connection.prepareStatement("UPDATE `pets` SET `name` = ?, `level` = ?, `closeness` = ?, `fullness` = ?, `summoned` = ? WHERE `petid` = ?");
+			ps.setString(1, this.getName());
+			ps.setInt(2, this.getLevel());
+			ps.setInt(3, this.getCloseness());
+			ps.setInt(4, this.getFullness());
+			ps.setInt(5, this.isSummoned() ? 1 : 0);
+			ps.setInt(6, this.getUniqueId());
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
 		}
 	}
 
-	public static int createPet(int itemid) {
+	public static int createPet(int itemId) {
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO `pets` (`name`, `level`, `closeness`, `fullness`, `summoned`) VALUES (?, 1, 0, 100, 0)", Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, ItemInfoProvider.getInstance().getName(itemid));
+			final PreparedStatement ps = connection.prepareStatement("INSERT INTO `pets` (`name`, `level`, `closeness`, `fullness`, `summoned`) VALUES (?, 1, 0, 100, 0)", Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, ItemInfoProvider.getInstance().getName(itemId));
 			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-			int ret = -1;
+			final ResultSet rs = ps.getGeneratedKeys();
+			int result = -1;
 			if (rs.next()) {
-				ret = rs.getInt(1);
+				result = rs.getInt(1);
 			}
 			rs.close();
 			ps.close();
-			return ret;
-		} catch (SQLException e) {
-			return -1;
-		}
-	}
-
-	public static int createPet(int itemid, byte level, int closeness, int fullness) {
-		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO `pets` (`name`, `level`, `closeness`, `fullness`, `summoned`) VALUES (?, ?, ?, ?, 0)", Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, ItemInfoProvider.getInstance().getName(itemid));
-			ps.setByte(2, level);
-			ps.setInt(3, closeness);
-			ps.setInt(4, fullness);
-			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-			int ret = -1;
-			if (rs.next()) {
-				ret = rs.getInt(1);
-				rs.close();
-				ps.close();
-			}
-			return ret;
+			return result;
 		} catch (SQLException e) {
 			return -1;
 		}
@@ -134,11 +117,11 @@ public class Pet extends Item {
 	}
 
 	public int getUniqueId() {
-		return uniqueid;
+		return uniqueId;
 	}
 
 	public void setUniqueId(int id) {
-		this.uniqueid = id;
+		this.uniqueId = id;
 	}
 
 	public int getCloseness() {
@@ -169,12 +152,12 @@ public class Pet extends Item {
 		this.fullness = fullness;
 	}
 
-	public int getFh() {
-		return Fh;
+	public int getFoothold() {
+		return foothold;
 	}
 
-	public void setFh(int Fh) {
-		this.Fh = Fh;
+	public void setFoothold(int foothold) {
+		this.foothold = foothold;
 	}
 
 	public Point getPos() {
@@ -197,8 +180,8 @@ public class Pet extends Item {
 		return summoned;
 	}
 
-	public void setSummoned(boolean yes) {
-		this.summoned = yes;
+	public void setSummoned(boolean value) {
+		this.summoned = value;
 	}
 
 	public boolean canConsume(int itemId) {
@@ -206,17 +189,19 @@ public class Pet extends Item {
 			if (petId == this.getItemId()) {
 				return true;
 			}
-		}
+		}		
 		return false;
 	}
 
 	public void updatePosition(List<LifeMovementFragment> movement) {
 		for (LifeMovementFragment move : movement) {
 			if (move instanceof LifeMovement) {
-				if (move instanceof AbsoluteLifeMovement) {
-					this.setPos(((LifeMovement) move).getPosition());
+				final LifeMovement lifeMove = (LifeMovement) move;
+				if (lifeMove instanceof AbsoluteLifeMovement) {
+					this.setPos(lifeMove.getPosition());
 				}
-				this.setStance(((LifeMovement) move).getNewstate());
+				
+				this.setStance(lifeMove.getNewstate());
 			}
 		}
 	}

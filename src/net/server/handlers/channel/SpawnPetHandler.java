@@ -91,7 +91,7 @@ public final class SpawnPetHandler extends AbstractPacketHandler {
 			Point pos = chr.getPosition();
 			pos.y -= 12;
 			pet.setPos(pos);
-			pet.setFh(chr.getMap().getFootholds().findBelow(pet.getPos()).getId());
+			pet.setFoothold(chr.getMap().getFootholds().findBelow(pet.getPos()).getId());
 			pet.setStance(0);
 			pet.setSummoned(true);
 			pet.saveToDb();
