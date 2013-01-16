@@ -4853,6 +4853,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.snowballattack = time;
 	}
 
+	// TODO: WHY HERE. WHY. WHY ADD THESE BYTES TO EVERY INSTANCE.
 	// Monster Carnival
 	private int cp = 0;
 	private int obtainedcp = 0;
@@ -4955,30 +4956,20 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public final void empty() {
 		// lol serious shit here
-		if (dragonBloodSchedule != null) {
-			dragonBloodSchedule.cancel(false);
-		}
-		if (hpDecreaseTask != null) {
-			hpDecreaseTask.cancel(false);
-		}
-		if (beholderHealingSchedule != null) {
-			beholderHealingSchedule.cancel(false);
-		}
-		if (beholderBuffSchedule != null) {
-			beholderBuffSchedule.cancel(false);
-		}
-		if (BerserkSchedule != null) {
-			BerserkSchedule.cancel(false);
-		}
-		if (recoveryTask != null) {
-			recoveryTask.cancel(false);
-		}
+		TimerManager.cancelSafely(this.dragonBloodSchedule, false);
+		TimerManager.cancelSafely(this.hpDecreaseTask, false);
+		TimerManager.cancelSafely(this.beholderHealingSchedule, false);
+		TimerManager.cancelSafely(this.beholderBuffSchedule, false);
+		TimerManager.cancelSafely(this.BerserkSchedule, false);
+		TimerManager.cancelSafely(this.recoveryTask, false);
+
 		cancelExpirationTask();
 		for (ScheduledFuture<?> sf : timers) {
 			sf.cancel(false);
 		}
 		timers.clear();
 		timers = null;
+		
 		maplemount = null;
 		diseases = null;
 		partyQuest = null;
