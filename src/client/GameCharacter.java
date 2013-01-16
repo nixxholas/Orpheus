@@ -633,6 +633,72 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.effects.clear();
 	}
 
+	private final class PendantHourlyAction implements Runnable {
+		@Override
+		public void run() {
+			if (pendantExp < 3) {
+				pendantExp++;
+				message("Pendant of the Spirit has been equipped for " + pendantExp + " hour(s), you will now receive " + pendantExp + "0% bonus exp.");
+			} else {
+				pendantOfSpirit.cancel(false);
+			}
+		}
+	}
+
+	private final class QuestExpirationAction implements Runnable {
+		private final Quest quest;
+
+		private QuestExpirationAction(Quest quest) {
+			this.quest = quest;
+		}
+
+		@Override
+		public void run() {
+			announce(PacketCreator.questExpire(quest.getId()));
+			QuestStatus newStatus = new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
+			newStatus.setForfeited(getQuest(quest).getForfeited() + 1);
+			updateQuest(newStatus);
+		}
+	}
+
+	private final class MapEffectAction implements Runnable {
+		private final GameMapEffect mapEffect;
+
+		private MapEffectAction(GameMapEffect mapEffect) {
+			this.mapEffect = mapEffect;
+		}
+
+		@Override
+		public void run() {
+			getClient().announce(mapEffect.makeDestroyData());
+		}
+	}
+
+	private final class FullnessScheduleAction implements Runnable {
+		private final Pet pet;
+		private final int decrease;
+
+		private FullnessScheduleAction(Pet pet, int decrease) {
+			this.pet = pet;
+			this.decrease = decrease;
+		}
+
+		@Override
+		public void run() {
+			int newFullness = pet.getFullness() - decrease;
+			if (newFullness <= 5) {
+				pet.setFullness(15);
+				pet.saveToDb();
+				unequipPet(pet, true);
+			} else {
+				pet.setFullness(newFullness);
+				pet.saveToDb();
+				IItem petz = getInventory(InventoryType.CASH).getItem(pet.getPosition());
+				client.announce(PacketCreator.updateSlot(petz));
+			}
+		}
+	}
+
 	public static class CancelCooldownAction implements Runnable {
 
 		private int skillId;
@@ -3296,7 +3362,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void removePet(Pet pet, boolean shift_left) {
+	public void removePet(Pet pet, boolean shiftLeft) {
 		int slot = -1;
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] != null) {
@@ -3307,7 +3373,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 			}
 		}
-		if (shift_left) {
+		if (shiftLeft) {
 			if (slot > -1) {
 				for (int i = slot; i < 3; i++) {
 					if (i != 2) {
@@ -4404,23 +4470,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (isGM() && ServerConstants.GM_PETS_NEVER_HUNGRY || ServerConstants.PETS_NEVER_HUNGRY) {
 			return; // no fullness schedules :3
 		}
-		ScheduledFuture<?> schedule = TimerManager.getInstance().register(new Runnable() {
-
-			@Override
-			public void run() {
-				int newFullness = pet.getFullness() - decrease;
-				if (newFullness <= 5) {
-					pet.setFullness(15);
-					pet.saveToDb();
-					unequipPet(pet, true);
-				} else {
-					pet.setFullness(newFullness);
-					pet.saveToDb();
-					IItem petz = getInventory(InventoryType.CASH).getItem(pet.getPosition());
-					client.announce(PacketCreator.updateSlot(petz));
-				}
-			}
-		}, ServerConstants.PET_FULLNESS_REPEAT_TIME, ServerConstants.PET_FULLNESS_START_DELAY);
+		ScheduledFuture<?> schedule = TimerManager.getInstance().register(
+				new FullnessScheduleAction(pet, decrease), 
+				ServerConstants.PET_FULLNESS_REPEAT_TIME, 
+				ServerConstants.PET_FULLNESS_START_DELAY);
 		fullnessSchedule[petSlot] = schedule;
 	}
 
@@ -4431,13 +4484,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void startMapEffect(String msg, int itemId, int duration) {
 		final GameMapEffect mapEffect = new GameMapEffect(msg, itemId);
 		getClient().announce(mapEffect.makeStartData());
-		TimerManager.getInstance().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				getClient().announce(mapEffect.makeDestroyData());
-			}
-		}, duration);
+		TimerManager.getInstance().schedule(new MapEffectAction(mapEffect), duration);
 	}
 
 	public void stopControllingMonster(Monster monster) {
@@ -4452,22 +4499,23 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void unequipPet(Pet pet, boolean shift_left) {
-		unequipPet(pet, shift_left, false);
+	public void unequipPet(Pet pet, boolean shiftLeft) {
+		unequipPet(pet, shiftLeft, false);
 	}
 
-	public void unequipPet(Pet pet, boolean shift_left, boolean hunger) {
-		if (this.getPet(this.getPetIndex(pet)) != null) {
-			this.getPet(this.getPetIndex(pet)).setSummoned(false);
-			this.getPet(this.getPetIndex(pet)).saveToDb();
+	public void unequipPet(Pet pet, boolean shiftLeft, boolean hunger) {
+		final byte petIndex = this.getPetIndex(pet);
+		if (this.getPet(petIndex) != null) {
+			this.getPet(petIndex).setSummoned(false);
+			this.getPet(petIndex).saveToDb();
 		}
-		cancelFullnessSchedule(getPetIndex(pet));
+		cancelFullnessSchedule(petIndex);
 		getMap().broadcastMessage(this, PacketCreator.showPet(this, pet, true, hunger), true);
 		List<Pair<Stat, Integer>> stats = new ArrayList<Pair<Stat, Integer>>();
 		stats.add(new Pair<Stat, Integer>(Stat.PET, Integer.valueOf(0)));
 		client.getSession().write(PacketCreator.petStatUpdate(this));
 		client.getSession().write(PacketCreator.enableActions());
-		removePet(pet, shift_left);
+		removePet(pet, shiftLeft);
 	}
 
 	public void updateMacros(int position, SkillMacro updateMacro) {
@@ -4504,16 +4552,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void questTimeLimit(final Quest quest, int time) {
-		ScheduledFuture<?> sf = TimerManager.getInstance().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				announce(PacketCreator.questExpire(quest.getId()));
-				QuestStatus newStatus = new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
-				newStatus.setForfeited(getQuest(quest).getForfeited() + 1);
-				updateQuest(newStatus);
-			}
-		}, time);
+		ScheduledFuture<?> sf = TimerManager.getInstance().schedule(new QuestExpirationAction(quest), time);
 		announce(PacketCreator.addQuestTimeLimit(quest.getId(), time));
 		timers.add(sf);
 	}
@@ -4875,18 +4914,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void equipPendantOfSpirit() {
 		if (pendantOfSpirit == null) {
-			pendantOfSpirit = TimerManager.getInstance().register(new Runnable() {
-
-				@Override
-				public void run() {
-					if (pendantExp < 3) {
-						pendantExp++;
-						message("Pendant of the Spirit has been equipped for " + pendantExp + " hour(s), you will now receive " + pendantExp + "0% bonus exp.");
-					} else {
-						pendantOfSpirit.cancel(false);
-					}
-				}
-			}, 3600000); // 1 hour
+			pendantOfSpirit = TimerManager.getInstance().register(new PendantHourlyAction(), 3600000); // 1 hour
 		}
 	}
 
@@ -4925,7 +4953,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.partyQuest = pq;
 	}
 
-	public final void empty() {// lol serious shit here
+	public final void empty() {
+		// lol serious shit here
 		if (dragonBloodSchedule != null) {
 			dragonBloodSchedule.cancel(false);
 		}
