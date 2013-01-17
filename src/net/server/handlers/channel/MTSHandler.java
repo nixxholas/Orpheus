@@ -891,9 +891,9 @@ public final class MTSHandler extends AbstractPacketHandler {
 			ps.close();
 		} catch (SQLException e) {
 		}
-		// resniff
-		return PacketCreator.sendMTS(items, tab, type, page, pages); 
 		
+		// resniff
+		return PacketCreator.sendMTS(items, tab, type, page, pages); 		
 	}
 
 	public GamePacket getMTSSearch(int tab, int type, int cOi, String search, int page) {
@@ -975,20 +975,20 @@ public final class MTSHandler extends AbstractPacketHandler {
 				ps = con.prepareStatement("SELECT COUNT(*) FROM mts_items WHERE tab = ? " + listaitems + " AND type = ? AND transfer = 0");
 			} else {
 				ps = con.prepareStatement("SELECT COUNT(*) FROM mts_items WHERE tab = ? " + listaitems + " AND transfer = 0");
-				ps.setInt(1, tab);
-				if (type != 0) {
-					ps.setInt(2, type);
-				}
-				rs = ps.executeQuery();
-				if (rs.next()) {
-					pages = rs.getInt(1) / 16;
-					if (rs.getInt(1) % 16 > 0) {
-						pages++;
-					}
-				}
-				rs.close();
-				ps.close();
 			}
+			ps.setInt(1, tab);
+			if (type != 0) {
+				ps.setInt(2, type);
+			}
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				pages = rs.getInt(1) / 16;
+				if (rs.getInt(1) % 16 > 0) {
+					pages++;
+				}
+			}
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {
 		}
 		return PacketCreator.sendMTS(items, tab, type, page, pages);
