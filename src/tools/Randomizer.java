@@ -24,37 +24,37 @@ import java.util.Random;
 
 public class Randomizer {
 
-	private final static Random rand = new Random();
+	private final static Random rng = new Random();
 
 	public static int nextInt() {
-		return rand.nextInt();
+		return rng.nextInt();
 	}
 
 	public static int nextInt(final int arg0) {
-		return rand.nextInt(arg0);
+		return rng.nextInt(arg0);
 	}
 
 	public static void nextBytes(final byte[] bytes) {
-		rand.nextBytes(bytes);
+		rng.nextBytes(bytes);
 	}
 
 	public static boolean nextBoolean() {
-		return rand.nextBoolean();
+		return rng.nextBoolean();
 	}
 
 	public static double nextDouble() {
-		return rand.nextDouble();
+		return rng.nextDouble();
 	}
 
 	public static float nextFloat() {
-		return rand.nextFloat();
+		return rng.nextFloat();
 	}
 
 	public static long nextLong() {
-		return rand.nextLong();
+		return rng.nextLong();
 	}
 
-	public static int rand(final int lbound, final int ubound) {
-		return (int) ((rand.nextDouble() * (ubound - lbound + 1)) + lbound);
+	public static int rand(final int lowerBound, final int upperBound) {
+		return (int) ((rng.nextDouble() * (upperBound - lowerBound + 1)) + lowerBound);
 	}
 }

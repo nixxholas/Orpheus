@@ -20,21 +20,36 @@
  */
 package server.life;
 
+import tools.Randomizer;
+
 /**
  * 
  * @author LightPepsi
  */
 public class MonsterGlobalDropEntry {
-	public MonsterGlobalDropEntry(int itemId, int chance, int continent, byte dropType, int Minimum, int Maximum, short questid) {
-		this.itemId = itemId;
-		this.chance = chance;
-		this.dropType = dropType;
-		this.questid = questid;
-		this.Minimum = Minimum;
-		this.Maximum = Maximum;
-	}
 
-	public byte dropType;
-	public int itemId, chance, Minimum, Maximum;
-	public short questid;
+	public final byte DropType;
+	public final int ItemId;
+	public final int Chance;
+	public final short QuestId;
+
+	private final int Minimum;
+	private final int Maximum;
+
+	public MonsterGlobalDropEntry(int itemId, int chance, int continent, byte dropType, int minimum, int maximum, short questId) {
+		this.ItemId = itemId;
+		this.Chance = chance;
+		this.DropType = dropType;
+		this.QuestId = questId;
+		this.Minimum = minimum;
+		this.Maximum = maximum;
+	}
+		
+	public int getRandomQuantity() {
+		if (this.Maximum == 1) {
+			return 1;
+		} else {
+			return Randomizer.nextInt(this.Maximum - this.Minimum) + this.Minimum;
+		}
+	}
 }

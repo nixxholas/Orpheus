@@ -23,11 +23,13 @@ package server.maps;
 public class ReactorDropEntry {
 
 	public ReactorDropEntry(int itemId, int chance) {
-		this.itemId = itemId;
-		this.chance = chance;
-		// this.questid = questid;
+		this.ItemId = itemId;
+		this.Chance = chance;
 	}
 
-	public int itemId, chance, questid;
-	public int assignedRangeStart, assignedRangeLength;
+	public final int ItemId, Chance;
+
+	// Not used:
+	private int questId;
+	private int assignedRangeStart, assignedRangeLength;
 }

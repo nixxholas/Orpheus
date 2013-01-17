@@ -69,7 +69,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 		Iterator<ReactorDropEntry> iter = chances.iterator();
 		while (iter.hasNext()) {
 			ReactorDropEntry d = iter.next();
-			if (Math.random() < (1 / (double) d.chance)) {
+			if (Math.random() < (1 / (double) d.Chance)) {
 				numItems++;
 				items.add(d);
 			}
@@ -82,7 +82,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 		final Point dropPos = reactor.getPosition();
 		dropPos.x -= (12 * numItems);
 		for (ReactorDropEntry d : items) {
-			if (d.itemId == 0) {
+			if (d.ItemId == 0) {
 				int range = maxMeso - minMeso;
 				int displayDrop = (int) (Math.random() * range) + minMeso;
 				int mesoDrop = (displayDrop * client.getWorldServer().getMesoRate());
@@ -90,11 +90,11 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 			} else {
 				IItem drop;
 				ItemInfoProvider ii = ItemInfoProvider.getInstance();
-				if (ii.getInventoryType(d.itemId) != InventoryType.EQUIP) {
+				if (ii.getInventoryType(d.ItemId) != InventoryType.EQUIP) {
 					// TODO: So if it's not an equip, you always drop only one? So cheap!
-					drop = new Item(d.itemId, (byte) 0, (short) 1);
+					drop = new Item(d.ItemId, (byte) 0, (short) 1);
 				} else {
-					drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));
+					drop = ii.randomizeStats((Equip) ii.getEquipById(d.ItemId));
 				}
 				reactor.getMap().spawnItemDrop(reactor, getPlayer(), drop, dropPos, false, true);
 			}
