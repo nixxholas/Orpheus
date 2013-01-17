@@ -331,6 +331,8 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                             if (attack.skill == Aran.COMBO_SMASH || attack.skill == Aran.COMBO_PENRIL || attack.skill == Aran.COMBO_TEMPEST) {
                                 player.setCombo(combo);//WHY NOT USE COMBO LOL
                             }
+                            
+                            // TODO: See this amount thing? Yeah? It's not used.
                             for (Integer amount : onedList) {
                                 combo = player.getCombo();
                                 if ((currentTime - player.getLastCombo()) > 3000 && combo > 0) {

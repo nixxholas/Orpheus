@@ -170,7 +170,7 @@ public final class DueyHandler extends AbstractPacketHandler {
 				ResultSet rs = ps.executeQuery();
 				DueyPackages dueypack = null;
 				if (rs.next()) {
-					dueypack = getItemByPID(rs);
+					dueypack = getItemByPackageId(rs);
 					dueypack.setSender(rs.getString("SenderName"));
 					dueypack.setMesos(rs.getInt("Mesos"));
 					dueypack.setSentTime(rs.getString("TimeStamp"));
@@ -275,7 +275,7 @@ public final class DueyHandler extends AbstractPacketHandler {
 			ps.setInt(1, chr.getId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				DueyPackages dueypack = getItemByPID(rs);
+				DueyPackages dueypack = getItemByPackageId(rs);
 				dueypack.setSender(rs.getString("SenderName"));
 				dueypack.setMesos(rs.getInt("Mesos"));
 				dueypack.setSentTime(rs.getString("TimeStamp"));
@@ -332,7 +332,7 @@ public final class DueyHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private static DueyPackages getItemByPID(ResultSet rs) {
+	private static DueyPackages getItemByPackageId(ResultSet rs) {
 		try {
 			DueyPackages dueypack;
 			if (rs.getInt("type") == 1) {

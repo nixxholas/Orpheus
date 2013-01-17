@@ -79,4 +79,12 @@ public final class ItemConstants {
 		}
 		return InventoryType.fromByte(type);
 	}
+
+	public static boolean isOverall(int itemId) {
+		return itemId / 10000 == 105;
+	}
+
+	public static boolean isWeapon(int itemId) {
+		return itemId >= 1302000 && itemId < 1492024;
+	}
 }

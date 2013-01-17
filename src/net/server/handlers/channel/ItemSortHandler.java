@@ -35,28 +35,30 @@ public final class ItemSortHandler extends AbstractPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		chr.getAutobanManager().setTimestamp(2, slea.readInt());
-		byte inv = slea.readByte();
-		boolean sorted = false;
-		InventoryType pInvType = InventoryType.fromByte(inv);
-		Inventory pInv = chr.getInventory(pInvType);
-		while (!sorted) {
-			byte freeSlot = pInv.getNextFreeSlot();
+		
+		byte inventoryId = slea.readByte();
+		boolean isSorted = false;
+		InventoryType inventoryType = InventoryType.fromByte(inventoryId);
+		Inventory inventory = chr.getInventory(inventoryType);
+		while (!isSorted) {
+			byte freeSlot = inventory.getNextFreeSlot();
 			if (freeSlot != -1) {
 				byte itemSlot = -1;
 				for (int i = freeSlot + 1; i <= 100; i++) {
-					if (pInv.getItem((byte) i) != null) {
+					if (inventory.getItem((byte) i) != null) {
 						itemSlot = (byte) i;
 						break;
 					}
 				}
 				if (itemSlot <= 100 && itemSlot > 0) {
-					InventoryManipulator.move(c, pInvType, itemSlot, freeSlot);
+					InventoryManipulator.move(c, inventoryType, itemSlot, freeSlot);
 				} else {
-					sorted = true;
+					isSorted = true;
 				}
 			}
 		}
-		c.announce(PacketCreator.finishedSort(inv));
+		
+		c.announce(PacketCreator.finishedSort(inventoryId));
 		c.announce(PacketCreator.enableActions());
 	}
 }

@@ -91,6 +91,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 				IItem drop;
 				ItemInfoProvider ii = ItemInfoProvider.getInstance();
 				if (ii.getInventoryType(d.itemId) != InventoryType.EQUIP) {
+					// TODO: So if it's not an equip, you always drop only one? So cheap!
 					drop = new Item(d.itemId, (byte) 0, (short) 1);
 				} else {
 					drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));

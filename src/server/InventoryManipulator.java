@@ -165,8 +165,8 @@ public class InventoryManipulator {
 			short slotMax = ii.getSlotMax(c, item.getItemId());
 			List<IItem> existing = c.getPlayer().getInventory(type).listById(item.getItemId());
 			if (!ItemConstants.isRechargable(item.getItemId())) {
-				if (existing.size() > 0) { // first update all existing slots to
-											// slotMax
+				if (existing.size() > 0) { 
+					// first update all existing slots to slotMax
 					Iterator<IItem> i = existing.iterator();
 					while (quantity > 0) {
 						if (i.hasNext()) {
@@ -184,16 +184,16 @@ public class InventoryManipulator {
 					}
 				}
 				while (quantity > 0 || ItemConstants.isRechargable(item.getItemId())) {
-					short newQ = (short) Math.min(quantity, slotMax);
-					quantity -= newQ;
-					Item nItem = new Item(item.getItemId(), (byte) 0, newQ);
+					final short newQuantity = (short) Math.min(quantity, slotMax);
+					quantity -= newQuantity;
+					final Item nItem = new Item(item.getItemId(), (byte) 0, newQuantity);
 					nItem.setExpiration(item.getExpiration());
 					nItem.setOwner(item.getOwner());
 					byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
 					if (newSlot == -1) {
 						c.announce(PacketCreator.getInventoryFull());
 						c.announce(PacketCreator.getShowInventoryFull());
-						item.setQuantity((short) (quantity + newQ));
+						item.setQuantity((short) (quantity + newQuantity));
 						return false;
 					}
 					c.announce(PacketCreator.addInventorySlot(type, nItem, true));
@@ -202,14 +202,14 @@ public class InventoryManipulator {
 					}
 				}
 			} else {
-				Item nItem = new Item(item.getItemId(), (byte) 0, quantity);
-				byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
+				final Item newItem = new Item(item.getItemId(), (byte) 0, quantity);
+				final byte newSlot = c.getPlayer().getInventory(type).addItem(newItem);
 				if (newSlot == -1) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
 					return false;
 				}
-				c.announce(PacketCreator.addInventorySlot(type, nItem));
+				c.announce(PacketCreator.addInventorySlot(type, newItem));
 				c.announce(PacketCreator.enableActions());
 			}
 		} else if (quantity == 1) {
@@ -236,9 +236,9 @@ public class InventoryManipulator {
 			short slotMax = ii.getSlotMax(c, itemid);
 			List<IItem> existing = c.getPlayer().getInventory(type).listById(itemid);
 			if (!ItemConstants.isRechargable(itemid)) {
-				if (existing.size() > 0) // first update all existing slots to
-											// slotMax
+				if (existing.size() > 0) 
 				{
+					// first update all existing slots to slotMax
 					for (IItem eItem : existing) {
 						short oldQ = eItem.getQuantity();
 						if (oldQ < slotMax && owner.equals(eItem.getOwner())) {
@@ -283,14 +283,20 @@ public class InventoryManipulator {
 
 	public static void removeById(GameClient c, InventoryType type, int itemId, int quantity, boolean fromDrop, boolean consume) {
 		List<IItem> items = c.getPlayer().getInventory(type).listById(itemId);
+		
+		// TODO: What... is this?
 		int remremove = quantity;
+		
 		for (IItem item : items) {
 			if (remremove <= item.getQuantity()) {
 				removeFromSlot(c, type, item.getPosition(), (short) remremove, fromDrop, consume);
 				remremove = 0;
 				break;
 			} else {
+				
+				// TODO: ... what!
 				remremove -= item.getQuantity();
+				
 				removeFromSlot(c, type, item.getPosition(), item.getQuantity(), fromDrop, consume);
 			}
 		}
@@ -301,7 +307,8 @@ public class InventoryManipulator {
 
 	public static void move(GameClient c, InventoryType type, byte src, byte dst) {
 		if (src < 0 || dst < 0) {
-			return;
+			// TODO: No? This should not ever ever happen, you niblet. Crash! Burn!
+			return; 
 		}
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		IItem source = c.getPlayer().getInventory(type).getItem(src);
@@ -346,7 +353,7 @@ public class InventoryManipulator {
 		}
 		if (dst == -6) { // unequip the overall
 			IItem top = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -5);
-			if (top != null && isOverall(top.getItemId())) {
+			if (top != null && ItemConstants.isOverall(top.getItemId())) {
 				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
@@ -356,7 +363,7 @@ public class InventoryManipulator {
 			}
 		} else if (dst == -5) {
 			final IItem bottom = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -6);
-			if (bottom != null && isOverall(source.getItemId())) {
+			if (bottom != null && ItemConstants.isOverall(source.getItemId())) {
 				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
@@ -393,6 +400,7 @@ public class InventoryManipulator {
 		if (source.getItemId() == 1122017) {
 			c.getPlayer().equipPendantOfSpirit();
 		}
+		
 		// 1112413, 1112414, 1112405 (Lilin's Ring)
 		source = (Equip) c.getPlayer().getInventory(InventoryType.EQUIP).getItem(src);
 		target = (Equip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(dst);
@@ -406,7 +414,7 @@ public class InventoryManipulator {
 			target.setPosition(src);
 			c.getPlayer().getInventory(InventoryType.EQUIP).addFromDB(target);
 		}
-		if (c.getPlayer().getBuffedValue(BuffStat.BOOSTER) != null && isWeapon(source.getItemId())) {
+		if (c.getPlayer().getBuffedValue(BuffStat.BOOSTER) != null && ItemConstants.isWeapon(source.getItemId())) {
 			c.getPlayer().cancelBuffStats(BuffStat.BOOSTER);
 		}
 		c.announce(PacketCreator.moveInventoryItem(InventoryType.EQUIP, src, dst, (byte) 2));
@@ -509,13 +517,5 @@ public class InventoryManipulator {
 				c.getPlayer().getMap().spawnItemDrop(c.getPlayer(), c.getPlayer(), source, dropPos, true, true);
 			}
 		}
-	}
-
-	private static boolean isOverall(int itemId) {
-		return itemId / 10000 == 105;
-	}
-
-	private static boolean isWeapon(int itemId) {
-		return itemId >= 1302000 && itemId < 1492024;
 	}
 }

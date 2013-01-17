@@ -60,17 +60,23 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 		newchar.setGender(slea.readByte());
 		newchar.setName(name);
 		if (!newchar.isGM()) {
-			if (job == 0) { // Knights of Cygnus
+			if (job == 0) { 
+				// Knights of Cygnus
 				newchar.setJob(Job.NOBLESSE);
 				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161047, (byte) 0, (short) 1));
-			} else if (job == 1) { // Adventurer
+			} else if (job == 1) { 
+				// Adventurer
 				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161001, (byte) 0, (short) 1));
-			} else if (job == 2) { // Aran
+			} else if (job == 2) { 
+				// Aran
 				newchar.setJob(Job.LEGEND);
 				newchar.getInventory(InventoryType.ETC).addItem(new Item(4161048, (byte) 0, (short) 1));
 			} else {
-				c.disconnect(); // Muhaha
-				Output.print("[CHAR CREATION] A new job ID has been found: " + job); // Should probably ban for packet editing.
+				// Muhaha
+				c.disconnect(); 
+				
+				// Should probably ban for packet editing.
+				Output.print("[CHAR CREATION] A new job ID has been found: " + job); 
 				return;
 			}
 		}

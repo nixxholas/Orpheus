@@ -22,19 +22,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+// TODO: I've written this rant somewhere before...
+// This class is bad. It does not represent an item. It represents an item container slot.
+// For some weird reason (read: people are idiots) it is used for /everything/ item-related.
+// Including drops on the ground. Which don't have a position.
 public class Item implements IItem {
 
 	private int id, cashId, sn;
+	
+	private byte flag;
+	private long expiration = -1;
+
 	private byte position;
 	private short quantity;
 	private int petid = -1;
-	private Pet pet = null;
-	private String owner = "";
-	protected List<String> log;
-	private byte flag;
-	private long expiration = -1;
+	private Pet pet = null;	
+	
 	private String giftFrom = "";
-
+	private String owner = "";
+	
+	protected List<String> log;
+	
 	public Item(int id, byte position, short quantity) {
 		this.id = id;
 		this.position = position;
@@ -48,8 +56,11 @@ public class Item implements IItem {
 		this.position = position;
 		this.quantity = quantity;
 		this.petid = petid;
+		
+		// TODO: EWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 		if (petid > -1)
 			this.pet = Pet.loadFromDb(id, position, petid);
+		
 		this.flag = 0;
 		this.log = new LinkedList<String>();
 	}
@@ -172,6 +183,7 @@ public class Item implements IItem {
 		this.giftFrom = giftFrom;
 	}
 
+	// TODO: EWWWWWWW?		
 	public Pet getPet() {
 		return pet;
 	}

@@ -35,18 +35,18 @@ public final class ItemMoveHandler extends AbstractPacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		slea.skip(4);
-		InventoryType type = InventoryType.fromByte(slea.readByte());
-		byte src = (byte) slea.readShort();
-		byte action = (byte) slea.readShort();
-		short quantity = slea.readShort();
-		if (src < 0 && action > 0) {
-			InventoryManipulator.unequip(c, src, action);
-		} else if (action < 0) {
-			InventoryManipulator.equip(c, src, action);
-		} else if (action == 0) {
-			InventoryManipulator.drop(c, type, src, quantity);
+		final InventoryType type = InventoryType.fromByte(slea.readByte());
+		final byte sourceSlot = (byte) slea.readShort();
+		final byte targetSlot = (byte) slea.readShort();
+		final short quantity = slea.readShort();
+		if (sourceSlot < 0 && targetSlot > 0) {
+			InventoryManipulator.unequip(c, sourceSlot, targetSlot);
+		} else if (targetSlot < 0) {
+			InventoryManipulator.equip(c, sourceSlot, targetSlot);
+		} else if (targetSlot == 0) {
+			InventoryManipulator.drop(c, type, sourceSlot, quantity);
 		} else {
-			InventoryManipulator.move(c, type, src, action);
+			InventoryManipulator.move(c, type, sourceSlot, targetSlot);
 		}
 	}
 }
