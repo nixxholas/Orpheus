@@ -112,16 +112,16 @@ public class Inventory implements Iterable<IItem> {
 		inventory.put(item.getPosition(), item);
 	}
 
-	public void move(byte sSlot, byte dSlot, short slotMax) {
-		Item source = (Item) inventory.get(sSlot);
-		Item target = (Item) inventory.get(dSlot);
+	public void move(byte sourceSlot, byte targetSlot, short slotMax) {
+		Item source = (Item) inventory.get(sourceSlot);
+		Item target = (Item) inventory.get(targetSlot);
 		if (source == null) {
 			throw new RuntimeException("Trying to move empty slot");
 		}
 		if (target == null) {
-			source.setPosition(dSlot);
-			inventory.put(dSlot, source);
-			inventory.remove(sSlot);
+			source.setPosition(targetSlot);
+			inventory.put(targetSlot, source);
+			inventory.remove(sourceSlot);
 		} else if (target.getItemId() == source.getItemId() && !ItemConstants.isRechargable(source.getItemId())) {
 			if (type.asByte() == InventoryType.EQUIP.asByte()) {
 				swap(target, source);
@@ -132,7 +132,7 @@ public class Inventory implements Iterable<IItem> {
 				target.setQuantity(slotMax);
 			} else {
 				target.setQuantity((short) (source.getQuantity() + target.getQuantity()));
-				inventory.remove(sSlot);
+				inventory.remove(sourceSlot);
 			}
 		} else {
 			swap(target, source);

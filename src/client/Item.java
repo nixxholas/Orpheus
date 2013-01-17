@@ -28,14 +28,14 @@ import java.util.Random;
 // Including drops on the ground. Which don't have a position.
 public class Item implements IItem {
 
-	private int id, cashId, sn;
+	private int itemId, cashId, sn;
 	
 	private byte flag;
 	private long expiration = -1;
 
 	private byte position;
 	private short quantity;
-	private int petid = -1;
+	private int petId = -1;
 	private Pet pet = null;	
 	
 	private String giftFrom = "";
@@ -43,30 +43,31 @@ public class Item implements IItem {
 	
 	protected List<String> log;
 	
-	public Item(int id, byte position, short quantity) {
-		this.id = id;
+	public Item(int itemId, byte position, short quantity) {
+		this.itemId = itemId;
 		this.position = position;
 		this.quantity = quantity;
 		this.log = new LinkedList<String>();
 		this.flag = 0;
 	}
 
-	public Item(int id, byte position, short quantity, int petid) {
-		this.id = id;
+	public Item(int itemId, byte position, short quantity, int petid) {
+		this.itemId = itemId;
 		this.position = position;
 		this.quantity = quantity;
-		this.petid = petid;
+		this.petId = petid;
 		
 		// TODO: EWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 		if (petid > -1)
-			this.pet = Pet.loadFromDb(id, position, petid);
+			this.pet = Pet.loadFromDb(itemId, position, petid);
 		
 		this.flag = 0;
 		this.log = new LinkedList<String>();
 	}
 
+	@Override
 	public IItem copy() {
-		Item ret = new Item(id, position, quantity, petid);
+		Item ret = new Item(itemId, position, quantity, petId);
 		ret.flag = flag;
 		ret.owner = owner;
 		ret.expiration = expiration;
@@ -74,22 +75,25 @@ public class Item implements IItem {
 		return ret;
 	}
 
+	@Override
 	public void setPosition(byte position) {
 		this.position = position;
 	}
 
+	@Override
 	public void setQuantity(short quantity) {
 		this.quantity = quantity;
 	}
 
 	@Override
 	public int getItemId() {
-		return id;
+		return itemId;
 	}
 
 	@Override
 	public int getCashId() {
 		if (cashId == 0) {
+			// TODO: ... what!
 			cashId = new Random().nextInt(Integer.MAX_VALUE) + 1;
 		}
 		return cashId;
@@ -107,7 +111,7 @@ public class Item implements IItem {
 
 	@Override
 	public byte getType() {
-		if (getPetId() > -1) {
+		if (this.getPetId() > -1) {
 			return IItem.PET;
 		}
 		return IItem.ITEM;
@@ -118,25 +122,26 @@ public class Item implements IItem {
 		return owner;
 	}
 
+	@Override
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 
 	@Override
 	public int getPetId() {
-		return petid;
+		return petId;
 	}
 
 	@Override
 	public void setPetId(int id) {
-		this.petid = id;
+		this.petId = id;
 	}
 
 	@Override
 	public int compareTo(IItem other) {
-		if (this.id < other.getItemId()) {
+		if (this.itemId < other.getItemId()) {
 			return -1;
-		} else if (this.id > other.getItemId()) {
+		} else if (this.itemId > other.getItemId()) {
 			return 1;
 		}
 		return 0;
@@ -144,46 +149,55 @@ public class Item implements IItem {
 
 	@Override
 	public String toString() {
-		return "Item: " + id + " quantity: " + quantity;
+		return "Item: " + itemId + " quantity: " + quantity;
 	}
 
 	public List<String> getLog() {
 		return Collections.unmodifiableList(log);
 	}
 
+	@Override
 	public byte getFlag() {
 		return flag;
 	}
 
+	@Override
 	public void setFlag(byte b) {
 		this.flag = b;
 	}
 
+	@Override
 	public long getExpiration() {
 		return expiration;
 	}
 
+	@Override
 	public void setExpiration(long expire) {
 		this.expiration = expire;
 	}
 
+	@Override
 	public int getSN() {
 		return sn;
 	}
 
+	@Override
 	public void setSN(int sn) {
 		this.sn = sn;
 	}
 
+	@Override
 	public String getGiftFrom() {
 		return giftFrom;
 	}
 
+	@Override
 	public void setGiftFrom(String giftFrom) {
 		this.giftFrom = giftFrom;
 	}
 
 	// TODO: EWWWWWWW?		
+	@Override
 	public Pet getPet() {
 		return pet;
 	}
