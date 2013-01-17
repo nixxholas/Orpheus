@@ -30,6 +30,6 @@ public class ReactorDropEntry {
 	public final int ItemId, Chance;
 
 	// Not used:
-	private int questId;
-	private int assignedRangeStart, assignedRangeLength;
+	//private int questId;
+	//private int assignedRangeStart, assignedRangeLength;
 }

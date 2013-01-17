@@ -66,6 +66,9 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				final byte typeByte = slea.readByte();
 				final InventoryType type = InventoryType.fromByte(typeByte);
 				final Inventory in = player.getInventory(type);
+				
+				// TODO: This for loop is equivalent to checking for a first item and removing it.
+				// You sure you wanna return in the end?				
 				for (byte i = 0; i < in.getSlotLimit(); i++) {
 					final IItem item = in.getItem(i);
 					if (item != null) {
