@@ -62,11 +62,13 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			if (cItem == null || !cItem.isOnSale() || cs.getCash(useNX) < cItem.getPrice()) {
 				return;
 			}
-			if (action == 0x03) { // Item
+			if (action == 0x03) { 
+				// Item
 				IItem item = cItem.toItem();
 				cs.addToInventory(item);
 				c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
-			} else { // Package
+			} else { 
+				// Package
 				List<IItem> cashPackage = CashItemFactory.getPackage(cItem.getItemId());
 				for (IItem item : cashPackage) {
 					cs.addToInventory(item);
@@ -75,7 +77,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 			cs.gainCash(useNX, -cItem.getPrice());
 			c.announce(PacketCreator.showCash(chr));
-		} else if (action == 0x04) {// TODO check for gender
+		} else if (action == 0x04) {
+			// TODO: check for gender
 			int birthday = slea.readInt();
 			CashItem cItem = CashItemFactory.getItem(slea.readInt());
 			Map<String, String> recipient = GameCharacter.getCharacterFromDatabase(slea.readMapleAsciiString());
@@ -98,15 +101,15 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			cs.gainCash(4, -cItem.getPrice());
 			c.announce(PacketCreator.showCash(chr));
 			try {
-				chr.sendNote(recipient.get("name"), chr.getName() + " has sent you a gift! Go check out the Cash Shop.", (byte) 0); // fame
-																																	// or
-																																	// not
+				// last byte - fame or not
+				chr.sendNote(recipient.get("name"), chr.getName() + " has sent you a gift! Go check out the Cash Shop.", (byte) 0); 
 			} catch (SQLException ex) {
 			}
 			GameCharacter receiver = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient.get("name"));
 			if (receiver != null)
 				receiver.showNote();
-		} else if (action == 0x05) { // Modify wish list
+		} else if (action == 0x05) { 
+			// Modify wish list
 			cs.clearWishList();
 			for (byte i = 0; i < 10; i++) {
 				int sn = slea.readInt();
@@ -116,7 +119,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				}
 			}
 			c.announce(PacketCreator.showWishList(chr, true));
-		} else if (action == 0x06) { // Increase Inventory Slots
+		} else if (action == 0x06) { 
+			// Increase Inventory Slots
 			slea.skip(1);
 			int cash = slea.readInt();
 			byte mode = slea.readByte();
@@ -142,7 +146,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showCash(chr));
 				}
 			}
-		} else if (action == 0x07) { // Increase Storage Slots
+		} else if (action == 0x07) { 
+			// Increase Storage Slots
 			slea.skip(1);
 			int cash = slea.readInt();
 			byte mode = slea.readByte();
@@ -167,7 +172,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showCash(chr));
 				}
 			}
-		} else if (action == 0x08) { // Increase Character Slots
+		} else if (action == 0x08) { 
+			// Increase Character Slots
 			slea.skip(1);
 			int cash = slea.readInt();
 			CashItem cItem = CashItemFactory.getItem(slea.readInt());
@@ -180,7 +186,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				cs.gainCash(cash, -cItem.getPrice());
 				c.announce(PacketCreator.showCash(chr));
 			}
-		} else if (action == 0x0D) { // Take from Cash Inventory
+		} else if (action == 0x0D) { 
+			// Take from Cash Inventory
 			IItem item = cs.findByCashId(slea.readInt());
 			if (item == null) {
 				return;
@@ -189,7 +196,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				cs.removeFromInventory(item);
 				c.announce(PacketCreator.takeFromCashInventory(item));
 			}
-		} else if (action == 0x0E) { // Put into Cash Inventory
+		} else if (action == 0x0E) { 
+			// Put into Cash Inventory
 			int cashId = slea.readInt();
 			slea.skip(4);
 			Inventory mi = chr.getInventory(InventoryType.fromByte(slea.readByte()));
@@ -200,7 +208,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			cs.addToInventory(item);
 			mi.removeSlot(item.getPosition());
 			c.announce(PacketCreator.putIntoCashInventory(item, c.getAccID()));
-		} else if (action == 0x1D) { // crush ring (action 28)
+		} else if (action == 0x1D) { 
+			// crush ring (action 28)
 			if (checkBirthday(c, slea.readInt())) {
 				int toCharge = slea.readInt();
 				int SN = slea.readInt();
@@ -234,7 +243,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				chr.dropMessage("The birthday you entered was incorrect.");
 			}
 			c.announce(PacketCreator.showCash(c.getPlayer()));
-		} else if (action == 0x20) { // everything is 1 meso...
+		} else if (action == 0x20) { 
+			// everything is 1 meso...
 			int itemId = CashItemFactory.getItem(slea.readInt()).getItemId();
 			if (chr.getMeso() > 0) {
 				if (itemId == 4031180 || itemId == 4031192 || itemId == 4031191) {
@@ -244,7 +254,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				}
 			}
 			c.announce(PacketCreator.showCash(c.getPlayer()));
-		} else if (action == 0x23) { // Friendship :3
+		} else if (action == 0x23) {
+			// Friendship :3
 			if (checkBirthday(c, slea.readInt())) {
 				int payment = slea.readByte();
 				slea.skip(3); // 0s

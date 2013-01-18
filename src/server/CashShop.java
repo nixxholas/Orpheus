@@ -98,8 +98,9 @@ public class CashShop {
 				item = new Item(itemId, (byte) 0, count, petid);
 			}
 
-			if (ItemConstants.EXPIRING_ITEMS)
+			if (ItemConstants.EXPIRING_ITEMS) {
 				item.setExpiration(period == 1 ? System.currentTimeMillis() + (1000 * 60 * 60 * 4 * period) : System.currentTimeMillis() + (1000 * 60 * 60 * 24 * period));
+			}
 
 			item.setSN(sn);
 			return item;
@@ -200,7 +201,8 @@ public class CashShop {
 			return specialcashitems;
 		}
 
-		public static void reloadSpecialCashItems() {// Yay?
+		public static void reloadSpecialCashItems() {
+			// Yay?
 			specialcashitems.clear();
 			PreparedStatement ps = null;
 			ResultSet rs = null;
