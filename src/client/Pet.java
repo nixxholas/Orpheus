@@ -49,44 +49,53 @@ public class Pet extends Item {
 		super(id, position, (short) 1);
 		this.uniqueId = uniqueId;
 	}
+	
+	public static Pet loadFromDb(IItem petItem) {
+		int petId = petItem.getPetId();
+		final Pet pet = new Pet(petItem.getItemId(), petItem.getPosition(), petId);
 
-	public static Pet loadFromDb(int itemId, byte position, int petId) {
+		// Get pet details...
 		final Connection connection = DatabaseConnection.getConnection();
-		try {
-			final Pet pet = new Pet(itemId, position, petId);
+		try (
+				PreparedStatement ps = getSelectCommand(petId, connection);
+				ResultSet rs = ps.executeQuery();) {
 			
-			// Get pet details..
-			PreparedStatement ps = connection.prepareStatement("SELECT `name`, `level`, `closeness`, `fullness`, `summoned` FROM `pets` WHERE `petid` = ?"); 
-			ps.setInt(1, petId);
-			ResultSet rs = ps.executeQuery();
 			rs.next();
-			pet.setName(rs.getString("name"));
-			pet.setCloseness(Math.min(rs.getInt("closeness"), 30000));
-			pet.setLevel((byte) Math.min(rs.getByte("level"), 30));
-			pet.setFullness(Math.min(rs.getInt("fullness"), 100));
-			pet.setSummoned(rs.getInt("summoned") == 1);
-			rs.close();
-			ps.close();
+			pet.name = rs.getString("name");
+			pet.closeness = Math.min(rs.getInt("closeness"), 30000);
+			pet.level = (byte) Math.min(rs.getByte("level"), 30);
+			pet.fullness = Math.min(rs.getInt("fullness"), 100);
+			pet.summoned = rs.getInt("summoned") == 1;
+
 			return pet;
 		} catch (SQLException e) {
 			return null;
 		}
 	}
 
+	private static PreparedStatement getSelectCommand(int petId, final Connection connection) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT `name`, `level`, `closeness`, `fullness`, `summoned` FROM `pets` WHERE `petid` = ?"); 
+		ps.setInt(1, petId);
+		return ps;
+	}
+
 	public void saveToDb() {
 		final Connection connection = DatabaseConnection.getConnection();
-		try {
-			final PreparedStatement ps = connection.prepareStatement("UPDATE `pets` SET `name` = ?, `level` = ?, `closeness` = ?, `fullness` = ?, `summoned` = ? WHERE `petid` = ?");
-			ps.setString(1, this.getName());
-			ps.setInt(2, this.getLevel());
-			ps.setInt(3, this.getCloseness());
-			ps.setInt(4, this.getFullness());
-			ps.setInt(5, this.isSummoned() ? 1 : 0);
-			ps.setInt(6, this.getUniqueId());
-			ps.executeUpdate();
-			ps.close();
+		try (final PreparedStatement ps = getUpdateCommand(connection);) {
+			ps.executeUpdate();			
 		} catch (SQLException e) {
 		}
+	}
+
+	private PreparedStatement getUpdateCommand(final Connection connection) throws SQLException {
+		final PreparedStatement ps = connection.prepareStatement("UPDATE `pets` SET `name` = ?, `level` = ?, `closeness` = ?, `fullness` = ?, `summoned` = ? WHERE `petid` = ?");
+		ps.setString(1, this.getName());
+		ps.setInt(2, this.getLevel());
+		ps.setInt(3, this.getCloseness());
+		ps.setInt(4, this.getFullness());
+		ps.setInt(5, this.isSummoned() ? 1 : 0);
+		ps.setInt(6, this.getUniqueId());
+		return ps;
 	}
 
 	public static int createPet(int itemId) {
@@ -100,8 +109,7 @@ public class Pet extends Item {
 			if (rs.next()) {
 				result = rs.getInt(1);
 			}
-			rs.close();
-			ps.close();
+
 			return result;
 		} catch (SQLException e) {
 			return -1;

@@ -61,6 +61,4 @@ public interface IItem extends Comparable<IItem> {
 	String getGiftFrom();
 
 	void setGiftFrom(String giftFrom);
-
-	Pet getPet();
 }

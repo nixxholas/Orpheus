@@ -346,15 +346,15 @@ public class PacketCreator {
 		}
 		addExpirationTime(w, item.getExpiration());
 		if (isPet) {
-			Pet pet = item.getPet();
+			Pet pet = Pet.loadFromDb(item);
 			w.writePaddedString(pet.getName(), 13);
 			w.writeAsByte(pet.getLevel());
 			w.writeAsShort(pet.getCloseness());
 			w.writeAsByte(pet.getFullness());
 			addExpirationTime(w, item.getExpiration());
 			w.writeInt(0);
-			w.write(new byte[] {(byte) 0x50, (byte) 0x46}); // wonder what
-																// this is
+			// wonder what this is
+			w.write(new byte[] {(byte) 0x50, (byte) 0x46}); 
 			w.writeInt(0);
 			return;
 		}

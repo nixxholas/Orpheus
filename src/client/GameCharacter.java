@@ -2753,7 +2753,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 				IItem item = entry.item;
 				if (item.getPetId() > -1) {
-					Pet pet = item.getPet();
+					Pet pet = Pet.loadFromDb(item);
 					if (pet != null && pet.isSummoned()) {
 						ret.addPet(pet);
 					}

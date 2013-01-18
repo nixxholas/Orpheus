@@ -36,7 +36,6 @@ public class Item implements IItem {
 	private byte position;
 	private short quantity;
 	private int petId = -1;
-	private Pet pet = null;	
 	
 	private String giftFrom = "";
 	private String owner = "";
@@ -47,21 +46,17 @@ public class Item implements IItem {
 		this.itemId = itemId;
 		this.position = position;
 		this.quantity = quantity;
-		this.log = new LinkedList<String>();
 		this.flag = 0;
+
+		this.log = new LinkedList<String>();
 	}
 
 	public Item(int itemId, byte position, short quantity, int petid) {
 		this.itemId = itemId;
 		this.position = position;
 		this.quantity = quantity;
-		this.petId = petid;
-		
-		// TODO: EWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-		if (petid > -1)
-			this.pet = Pet.loadFromDb(itemId, position, petid);
-		
 		this.flag = 0;
+		
 		this.log = new LinkedList<String>();
 	}
 
@@ -72,6 +67,7 @@ public class Item implements IItem {
 		ret.owner = owner;
 		ret.expiration = expiration;
 		ret.log = new LinkedList<String>(log);
+		
 		return ret;
 	}
 
@@ -113,8 +109,9 @@ public class Item implements IItem {
 	public byte getType() {
 		if (this.getPetId() > -1) {
 			return IItem.PET;
+		} else {
+			return IItem.ITEM;
 		}
-		return IItem.ITEM;
 	}
 
 	@Override
@@ -194,11 +191,5 @@ public class Item implements IItem {
 	@Override
 	public void setGiftFrom(String giftFrom) {
 		this.giftFrom = giftFrom;
-	}
-
-	// TODO: EWWWWWWW?		
-	@Override
-	public Pet getPet() {
-		return pet;
 	}
 }

@@ -25,6 +25,7 @@ import java.awt.Point;
 import java.io.File;
 import java.sql.PreparedStatement;
 import client.GameClient;
+import client.IItem;
 import client.InventoryType;
 import client.Pet;
 import client.PetDataFactory;
@@ -49,36 +50,40 @@ public final class SpawnPetHandler extends AbstractPacketHandler {
 		byte slot = slea.readByte();
 		slea.readByte();
 		boolean lead = slea.readByte() == 1;
-		Pet pet = chr.getInventory(InventoryType.CASH).getItem(slot).getPet();
-		if (pet == null)
+		final IItem petItem = chr.getInventory(InventoryType.CASH).getItem(slot);
+		Pet pet = Pet.loadFromDb(petItem);
+		if (pet == null) {
 			return;
-		int petid = pet.getItemId();
-		if (petid == 5000028 || petid == 5000047) // Handles Dragon AND Robos
+		}
+		
+		int itemId = pet.getItemId();
+		if (itemId == 5000028 || itemId == 5000047) // Handles Dragon AND Robos
 		{
-			if (chr.haveItem(petid + 1)) {
-				chr.dropMessage(5, "You can't hatch your " + (petid == 5000028 ? "Dragon egg" : "Robo egg") + " if you already have a Baby " + (petid == 5000028 ? "Dragon." : "Robo."));
+			if (chr.haveItem(itemId + 1)) {
+				chr.dropMessage(5, "You can't hatch your " + (itemId == 5000028 ? "Dragon egg" : "Robo egg") + " if you already have a Baby " + (itemId == 5000028 ? "Dragon." : "Robo."));
 				c.getSession().write(PacketCreator.enableActions());
 				return;
 			} else {
-				int evolveid = MapleDataTool.getInt("info/evol1", dataRoot.getData("Pet/" + petid + ".img"));
-				int petId = Pet.createPet(evolveid);
+				int evolveId = MapleDataTool.getInt("info/evol1", dataRoot.getData("Pet/" + itemId + ".img"));
+				int petId = Pet.createPet(evolveId);
 				if (petId == -1) {
 					return;
 				}
 				try {
-					PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("DELETE FROM pets WHERE `petid` = ?");
+					PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("DELETE FROM `pets` WHERE `petid` = ?");
 					ps.setInt(1, pet.getUniqueId());
 					ps.executeUpdate();
 					ps.close();
 				} catch (SQLException ex) {
 				}
 				long expiration = chr.getInventory(InventoryType.CASH).getItem(slot).getExpiration();
-				InventoryManipulator.removeById(c, InventoryType.CASH, petid, (short) 1, false, false);
-				InventoryManipulator.addById(c, evolveid, (short) 1, null, petId, expiration);
+				InventoryManipulator.removeById(c, InventoryType.CASH, itemId, (short) 1, false, false);
+				InventoryManipulator.addById(c, evolveId, (short) 1, null, petId, expiration);
 				c.getSession().write(PacketCreator.enableActions());
 				return;
 			}
 		}
+		
 		if (chr.getPetIndex(pet) != -1) {
 			chr.unequipPet(pet, true);
 		} else {
