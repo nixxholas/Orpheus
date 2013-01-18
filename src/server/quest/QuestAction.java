@@ -102,6 +102,7 @@ public class QuestAction {
 					c.gainExp(MapleDataTool.getInt(data) * ServerConstants.QUEST_EXP_RATE, true, true);
 				}
 				break;
+				
 			case ITEM:
 				ItemInfoProvider ii = ItemInfoProvider.getInstance();
 				Map<Integer, Integer> props = new HashMap<Integer, Integer>();
@@ -149,6 +150,7 @@ public class QuestAction {
 					}
 				}
 				break;
+				
 			case NEXTQUEST:
 				status = c.getQuest(quest);
 				int nextQuest = MapleDataTool.getInt(data);
@@ -157,6 +159,7 @@ public class QuestAction {
 				}
 				c.getClient().getSession().write(PacketCreator.updateQuestFinish((short) quest.getId(), status.getNpc(), (short) nextQuest));
 				break;
+				
 			case MESO:
 				status = c.getQuest(quest);
 				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
@@ -164,6 +167,7 @@ public class QuestAction {
 				}
 				c.gainMeso(MapleDataTool.getInt(data) * ServerConstants.QUEST_MESO_RATE, true, false, true);
 				break;
+				
 			case QUEST:
 				for (MapleData qEntry : data) {
 					int questid = MapleDataTool.getInt(qEntry.getChildByPath("id"));
@@ -171,6 +175,7 @@ public class QuestAction {
 					c.updateQuest(new QuestStatus(Quest.getInstance(questid), QuestStatus.Status.getById(stat)));
 				}
 				break;
+				
 			case SKILL:
 				for (MapleData sEntry : data) {
 					int skillid = MapleDataTool.getInt(sEntry.getChildByPath("id"));
@@ -196,6 +201,7 @@ public class QuestAction {
 					}
 				}
 				break;
+				
 			case FAME:
 				status = c.getQuest(quest);
 				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
@@ -206,6 +212,7 @@ public class QuestAction {
 				int fameGain = MapleDataTool.getInt(data);
 				c.getClient().getSession().write(PacketCreator.getShowFameGain(fameGain));
 				break;
+				
 			case BUFF:
 				status = c.getQuest(quest);
 				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
@@ -213,6 +220,7 @@ public class QuestAction {
 				}
 				ItemInfoProvider.getInstance().getItemEffect(MapleDataTool.getInt(data)).applyTo(c);
 				break;
+				
 			case PETSKILL:
 				status = c.getQuest(quest);
 				if (status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0) {
@@ -221,7 +229,9 @@ public class QuestAction {
 				int flag = MapleDataTool.getInt("petskill", data);
 				c.getPet(0).setFlag((byte) ItemConstants.getFlagByInt(flag));
 				break;
+				
 			default:
+				break;
 		}
 	}
 }

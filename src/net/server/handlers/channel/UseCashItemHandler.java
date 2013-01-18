@@ -102,68 +102,79 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 				int APTo = slea.readInt();
 				int APFrom = slea.readInt();
 				switch (APFrom) {
-					case 64: // str
+					case 64: 
+						// str
 						if (player.getStr() < 5) {
 							return;
 						}
 						player.addStat(1, -1);
 						break;
-					case 128: // dex
+						
+					case 128: 
+						// dex
 						if (player.getDex() < 5) {
 							return;
 						}
 						player.addStat(2, -1);
 						break;
-					case 256: // int
+						
+					case 256: 
+						// int
 						if (player.getInt() < 5) {
 							return;
 						}
 						player.addStat(3, -1);
 						break;
-					case 512: // luk
+						
+					case 512: 
+						// luk
 						if (player.getLuk() < 5) {
 							return;
 						}
 						player.addStat(4, -1);
 						break;
-					case 2048: // HP
+						
+					case 2048: 
+						// HP
 						int hplose = 0;
 						final int jobid = player.getJob().getId();
-						if (jobid == 0 || jobid == 1000 || jobid == 2000 || jobid >= 1200 && jobid <= 1211) { // Beginner
+						if (jobid == 0 || jobid == 1000 || jobid == 2000 || jobid >= 1200 && jobid <= 1211) { 
+							// Beginner
 							hplose -= 12;
-						} else if (jobid >= 100 && jobid <= 132) { // Warrior
+						} else if (jobid >= 100 && jobid <= 132) { 
+							// Warrior
 							ISkill improvinghplose = SkillFactory.getSkill(1000001);
 							int improvinghploseLevel = c.getPlayer().getSkillLevel(improvinghplose);
 							hplose -= 24;
 							if (improvinghploseLevel >= 1) {
 								hplose -= improvinghplose.getEffect(improvinghploseLevel).getY();
 							}
-						} else if (jobid >= 200 && jobid <= 232) { // Magician
+						} else if (jobid >= 200 && jobid <= 232) { 
+							// Magician
 							hplose -= 10;
-						} else if (jobid >= 500 && jobid <= 522) { // Pirate
+						} else if (jobid >= 500 && jobid <= 522) { 
+							// Pirate
 							ISkill improvinghplose = SkillFactory.getSkill(5100000);
 							int improvinghploseLevel = c.getPlayer().getSkillLevel(improvinghplose);
 							hplose -= 22;
 							if (improvinghploseLevel > 0) {
 								hplose -= improvinghplose.getEffect(improvinghploseLevel).getY();
 							}
-						} else if (jobid >= 1100 && jobid <= 1111) { // Soul
-																		// Master
+						} else if (jobid >= 1100 && jobid <= 1111) { 
+							// Soul Master
 							ISkill improvinghplose = SkillFactory.getSkill(11000000);
 							int improvinghploseLevel = c.getPlayer().getSkillLevel(improvinghplose);
 							hplose -= 27;
 							if (improvinghploseLevel >= 1) {
 								hplose -= improvinghplose.getEffect(improvinghploseLevel).getY();
 							}
-						} else if ((jobid >= 1300 && jobid <= 1311) || (jobid >= 1400 && jobid <= 1411)) { // Wind
-																											// Breaker
-																											// and
-																											// Night
-																											// Walker
+						} else if ((jobid >= 1300 && jobid <= 1311) || (jobid >= 1400 && jobid <= 1411)) { 
+							// Wind Breaker and Night Walker
 							hplose -= 17;
 						} else if (jobid >= 300 && jobid <= 322 || jobid >= 400 && jobid <= 422 || jobid >= 2000 && jobid <= 2112) { // Aran
 							hplose -= 20;
-						} else { // GameMaster
+						} else { 
+							// GameMaster
 							hplose -= 20;
 						}
 						player.setHp(player.getHp() + hplose);
@@ -171,7 +182,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 						statupdate.add(new StatDelta(Stat.HP, player.getHp()));
 						statupdate.add(new StatDelta(Stat.MAXHP, player.getMaxHp()));
 						break;
-					case 8192: // MP
+					case 8192: 
+						// MP
 						int mp = player.getMp();
 						int level = player.getLevel();
 						Job job = player.getJob();
@@ -205,6 +217,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 							statupdate.add(new StatDelta(Stat.MAXMP, player.getMaxMp()));
 							break;
 						}
+						
 					default:
 						c.announce(PacketCreator.updatePlayerStats(PacketCreator.EMPTY_STATUPDATE, true));
 						return;
@@ -215,24 +228,27 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			remove(c, itemId);
 		} else if (itemType == 506) {
 			IItem eq = null;
-			if (itemId == 5060000) { // Item tag.
+			if (itemId == 5060000) { 
+				// Item tag.
 				int equipSlot = slea.readShort();
 				if (equipSlot == 0) {
 					return;
 				}
 				eq = player.getInventory(InventoryType.EQUIPPED).getItem((byte) equipSlot);
 				eq.setOwner(player.getName());
-			} else if (itemId == 5060001 || itemId == 5061000 || itemId == 5061001 || itemId == 5061002 || itemId == 5061003) { // Sealing
-																																// lock
+			} else if (itemId == 5060001 || itemId == 5061000 || itemId == 5061001 || itemId == 5061002 || itemId == 5061003) { 
+				// Sealing lock
 				InventoryType type = InventoryType.fromByte((byte) slea.readInt());
 				IItem item = c.getPlayer().getInventory(type).getItem((byte) slea.readInt());
-				if (item == null) { // Check if the type is EQUIPMENT?
+				if (item == null) { 
+					// Check if the type is EQUIPMENT?
 					return;
 				}
 				byte flag = item.getFlag();
 				flag |= ItemConstants.LOCK;
 				if (item.getExpiration() > -1) {
-					return; // No perma items pls
+					// No perma items pls
+					return; 
 				}
 				item.setFlag(flag);
 
@@ -254,12 +270,14 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.updateSlot(item));
 
 				remove(c, itemId);
-			} else if (itemId == 5060002) { // Incubator
+			} else if (itemId == 5060002) { 
+				// Incubator
 				byte inventory2 = (byte) slea.readInt();
 				byte slot2 = (byte) slea.readInt();
 				IItem item2 = c.getPlayer().getInventory(InventoryType.fromByte(inventory2)).getItem(slot2);
-				if (item2 == null) // hacking
+				if (item2 == null) 
 				{
+					// hacking
 					return;
 				}
 				if (getIncubatedItem(c, itemId)) {
@@ -274,17 +292,22 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 		} else if (itemType == 507) {
 			boolean whisper;
 			switch (itemId / 1000 % 10) {
-				case 1: // Megaphone
-					if (player.getLevel() > 9) {
+				case 1: 
+					// Megaphone
+					if (player.getLevel() >= 10) {
 						player.getClient().getChannelServer().broadcastPacket(PacketCreator.serverNotice(2, medal + player.getName() + " : " + slea.readMapleAsciiString()));
 					} else {
 						player.dropMessage(1, "You may not use this until you're level 10.");
 					}
 					break;
-				case 2: // Super megaphone
+					
+				case 2: 
+					// Super megaphone
 					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(3, c.getChannel(), medal + player.getName() + " : " + slea.readMapleAsciiString(), (slea.readByte() != 0)));
 					break;
-				case 5: // Maple TV
+					
+				case 5: 
+					// Maple TV
 					int tvType = itemId % 10;
 					boolean megassenger = false;
 					boolean ear = false;
@@ -324,14 +347,21 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 						return;
 					}
 					break;
-				case 6: // item megaphone
+					
+				case 6: 
+					// item megaphone
 					String msg = medal + c.getPlayer().getName() + " : " + slea.readMapleAsciiString();
 					whisper = slea.readByte() == 1;
 					IItem item = null;
-					if (slea.readByte() == 1) { // item
-						item = c.getPlayer().getInventory(InventoryType.fromByte((byte) slea.readInt())).getItem((byte) slea.readInt());
-						if (item == null) // hack
-						{
+					final boolean hasItem = slea.readByte() == 1;
+					if (hasItem) { 
+						// item
+						final byte inventoryId = (byte) slea.readInt();
+						final InventoryType inventoryType = InventoryType.fromByte(inventoryId);
+						final byte slot = (byte) slea.readInt();
+						item = c.getPlayer().getInventory(inventoryType).getItem(slot);
+						if (item == null) {
+							// hack
 							return;
 						} else if (ii.isDropRestricted(item.getItemId())) { // Lol?
 							player.dropMessage(1, "You cannot trade this item.");
@@ -341,10 +371,13 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 					}
 					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.itemMegaphone(msg, whisper, c.getChannel(), item));
 					break;
-				case 7: // triple megaphone
+					
+				case 7: 
+					// triple megaphone
 					int lines = slea.readByte();
-					if (lines < 1 || lines > 3) // hack
+					if (lines < 1 || lines > 3) 
 					{
+						// hack
 						return;
 					}
 					String[] msg2 = new String[lines];
@@ -356,8 +389,11 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 					break;
 			}
 			remove(c, itemId);
-		} else if (itemType == 508) { // graduation banner
-			slea.readMapleAsciiString(); // message, sepearated by 0A for lines
+		} else if (itemType == 508) { 
+			// graduation banner
+			
+			// message, sepearated by 0A for lines
+			slea.readMapleAsciiString(); 
 			c.announce(PacketCreator.enableActions());
 		} else if (itemType == 509) {
 			String sendTo = slea.readMapleAsciiString();
@@ -392,7 +428,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			player.getMap().broadcastMessage(player, PacketCreator.changePetName(player, newName, 1), true);
 			c.announce(PacketCreator.enableActions());
 			remove(c, itemId);
-		} else if (itemType == 504) { // vip teleport rock
+		} else if (itemType == 504) { 
+			// vip teleport rock
 			String error1 = "Either the player could not be found or you were trying to teleport to an illegal location.";
 			boolean vip = slea.readByte() == 1;
 			remove(c, itemId);
@@ -413,10 +450,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 					GameMap target = victim.getMap();
 					if (c.getChannelServer().getMapFactory().getMap(victim.getMapId()).getForcedReturnId() == 999999999 || victim.getMapId() < 100000000) {
 						if (victim.gmLevel() <= player.gmLevel()) {
-							if (itemId == 5041000 || victim.getMapId() / player.getMapId() == 1) { // viprock
-																									// &
-																									// same
-																									// continent
+							if (itemId == 5041000 || victim.getMapId() / player.getMapId() == 1) { 
+								// viprock & same continent
 								player.changeMap(target, target.findClosestSpawnpoint(victim.getPosition()));
 								success = true;
 							} else {
@@ -485,7 +520,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			}
 			Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.getAvatarMega(c.getPlayer(), medal, c.getChannel(), itemId, lines, (slea.readByte() != 0)));
 			remove(c, itemId);
-		} else if (itemType == 545) { // MiuMiu's travel store
+		} else if (itemType == 545) { 
+			// MiuMiu's travel store
 			if (player.getShop() == null) {
 				Shop shop = ShopFactory.getInstance().getShop(1338);
 				if (shop != null) {
@@ -495,7 +531,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			} else {
 				c.announce(PacketCreator.enableActions());
 			}
-		} else if (itemType == 550) { // Extend item expiration
+		} else if (itemType == 550) { 
+			// Extend item expiration
 			c.announce(PacketCreator.enableActions());
 		} else if (itemType == 552) {
 			InventoryType type = InventoryType.fromByte((byte) slea.readInt());
@@ -514,7 +551,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			c.getPlayer().forceUpdateItem(type, item);
 			remove(c, itemId);
 			c.announce(PacketCreator.enableActions());
-		} else if (itemType == 552) { // DS EGG THING
+		} else if (itemType == 552) { 
+			// DS EGG THING
 			c.announce(PacketCreator.enableActions());
 		} else if (itemType == 557) {
 			slea.readInt();
@@ -530,7 +568,8 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.enableActions());
 			c.announce(PacketCreator.sendHammerData(equip.getVicious()));
 			c.announce(PacketCreator.hammerItem(equip));
-		} else if (itemType == 561) { // VEGA'S SPELL
+		} else if (itemType == 561) { 
+			// VEGA'S SPELL
 			c.announce(PacketCreator.enableActions());
 		} else {
 			Output.print("NEW CASH ITEM: " + itemType + "\n" + slea.toString());

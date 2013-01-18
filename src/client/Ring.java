@@ -49,33 +49,44 @@ public class Ring implements Comparable<Ring> {
 	}
 
 	public static Ring loadFromDb(int ringId) {
-		try {
-			Ring ret = null;
-			Connection con = DatabaseConnection.getConnection(); 
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM `rings` WHERE `id` = ?"); 
-			ps.setInt(1, ringId);
-			ResultSet rs = ps.executeQuery();
+		Ring ring = null;
+		Connection connection = DatabaseConnection.getConnection(); 
+		try (
+				PreparedStatement ps = getSelectCommand(connection, ringId);
+				ResultSet rs = ps.executeQuery();) {
+			
 			if (rs.next()) {
-				ret = new Ring(ringId, rs.getInt("partnerRingId"), rs.getInt("partnerChrId"), rs.getInt("itemid"), rs.getString("partnerName"));
+				final int partnerRingId = rs.getInt("partnerRingId");
+				final int partnerCharacterId = rs.getInt("partnerChrId");
+				final int ringItemId = rs.getInt("itemid");
+				final String partnerCharacterName = rs.getString("partnerName");
+				ring = new Ring(ringId, partnerRingId, partnerCharacterId, ringItemId, partnerCharacterName);
 			}
-			rs.close();
-			ps.close();
-			return ret;
+
+			return ring;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 			return null;
 		}
 	}
 
+	private static PreparedStatement getSelectCommand(Connection connection, int ringId) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM `rings` WHERE `id` = ?"); 
+		ps.setInt(1, ringId);
+		return ps;
+	}
+
+	// TODO: Extract partner IDs and names into a parameter object. Yuck.
 	public static int createRing(int itemid, final GameCharacter partner1, final GameCharacter partner2) {
+		if (partner1 == null) {
+			return -2;
+		} else if (partner2 == null) {
+			return -1;
+		}
+		int[] ringID = new int[2];
+
+		Connection con = DatabaseConnection.getConnection();
 		try {
-			if (partner1 == null) {
-				return -2;
-			} else if (partner2 == null) {
-				return -1;
-			}
-			int[] ringID = new int[2];
-			Connection con = DatabaseConnection.getConnection();
 			PreparedStatement ps = con.prepareStatement("INSERT INTO `rings` (`itemid`, `partnerChrId`, `partnername`) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, itemid);
 			ps.setInt(2, partner2.getId());
