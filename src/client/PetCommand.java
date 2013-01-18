@@ -21,28 +21,15 @@ package client;
  * @author Leifde
  */
 public class PetCommand {
-	private int petId, skillId, prob, inc;
-
+	public final int PetId;
+	public final int SkillId;
+	public final int Probability;
+	public final int Increase;
+	
 	public PetCommand(int petId, int skillId, int prob, int inc) {
-		this.petId = petId;
-		this.skillId = skillId;
-		this.prob = prob;
-		this.inc = inc;
-	}
-
-	public int getPetId() {
-		return petId;
-	}
-
-	public int getSkillId() {
-		return skillId;
-	}
-
-	public int getProbability() {
-		return prob;
-	}
-
-	public int getIncrease() {
-		return inc;
+		this.PetId = petId;
+		this.SkillId = skillId;
+		this.Probability = prob;
+		this.Increase = inc;
 	}
 }

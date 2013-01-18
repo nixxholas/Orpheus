@@ -54,10 +54,10 @@ public final class PetCommandHandler extends AbstractPacketHandler {
 			return;
 		}
 		boolean success = false;
-		if (Randomizer.nextInt(101) <= petCommand.getProbability()) {
+		if (Randomizer.nextInt(101) <= petCommand.Probability) {
 			success = true;
 			if (pet.getCloseness() < 30000) {
-				int newCloseness = pet.getCloseness() + petCommand.getIncrease();
+				int newCloseness = pet.getCloseness() + petCommand.Increase;
 				if (newCloseness > 30000) {
 					newCloseness = 30000;
 				}
