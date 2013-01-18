@@ -84,18 +84,17 @@ public class CashShop {
 		}
 
 		public IItem toItem() {
+			int petId = -1;
+			if (ItemConstants.isPet(itemId)) {
+				petId = Pet.createPet(itemId);
+			}
+
 			ItemInfoProvider ii = ItemInfoProvider.getInstance();
 			IItem item;
-
-			int petid = -1;
-
-			if (ItemConstants.isPet(itemId))
-				petid = Pet.createPet(itemId);
-
 			if (ii.getInventoryType(itemId).equals(InventoryType.EQUIP)) {
 				item = ii.getEquipById(itemId);
 			} else {
-				item = new Item(itemId, (byte) 0, count, petid);
+				item = new Item(itemId, (byte) 0, count, petId);
 			}
 
 			if (ItemConstants.EXPIRING_ITEMS) {

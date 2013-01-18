@@ -135,9 +135,9 @@ public class Shop {
 				int cardreduce = value - cost;
 				int diff = cardreduce + c.getPlayer().getMeso();
 				if (InventoryManipulator.checkSpace(c, itemId, quantity, "")) {
-					if (itemId >= 5000000 && itemId <= 5000100) {
-						int petid = Pet.createPet(itemId);
-						InventoryManipulator.addById(c, itemId, quantity, null, petid, -1);
+					if (ItemConstants.isPet(itemId)) {
+						int petId = Pet.createPet(itemId);
+						InventoryManipulator.addById(c, itemId, quantity, null, petId, -1);
 					} else {
 						InventoryManipulator.addById(c, itemId, quantity);
 					}

@@ -1236,11 +1236,11 @@ public class GameMap {
 			chr.cancelEffectFromBuffStat(BuffStat.MONSTER_RIDING);
 			chr.cancelBuffStats(BuffStat.MONSTER_RIDING);
 		}
-		if (mapid == 923010000 && getMonsterById(9300102) == null) { // Kenta's
-																		// Mount
-																		// Quest
+		if (mapid == 923010000 && getMonsterById(9300102) == null) { 
+			// Kenta's Mount Quest
 			spawnMonsterOnGroundBelow(LifeFactory.getMonster(9300102), new Point(77, 426));
-		} else if (mapid == 910110000) { // Henesys Party Quest
+		} else if (mapid == 910110000) { 
+			// Henesys Party Quest
 			chr.getClient().announce(PacketCreator.getClock(15 * 60));
 			TimerManager.getInstance().register(new Runnable() {
 
@@ -1252,6 +1252,7 @@ public class GameMap {
 				}
 			}, 15 * 60 * 1000 + 3000);
 		}
+		
 		Pet[] pets = chr.getPets();
 		for (int i = 0; i < chr.getPets().length; i++) {
 			if (pets[i] != null) {

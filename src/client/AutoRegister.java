@@ -32,7 +32,8 @@ public class AutoRegister {
 	public static boolean getAccountExists(String login) {
 		boolean accountExists = false;
 		Connection con = DatabaseConnection.getConnection();
-		try (PreparedStatement ps = getSelectAccountByName(con, login);
+		try (
+				PreparedStatement ps = getSelectAccountByName(con, login);
 				ResultSet rs = ps.executeQuery();) {
 			
 			if (rs.first()) {
@@ -51,48 +52,47 @@ public class AutoRegister {
 	}
 
 	public static boolean createAccount(String login, String pwd, String endpoint) {
-		Connection con;
-		try {
-			con = DatabaseConnection.getConnection();
-		} catch (Exception e) {
-			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
-			return false;
-		}
+		Connection con = DatabaseConnection.getConnection();
 		
 		final String ip = endpoint.substring(1, endpoint.lastIndexOf(':'));
-		try (PreparedStatement ipc = getSelectAccountByIp(con, ip);
+		try (
+				PreparedStatement ipc = getSelectAccountByIp(con, ip);
 				ResultSet rs = ipc.executeQuery();) {
 			
 			if (rs.last() == true && rs.getRow() > ACCOUNTS_PER_IP) {
 				return false;
-			}
-			
+			}			
 		} catch (SQLException e) {
 			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
 			return false;
 		}		
 
-		try (PreparedStatement ps = getInsertAccount(con, login, pwd, ip);) {
+		String hash;
+		try {
+			hash = HashCreator.getHash(pwd);
+		} catch (NoSuchAlgorithmException e) {
+			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
+			return false;
+		}
+		
+		try (PreparedStatement ps = getInsertAccount(con, login, hash, ip);) {
 			
 			ps.executeUpdate();
 			return true;
 			
-		} catch (NoSuchAlgorithmException e) {
-			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + e);
-			return false;
 		} catch (SQLException ex) {
 			GameLogger.print(GameLogger.EXCEPTION_CAUGHT, "There's a problem with automatic registration.\r\n" + ex);
 			return false;
 		}
 	}
 
-	private static PreparedStatement getInsertAccount(Connection connection, String login, String pwd, final String ip) 
-			throws SQLException, NoSuchAlgorithmException {
+	private static PreparedStatement getInsertAccount(Connection connection, String login, String hash, final String ip) 
+			throws SQLException {
 		
 		PreparedStatement ps = connection.prepareStatement("INSERT INTO `accounts` (`name`, `password`, `email`, `birthday`, `macs`, `lastknownip`) VALUES (?, ?, ?, ?, ?, ?)");
 		
 		ps.setString(1, login);
-		ps.setString(2, HashCreator.getHash(pwd));
+		ps.setString(2, hash);
 		ps.setString(3, "no@email.provided");
 		ps.setString(4, "0000-00-00");
 		ps.setString(5, "00-00-00-00-00-00");

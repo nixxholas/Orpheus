@@ -17,6 +17,7 @@
  */
 package client;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,8 +34,9 @@ public class Family {
 	private static Map<Integer, FamilyEntry> members = new HashMap<Integer, FamilyEntry>();
 
 	public Family(int cid) {
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `familyid` FROM `family_character` WHERE `cid` = ?");
+			PreparedStatement ps = connection.prepareStatement("SELECT `familyid` FROM `family_character` WHERE `cid` = ?");
 			ps.setInt(1, cid);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -48,8 +50,9 @@ public class Family {
 	}
 
 	public static void getMapleFamily() {
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM `family_character` WHERE `familyid` = ?");
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM `family_character` WHERE `familyid` = ?");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -72,8 +75,9 @@ public class Family {
 	}
 
 	public FamilyEntry getMember(int cid) {
-		if (members.containsKey(cid))
+		if (members.containsKey(cid)) {
 			return members.get(cid);
+		}
 
 		return null;
 	}

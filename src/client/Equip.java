@@ -296,8 +296,9 @@ public class Equip extends Item implements IEquip {
 		if (itemExp >= 364) {
 			itemExp = (itemExp - 364);
 			gainLevel(c, timeless);
-		} else
+		} else {
 			c.getPlayer().forceUpdateItem(InventoryType.EQUIPPED, this);
+		}
 	}
 
 	public void setItemExp(int exp) {
@@ -311,7 +312,7 @@ public class Equip extends Item implements IEquip {
 	@Override
 	public void setQuantity(short quantity) {
 		if (quantity < 0 || quantity > 1) {
-			throw new RuntimeException("Setting the quantity to " + quantity + " on an equip (itemid: " + getItemId() + ")");
+			throw new IllegalArgumentException("Setting the quantity to " + quantity + " on an equip (itemid: " + getItemId() + ")");
 		}
 		super.setQuantity(quantity);
 	}

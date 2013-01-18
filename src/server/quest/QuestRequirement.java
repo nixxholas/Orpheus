@@ -56,14 +56,17 @@ public class QuestRequirement {
 				Calendar cal = Calendar.getInstance();
 				cal.set(Integer.parseInt(timeStr.substring(0, 4)), Integer.parseInt(timeStr.substring(4, 6)), Integer.parseInt(timeStr.substring(6, 8)), Integer.parseInt(timeStr.substring(8, 10)), 0);
 				return cal.getTimeInMillis() >= System.currentTimeMillis();
+			
 			case FIELD_ENTER:
 				MapleData zeroField = getData().getChildByPath("0");
 				if (zeroField != null) {
 					return MapleDataTool.getInt(zeroField) == c.getMapId();
 				}
 				return false;
+			
 			case INTERVAL:
 				return !c.getQuest(quest).getStatus().equals(QuestStatus.Status.COMPLETED) || c.getQuest(quest).getCompletionTime() <= System.currentTimeMillis() - MapleDataTool.getInt(getData()) * 60 * 1000;
+			
 			case ITEM:
 				ItemInfoProvider ii = ItemInfoProvider.getInstance();
 				for (MapleData itemEntry : getData().getChildren()) {
@@ -72,22 +75,27 @@ public class QuestRequirement {
 					InventoryType iType = ii.getInventoryType(itemId);
 					for (IItem item : c.getInventory(iType).listById(itemId))
 						quantity += item.getQuantity();
+					
 					// Weird stuff, nexon made some quests only available when
 					// wearing gm clothes. This enables us to accept it ><
-					if (iType.equals(InventoryType.EQUIP))
-						for (IItem item : c.getInventory(InventoryType.EQUIPPED).listById(itemId))
+					if (iType.equals(InventoryType.EQUIP)) {
+						for (IItem item : c.getInventory(InventoryType.EQUIPPED).listById(itemId)) {
 							quantity += item.getQuantity();
+						}
+					}
 
 					if (itemEntry.getChildByPath("count") != null) {
 						if (quantity < MapleDataTool.getInt(itemEntry.getChildByPath("count"), 0) || MapleDataTool.getInt(itemEntry.getChildByPath("count"), 0) <= 0 && quantity > 0) {
 							return false;
 						}
 					} else {
-						if (quantity != 0)
+						if (quantity != 0) {
 							return false;
+						}
 					}
 				}
 				return true;
+				
 			case JOB:
 				for (MapleData jobEntry : getData().getChildren()) {
 					if (c.getJob().equals(Job.getById(MapleDataTool.getInt(jobEntry))) || c.isGM()) {
@@ -95,6 +103,7 @@ public class QuestRequirement {
 					}
 				}
 				return false;
+				
 			case QUEST:
 				for (MapleData questEntry : getData().getChildren()) {
 					QuestStatus q = c.getQuest(Quest.getInstance(MapleDataTool.getInt(questEntry.getChildByPath("id"))));
@@ -106,15 +115,20 @@ public class QuestRequirement {
 					}
 				}
 				return true;
+				
 			case MAX_LEVEL:
 				return c.getLevel() <= MapleDataTool.getInt(getData());
+				
 			case MIN_LEVEL:
 				return c.getLevel() >= MapleDataTool.getInt(getData());
+				
 			case MIN_PET_TAMENESS:
 				Pet pet = c.getPet(0);
-				if (pet == null)
+				if (pet == null) {
 					return false;
+				}
 				return c.getPet(0).getCloseness() >= MapleDataTool.getInt(getData());
+				
 			case MOB:
 				for (MapleData mobEntry : getData().getChildren()) {
 					int mobId = MapleDataTool.getInt(mobEntry.getChildByPath("id"));
@@ -124,14 +138,19 @@ public class QuestRequirement {
 					}
 				}
 				return true;
+				
 			case MONSTER_BOOK:
 				return c.getMonsterBook().getTotalCards() >= MapleDataTool.getInt(getData());
+				
 			case NPC:
 				return npcid == null || npcid == MapleDataTool.getInt(getData());
-			case INFO_EX:
+				
+			case INFO_EX:				
 				return c.getQuest(quest).getMedalProgress() >= quest.getInfoEx();
+				
 			case COMPLETED_QUEST:
 				return c.getCompletedQuests().size() >= MapleDataTool.getInt(getData());
+				
 			default:
 				return true;
 		}
@@ -149,6 +168,7 @@ public class QuestRequirement {
 		if (type != QuestRequirementType.ITEM) {
 			return null;
 		}
+		
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		List<Integer> delta = new ArrayList<Integer>();
 		for (MapleData itemEntry : getData().getChildren()) {

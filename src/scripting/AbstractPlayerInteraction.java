@@ -157,8 +157,9 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void gainItem(int id, short quantity, boolean randomStats) {
-		if (id >= 5000000 && id <= 5000100) {
-			InventoryManipulator.addById(c, id, (short) 1, null, Pet.createPet(id), -1);
+		if (ItemConstants.isPet(id)) {
+			final int uniqueId = Pet.createPet(id);
+			InventoryManipulator.addById(c, id, (short) 1, null, uniqueId, -1);
 		}
 		if (quantity >= 0) {
 			ItemInfoProvider ii = ItemInfoProvider.getInstance();

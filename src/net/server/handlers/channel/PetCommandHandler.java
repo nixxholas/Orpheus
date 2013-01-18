@@ -40,12 +40,11 @@ public final class PetCommandHandler extends AbstractPacketHandler {
 		GameCharacter chr = c.getPlayer();
 		int petId = slea.readInt();
 		byte petIndex = chr.getPetIndex(petId);
-		Pet pet = null;
 		if (petIndex == -1) {
 			return;
-		} else {
-			pet = chr.getPet(petIndex);
-		}
+		} 
+
+		Pet pet = chr.getPet(petIndex);
 		slea.readInt();
 		slea.readByte();
 		byte command = slea.readByte();
@@ -53,6 +52,7 @@ public final class PetCommandHandler extends AbstractPacketHandler {
 		if (petCommand == null) {
 			return;
 		}
+		
 		boolean success = false;
 		if (Randomizer.nextInt(101) <= petCommand.Probability) {
 			success = true;
@@ -62,6 +62,7 @@ public final class PetCommandHandler extends AbstractPacketHandler {
 					newCloseness = 30000;
 				}
 				pet.setCloseness(newCloseness);
+				
 				if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel())) {
 					pet.setLevel((byte) (pet.getLevel() + 1));
 					c.announce(PacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
@@ -71,6 +72,7 @@ public final class PetCommandHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.updateSlot(petz));
 			}
 		}
+		
 		chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.commandResponse(chr.getId(), petIndex, command, success), true);
 	}
 }

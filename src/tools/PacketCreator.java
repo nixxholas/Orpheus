@@ -47,6 +47,7 @@ import client.FamilyEntry;
 import client.Inventory;
 import client.InventoryType;
 import client.KeyBinding;
+import client.MonsterBook;
 import client.Mount;
 import client.Pet;
 import client.QuestStatus;
@@ -2548,38 +2549,47 @@ public class PacketCreator {
 		w.writeLengthString(guildName);
 		w.writeLengthString(allianceName);
 		w.writeAsByte(0);
+		
 		Pet[] pets = chr.getPets();
 		IItem inv = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -114);
 		for (int i = 0; i < 3; i++) {
-			if (pets[i] != null) {
+			final Pet pet = pets[i];
+			if (pet != null) {
 				w.writeAsByte(pets[i].getUniqueId());
-				w.writeInt(pets[i].getItemId()); // petid
+				w.writeInt(pets[i].getItemId()); 
 				w.writeLengthString(pets[i].getName());
-				w.writeAsByte(pets[i].getLevel()); // pet level
-				w.writeAsShort(pets[i].getCloseness()); // pet closeness
-				w.writeAsByte(pets[i].getFullness()); // pet fullness
+				w.writeAsByte(pets[i].getLevel()); 
+				w.writeAsShort(pets[i].getCloseness()); 
+				w.writeAsByte(pets[i].getFullness());
 				w.writeAsShort(0);
 				w.writeInt(inv != null ? inv.getItemId() : 0);
 			}
 		}
 		w.writeAsByte(0); // end of pets
-		if (chr.getMount() != null && chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -18) != null) {
-			w.writeAsByte(chr.getMount().getId()); // mount
-			w.writeInt(chr.getMount().getLevel()); // level
-			w.writeInt(chr.getMount().getExp()); // exp
-			w.writeInt(chr.getMount().getTiredness()); // tiredness
+		
+		final Mount mount = chr.getMount();
+		if (mount != null && chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -18) != null) {
+			w.writeAsByte(mount.getId());
+			w.writeInt(mount.getLevel());
+			w.writeInt(mount.getExp());
+			w.writeInt(mount.getTiredness());
 		} else {
 			w.writeAsByte(0);
 		}
-		w.writeAsByte(chr.getCashShop().getWishList().size());
-		for (int sn : chr.getCashShop().getWishList()) {
+		
+		final List<Integer> wishList = chr.getCashShop().getWishList();
+		w.writeAsByte(wishList.size());
+		for (int sn : wishList) {
 			w.writeInt(sn);
 		}
-		w.writeInt(chr.getMonsterBook().getBookLevel());
-		w.writeInt(chr.getMonsterBook().getNormalCard());
-		w.writeInt(chr.getMonsterBook().getSpecialCard());
-		w.writeInt(chr.getMonsterBook().getTotalCards());
+		
+		final MonsterBook monsterBook = chr.getMonsterBook();
+		w.writeInt(monsterBook.getBookLevel());
+		w.writeInt(monsterBook.getNormalCard());
+		w.writeInt(monsterBook.getSpecialCard());
+		w.writeInt(monsterBook.getTotalCards());
 		w.writeInt(chr.getMonsterBookCover() > 0 ? ItemInfoProvider.getInstance().getCardMobId(chr.getMonsterBookCover()) : 0);
+		
 		IItem medal = chr.getInventory(InventoryType.EQUIPPED).getItem((byte) -49);
 		if (medal != null) {
 			w.writeInt(medal.getItemId());
@@ -2589,8 +2599,8 @@ public class PacketCreator {
 		ArrayList<Short> medalQuests = new ArrayList<Short>();
 		List<QuestStatus> completed = chr.getCompletedQuests();
 		for (QuestStatus q : completed) {
-			if (q.getQuest().getId() >= 29000) { // && q.getQuest().getId() <=
-													// 29923
+			if (q.getQuest().getId() >= 29000) { 
+				// && q.getQuest().getId() <= 29923
 				medalQuests.add(q.getQuest().getId());
 			}
 		}
@@ -2632,7 +2642,9 @@ public class PacketCreator {
 		}
 		w.writeInt(0);
 		w.writeAsByte(0);
-		w.writeInt(statups.get(0).delta); // Homing beacon ...
+		
+		// Homing beacon ...
+		w.writeInt(statups.get(0).delta);
 
 		if (special) {
 			w.write0(3);
@@ -2642,24 +2654,32 @@ public class PacketCreator {
 
 	/**
 	 * 
-	 * @param cid
+	 * @param characterId
 	 * @param statups
 	 * @param mount
 	 * @return
 	 */
-	public static GamePacket showMonsterRiding(int cid, Mount mount) { 
+	public static GamePacket showMonsterRiding(int characterId, Mount mount) { 
 		// Gtfo with this, this is just giveForeignBuff
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.GIVE_FOREIGN_BUFF.getValue());
-		w.writeInt(cid);
-		w.writeLong(BuffStat.MONSTER_RIDING.getValue()); // Thanks?
+		w.writeInt(characterId);
+		
+		// Thanks?
+		w.writeLong(BuffStat.MONSTER_RIDING.getValue()); 
+		
 		w.writeLong(0);
 		w.writeAsShort(0);
 		w.writeInt(mount.getItemId());
 		w.writeInt(mount.getSkillId());
-		w.writeInt(0); // Server Tick value.
+		
+		// Server Tick value.
+		w.writeInt(0); 
+		
 		w.writeAsShort(0);
-		w.writeAsByte(0); // Times you have been buffed
+		
+		// Times you have been buffed
+		w.writeAsByte(0); 
 		return w.getPacket();
 	}
 
@@ -2763,7 +2783,7 @@ public class PacketCreator {
 			w.writeInt((int) skill.getDuration());
 		}
 		w.writeAsShort(0); // ??? wk charges have 600 here o.o
-		w.writeAsShort(900);// Delay
+		w.writeAsShort(900); // Delay
 		w.writeAsByte(1);
 		return w.getPacket();
 	}
@@ -2780,7 +2800,7 @@ public class PacketCreator {
 			w.writeAsShort(skill.getSkillLevel());
 		}
 		w.writeAsShort(0); // same as give_buff
-		w.writeAsShort(900);// Delay
+		w.writeAsShort(900); // Delay
 		return w.getPacket();
 	}
 

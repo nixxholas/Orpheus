@@ -90,7 +90,9 @@ public class SupportCommands extends EnumeratedCommands {
 					short quantity = 1;
 					try {
 						quantity = Short.parseShort(sub[2]);
-					} catch (Exception e) {}
+					} catch (Exception e) {						
+					}
+					
 					int petid = -1;
 					if (ItemConstants.isPet(itemId)) {
 						petid = Pet.createPet(itemId);
