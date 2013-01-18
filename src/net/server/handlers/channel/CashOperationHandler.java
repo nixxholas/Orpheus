@@ -27,6 +27,8 @@ import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
 import client.Ring;
+import client.RingCreationInfo;
+
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
@@ -214,7 +216,8 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 						return;
 					}
 					IEquip item = (IEquip) ring.toItem();
-					int ringid = Ring.createRing(ring.getItemId(), chr, partner);
+					final RingCreationInfo info = getRingCreationInfo(ring, chr, partner);
+					int ringid = Ring.createRing(info);
 					item.setRingId(ringid);
 					cs.addToInventory(item);
 					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
@@ -256,7 +259,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					chr.dropMessage("The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel.");
 				} else {
 					IEquip item = (IEquip) ring.toItem();
-					int ringid = Ring.createRing(ring.getItemId(), chr, partner);
+					int ringid = Ring.createRing(getRingCreationInfo(ring, chr, partner));
 					item.setRingId(ringid);
 					cs.addToInventory(item);
 					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
@@ -276,6 +279,14 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 		} else {
 			Output.print(slea.toString());
 		}
+	}
+
+	private RingCreationInfo getRingCreationInfo(
+			CashItem ringItem,
+			GameCharacter partner1, 
+			GameCharacter partner2) {
+		
+		return new RingCreationInfo(ringItem.getItemId(), partner1.getId(), partner1.getName(), partner2.getId(), partner2.getName());
 	}
 
 	private boolean checkBirthday(GameClient c, int idate) {

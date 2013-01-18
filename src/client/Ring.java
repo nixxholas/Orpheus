@@ -76,38 +76,34 @@ public class Ring implements Comparable<Ring> {
 		return ps;
 	}
 
-	// TODO: Extract partner IDs and names into a parameter object. Yuck.
-	public static int createRing(int itemid, final GameCharacter partner1, final GameCharacter partner2) {
-		if (partner1 == null) {
-			return -2;
-		} else if (partner2 == null) {
-			return -1;
-		}
+	public static int createRing(RingCreationInfo info) {
 		int[] ringID = new int[2];
 
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("INSERT INTO `rings` (`itemid`, `partnerChrId`, `partnername`) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			ps.setInt(1, itemid);
-			ps.setInt(2, partner2.getId());
-			ps.setString(3, partner2.getName());
+			ps.setInt(1, info.RingItemId);
+			ps.setInt(2, info.SecondPartnerId);
+			ps.setString(3, info.SecondPartnerName);
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			ringID[0] = rs.getInt(1); // ID.
 			rs.close();
 			ps.close();
+			
 			ps = con.prepareStatement("INSERT INTO `rings` (`itemid`, `partnerRingId`, `partnerChrId`, `partnername`) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			ps.setInt(1, itemid);
+			ps.setInt(1, info.RingItemId);
 			ps.setInt(2, ringID[0]);
-			ps.setInt(3, partner1.getId());
-			ps.setString(4, partner1.getName());
+			ps.setInt(3, info.FirstPartnerId);
+			ps.setString(4, info.FirstPartnerName);
 			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			ringID[1] = rs.getInt(1);
 			rs.close();
 			ps.close();
+			
 			ps = con.prepareStatement("UPDATE `rings` SET `partnerRingId` = ? WHERE `id` = ?");
 			ps.setInt(1, ringID[1]);
 			ps.setInt(2, ringID[0]);
@@ -140,7 +136,7 @@ public class Ring implements Comparable<Ring> {
 		return partnerName;
 	}
 
-	public boolean equipped() {
+	public boolean isEquipped() {
 		return equipped;
 	}
 

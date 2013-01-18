@@ -1978,7 +1978,7 @@ public class PacketCreator {
 		}
 		boolean yes = false;
 		for (Ring ring : rings) {
-			if (ring.equipped()) {
+			if (ring.isEquipped()) {
 				if (yes == false) {
 					yes = true;
 					w.writeAsByte(1);
@@ -1997,7 +1997,7 @@ public class PacketCreator {
 
 	private static void addMarriageRingLook(PacketWriter w, GameCharacter chr) {
 		final boolean hasMarriageRing = chr.getMarriageRing() != null;
-		if (hasMarriageRing && !chr.getMarriageRing().equipped()) {
+		if (hasMarriageRing && !chr.getMarriageRing().isEquipped()) {
 			w.writeAsByte(0);
 			return;
 		}
