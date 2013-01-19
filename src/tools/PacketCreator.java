@@ -47,6 +47,7 @@ import client.FamilyEntry;
 import client.Inventory;
 import client.InventoryType;
 import client.KeyBinding;
+import client.MinigameStats;
 import client.MonsterBook;
 import client.Mount;
 import client.Pet;
@@ -227,7 +228,8 @@ public class PacketCreator {
 			byte pos = (byte) (item.getSlot() * -1);
 			if (pos < 100 && myEquip.get(pos) == null) {
 				myEquip.put(pos, item.getItemId());
-			} else if (pos > 100 && pos != 111) { // don't ask. o.o
+			} else if (pos > 100 && pos != 111) { 
+				// don't ask. o.o
 				pos -= 100;
 				if (myEquip.get(pos) != null) {
 					maskedEquip.put(pos, myEquip.get(pos));
@@ -258,10 +260,10 @@ public class PacketCreator {
 		}
 	}
 
-	private static void addCharEntry(PacketWriter w, GameCharacter chr, boolean viewall) {
+	private static void addCharEntry(PacketWriter w, GameCharacter chr, boolean viewAll) {
 		addCharStats(w, chr);
 		addCharLook(w, chr, false);
-		if (!viewall) {
+		if (!viewAll) {
 			w.writeAsByte(0);
 		}
 		if (chr.isGM()) {
@@ -404,7 +406,6 @@ public class PacketCreator {
 		}
 		w.write(new byte[] {0, (byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
 		w.writeInt(-1);
-
 	}
 
 	private static void addInventoryInfo(PacketWriter w, GameCharacter chr) {
@@ -4616,7 +4617,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGame(GameClient c, Minigame minigame, boolean isOwner, int piece) {
+	public static GamePacket getOmokStats(GameClient c, Minigame minigame, boolean isOwner, int piece) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.writeAsByte(PlayerInteractionHandler.Action.ROOM.getCode());
@@ -4624,30 +4625,32 @@ public class PacketCreator {
 		w.writeAsByte(0);
 		w.writeAsByte(!isOwner);
 		w.writeAsByte(0);
-		addCharLook(w, minigame.getOwner(), false);
-		w.writeLengthString(minigame.getOwner().getName());
-		if (minigame.getVisitor() != null) {
-			GameCharacter visitor = minigame.getVisitor();
+		final GameCharacter owner = minigame.getOwner();
+		addCharLook(w, owner, false);
+		w.writeLengthString(owner.getName());
+		
+		GameCharacter visitor = minigame.getVisitor();
+		if (visitor != null) {
 			w.writeAsByte(1);
 			addCharLook(w, visitor, false);
 			w.writeLengthString(visitor.getName());
 		}
+		
 		w.writeAsByte(0xFF);
 		w.writeAsByte(0);
 		w.writeInt(1);
-		w.writeInt(minigame.getOwner().getMiniGamePoints("wins", true));
-		w.writeInt(minigame.getOwner().getMiniGamePoints("ties", true));
-		w.writeInt(minigame.getOwner().getMiniGamePoints("losses", true));
-		w.writeInt(2000);
-		if (minigame.getVisitor() != null) {
-			GameCharacter visitor = minigame.getVisitor();
+		
+		final MinigameStats ownerStats = owner.getOmokStats();
+		ownerStats.serialize(w);
+		
+		if (visitor != null) {
 			w.writeAsByte(1);
 			w.writeInt(1);
-			w.writeInt(visitor.getMiniGamePoints("wins", true));
-			w.writeInt(visitor.getMiniGamePoints("ties", true));
-			w.writeInt(visitor.getMiniGamePoints("losses", true));
-			w.writeInt(2000);
+
+			final MinigameStats visitorStats = visitor.getOmokStats();
+			visitorStats.serialize(w);
 		}
+		
 		w.writeAsByte(0xFF);
 		w.writeLengthString(minigame.getDescription());
 		w.writeAsByte(piece);
@@ -4725,7 +4728,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getMiniGameNewVisitor(GameCharacter c, int slot) {
+	public static GamePacket getOmokNewVisitor(GameCharacter c, int slot) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.writeAsByte(PlayerInteractionHandler.Action.VISIT.getCode());
@@ -4733,10 +4736,8 @@ public class PacketCreator {
 		addCharLook(w, c, false);
 		w.writeLengthString(c.getName());
 		w.writeInt(1);
-		w.writeInt(c.getMiniGamePoints("wins", true));
-		w.writeInt(c.getMiniGamePoints("ties", true));
-		w.writeInt(c.getMiniGamePoints("losses", true));
-		w.writeInt(2000);
+		final MinigameStats stats = c.getOmokStats();
+		stats.serialize(w);
 		return w.getPacket();
 	}
 
@@ -4747,51 +4748,70 @@ public class PacketCreator {
 		w.writeAsByte(1);
 		return w.getPacket();
 	}
+	
+	private enum MinigameResult {
+		OWNER_WIN,
+		VISITOR_WIN,
+		OWNER_FORFEIT,
+		VISITOR_FORFEIT,
+		TIE;
+	}
 
-	private static GamePacket getMiniGameResult(Minigame game, int win, int lose, int tie, int result, int forfeit, boolean omok) {
+	private static GamePacket getMiniGameResult(Minigame game, MinigameResult result, boolean omok) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.writeAsByte(PlayerInteractionHandler.Action.GET_RESULT.getCode());
-		if (tie == 0 && forfeit != 1) {
+		
+		final GameCharacter owner = game.getOwner();
+		final MinigameStats ownerStats = omok ? owner.getOmokStats() : owner.getMatchingCardStats();
+		
+		final GameCharacter visitor = game.getVisitor();
+		final MinigameStats visitorStats = omok ? visitor.getOmokStats() : visitor.getMatchingCardStats();
+
+		switch (result) {
+		case OWNER_WIN:
+		case VISITOR_FORFEIT:
+			MinigameStats.processOwnerWin(ownerStats, visitorStats);
 			w.writeAsByte(0);
-		} else if (tie == 1) {
+			break;
+		case TIE:
+			MinigameStats.processTie(ownerStats, visitorStats);
 			w.writeAsByte(1);
-		} else if (forfeit == 1) {
+			break;
+		case VISITOR_WIN:
+		case OWNER_FORFEIT:
+			MinigameStats.processOwnerLoss(ownerStats, visitorStats);
 			w.writeAsByte(2);
+			break;
 		}
+
 		w.writeAsByte(0); // owner
 		w.writeInt(1); // unknown
-		w.writeInt(game.getOwner().getMiniGamePoints("wins", omok) + win); // wins
-		w.writeInt(game.getOwner().getMiniGamePoints("ties", omok) + tie); // ties
-		w.writeInt(game.getOwner().getMiniGamePoints("losses", omok) + lose); // losses
-		w.writeInt(2000); // points
+		
+		ownerStats.serialize(w);
 		w.writeInt(1); // start of visitor; unknown
-		w.writeInt(game.getVisitor().getMiniGamePoints("wins", omok) + lose); // wins
-		w.writeInt(game.getVisitor().getMiniGamePoints("ties", omok) + tie); // ties
-		w.writeInt(game.getVisitor().getMiniGamePoints("losses", omok) + win); // losses
-		w.writeInt(2000); // points
-		game.getOwner().setMiniGamePoints(game.getVisitor(), result, omok);
+		visitorStats.serialize(w);
 		return w.getPacket();
 	}
 
 	public static GamePacket getMiniGameOwnerWin(Minigame game) {
-		return getMiniGameResult(game, 0, 1, 0, 1, 0, true);
+		return getMiniGameResult(game, MinigameResult.OWNER_WIN, true);
 	}
 
 	public static GamePacket getMiniGameVisitorWin(Minigame game) {
-		return getMiniGameResult(game, 1, 0, 0, 2, 0, true);
+		return getMiniGameResult(game, MinigameResult.VISITOR_WIN, true);
 	}
 
 	public static GamePacket getMiniGameTie(Minigame game) {
-		return getMiniGameResult(game, 0, 0, 1, 3, 0, true);
+		return getMiniGameResult(game, MinigameResult.TIE, true);
 	}
 
 	public static GamePacket getMiniGameOwnerForfeit(Minigame game) {
-		return getMiniGameResult(game, 0, 1, 0, 2, 1, true);
+		return getMiniGameResult(game, MinigameResult.OWNER_FORFEIT, true);
 	}
 
 	public static GamePacket getMiniGameVisitorForfeit(Minigame game) {
-		return getMiniGameResult(game, 1, 0, 0, 1, 1, true);
+		return getMiniGameResult(game, MinigameResult.VISITOR_FORFEIT, true);
 	}
 
 	public static GamePacket getMiniGameClose() {
@@ -4811,30 +4831,31 @@ public class PacketCreator {
 		w.writeAsByte(2);
 		w.writeAsByte(!isOwner);
 		w.writeAsByte(0);
-		addCharLook(w, minigame.getOwner(), false);
-		w.writeLengthString(minigame.getOwner().getName());
-		if (minigame.getVisitor() != null) {
-			GameCharacter visitor = minigame.getVisitor();
+		final GameCharacter owner = minigame.getOwner();
+		addCharLook(w, owner, false);
+		w.writeLengthString(owner.getName());
+		
+		final GameCharacter visitor = minigame.getVisitor();
+		if (visitor != null) {
 			w.writeAsByte(1);
 			addCharLook(w, visitor, false);
 			w.writeLengthString(visitor.getName());
 		}
+		
 		w.writeAsByte(0xFF);
 		w.writeAsByte(0);
 		w.writeInt(2);
-		w.writeInt(minigame.getOwner().getMiniGamePoints("wins", false));
-		w.writeInt(minigame.getOwner().getMiniGamePoints("ties", false));
-		w.writeInt(minigame.getOwner().getMiniGamePoints("losses", false));
-		w.writeInt(2000);
-		if (minigame.getVisitor() != null) {
-			GameCharacter visitor = minigame.getVisitor();
+		
+		final MinigameStats ownerStats = owner.getMatchingCardStats();
+		ownerStats.serialize(w);
+		
+		if (visitor != null) {
+			final MinigameStats visitorStats = visitor.getMatchingCardStats();
 			w.writeAsByte(1);
 			w.writeInt(2);
-			w.writeInt(visitor.getMiniGamePoints("wins", false));
-			w.writeInt(visitor.getMiniGamePoints("ties", false));
-			w.writeInt(visitor.getMiniGamePoints("losses", false));
-			w.writeInt(2000);
+			visitorStats.serialize(w);
 		}
+		
 		w.writeAsByte(0xFF);
 		w.writeLengthString(minigame.getDescription());
 		w.writeAsByte(piece);
@@ -4868,10 +4889,9 @@ public class PacketCreator {
 		addCharLook(w, c, false);
 		w.writeLengthString(c.getName());
 		w.writeInt(1);
-		w.writeInt(c.getMiniGamePoints("wins", false));
-		w.writeInt(c.getMiniGamePoints("ties", false));
-		w.writeInt(c.getMiniGamePoints("losses", false));
-		w.writeInt(2000);
+		
+		final MinigameStats ownerStats = c.getMatchingCardStats();
+		ownerStats.serialize(w);
 		return w.getPacket();
 	}
 
@@ -4891,15 +4911,15 @@ public class PacketCreator {
 	}
 
 	public static GamePacket getMatchCardOwnerWin(Minigame game) {
-		return getMiniGameResult(game, 1, 0, 0, 1, 0, false);
+		return getMiniGameResult(game, MinigameResult.OWNER_WIN, false);
 	}
 
 	public static GamePacket getMatchCardVisitorWin(Minigame game) {
-		return getMiniGameResult(game, 0, 1, 0, 2, 0, false);
+		return getMiniGameResult(game, MinigameResult.VISITOR_WIN, false);
 	}
 
 	public static GamePacket getMatchCardTie(Minigame game) {
-		return getMiniGameResult(game, 0, 0, 1, 3, 0, false);
+		return getMiniGameResult(game, MinigameResult.TIE, false);
 	}
 
 	public static GamePacket fredrickMessage(byte operation) {
@@ -4948,11 +4968,11 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket addOmokBox(GameCharacter c, int ammount, int type) {
+	public static GamePacket addOmokBox(GameCharacter c, int amount, int type) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		w.writeInt(c.getId());
-		addAnnounceBox(w, c.getMiniGame(), 1, 0, ammount, type);
+		addAnnounceBox(w, c.getMiniGame(), 1, 0, amount, type);
 		return w.getPacket();
 	}
 
@@ -4964,11 +4984,11 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket addMatchCardBox(GameCharacter c, int ammount, int type) {
+	public static GamePacket addMatchCardBox(GameCharacter c, int amount, int type) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		w.writeInt(c.getId());
-		addAnnounceBox(w, c.getMiniGame(), 2, 0, ammount, type);
+		addAnnounceBox(w, c.getMiniGame(), 2, 0, amount, type);
 		return w.getPacket();
 	}
 

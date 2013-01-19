@@ -691,7 +691,7 @@ public class GameClient {
 				player.unequipPendantOfSpirit();
 				Minigame game = player.getMiniGame();
 				if (game != null) {
-					player.setMiniGame(null);
+					player.setMinigame(null);
 					if (game.isOwner(player)) {
 						player.getMap().broadcastMessage(PacketCreator.removeCharBox(player));
 						game.broadcastToVisitor(PacketCreator.getMiniGameClose());

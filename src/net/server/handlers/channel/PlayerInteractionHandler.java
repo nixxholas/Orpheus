@@ -76,7 +76,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				slea.readByte(); // 20 6E 4E
 				int type = slea.readByte(); // 20 6E 4E
 				Minigame game = new Minigame(chr, desc);
-				chr.setMiniGame(game);
+				chr.setMinigame(game);
 				game.setPieceType(type);
 				game.setGameType("omok");
 				chr.getMap().addMapObject(game);
@@ -99,7 +99,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 					game.setMatchesToWin(15);
 				}
 				game.setGameType("matchcard");
-				chr.setMiniGame(game);
+				chr.setMinigame(game);
 				chr.getMap().addMapObject(game);
 				chr.getMap().broadcastMessage(PacketCreator.addMatchCardBox(chr, 1, 0));
 				game.sendMatchCard(c, type);
@@ -155,7 +155,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 					Minigame game = (Minigame) ob;
 					if (game.hasFreeSlot() && !game.isVisitor(c.getPlayer())) {
 						game.addVisitor(c.getPlayer());
-						chr.setMiniGame(game);
+						chr.setMinigame(game);
 						if (game.getGameType().equals("omok")) {
 							game.sendOmok(c, game.getPieceType());
 						} else if (game.getGameType().equals("matchcard")) {
@@ -228,7 +228,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 					}
 					chr.setPlayerShop(null);
 				} else if (game != null) {
-					chr.setMiniGame(null);
+					chr.setMinigame(null);
 					if (game.isOwner(c.getPlayer())) {
 						chr.getMap().broadcastMessage(PacketCreator.removeCharBox(c.getPlayer()));
 						game.broadcastToVisitor(PacketCreator.getMiniGameClose());

@@ -66,7 +66,7 @@ public class Minigame extends AbstractGameMapObject {
 	public void addVisitor(GameCharacter challenger) {
 		visitor = challenger;
 		if (GameType.equals("omok")) {
-			this.getOwner().getClient().announce(PacketCreator.getMiniGameNewVisitor(challenger, 1));
+			this.getOwner().getClient().announce(PacketCreator.getOmokNewVisitor(challenger, 1));
 			this.getOwner().getMap().broadcastMessage(PacketCreator.addOmokBox(owner, 2, 0));
 		}
 		if (GameType.equals("matchcard")) {
@@ -220,7 +220,7 @@ public class Minigame extends AbstractGameMapObject {
 	}
 
 	public void sendOmok(GameClient c, int type) {
-		c.announce(PacketCreator.getMiniGame(c, this, isOwner(c.getPlayer()), type));
+		c.announce(PacketCreator.getOmokStats(c, this, isOwner(c.getPlayer()), type));
 	}
 
 	public void sendMatchCard(GameClient c, int type) {
