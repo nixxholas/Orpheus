@@ -3756,7 +3756,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 			@Override
 			public void run() {
-				client.disconnect(); // FAGGOTS
+				client.disconnect(); // NIBS
 			}
 		}, duration);
 	}
@@ -3768,7 +3768,19 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 			@Override
 			public void run() {
-				client.disconnect(); // FAGGOTS
+				client.disconnect(); // NIBS
+			}
+		}, 6000);
+	}
+	
+	public void sendPolice() {		
+		announce(PacketCreator.sendPolice("You have been blocked by #bMooplePolice#k for the HACK reason."));
+		this.isbanned = true;
+		TimerManager.getInstance().schedule(new Runnable() {
+
+			@Override
+			public void run() {
+				client.disconnect(); // NIBS
 			}
 		}, 6000);
 	}

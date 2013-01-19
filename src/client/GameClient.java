@@ -913,7 +913,7 @@ public class GameClient {
 	}
 
 	public boolean acceptTermsOfService() {
-		boolean disconnectForBeingAFaggot = false;
+		boolean disconnect = false;
 		if (accountName == null) {
 			return true;
 		}
@@ -924,7 +924,7 @@ public class GameClient {
 			
 			if (rs.next()) {
 				if (rs.getByte("tos") == 1) {
-					disconnectForBeingAFaggot = true;
+					disconnect = true;
 				}
 			}
 		} catch (SQLException e) {
@@ -935,7 +935,7 @@ public class GameClient {
 		} catch (SQLException e) {
 		}
 
-		return disconnectForBeingAFaggot;
+		return disconnect;
 	}
 
 	private PreparedStatement getUpdateTosById(final Connection connection) throws SQLException {

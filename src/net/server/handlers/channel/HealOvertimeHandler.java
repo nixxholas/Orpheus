@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
-import client.autoban.AutobanFactory;
+import client.autoban.AutobanType;
 import client.autoban.AutobanManager;
 import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -37,10 +37,11 @@ public final class HealOvertimeHandler extends AbstractPacketHandler {
 		slea.skip(4);
 		short healHP = slea.readShort();
 		if (healHP != 0) {
-			if ((abm.getLastSpam(0) + 1500) > System.currentTimeMillis())
-				AutobanFactory.FAST_HP_HEALING.addPoint(abm, "Fast hp healing");
+			if ((abm.getLastSpam(0) + 1500) > System.currentTimeMillis()) {
+				abm.addPoint(AutobanType.FAST_HP_HEALING, "Fast hp healing");
+			}
 			if (healHP > 140) {
-				AutobanFactory.HIGH_HP_HEALING.autoban(chr, "Healing: " + healHP + "; Max is 140.");
+				abm.autoban(AutobanType.HIGH_HP_HEALING, "Healing: " + healHP + "; Max is 140.");
 				return;
 			}
 			chr.addHP(healHP);
@@ -49,10 +50,12 @@ public final class HealOvertimeHandler extends AbstractPacketHandler {
 			chr.checkBerserk();
 			abm.spam(0);
 		}
+		
 		short healMP = slea.readShort();
 		if (healMP != 0 && healMP < 1000) {
-			if ((abm.getLastSpam(1) + 1500) > System.currentTimeMillis())
-				AutobanFactory.FAST_MP_HEALING.addPoint(abm, "Fast mp healing");
+			if ((abm.getLastSpam(1) + 1500) > System.currentTimeMillis()) {
+				abm.addPoint(AutobanType.FAST_MP_HEALING, "Fast mp healing");
+			}
 			chr.addMP(healMP);
 			abm.spam(1);
 		}

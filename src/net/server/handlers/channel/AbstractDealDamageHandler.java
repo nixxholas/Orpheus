@@ -60,7 +60,7 @@ import constants.skills.WindArcher;
 import server.life.MonsterDropEntry;
 import tools.Randomizer;
 import net.AbstractPacketHandler;
-import client.autoban.AutobanFactory;
+import client.autoban.AutobanType;
 import constants.skills.Aran;
 import constants.skills.Crossbowman;
 import constants.skills.DawnWarrior;
@@ -99,7 +99,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
         public StatEffect getAttackEffect(GameCharacter chr, ISkill theSkill) {
             ISkill mySkill = theSkill;
             if (mySkill == null) {
-                mySkill = SkillFactory.getSkill(skill);
+                mySkill = SkillFactory.getSkill(this.skill);
             }
             int skillLevel = chr.getSkillLevel(mySkill);
             if (mySkill.getId() % 10000000 == 1020) {
@@ -112,9 +112,10 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
             if (skillLevel == 0) {
                 return null;
             }
-            if (display > 80) { //Hmm
+            if (this.display > 80) { 
+            	// Hmm
                 if (!theSkill.getAction()) {
-                    AutobanFactory.FAST_ATTACK.autoban(chr, "WZ Edit; adding action to a skill: " + display);
+                	chr.getAutobanManager().autoban(AutobanType.FAST_ATTACK, "WZ Edit; adding action to a skill: " + this.display);
                     return null;
                 }
             }
@@ -139,7 +140,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                 }
 
                 if (player.getMp() < attackEffect.getMpCon()) {
-                    AutobanFactory.MPCON.addPoint(player.getAutobanManager(), "Skill: " + attack.skill + "; Player MP: " + player.getMp() + "; MP Needed: " + attackEffect.getMpCon());
+                	player.getAutobanManager().addPoint(AutobanType.MPCON, "Skill: " + attack.skill + "; Player MP: " + player.getMp() + "; MP Needed: " + attackEffect.getMpCon());
                 }
 
                 if (attack.skill != Cleric.HEAL) {
@@ -156,7 +157,8 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     mobCount = 15;//:(
                 }
                 if (attack.numAttacked > mobCount) {
-                    AutobanFactory.MOB_COUNT.autoban(player, "Skill: " + attack.skill + "; Count: " + attack.numAttacked + " Max: " + attackEffect.getMobCount());
+                	String message = "Skill: " + attack.skill + "; Count: " + attack.numAttacked + " Max: " + attackEffect.getMobCount();
+                	player.getAutobanManager().autoban(AutobanType.MOB_COUNT, message);
                     return;
                 }
             }
@@ -314,7 +316,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     if (attack.skill != 0) {
                         if (attackEffect.getFixDamage() != -1) {
                             if (totDamageToOneMonster != attackEffect.getFixDamage() && totDamageToOneMonster != 0) {
-                                AutobanFactory.FIX_DAMAGE.autoban(player, String.valueOf(totDamageToOneMonster) + " damage");
+                            	player.getAutobanManager().autoban(AutobanType.FIX_DAMAGE, String.valueOf(totDamageToOneMonster) + " damage");                                
                             }
                         }
                     }

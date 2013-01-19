@@ -20,46 +20,35 @@
  */
 package client.autoban;
 
-import client.GameCharacter;
-
 /**
  * 
  * @author kevintjuh93
  */
-public enum AutobanFactory {
+public enum AutobanType {
 	MOB_COUNT, FIX_DAMAGE, HIGH_HP_HEALING, FAST_HP_HEALING(15), FAST_MP_HEALING(15), GACHA_EXP, TUBI(20, 15000), SHORT_ITEM_VAC, ITEM_VAC, FAST_ATTACK(10, 30000), MPCON(25, 30000);
 
 	private int points;
-	private long expiretime;
+	private long expiration;
 
-	private AutobanFactory() {
+	private AutobanType() {
 		this(1, -1);
 	}
 
-	private AutobanFactory(int points) {
+	private AutobanType(int points) {
 		this.points = points;
-		this.expiretime = -1;
+		this.expiration = -1;
 	}
 
-	private AutobanFactory(int points, long expire) {
+	private AutobanType(int points, long expire) {
 		this.points = points;
-		this.expiretime = expire;
+		this.expiration = expire;
 	}
 
 	public int getMaximum() {
 		return points;
 	}
 
-	public long getExpire() {
-		return expiretime;
-	}
-
-	public void addPoint(AutobanManager ban, String reason) {
-		ban.addPoint(this, reason);
-	}
-
-	public void autoban(GameCharacter chr, String value) {
-		chr.autoban("Autobanned for (" + this.name() + ": " + value + ")", 1);
-		chr.sendPolice("You have been blocked by #bMooplePolice#k for the HACK reason.");
+	public long getExpiration() {
+		return expiration;
 	}
 }

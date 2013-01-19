@@ -20,8 +20,9 @@
  */
 package net.server.handlers.channel;
 
+import client.GameCharacter;
 import client.GameClient;
-import client.autoban.AutobanFactory;
+import client.autoban.AutobanType;
 import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -34,11 +35,12 @@ public class UseGachaExpHandler extends AbstractPacketHandler {
 
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		if (c.getPlayer().getGachaExp() == 0) {
-			c.getPlayer().dropMessage(1, "Packet editing is for faggots like you.");
-			AutobanFactory.GACHA_EXP.autoban(c.getPlayer(), "Packet editing is for faggots like this nib.");
+		final GameCharacter player = c.getPlayer();
+		if (player.getGachaExp() == 0) {
+			player.dropMessage(1, "Packet editing is for nibs like you.");
+			player.getAutobanManager().autoban(AutobanType.GACHA_EXP, "Packet editing is for nibs like this one.");
 		}
-		c.getPlayer().gainGachaExp();
+		player.gainGachaExp();
 		c.announce(PacketCreator.enableActions());
 	}
 }

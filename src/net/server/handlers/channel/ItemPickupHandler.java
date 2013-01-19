@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import net.server.PartyCharacter;
 import client.GameClient;
-import client.autoban.AutobanFactory;
+import client.autoban.AutobanType;
 import java.awt.Point;
 import net.AbstractPacketHandler;
 import scripting.item.ItemScriptManager;
@@ -92,9 +92,9 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 					}
 					final double Distance = cpos.distanceSq(mapitem.getPosition());
 					if (Distance > 2500) {
-						AutobanFactory.SHORT_ITEM_VAC.autoban(chr, cpos.toString() + Distance);
+						chr.getAutobanManager().autoban(AutobanType.SHORT_ITEM_VAC, cpos.toString() + Distance);
 					} else if (chr.getPosition().distanceSq(mapitem.getPosition()) > 90000.0) {
-						AutobanFactory.ITEM_VAC.autoban(chr, cpos.toString() + Distance);
+						chr.getAutobanManager().autoban(AutobanType.ITEM_VAC, cpos.toString() + Distance);
 					}
 					if (mapitem.getMeso() > 0) {
 						if (chr.getParty() != null) {

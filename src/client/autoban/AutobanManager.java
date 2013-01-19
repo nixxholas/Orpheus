@@ -30,32 +30,35 @@ import java.util.Map;
  */
 public class AutobanManager {
 	private GameCharacter chr;
-	private Map<AutobanFactory, Integer> points = new HashMap<AutobanFactory, Integer>();
-	private Map<AutobanFactory, Long> lastTime = new HashMap<AutobanFactory, Long>();
+	private Map<AutobanType, Integer> points = new HashMap<AutobanType, Integer>();
+	private Map<AutobanType, Long> lastTime = new HashMap<AutobanType, Long>();
 	private int misses = 0;
-	private int lastmisses = 0;
-	private int samemisscount = 0;
+	private int lastMisses = 0;
+	private int sameMissCount = 0;
 	private long spam[] = new long[20];
 	private int timestamp[] = new int[20];
-	private byte timestampcounter[] = new byte[20];
+	private byte timestampCounter[] = new byte[20];
 
 	public AutobanManager(GameCharacter chr) {
 		this.chr = chr;
 	}
 
-	public void addPoint(AutobanFactory fac, String reason) {
+	public void addPoint(AutobanType fac, String reason) {
 		if (lastTime.containsKey(fac)) {
-			if (lastTime.get(fac) < (System.currentTimeMillis() - fac.getExpire())) {
-				points.put(fac, points.get(fac) / 2); // So the points are not completely gone.
+			if (lastTime.get(fac) < (System.currentTimeMillis() - fac.getExpiration())) {
+				// Divide by 2 so the points are not completely gone.
+				points.put(fac, points.get(fac) / 2); 
 			}
 		}
-		if (fac.getExpire() != -1)
+		if (fac.getExpiration() != -1){
 			lastTime.put(fac, System.currentTimeMillis());
+		}
 
 		if (points.containsKey(fac)) {
 			points.put(fac, points.get(fac) + 1);
-		} else
+		} else {
 			points.put(fac, 1);
+		}
 
 		if (points.get(fac) >= fac.getMaximum()) {
 			chr.autoban("Autobanned for " + fac.name() + " ;" + reason, 1);
@@ -68,14 +71,17 @@ public class AutobanManager {
 	}
 
 	public void resetMisses() {
-		if (lastmisses == misses && misses > 6) {
-			samemisscount++;
+		if (lastMisses == misses && misses > 6) {
+			sameMissCount++;
 		}
-		if (samemisscount > 4)
+		
+		if (sameMissCount > 4) {
 			chr.autoban("Autobanned for : " + misses + " Miss godmode", 1);
-		else if (samemisscount > 0)
-
-			this.lastmisses = misses;
+			chr.sendPolice("You have been blocked by #bMooplePolice for the HACK reason#k.");
+		} else if (sameMissCount > 0) {
+			this.lastMisses = misses;
+		}
+		
 		this.misses = 0;
 	}
 
@@ -105,8 +111,8 @@ public class AutobanManager {
 	 */
 	public void setTimestamp(int type, int time) {
 		if (this.timestamp[type] == time) {
-			this.timestampcounter[type]++;
-			if (this.timestampcounter[type] > 3) {
+			this.timestampCounter[type]++;
+			if (this.timestampCounter[type] > 3) {
 				chr.getClient().disconnect();
 				// System.out.println("Same timestamp for type: " + type +
 				// "; Character: " + chr);
@@ -114,5 +120,12 @@ public class AutobanManager {
 			return;
 		}
 		this.timestamp[type] = time;
+	}
+	
+	public void autoban(AutobanType type, String message) {
+		final String autobanMessage = 
+				String.format("Autobanned for (%s: %s)", type.name(), message);
+		chr.autoban(autobanMessage, 1);
+		chr.sendPolice("You have been blocked by #bMooplePolice#k for the HACK reason.");
 	}
 }
