@@ -47,6 +47,7 @@ import tools.DatabaseConnection;
  * @author Flav
  */
 public class CashShop {
+	
 	public static class CashItem {
 
 		private int sn, itemId, price;
@@ -84,21 +85,23 @@ public class CashShop {
 		}
 
 		public IItem toItem() {
-			int petId = -1;
-			if (ItemConstants.isPet(itemId)) {
-				petId = Pet.createPet(itemId);
-			}
-
 			ItemInfoProvider ii = ItemInfoProvider.getInstance();
 			IItem item;
 			if (ii.getInventoryType(itemId).equals(InventoryType.EQUIP)) {
 				item = ii.getEquipById(itemId);
-			} else {
+			} else if (ItemConstants.isPet(itemId)) {
+				int petId = Pet.createPet(itemId);
 				item = new Item(itemId, (byte) 0, count, petId);
+			} else {
+				item = new Item(itemId, (byte) 0, count);
 			}
 
 			if (ItemConstants.EXPIRING_ITEMS) {
-				item.setExpiration(period == 1 ? System.currentTimeMillis() + (1000 * 60 * 60 * 4 * period) : System.currentTimeMillis() + (1000 * 60 * 60 * 24 * period));
+				final int hourMultiplier = period == 1 ? 4 : 24;
+				final long validityPeriod = 1000 * 60 * 60 * hourMultiplier * period;
+				
+				final long expiration = System.currentTimeMillis() + validityPeriod;
+				item.setExpiration(expiration);
 			}
 
 			item.setSN(sn);
@@ -108,7 +111,7 @@ public class CashShop {
 
 	public static class SpecialCashItem {
 		private int sn, modifier;
-		private byte info; // ?
+		private byte info;
 
 		public SpecialCashItem(int sn, int modifier, byte info) {
 			this.sn = sn;
@@ -157,25 +160,18 @@ public class CashShop {
 
 				packages.put(Integer.parseInt(cashPackage.getName()), cPackage);
 			}
-			PreparedStatement ps = null;
-			ResultSet rs = null;
-			try {
-				ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM specialcashitems");
-				rs = ps.executeQuery();
+
+			final Connection connection = DatabaseConnection.getConnection();
+			try (				
+					PreparedStatement ps = connection.prepareStatement("SELECT * FROM specialcashitems");
+					ResultSet rs = ps.executeQuery();) {
+				
 				while (rs.next()) {
 					specialcashitems.add(new SpecialCashItem(rs.getInt("sn"), rs.getInt("modifier"), rs.getByte("info")));
 				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
-			} finally {
-				try {
-					if (rs != null)
-						rs.close();
-					if (ps != null)
-						ps.close();
-				} catch (SQLException ex) {
-				}
-			}
+			} 
 		}
 
 		public static CashItem getItem(int sn) {
@@ -224,7 +220,7 @@ public class CashShop {
 			}
 		}
 	}
-
+	
 	private int accountId, characterId, nxCredit, maplePoint, nxPrepaid;
 	private boolean opened;
 	private ItemFactory factory;

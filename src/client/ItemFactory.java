@@ -45,19 +45,21 @@ public enum ItemFactory {
 		return value;
 	}
 
-	public List<ItemInventoryEntry> loadItems(int id, boolean login) throws SQLException {
+	public List<ItemInventoryEntry> loadItems(int id, boolean onlyEquipped) throws SQLException {
 		List<ItemInventoryEntry> items = new ArrayList<ItemInventoryEntry>();
 		final Connection connection = DatabaseConnection.getConnection();
 
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT * FROM `inventoryitems` LEFT JOIN `inventoryequipment` USING(`inventoryitemid`) WHERE `type` = ? AND ");
-		query.append(account ? "`accountid`" : "`characterid`").append(" = ?");
+		query.append(this.account ? "`accountid`" : "`characterid`").append(" = ?");
 
-		if (login)
+		if (onlyEquipped) {
 			query.append(" AND `inventorytype` = ").append(InventoryType.EQUIPPED.asByte());
+		}
 
 		final String sql = query.toString();
-		try (PreparedStatement ps = getSelectItems(connection, sql, id);
+		try (
+				PreparedStatement ps = getSelectItems(connection, sql, this.value, id);
 				ResultSet rs = ps.executeQuery();) {
 			
 			while (rs.next()) {
@@ -106,8 +108,8 @@ public enum ItemFactory {
 		return items;
 	}
 
-	private PreparedStatement getSelectItems(final Connection connection,
-			final String sql, int id) throws SQLException {
+	private static PreparedStatement getSelectItems(final Connection connection,
+			final String sql, int value, int id) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setInt(1, value);
 		ps.setInt(2, id);
