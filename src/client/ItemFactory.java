@@ -47,7 +47,6 @@ public enum ItemFactory {
 
 	public List<ItemInventoryEntry> loadItems(int id, boolean onlyEquipped) throws SQLException {
 		List<ItemInventoryEntry> items = new ArrayList<ItemInventoryEntry>();
-		final Connection connection = DatabaseConnection.getConnection();
 
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT * FROM `inventoryitems` LEFT JOIN `inventoryequipment` USING(`inventoryitemid`) WHERE `type` = ? AND ");
@@ -58,6 +57,7 @@ public enum ItemFactory {
 		}
 
 		final String sql = query.toString();
+		final Connection connection = DatabaseConnection.getConnection();
 		try (
 				PreparedStatement ps = getSelectItems(connection, sql, this.value, id);
 				ResultSet rs = ps.executeQuery();) {

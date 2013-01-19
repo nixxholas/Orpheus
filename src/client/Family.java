@@ -30,6 +30,9 @@ import tools.DatabaseConnection;
  * @author Jay Estrella :3
  */
 public class Family {
+	
+	// TODO: WHAT. WHY ARE THEY STATIC!
+	// Jay Estrella, whoever you are, you are nib.
 	private static int id;
 	private static Map<Integer, FamilyEntry> members = new HashMap<Integer, FamilyEntry>();
 
