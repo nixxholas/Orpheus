@@ -434,8 +434,8 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					break;
 				case texttype:
-					chr.toggleGMText();
-					chr.message("Your chat messages are now " + (chr.getGMText() ? "white." : "black."));
+					chr.toggleGmText();
+					chr.message("Your chat messages are now " + (chr.getGmText() ? "white." : "black."));
 					break;
 				case unban:
 					try {

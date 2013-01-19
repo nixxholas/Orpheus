@@ -154,7 +154,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int battleshipHp = 0;
 	private int mesosTraded = 0;
 	private int possibleReports = 10;
-	private int dojoPoints, vanquisherStage, dojoStage, dojoEnergy,
+	private int dojoPoints, dojoStage, dojoEnergy, vanquisherStage, 
 			vanquisherKills;
 	private int allowWarpToId;
 	private int expRate = 1, mesoRate = 1, dropRate = 1;
@@ -337,6 +337,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public int addDojoPointsByMap() {
 		int pts = 0;
 		if (dojoPoints < 17000) {
+			// TODO: bash head into desk because of this line:
 			pts = 1 + ((getMap().getId() - 1) / 100 % 100) / 6;
 			if (!dojoParty) {
 				pts++;
@@ -628,6 +629,22 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			mbsvh.schedule.cancel(false);
 		}
 		this.effects.clear();
+	}
+
+	private final class DojoForceWarpAction implements Runnable {
+		private final boolean rightmap;
+
+		private DojoForceWarpAction(boolean rightmap) {
+			this.rightmap = rightmap;
+		}
+
+		@Override
+		public void run() {
+			if (rightmap) {
+				final GameMap targetMap = client.getChannelServer().getMapFactory().getMap(925020000);
+				client.getPlayer().changeMap(targetMap);
+			}
+		}
 	}
 
 	private final class PendantHourlyAction implements Runnable {
@@ -2884,7 +2901,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				rs = ps.executeQuery();
 				while (rs.next()) {
 					int position = rs.getInt("position");
-					SkillMacro macro = new SkillMacro(rs.getInt("skill1"), rs.getInt("skill2"), rs.getInt("skill3"), rs.getString("name"), rs.getInt("shout"), position);
+					SkillMacro macro = new SkillMacro(position, rs.getInt("skill1"), rs.getInt("skill2"), rs.getInt("skill3"), rs.getString("name"), rs.getInt("shout"));
 					character.skillMacros[position] = macro;
 				}
 				rs.close();
@@ -3660,11 +3677,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			for (int i = 0; i < 5; i++) {
 				SkillMacro macro = skillMacros[i];
 				if (macro != null) {
-					ps.setInt(2, macro.getSkill1());
-					ps.setInt(3, macro.getSkill2());
-					ps.setInt(4, macro.getSkill3());
-					ps.setString(5, macro.getName());
-					ps.setInt(6, macro.getShout());
+					ps.setInt(2, macro.skill1);
+					ps.setInt(3, macro.skill2);
+					ps.setInt(4, macro.skill3);
+					ps.setString(5, macro.name);
+					ps.setInt(6, macro.shout);
 					ps.setInt(7, i);
 					ps.addBatch();
 				}
@@ -3919,26 +3936,26 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void setRates() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("GMT-8"));
-		World worldz = Server.getInstance().getWorld(worldId);
+		World world = Server.getInstance().getWorld(worldId);
 		int hr = cal.get(Calendar.HOUR_OF_DAY);
 		if ((haveItem(5360001) && hr > 6 && hr < 12) || (haveItem(5360002) && hr > 9 && hr < 15) || (haveItem(536000) && hr > 12 && hr < 18) || (haveItem(5360004) && hr > 15 && hr < 21) || (haveItem(536000) && hr > 18) || (haveItem(5360006) && hr < 5) || (haveItem(5360007) && hr > 2 && hr < 6) || (haveItem(5360008) && hr >= 6 && hr < 11)) {
-			this.dropRate = 2 * worldz.getDropRate();
-			this.mesoRate = 2 * worldz.getMesoRate();
+			this.dropRate = 2 * world.getDropRate();
+			this.mesoRate = 2 * world.getMesoRate();
 		} else {
-			this.dropRate = worldz.getDropRate();
-			this.mesoRate = worldz.getMesoRate();
+			this.dropRate = world.getDropRate();
+			this.mesoRate = world.getMesoRate();
 		}
 		if ((haveItem(5211000) && hr > 17 && hr < 21) || (haveItem(5211014) && hr > 6 && hr < 12) || (haveItem(5211015) && hr > 9 && hr < 15) || (haveItem(5211016) && hr > 12 && hr < 18) || (haveItem(5211017) && hr > 15 && hr < 21) || (haveItem(5211018) && hr > 14) || (haveItem(5211039) && hr < 5) || (haveItem(5211042) && hr > 2 && hr < 8) || (haveItem(5211045) && hr > 5 && hr < 11) || haveItem(5211048)) {
 			if (isBeginnerJob() && ServerConstants.BEGINNERS_USE_GMS_RATES) {
 				this.expRate = 2;
 			} else {
-				this.expRate = 2 * worldz.getExpRate();
+				this.expRate = 2 * world.getExpRate();
 			}
 		} else {
 			if (isBeginnerJob() && ServerConstants.BEGINNERS_USE_GMS_RATES) {
 				this.expRate = 1;
 			} else {
-				this.expRate = worldz.getExpRate();
+				this.expRate = world.getExpRate();
 			}
 		}
 		if (isHardcoreMode()) {
@@ -4125,14 +4142,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 	}
 
-	public void setMap(int PmapId) {
-		this.mapId = PmapId;
-	}
-
-	public void setMap(GameMap newmap) {
-		this.map = newmap;
-	}
-
 	public void setMarkedMonster(int markedMonster) {
 		this.markedMonster = markedMonster;
 	}
@@ -4303,43 +4312,35 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void showDojoClock() {
 		int stage = (map.getId() / 100) % 100;
-		long time;
+		long seconds;
 		if (stage % 6 == 1) {
-			time = (stage > 36 ? 15 : stage / 6 + 5) * 60;
+			seconds = (stage > 36 ? 15 : stage / 6 + 5) * 60;
 		} else {
-			time = (dojoFinish - System.currentTimeMillis()) / 1000;
+			seconds = (dojoFinish - System.currentTimeMillis()) / 1000;
 		}
 		if (stage % 6 > 0) {
-			client.announce(PacketCreator.getClock((int) time));
+			client.announce(PacketCreator.getClock((int) seconds));
 		}
-		boolean rightmap = true;
 		int clockid = (dojoMap.getId() / 100) % 100;
+		final boolean rightmap;
 		if (map.getId() > clockid / 6 * 6 + 6 || map.getId() < clockid / 6 * 6) {
 			rightmap = false;
+		} else {
+			rightmap = true;
 		}
-		final boolean rightMap = rightmap; // lol
-		TimerManager.getInstance().schedule(new Runnable() {
 
-			@Override
-			public void run() {
-				if (rightMap) {
-					client.getPlayer().changeMap(client.getChannelServer().getMapFactory().getMap(925020000));
-				}
-			}
-		}, time * 1000 + 3000); // let the TIMES UP display for 3 seconds, then
-								// warp
+		// let the TIME'S UP display for 3 seconds, then warp
+		final long delay = seconds * 1000 + 3000;
+		
+		TimerManager.getInstance().schedule(new DojoForceWarpAction(rightmap), delay); 
 	}
 	
-	public boolean getGMText() {
+	public boolean getGmText() {
 		return whitetext;
 	}
 	
-	public void toggleGMText() {
-		if (whitetext) {
-			whitetext = false;
-		} else {
-			whitetext = true;
-		}
+	public void toggleGmText() {
+		this.whitetext = !this.whitetext;
 	}
 
 	public void showNote() {
@@ -4371,15 +4372,14 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void silentPartyUpdate() {
 		if (party != null) {
 			Server.getInstance().getWorld(worldId).updateParty(party.getId(), PartyOperation.SILENT_UPDATE, getMPC());
-
 		}
 	}
 
 	public static class SkillEntry {
 
-		public int masterlevel;
-		public byte skillevel;
-		public long expiration;
+		public final int masterlevel;
+		public final byte skillevel;
+		public final long expiration;
 
 		public SkillEntry(byte skillevel, int masterlevel, long expiration) {
 			this.skillevel = skillevel;
@@ -4451,8 +4451,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		removePet(pet, shiftLeft);
 	}
 
-	public void updateMacros(int position, SkillMacro updateMacro) {
-		skillMacros[position] = updateMacro;
+	public void updateMacro(int position, SkillMacro newMacro) {
+		skillMacros[position] = newMacro;
 	}
 
 	public void updatePartyMemberHP() {

@@ -18,43 +18,22 @@
 package client;
 
 public class SkillMacro {
-	private int skill1;
-	private int skill2;
-	private int skill3;
-	private String name;
-	private int shout;
-	private int position;
+	
+	public final int position;
 
-	public SkillMacro(int skill1, int skill2, int skill3, String name, int shout, int position) {
+	public final int skill1;
+	public final int skill2;
+	public final int skill3;
+
+	public final String name;
+	public final int shout;
+
+	public SkillMacro(int position, int skill1, int skill2, int skill3, String name, int shout) {
 		this.skill1 = skill1;
 		this.skill2 = skill2;
 		this.skill3 = skill3;
 		this.name = name;
 		this.shout = shout;
 		this.position = position;
-	}
-
-	public int getSkill1() {
-		return skill1;
-	}
-
-	public int getSkill2() {
-		return skill2;
-	}
-
-	public int getSkill3() {
-		return skill3;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getShout() {
-		return shout;
-	}
-
-	public int getPosition() {
-		return position;
 	}
 }

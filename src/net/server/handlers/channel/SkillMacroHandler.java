@@ -36,8 +36,8 @@ public final class SkillMacroHandler extends AbstractPacketHandler {
 			int skill1 = slea.readInt();
 			int skill2 = slea.readInt();
 			int skill3 = slea.readInt();
-			SkillMacro macro = new SkillMacro(skill1, skill2, skill3, name, shout, i);
-			c.getPlayer().updateMacros(i, macro);
+			SkillMacro macro = new SkillMacro(i, skill1, skill2, skill3, name, shout);
+			c.getPlayer().updateMacro(i, macro);
 		}
 	}
 }

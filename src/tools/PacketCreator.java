@@ -4498,11 +4498,11 @@ public class PacketCreator {
 		for (int i = 0; i < 5; i++) {
 			SkillMacro macro = macros[i];
 			if (macro != null) {
-				w.writeLengthString(macro.getName());
-				w.writeAsByte(macro.getShout());
-				w.writeInt(macro.getSkill1());
-				w.writeInt(macro.getSkill2());
-				w.writeInt(macro.getSkill3());
+				w.writeLengthString(macro.name);
+				w.writeAsByte(macro.shout);
+				w.writeInt(macro.skill1);
+				w.writeInt(macro.skill2);
+				w.writeInt(macro.skill3);
 			}
 		}
 		return w.getPacket();
