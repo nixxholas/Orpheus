@@ -148,17 +148,24 @@ public class CashShop {
 				long period = MapleDataTool.getIntConvert("Period", item, 1);
 				short count = (short) MapleDataTool.getIntConvert("Count", item, 1);
 				boolean onSale = MapleDataTool.getIntConvert("OnSale", item, 0) == 1;
-				items.put(sn, new CashItem(sn, itemId, price, period, count, onSale));
+				
+				final CashItem cashItem = new CashItem(sn, itemId, price, period, count, onSale);
+				items.put(sn, cashItem);
 			}
 
-			for (MapleData cashPackage : etc.getData("CashPackage.img").getChildren()) {
-				List<Integer> cPackage = new ArrayList<Integer>();
+			final List<MapleData> packageDataItems = etc.getData("CashPackage.img").getChildren();
+			for (MapleData packageData : packageDataItems) {
 
-				for (MapleData item : cashPackage.getChildByPath("SN").getChildren()) {
-					cPackage.add(Integer.parseInt(item.getData().toString()));
+				final List<MapleData> snDataItems = packageData.getChildByPath("SN").getChildren();
+				List<Integer> packageItemSns = new ArrayList<Integer>(snDataItems.size());
+				
+				for (MapleData snData : snDataItems) {
+					final String snString = snData.getData().toString();
+					final int sn = Integer.parseInt(snString);
+					packageItemSns.add(sn);
 				}
 
-				packages.put(Integer.parseInt(cashPackage.getName()), cPackage);
+				packages.put(Integer.parseInt(packageData.getName()), packageItemSns);
 			}
 
 			final Connection connection = DatabaseConnection.getConnection();
@@ -199,25 +206,17 @@ public class CashShop {
 		public static void reloadSpecialCashItems() {
 			// Yay?
 			specialcashitems.clear();
-			PreparedStatement ps = null;
-			ResultSet rs = null;
-			try {
-				ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM specialcashitems");
-				rs = ps.executeQuery();
+			
+			try (
+					PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT * FROM specialcashitems");
+					ResultSet rs = ps.executeQuery();) {
+				
 				while (rs.next()) {
 					specialcashitems.add(new SpecialCashItem(rs.getInt("sn"), rs.getInt("modifier"), rs.getByte("info")));
 				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
-			} finally {
-				try {
-					if (rs != null)
-						rs.close();
-					if (ps != null)
-						ps.close();
-				} catch (SQLException ex) {
-				}
-			}
+			} 
 		}
 	}
 	
