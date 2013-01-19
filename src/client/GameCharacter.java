@@ -184,8 +184,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private Job job = Job.BEGINNER;
 	private GameMap map, dojoMap; // Make a Dojo pq instance
 	private Messenger messenger = null;
-	private Minigame miniGame;
-	private Mount maplemount;
+	private Minigame activeMinigame;
+	private Mount mount;
 	private Party party;
 	private Pet[] pets = new Pet[3];
 	private PlayerShop playerShop = null;
@@ -276,7 +276,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		ret.level = 1;
 		ret.accountId = c.getAccountId();
 		ret.buddylist = new BuddyList(20);
-		ret.maplemount = null;
+		ret.mount = null;
 		ret.getInventory(InventoryType.EQUIP).setSlotLimit(24);
 		ret.getInventory(InventoryType.USE).setSlotLimit(24);
 		ret.getInventory(InventoryType.SETUP).setSlotLimit(24);
@@ -1979,8 +1979,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.mpc = mpc;
 	}
 
-	public Minigame getMiniGame() {
-		return miniGame;
+	public Minigame getActiveMinigame() {
+		return activeMinigame;
 	}
 
 	public MinigameStats getOmokStats() {
@@ -2000,7 +2000,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public Mount getMount() {
-		return maplemount;
+		return mount;
 	}
 
 	public int getMp() {
@@ -2129,11 +2129,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (sl == null) {
 			return 102000000;
 		}
-		int m = sl.getMapId();
 		if (!SavedLocationType.fromString(type).equals(SavedLocationType.WORLDTOUR)) {
 			clearSavedLocation(SavedLocationType.fromString(type));
 		}
-		return m;
+		return sl.mapId;
 	}
 
 	public Shop getShop() {
@@ -2918,14 +2917,14 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 			int mountid = character.getJobType() * 10000000 + 1004;
 			if (character.getInventory(InventoryType.EQUIPPED).getItem((byte) -18) != null) {
-				character.maplemount = new Mount(character, character.getInventory(InventoryType.EQUIPPED).getItem((byte) -18).getItemId(), mountid);
+				character.mount = new Mount(character, character.getInventory(InventoryType.EQUIPPED).getItem((byte) -18).getItemId(), mountid);
 			} else {
-				character.maplemount = new Mount(character, 0, mountid);
+				character.mount = new Mount(character, 0, mountid);
 			}
-			character.maplemount.setExp(mountexp);
-			character.maplemount.setLevel(mountlevel);
-			character.maplemount.setTiredness(mounttiredness);
-			character.maplemount.setActive(false);
+			character.mount.setExp(mountexp);
+			character.mount.setLevel(mountlevel);
+			character.mount.setTiredness(mounttiredness);
+			character.mount.setActive(false);
 			return character;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2998,7 +2997,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void mount(int id, int skillid) {
-		maplemount = new Mount(this, id, skillid);
+		mount = new Mount(this, id, skillid);
 	}
 
 	public void playerNPC(GameCharacter v, int scriptId) {
@@ -3569,10 +3568,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				ps.setInt(28, 0);
 				ps.setInt(29, 4);
 			}
-			if (maplemount != null) {
-				ps.setInt(30, maplemount.getLevel());
-				ps.setInt(31, maplemount.getExp());
-				ps.setInt(32, maplemount.getTiredness());
+			if (mount != null) {
+				ps.setInt(30, mount.getLevel());
+				ps.setInt(31, mount.getExp());
+				ps.setInt(32, mount.getTiredness());
 			} else {
 				ps.setInt(30, 1);
 				ps.setInt(31, 0);
@@ -3685,10 +3684,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps = con.prepareStatement("INSERT INTO `savedlocations` (`characterid`, `locationtype`, `map`, `portal`) VALUES (?, ?, ?, ?)");
 			ps.setInt(1, id);
 			for (SavedLocationType savedLocationType : SavedLocationType.values()) {
-				if (savedLocations[savedLocationType.ordinal()] != null) {
+				final SavedLocation location = savedLocations[savedLocationType.ordinal()];
+				if (location != null) {
 					ps.setString(2, savedLocationType.name());
-					ps.setInt(3, savedLocations[savedLocationType.ordinal()].getMapId());
-					ps.setInt(4, savedLocations[savedLocationType.ordinal()].getPortal());
+					ps.setInt(3, location.mapId);
+					ps.setInt(4, location.portal);
 					ps.addBatch();
 				}
 			}
@@ -4152,8 +4152,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.messengerposition = position;
 	}
 
-	public void setMinigame(Minigame miniGame) {
-		this.miniGame = miniGame;
+	public void setActiveMinigame(Minigame miniGame) {
+		this.activeMinigame = miniGame;
 	}
 
 	public void setMonsterBookCover(int bookCover) {
@@ -4798,7 +4798,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		timers.clear();
 		timers = null;
 		
-		maplemount = null;
+		mount = null;
 		diseases = null;
 		partyQuest = null;
 		events = null;

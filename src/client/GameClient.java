@@ -689,9 +689,9 @@ public class GameClient {
 				World worlda = getWorldServer();
 				player.saveCooldowns();
 				player.unequipPendantOfSpirit();
-				Minigame game = player.getMiniGame();
+				Minigame game = player.getActiveMinigame();
 				if (game != null) {
-					player.setMinigame(null);
+					player.setActiveMinigame(null);
 					if (game.isOwner(player)) {
 						player.getMap().broadcastMessage(PacketCreator.removeCharBox(player));
 						game.broadcastToVisitor(PacketCreator.getMiniGameClose());

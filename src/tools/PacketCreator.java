@@ -1959,11 +1959,11 @@ public class PacketCreator {
 			} else {
 				addAnnounceBox(w, chr.getPlayerShop(), 1);
 			}
-		} else if (chr.getMiniGame() != null && chr.getMiniGame().isOwner(chr)) {
-			if (chr.getMiniGame().hasFreeSlot()) {
-				addAnnounceBox(w, chr.getMiniGame(), 1, 0, 1, 0);
+		} else if (chr.getActiveMinigame() != null && chr.getActiveMinigame().isOwner(chr)) {
+			if (chr.getActiveMinigame().hasFreeSlot()) {
+				addAnnounceBox(w, chr.getActiveMinigame(), 1, 0, 1, 0);
 			} else {
-				addAnnounceBox(w, chr.getMiniGame(), 1, 0, 2, 1);
+				addAnnounceBox(w, chr.getActiveMinigame(), 1, 0, 2, 1);
 			}
 		} else {
 			w.writeAsByte(0);
@@ -4983,7 +4983,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		w.writeInt(c.getId());
-		addAnnounceBox(w, c.getMiniGame(), 1, 0, amount, type);
+		addAnnounceBox(w, c.getActiveMinigame(), 1, 0, amount, type);
 		return w.getPacket();
 	}
 
@@ -4999,7 +4999,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.UPDATE_CHAR_BOX.getValue());
 		w.writeInt(c.getId());
-		addAnnounceBox(w, c.getMiniGame(), 2, 0, amount, type);
+		addAnnounceBox(w, c.getActiveMinigame(), 2, 0, amount, type);
 		return w.getPacket();
 	}
 
