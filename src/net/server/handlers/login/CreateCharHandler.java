@@ -43,7 +43,7 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 			return;
 		}
 		GameCharacter newchar = GameCharacter.getDefault(c);
-		newchar.setWorld(c.getWorld());
+		newchar.setWorldId(c.getWorld());
 		int job = slea.readInt();
 		int face = slea.readInt();
 		newchar.setFace(face);

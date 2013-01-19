@@ -628,7 +628,7 @@ public class StatEffect {
 			hpchange = applyto.getMaxHp();
 			applyto.setStance(0);
 			applyto.getMap().broadcastMessage(applyto, PacketCreator.removePlayerFromMap(applyto.getId()), false);
-			applyto.getMap().broadcastMessage(applyto, PacketCreator.spawnPlayerMapobject(applyto), false);
+			applyto.getMap().broadcastMessage(applyto, PacketCreator.spawnPlayerMapObject(applyto), false);
 		}
 		if (isDispel() && makeChanceResult()) {
 			applyto.dispelDebuffs();

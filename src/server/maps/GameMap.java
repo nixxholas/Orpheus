@@ -1264,10 +1264,10 @@ public class GameMap {
 		}
 
 		if (chr.isHidden()) {
-			broadcastGMMessage(chr, PacketCreator.spawnPlayerMapobject(chr), false);
+			broadcastGMMessage(chr, PacketCreator.spawnPlayerMapObject(chr), false);
 			chr.announce(PacketCreator.getGMEffect(0x10, (byte) 1));
 		} else {
-			broadcastMessage(chr, PacketCreator.spawnPlayerMapobject(chr), false);
+			broadcastMessage(chr, PacketCreator.spawnPlayerMapObject(chr), false);
 		}
 
 		sendObjectPlacement(chr.getClient());

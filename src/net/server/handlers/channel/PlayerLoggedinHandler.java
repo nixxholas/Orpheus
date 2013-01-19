@@ -242,10 +242,10 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 			}
 		}
 		if (ServerConstants.GREET_PLAYERS_ON_LOGIN && !player.isGM()) {
-			Server.getInstance().broadcastMessage(player.getWorld(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " has logged in."));
+			Server.getInstance().broadcastMessage(player.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " has logged in."));
 		}
 		if (ServerConstants.GREET_GMS_ON_LOGIN && player.isGM()) {
-			Server.getInstance().broadcastMessage(player.getWorld(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " (" + player.getStaffRank() + ") has logged in."));
+			Server.getInstance().broadcastMessage(player.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " (" + player.getStaffRank() + ") has logged in."));
 		}
 	}
 }

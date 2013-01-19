@@ -40,7 +40,7 @@ public class GuildCharacter implements Serializable {
 		this.level = c.getLevel();
 		this.id = c.getId();
 		this.channel = c.getClient().getChannel();
-		this.world = c.getWorld();
+		this.world = c.getWorldId();
 		this.jobid = c.getJob().getId();
 		this.guildrank = c.getGuildRank();
 		this.guildid = c.getGuildId();

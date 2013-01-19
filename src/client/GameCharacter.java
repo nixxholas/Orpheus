@@ -126,7 +126,7 @@ import constants.skills.ThunderBreaker;
 
 public class GameCharacter extends AbstractAnimatedGameMapObject {
 
-	private byte world;
+	private byte worldId;
 	private int accountId, id;
 	private int rank, rankMove, jobRank, jobRankMove;
 	private int level, str, dex, luk, int_, hp, maxhp, mp, maxmp;
@@ -786,7 +786,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			if (isHidden()) {
 				this.hidden = false;
 				announce(PacketCreator.getGMEffect(0x10, (byte) 0));
-				getMap().broadcastNONGMMessage(this, PacketCreator.spawnPlayerMapobject(this), false);
+				getMap().broadcastNONGMMessage(this, PacketCreator.spawnPlayerMapObject(this), false);
 				updatePartyMemberHP();
 			} else {
 				this.hidden = true;
@@ -1033,7 +1033,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void checkMessenger() {
 		if (messenger != null && messengerposition < 4 && messengerposition > -1) {
-			World worldz = Server.getInstance().getWorld(world);
+			World worldz = Server.getInstance().getWorld(worldId);
 			worldz.silentJoinMessenger(messenger.getId(), new MessengerCharacter(this, messengerposition), messengerposition);
 			worldz.updateMessenger(getMessenger().getId(), name, client.getChannel());
 		}
@@ -1351,7 +1351,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		enforceMaxHpMp();
 		// saveToDB(true);
 		if (getMessenger() != null) {
-			Server.getInstance().getWorld(world).updateMessenger(getMessenger(), getName(), getWorld(), client.getChannel());
+			Server.getInstance().getWorld(worldId).updateMessenger(getMessenger(), getName(), getWorldId(), client.getChannel());
 		}
 	}
 
@@ -2288,8 +2288,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return Collections.unmodifiableCollection(visibleMapObjects);
 	}
 
-	public byte getWorld() {
-		return world;
+	public byte getWorldId() {
+		return worldId;
 	}
 
 	public void giveCoolDowns(final int skillid, long starttime, long length) {
@@ -2646,7 +2646,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			character.accountId = rs.getInt("accountid");
 			character.mapId = rs.getInt("map");
 			character.initialSpawnPoint = rs.getInt("spawnpoint");
-			character.world = rs.getByte("world");
+			character.worldId = rs.getByte("world");
 			character.rank = rs.getInt("rank");
 			character.rankMove = rs.getInt("rankMove");
 			character.jobRank = rs.getInt("jobRank");
@@ -2742,7 +2742,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 				character.setPosition(portal.getPosition());
 				int partyid = rs.getInt("party");
-				Party party = Server.getInstance().getWorld(character.world).getParty(partyid);
+				Party party = Server.getInstance().getWorld(character.worldId).getParty(partyid);
 				if (party != null) {
 					character.mpc = party.getMemberById(character.id);
 					if (character.mpc != null) {
@@ -2753,7 +2753,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				int messengerid = rs.getInt("messengerid");
 				int position = rs.getInt("messengerposition");
 				if (messengerid > 0 && position < 4 && position > -1) {
-					Messenger messenger = Server.getInstance().getWorld(character.world).getMessenger(messengerid);
+					Messenger messenger = Server.getInstance().getWorld(character.worldId).getMessenger(messengerid);
 					if (messenger != null) {
 						character.messenger = messenger;
 						character.messengerposition = position;
@@ -2920,7 +2920,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				rs.close();
 				ps.close();
 				character.buddylist.loadFromDb(characterId);
-				character.storage = Storage.loadOrCreateFromDB(character.accountId, character.world);
+				character.storage = Storage.loadOrCreateFromDB(character.accountId, character.worldId);
 				character.recalcLocalStats();
 				// ret.resetBattleshipHp();
 				character.silentEnforceMaxHpMp();
@@ -3054,7 +3054,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				rs = ps.executeQuery();
 				rs.next();
 				PlayerNPCs pn = new PlayerNPCs(rs);
-				for (Channel channel : Server.getInstance().getChannelsFromWorld(world)) {
+				for (Channel channel : Server.getInstance().getChannelsFromWorld(worldId)) {
 					GameMap m = channel.getMapFactory().getMap(getMapId());
 					m.broadcastMessage(PacketCreator.spawnPlayerNPC(pn));
 					m.broadcastMessage(PacketCreator.getPlayerNPC(pn));
@@ -3229,7 +3229,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			byte channel = client.getChannel();
 			for (PartyCharacter partychar : party.getMembers()) {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
-					GameCharacter other = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
+					GameCharacter other = Server.getInstance().getWorld(worldId).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
 						client.announce(PacketCreator.updatePartyMemberHP(other.getId(), other.getHp(), other.getCurrentMaxHp()));
 					}
@@ -3614,7 +3614,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				} else {
 					ps.setInt(51, accountId);
 					ps.setString(52, name);
-					ps.setInt(53, world);
+					ps.setInt(53, worldId);
 				}
 			} else {
 				if (update) {
@@ -3622,7 +3622,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				} else {
 					ps.setInt(49, accountId);
 					ps.setString(50, name);
-					ps.setInt(51, world);
+					ps.setInt(51, worldId);
 				}
 			}
 			if (ServerConstants.USE_MAPLE_STOCKS) {
@@ -3919,7 +3919,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void setRates() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("GMT-8"));
-		World worldz = Server.getInstance().getWorld(world);
+		World worldz = Server.getInstance().getWorld(worldId);
 		int hr = cal.get(Calendar.HOUR_OF_DAY);
 		if ((haveItem(5360001) && hr > 6 && hr < 12) || (haveItem(5360002) && hr > 9 && hr < 15) || (haveItem(536000) && hr > 12 && hr < 18) || (haveItem(5360004) && hr > 15 && hr < 21) || (haveItem(536000) && hr > 18) || (haveItem(5360006) && hr < 5) || (haveItem(5360007) && hr > 2 && hr < 6) || (haveItem(5360008) && hr >= 6 && hr < 11)) {
 			this.dropRate = 2 * worldz.getDropRate();
@@ -4289,8 +4289,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.vanquisherStage = x;
 	}
 
-	public void setWorld(byte world) {
-		this.world = world;
+	public void setWorldId(byte world) {
+		this.worldId = world;
 	}
 
 	public void shiftPetsRight() {
@@ -4370,7 +4370,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void silentPartyUpdate() {
 		if (party != null) {
-			Server.getInstance().getWorld(world).updateParty(party.getId(), PartyOperation.SILENT_UPDATE, getMPC());
+			Server.getInstance().getWorld(worldId).updateParty(party.getId(), PartyOperation.SILENT_UPDATE, getMPC());
 
 		}
 	}
@@ -4460,7 +4460,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			byte channel = client.getChannel();
 			for (PartyCharacter partychar : party.getMembers()) {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
-					GameCharacter other = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
+					GameCharacter other = Server.getInstance().getWorld(worldId).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
 						other.client.announce(PacketCreator.updatePartyMemberHP(getId(), this.hp, maxhp));
 					}
@@ -4520,7 +4520,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	@Override
 	public void sendSpawnData(GameClient client) {
 		if (!this.isHidden() || client.getPlayer().gmLevel() > 0) {
-			client.announce(PacketCreator.spawnPlayerMapobject(this));
+			client.announce(PacketCreator.spawnPlayerMapObject(this));
 		}
 	}
 

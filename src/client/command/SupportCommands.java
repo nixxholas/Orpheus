@@ -61,7 +61,7 @@ public class SupportCommands extends EnumeratedCommands {
 					return false;
 				case announce:
 					String message = joinStringFrom(sub, 1);
-					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(6, chr.getName() + " (" + MapleRank.getById(chr.gmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
+					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(6, chr.getName() + " (" + MapleRank.getById(chr.gmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
 					break;
 				case cleardrops:
 					chr.getMap().clearDrops(chr);
@@ -110,7 +110,7 @@ public class SupportCommands extends EnumeratedCommands {
 					chr.gainMeso(Integer.parseInt(sub[1]), true);
 					break;
 				case online:
-					for (Channel ch : serv.getChannelsFromWorld(chr.getWorld())) {
+					for (Channel ch : serv.getChannelsFromWorld(chr.getWorldId())) {
 						String s = "Characters Online (Channel " + ch.getId() + " Online: " + ch.getPlayerStorage().getAllCharacters().size() + ") : ";
 						if (ch.getPlayerStorage().getAllCharacters().size() < 50) {
 							for (GameCharacter character : ch.getPlayerStorage().getAllCharacters()) {

@@ -1829,7 +1829,7 @@ public class PacketCreator {
 	 *            The character to spawn to other clients.
 	 * @return The spawn player packet.
 	 */
-	public static GamePacket spawnPlayerMapobject(GameCharacter chr) {
+	public static GamePacket spawnPlayerMapObject(GameCharacter chr) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.SPAWN_PLAYER.getValue());
 		w.writeInt(chr.getId());

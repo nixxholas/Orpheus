@@ -235,7 +235,7 @@ public class World {
 		}
 		if (bDifferentGuild) {
 			player.getMap().broadcastMessage(player, PacketCreator.removePlayerFromMap(cid), false);
-			player.getMap().broadcastMessage(player, PacketCreator.spawnPlayerMapobject(player), false);
+			player.getMap().broadcastMessage(player, PacketCreator.spawnPlayerMapObject(player), false);
 		}
 	}
 

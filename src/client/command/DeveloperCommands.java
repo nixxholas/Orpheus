@@ -80,7 +80,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.setRates();
 					}
-					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
+					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case exprate:
@@ -88,7 +88,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.setRates();
 					}
-					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
+					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case gc:
@@ -117,7 +117,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.setRates();
 					}
-					Server.getInstance().broadcastMessage(chr.getWorld(), PacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
+					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
 				case npc:

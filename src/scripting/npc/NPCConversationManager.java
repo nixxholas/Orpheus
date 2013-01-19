@@ -405,7 +405,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 			return null;
 		}
 		List<GameCharacter> chars = new LinkedList<GameCharacter>();
-		for (Channel channel : Server.getInstance().getChannelsFromWorld(getPlayer().getWorld())) {
+		for (Channel channel : Server.getInstance().getChannelsFromWorld(getPlayer().getWorldId())) {
 			for (GameCharacter chr : channel.getPartyMembers(getPlayer().getParty())) {
 				if (chr != null) {
 					chars.add(chr);
@@ -532,7 +532,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 	
 	public int getWorld() {
-		return getPlayer().getWorld();
+		return getPlayer().getWorldId();
 	}
 	
 	public String listEquips() {

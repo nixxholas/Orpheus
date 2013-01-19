@@ -70,7 +70,7 @@ public final class ViewCharHandler extends AbstractPacketHandler {
 			for (byte w : worlds) {
 				List<GameCharacter> chrsinworld = new ArrayList<GameCharacter>();
 				for (GameCharacter chr : chars) {
-					if (chr.getWorld() == w) {
+					if (chr.getWorldId() == w) {
 						chrsinworld.add(chr);
 					}
 				}

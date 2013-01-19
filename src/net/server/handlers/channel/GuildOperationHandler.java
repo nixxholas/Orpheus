@@ -46,7 +46,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 
 	private void respawnPlayer(GameCharacter player) {
 		player.getMap().broadcastMessage(player, PacketCreator.removePlayerFromMap(player.getId()), false);
-		player.getMap().broadcastMessage(player, PacketCreator.spawnPlayerMapobject(player), false);
+		player.getMap().broadcastMessage(player, PacketCreator.spawnPlayerMapObject(player), false);
 	}
 
 	private class Invited {
