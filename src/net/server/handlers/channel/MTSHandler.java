@@ -26,6 +26,7 @@ import client.Item;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
+import client.MtsState;
 import tools.DatabaseConnection;
 import net.AbstractPacketHandler;
 import net.GamePacket;
@@ -271,7 +272,8 @@ public final class MTSHandler extends AbstractPacketHandler {
 					pse.close();
 					c.getPlayer().getCashShop().gainCash(4, -price);
 					c.announce(PacketCreator.enableCSUse());
-					c.announce(getMTS(c.getPlayer().getCurrentTab(), c.getPlayer().getCurrentType(), c.getPlayer().getCurrentPage()));
+					
+					c.announce(getMts(c.getPlayer().getMtsState()));
 					c.announce(PacketCreator.MTSConfirmBuy());
 					c.announce(PacketCreator.showMTSCash(c.getPlayer()));
 					c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
@@ -334,7 +336,8 @@ public final class MTSHandler extends AbstractPacketHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		c.announce(getMTS(c.getPlayer().getCurrentTab(), c.getPlayer().getCurrentType(), c.getPlayer().getCurrentPage()));
+		
+		c.announce(getMts(c.getPlayer().getMtsState()));
 		c.announce(PacketCreator.enableCSUse());
 		c.announce(PacketCreator.enableActions());
 		c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
@@ -392,7 +395,8 @@ public final class MTSHandler extends AbstractPacketHandler {
 				InventoryManipulator.addFromDrop(c, i, false);
 				c.announce(PacketCreator.enableCSUse());
 				c.announce(getCart(c.getPlayer().getId()));
-				c.announce(getMTS(c.getPlayer().getCurrentTab(), c.getPlayer().getCurrentType(), c.getPlayer().getCurrentPage()));
+				
+				c.announce(getMts(c.getPlayer().getMtsState()));
 				c.announce(PacketCreator.MTSConfirmTransfer(i.getQuantity(), i.getSlot()));
 				c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 			}
@@ -419,8 +423,9 @@ public final class MTSHandler extends AbstractPacketHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		c.announce(PacketCreator.enableCSUse());
-		c.announce(getMTS(c.getPlayer().getCurrentTab(), c.getPlayer().getCurrentType(), c.getPlayer().getCurrentPage()));
+		c.announce(getMts(c.getPlayer().getMtsState()));
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 		c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 	}
@@ -431,13 +436,14 @@ public final class MTSHandler extends AbstractPacketHandler {
 		slea.readInt();
 		int ci = slea.readInt();
 		String search = slea.readMapleAsciiString();
-		c.getPlayer().setSearch(search);
-		c.getPlayer().changeTab(tab);
-		c.getPlayer().changeType(type);
-		c.getPlayer().changeCI(ci);
+		MtsState state = c.getPlayer().getMtsState();
+		state.setSearch(search);
+		state.changeTab(tab);
+		state.changeType(type);
+		state.changeCI(ci);
 		c.announce(PacketCreator.enableCSUse());
 		c.announce(PacketCreator.enableActions());
-		c.announce(getMTSSearch(tab, type, ci, search, c.getPlayer().getCurrentPage()));
+		c.announce(getMtsSearch(state));
 		c.announce(PacketCreator.showMTSCash(c.getPlayer()));
 		c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
@@ -447,17 +453,18 @@ public final class MTSHandler extends AbstractPacketHandler {
 		int tab = slea.readInt();
 		int type = slea.readInt();
 		int page = slea.readInt();
-		c.getPlayer().changePage(page);
+		final MtsState state = c.getPlayer().getMtsState();
+		state.changePage(page);
 		if (tab == 4 && type == 0) {
 			c.announce(getCart(c.getPlayer().getId()));
-		} else if (tab == c.getPlayer().getCurrentTab() && type == c.getPlayer().getCurrentType() && c.getPlayer().getSearch() != null) {
-			c.announce(getMTSSearch(tab, type, c.getPlayer().getCurrentCI(), c.getPlayer().getSearch(), page));
+		} else if (tab == state.getCurrentTab() && type == state.getCurrentType() && state.getSearch() != null) {
+			c.announce(getMtsSearch(state));
 		} else {
-			c.getPlayer().setSearch(null);
-			c.announce(getMTS(tab, type, page));
+			state.setSearch(null);
+			c.announce(getMts(state));
 		}
-		c.getPlayer().changeTab(tab);
-		c.getPlayer().changeType(type);
+		state.changeTab(tab);
+		state.changeType(type);
 		c.announce(PacketCreator.enableCSUse());
 		c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
@@ -527,7 +534,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 					if (rs.getInt(1) > 10) { 
 						// They have more than 10 items up for sale already!
 						c.getPlayer().dropMessage(1, "You already have 10 items up for auction!");
-						c.announce(getMTS(1, 0, 0));
+						c.announce(getMts(1, 0, 0));
 						c.announce(PacketCreator.transferInventory(getTransfer(playerId)));
 						c.announce(PacketCreator.notYetSoldInv(getNotYetSold(playerId)));
 						return;
@@ -582,7 +589,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 			
 			c.getPlayer().gainMeso(-5000, false);
 			c.announce(PacketCreator.MTSConfirmSell());
-			c.announce(getMTS(1, 0, 0));
+			c.announce(getMts(1, 0, 0));
 			c.announce(PacketCreator.enableCSUse());
 			c.announce(PacketCreator.transferInventory(getTransfer(playerId)));
 			c.announce(PacketCreator.notYetSoldInv(getNotYetSold(playerId)));
@@ -772,7 +779,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 			ps.close();
 		} catch (SQLException e) {
 		}
-		return PacketCreator.sendMTS(items, 4, 0, 0, pages);
+		return PacketCreator.sendMts(items, 4, 0, 0, pages);
 	}
 
 	public List<MTSItemInfo> getTransfer(int cid) {
@@ -822,7 +829,14 @@ public final class MTSHandler extends AbstractPacketHandler {
 		return items;
 	}
 
-	private static GamePacket getMTS(int tab, int type, int page) {
+	private static GamePacket getMts(MtsState state) {
+		int tab = state.getCurrentTab();
+		int type = state.getCurrentType();
+		int page = state.getCurrentPage();
+		return getMts(tab, type, page);
+	}
+	
+	private static GamePacket getMts(int tab, int type, int page) {
 		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
@@ -893,10 +907,16 @@ public final class MTSHandler extends AbstractPacketHandler {
 		}
 		
 		// resniff
-		return PacketCreator.sendMTS(items, tab, type, page, pages); 		
+		return PacketCreator.sendMts(items, tab, type, page, pages); 		
 	}
 
-	public GamePacket getMTSSearch(int tab, int type, int cOi, String search, int page) {
+	public GamePacket getMtsSearch(MtsState state) {
+		int tab = state.getCurrentTab();
+		int type = state.getCurrentType();
+		int cOi = state.getCurrentCI();
+		String search = state.getSearch();
+		int page = state.getCurrentPage();
+		
 		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		String listaitems = "";
@@ -904,7 +924,6 @@ public final class MTSHandler extends AbstractPacketHandler {
 			List<String> retItems = new ArrayList<String>();
 			for (ItemNameEntry itemPair : ii.getAllItems()) {
 				if (itemPair.name.toLowerCase().contains(search.toLowerCase())) {
-
 					retItems.add(" itemid=" + itemPair.itemId + " OR ");
 				}
 			}
@@ -991,6 +1010,6 @@ public final class MTSHandler extends AbstractPacketHandler {
 			ps.close();
 		} catch (SQLException e) {
 		}
-		return PacketCreator.sendMTS(items, tab, type, page, pages);
+		return PacketCreator.sendMts(items, tab, type, page, pages);
 	}
 }

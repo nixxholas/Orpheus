@@ -111,7 +111,7 @@ public final class EnterMTSHandler extends AbstractPacketHandler {
 				ps.close();
 			} catch (SQLException e) {
 			}
-			c.announce(PacketCreator.sendMTS(items, 1, 0, 0, pages));
+			c.announce(PacketCreator.sendMts(items, 1, 0, 0, pages));
 			c.announce(PacketCreator.transferInventory(getTransfer(chr.getId())));
 			c.announce(PacketCreator.notYetSoldInv(getNotYetSold(chr.getId())));
 		}

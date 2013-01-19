@@ -5315,7 +5315,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket sendMTS(List<MTSItemInfo> items, int tab, int type, int page, int pages) {
+	public static GamePacket sendMts(List<MTSItemInfo> items, int tab, int type, int page, int pages) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.MTS_OPERATION.getValue());
 		w.writeAsByte(0x15); // operation

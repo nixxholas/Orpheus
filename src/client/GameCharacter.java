@@ -138,7 +138,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int initialSpawnPoint;
 	private int mapId;
 	private int gender;
-	private int currentPage, currentType = 0, currentTab = 1;
 	private int chair;
 	private int itemEffect;
 	private int guildid, guildrank, allianceRank;
@@ -148,7 +147,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int rebirths;
 	private int gmLevel;
 	private boolean whitetext = true;
-	private int ci = 0;
 	private Family family;
 	private int familyId;
 	private int bookCover;
@@ -171,7 +169,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private boolean finishedDojoTutorial, dojoParty;
 	private String name;
 	private String chalktext;
-	private String search = null;
+	private MtsState mtsState = new MtsState();
 	private AtomicInteger exp = new AtomicInteger();
 	private AtomicInteger gachaexp = new AtomicInteger();
 	private AtomicInteger meso = new AtomicInteger();
@@ -184,7 +182,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private PartyCharacter mpc = null;
 	private Inventory[] inventory;
 	private Job job = Job.BEGINNER;
-	private GameMap map, dojoMap;// Make a Dojo pq instance
+	private GameMap map, dojoMap; // Make a Dojo pq instance
 	private Messenger messenger = null;
 	private Minigame miniGame;
 	private Mount maplemount;
@@ -195,7 +193,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private SkinColor skinColor = SkinColor.NORMAL;
 	private Storage storage = null;
 	private Trade trade = null;
-	private SavedLocation savedLocations[];
+	private SavedLocation[] savedLocations;
 	private SkillMacro[] skillMacros = new SkillMacro[5];
 	private List<Integer> lastmonthfameids;
 	private Map<Quest, QuestStatus> quests;
@@ -860,10 +858,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void changeCI(int type) {
-		this.ci = type;
-	}
-
 	public void changeJob(Job newJob) {
 		this.job = newJob;
 		this.remainingSp++;
@@ -994,10 +988,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		client.announce(warpPacket);
 	}
 
-	public void changePage(int page) {
-		this.currentPage = page;
-	}
-
 	public void changeSkillLevel(ISkill skill, byte newLevel, int newMasterlevel, long expiration) {
 		if (newLevel > -1) {
 			skills.put(skill, new SkillEntry(newLevel, newMasterlevel, expiration));
@@ -1017,14 +1007,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				Output.print("Unable to delete skill from database.\r\n" + ex);
 			}
 		}
-	}
-
-	public void changeTab(int tab) {
-		this.currentTab = tab;
-	}
-
-	public void changeType(int type) {
-		this.currentType = type;
 	}
 
 	public void checkBerserk() {
@@ -1651,28 +1633,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return crushRings;
 	}
 
-	public int getCurrentCI() {
-		return ci;
-	}
-
-	public int getCurrentPage() {
-		return currentPage;
-	}
-
 	public int getCurrentMaxHp() {
 		return localmaxhp;
 	}
 
 	public int getCurrentMaxMp() {
 		return localmaxmp;
-	}
-
-	public int getCurrentTab() {
-		return currentTab;
-	}
-
-	public int getCurrentType() {
-		return currentType;
 	}
 
 	public int getDex() {
@@ -2159,10 +2125,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			clearSavedLocation(SavedLocationType.fromString(type));
 		}
 		return m;
-	}
-
-	public String getSearch() {
-		return search;
 	}
 
 	public Shop getShop() {
@@ -3922,6 +3884,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void setChalkboard(String text) {
 		this.chalktext = text;
 	}
+	
+	public MtsState getMtsState() {
+		return this.mtsState;
+	}
 
 	public void setDex(int dex) {
 		this.dex = dex;
@@ -4247,10 +4213,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void setRemainingSp(int remainingSp) {
 		this.remainingSp = remainingSp;
-	}
-
-	public void setSearch(String find) {
-		search = find;
 	}
 
 	public void setSkinColor(SkinColor skinColor) {
