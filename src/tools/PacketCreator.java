@@ -56,6 +56,7 @@ import client.Ring;
 import client.Stat;
 import client.StatDelta;
 import client.SkillMacro;
+import client.TeleportRockInfo;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import constants.ItemConstants;
@@ -209,13 +210,23 @@ public class PacketCreator {
 	}
 
 	private static void addTeleportInfo(PacketWriter w, GameCharacter chr) {
-		final int[] tele = chr.getTrockMaps();
-		final int[] viptele = chr.getVipTrockMaps();
+		final TeleportRockInfo info = chr.getTeleportRockInfo();
+		final List<Integer> regular = info.getRegularMaps();
 		for (int i = 0; i < 5; i++) {
-			w.writeInt(tele[i]);
+			if (i < regular.size()) {
+				w.writeInt(regular.get(i));
+			} else {
+				w.writeInt(999999999);
+			}
 		}
+
+		final List<Integer> vip = info.getVipMaps();
 		for (int i = 0; i < 10; i++) {
-			w.writeInt(viptele[i]);
+			if (i < vip.size()) {
+				w.writeInt(vip.get(i));
+			} else {
+				w.writeInt(999999999);
+			}
 		}
 	}
 
@@ -5395,21 +5406,31 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket trockRefreshMapList(GameCharacter chr, boolean delete, boolean vip) {
+	public static GamePacket refreshTeleportRockMaps(GameCharacter chr, boolean delete, boolean vip) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.TROCK_LOCATIONS.getValue());
 		w.writeAsByte(delete ? 2 : 3);
+
+		final TeleportRockInfo info = chr.getTeleportRockInfo();
 		if (vip) {
 			w.writeAsByte(1);
-			int[] map = chr.getVipTrockMaps();
+			final List<Integer> maps = info.getVipMaps();
 			for (int i = 0; i < 10; i++) {
-				w.writeInt(map[i]);
+				if (i < maps.size()) {
+					w.writeInt(maps.get(i));
+				} else {
+					w.writeInt(999999999);
+				}
 			}
 		} else {
 			w.writeAsByte(0);
-			int[] map = chr.getTrockMaps();
-			for (int i = 0; i < 5; i++) {
-				w.writeInt(map[i]);
+			final List<Integer> maps = info.getRegularMaps();
+			for (int i = 0; i < 10; i++) {
+				if (i < maps.size()) {
+					w.writeInt(maps.get(i));
+				} else {
+					w.writeInt(999999999);
+				}
 			}
 		}
 		return w.getPacket();

@@ -234,8 +234,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private boolean isbanned = false;
 	private ScheduledFuture<?> pendantOfSpirit = null; // 1122017
 	private byte pendantExp = 0, lastmobcount = 0;
-	private int[] teleportRockLocations = new int[5];
-	private int[] vipTeleportRockLocations = new int[10];
+	private TeleportRockInfo teleportRocks = new TeleportRockInfo();
 	private Map<String, MapleEvents> events = new LinkedHashMap<String, MapleEvents>();
 	private PartyQuest partyQuest = null;
 	private boolean hardcore = false;
@@ -287,14 +286,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		int[] action = {0, 106, 10, 1, 12, 13, 18, 24, 8, 5, 4, 19, 14, 15, 2, 17, 11, 3, 20, 16, 9, 50, 51, 6, 7, 53, 100, 101, 102, 103, 104, 105, 54, 22, 52, 21, 25, 26, 23, 27};
 		for (int i = 0; i < key.length; i++) {
 			ret.keymap.put(key[i], new KeyBinding(type[i], action[i]));
-		}
-		
-		// to fix the map 0 lol
-		for (int i = 0; i < 5; i++) {
-			ret.teleportRockLocations[i] = 999999999;
-		}
-		for (int i = 0; i < 10; i++) {
-			ret.vipTeleportRockLocations[i] = 999999999;
 		}
 
 		if (ret.isGM()) {
@@ -2783,25 +2774,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps = connection.prepareStatement("SELECT `mapid`,`vip` FROM `trocklocations` WHERE `characterid` = ? LIMIT 15");
 			ps.setInt(1, characterId);
 			rs = ps.executeQuery();
-			byte v = 0;
-			byte r = 0;
-			while (rs.next()) {
-				if (rs.getInt("vip") == 1) {
-					character.vipTeleportRockLocations[v] = rs.getInt("mapid");
-					v++;
-				} else {
-					character.teleportRockLocations[r] = rs.getInt("mapid");
-					r++;
-				}
-			}
-			while (v < 10) {
-				character.vipTeleportRockLocations[v] = 999999999;
-				v++;
-			}
-			while (r < 5) {
-				character.teleportRockLocations[r] = 999999999;
-				r++;
-			}
+			character.teleportRocks = new TeleportRockInfo(rs);
 			rs.close();
 			ps.close();
 			ps = connection.prepareStatement("SELECT `name` FROM `accounts` WHERE `id` = ?", Statement.RETURN_GENERATED_KEYS);
@@ -3290,7 +3263,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				final StatEffect buffEffect = bBuff.getEffect(getSkillLevel(bBuff));
 				int buffInterval = buffEffect.getX() * 1000;
 				beholderBuffSchedule = TimerManager.getInstance().register(new Runnable() {
-
+					
 					@Override
 					public void run() {
 						buffEffect.applyTo(GameCharacter.this);
@@ -3722,21 +3695,17 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps.executeBatch();
 			deleteWhereCharacterId(con, "DELETE FROM `trocklocations` WHERE `characterid` = ?");
 			ps = con.prepareStatement("INSERT INTO `trocklocations` (`characterid`, `mapid`, `vip`) VALUES (?, ?, 0)");
-			for (int i = 0; i < getTrockSize(); i++) {
-				if (teleportRockLocations[i] != 999999999) {
-					ps.setInt(1, getId());
-					ps.setInt(2, teleportRockLocations[i]);
-					ps.addBatch();
-				}
+			for (int mapId : this.teleportRocks.getRegularMaps()) {
+				ps.setInt(1, this.id);
+				ps.setInt(2, mapId);
+				ps.addBatch();
 			}
 			ps.executeBatch();
 			ps = con.prepareStatement("INSERT INTO `trocklocations` (`characterid`, `mapid`, `vip`) VALUES (?, ?, 1)");
-			for (int i = 0; i < getVipTrockSize(); i++) {
-				if (vipTeleportRockLocations[i] != 999999999) {
-					ps.setInt(1, getId());
-					ps.setInt(2, vipTeleportRockLocations[i]);
-					ps.addBatch();
-				}
+			for (int mapId : this.teleportRocks.getVipMaps()) {
+				ps.setInt(1, this.id);
+				ps.setInt(2, mapId);
+				ps.addBatch();
 			}
 			ps.executeBatch();
 			deleteWhereCharacterId(con, "DELETE FROM `buddies` WHERE `characterid` = ? AND `pending` = 0");
@@ -4670,85 +4639,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return isbanned;
 	}
 
-	public int[] getTrockMaps() {
-		return teleportRockLocations;
+	public TeleportRockInfo getTeleportRockInfo() {
+		return this.teleportRocks;
 	}
-
-	public int[] getVipTrockMaps() {
-		return vipTeleportRockLocations;
-	}
-
-	public int getTrockSize() {
-		int ret = 0;
-		for (int i = 0; i < 5; i++) {
-			if (teleportRockLocations[i] != 999999999) {
-				ret++;
-			}
-		}
-		return ret;
-	}
-
-	public void deleteFromTrocks(int map) {
-		for (int i = 0; i < 5; i++) {
-			if (teleportRockLocations[i] == map) {
-				teleportRockLocations[i] = 999999999;
-				break;
-			}
-		}
-	}
-
-	public void addTrockMap() {
-		if (getTrockSize() >= 5) {
-			return;
-		}
-		teleportRockLocations[getTrockSize()] = getMapId();
-	}
-
-	public boolean isTrockMap(int id) {
-		for (int i = 0; i < 5; i++) {
-			if (teleportRockLocations[i] == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public int getVipTrockSize() {
-		int ret = 0;
-		for (int i = 0; i < 10; i++) {
-			if (vipTeleportRockLocations[i] != 999999999) {
-				ret++;
-			}
-		}
-		return ret;
-	}
-
-	public void deleteFromVipTrocks(int map) {
-		for (int i = 0; i < 10; i++) {
-			if (vipTeleportRockLocations[i] == map) {
-				vipTeleportRockLocations[i] = 999999999;
-				break;
-			}
-		}
-	}
-
-	public void addVipTrockMap() {
-		if (getVipTrockSize() >= 10) {
-			return;
-		}
-
-		vipTeleportRockLocations[getVipTrockSize()] = getMapId();
-	}
-
-	public boolean isVipTrockMap(int id) {
-		for (int i = 0; i < 10; i++) {
-			if (vipTeleportRockLocations[i] == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	// EVENTS
 	private byte team = 0;
 	private MapleFitness fitness;
@@ -4916,4 +4810,5 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		family = null;
 		client = null;
 	}
+
 }

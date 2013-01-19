@@ -22,8 +22,10 @@ package net.server.handlers.channel;
 
 import client.GameCharacter;
 import client.GameClient;
+import client.TeleportRockInfo;
 import net.AbstractPacketHandler;
 import server.maps.FieldLimit;
+import server.maps.GameMap;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -31,28 +33,31 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author kevintjuh93
  */
-public final class TrockAddMapHandler extends AbstractPacketHandler {
+public final class TeleportRockHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		byte type = slea.readByte();
 		boolean vip = slea.readByte() == 1;
+		final TeleportRockInfo info = chr.getTeleportRockInfo();
 		if (type == 0x00) {
 			int mapId = slea.readInt();
-			if (vip)
-				chr.deleteFromVipTrocks(mapId);
-			else
-				chr.deleteFromTrocks(mapId);
-			c.announce(PacketCreator.trockRefreshMapList(chr, true, vip));
+			if (vip) {
+				info.deleteVip(mapId);
+			} else {
+				info.deleteRegular(mapId);
+			}
+			c.announce(PacketCreator.refreshTeleportRockMaps(chr, true, vip));
 		} else if (type == 0x01) {
-			if (!FieldLimit.CANNOTVIPROCK.check(chr.getMap().getFieldLimit())) {
-				if (vip)
-					chr.addVipTrockMap();
-				else
-					chr.addTrockMap();
-
-				c.announce(PacketCreator.trockRefreshMapList(chr, false, vip));
+			final GameMap map = chr.getMap();
+			if (!FieldLimit.CANNOTVIPROCK.check(map.getFieldLimit())) {
+				if (vip){
+					info.addVip(map.getId());
+				} else {
+					info.addRegular(map.getId());
+				}
+				c.announce(PacketCreator.refreshTeleportRockMaps(chr, false, vip));
 			} else {
 				chr.message("You may not save this map.");
 			}

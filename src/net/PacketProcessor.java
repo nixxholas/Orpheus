@@ -179,7 +179,7 @@ public final class PacketProcessor {
 		registerHandler(RecvOpcode.PET_AUTO_POT, new PetAutoPotHandler());
 		registerHandler(RecvOpcode.PET_EXCLUDE_ITEMS, new PetExcludeItemsHandler());
 		registerHandler(RecvOpcode.TOUCH_MONSTER_ATTACK, new TouchMonsterDamageHandler());
-		registerHandler(RecvOpcode.TROCK_ADD_MAP, new TrockAddMapHandler());
+		registerHandler(RecvOpcode.TROCK_ADD_MAP, new TeleportRockHandler());
 		registerHandler(RecvOpcode.HIRED_MERCHANT_REQUEST, new HiredMerchantRequest());
 		registerHandler(RecvOpcode.MOB_DAMAGE_MOB, new MobDamageMobHandler());
 		registerHandler(RecvOpcode.REPORT, new ReportHandler());
