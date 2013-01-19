@@ -49,7 +49,7 @@ public class Equip extends Item implements IEquip {
 
 	@Override
 	public IItem copy() {
-		Equip ret = new Equip(getItemId(), getPosition(), getUpgradeSlots());
+		Equip ret = new Equip(getItemId(), getSlot(), getUpgradeSlots());
 		ret.str = str;
 		ret.dex = dex;
 		ret._int = _int;

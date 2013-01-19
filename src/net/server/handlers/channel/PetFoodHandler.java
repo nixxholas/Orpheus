@@ -102,7 +102,7 @@ public final class PetFoodHandler extends AbstractPacketHandler {
 			chr.getMap().broadcastMessage(PacketCreator.commandResponse(chr.getId(), slot, 0, false));
 		}
 		InventoryManipulator.removeFromSlot(c, InventoryType.USE, pos, (short) 1, false);
-		IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getPosition());
+		IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getSlot());
 		c.announce(PacketCreator.updateSlot(petz));
 		c.announce(PacketCreator.enableActions());
 	}

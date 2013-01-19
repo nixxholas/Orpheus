@@ -1256,7 +1256,7 @@ public class GameMap {
 		Pet[] pets = chr.getPets();
 		for (int i = 0; i < chr.getPets().length; i++) {
 			if (pets[i] != null) {
-				pets[i].setPos(getGroundBelow(chr.getPosition()));
+				pets[i].setPosition(getGroundBelow(chr.getPosition()));
 				chr.announce(PacketCreator.showPet(chr, pets[i], false, false));
 			} else {
 				break;

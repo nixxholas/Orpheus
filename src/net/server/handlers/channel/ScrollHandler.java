@@ -93,11 +93,11 @@ public final class ScrollHandler extends AbstractPacketHandler {
 		} else if (scrolled.getLevel() > oldLevel || (isCleanSlate(scroll.getItemId()) && scrolled.getLevel() == oldLevel + 1)) {
 			scrollSuccess = IEquip.ScrollResult.SUCCESS;
 		}
-		useInventory.removeItem(scroll.getPosition(), (short) 1, false);
+		useInventory.removeItem(scroll.getSlot(), (short) 1, false);
 		if (whiteScroll) {
-			useInventory.removeItem(wscroll.getPosition(), (short) 1, false);
+			useInventory.removeItem(wscroll.getSlot(), (short) 1, false);
 			if (wscroll.getQuantity() < 1) {
-				c.announce(PacketCreator.clearInventoryItem(InventoryType.USE, wscroll.getPosition(), false));
+				c.announce(PacketCreator.clearInventoryItem(InventoryType.USE, wscroll.getSlot(), false));
 			} else {
 				c.announce(PacketCreator.updateInventorySlot(InventoryType.USE, (Item) wscroll));
 			}
@@ -105,9 +105,9 @@ public final class ScrollHandler extends AbstractPacketHandler {
 		if (scrollSuccess == IEquip.ScrollResult.CURSE) {
 			c.announce(PacketCreator.scrolledItem(scroll, toScroll, true));
 			if (dst < 0) {
-				c.getPlayer().getInventory(InventoryType.EQUIPPED).removeItem(toScroll.getPosition());
+				c.getPlayer().getInventory(InventoryType.EQUIPPED).removeItem(toScroll.getSlot());
 			} else {
-				c.getPlayer().getInventory(InventoryType.EQUIP).removeItem(toScroll.getPosition());
+				c.getPlayer().getInventory(InventoryType.EQUIP).removeItem(toScroll.getSlot());
 			}
 		} else {
 			c.announce(PacketCreator.scrolledItem(scroll, scrolled, false));

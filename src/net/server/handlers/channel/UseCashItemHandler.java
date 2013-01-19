@@ -64,7 +64,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 		slea.readShort();
 		int itemId = slea.readInt();
 		int itemType = itemId / 10000;
-		IItem toUse = c.getPlayer().getInventory(InventoryType.CASH).getItem(c.getPlayer().getInventory(InventoryType.CASH).findById(itemId).getPosition());
+		IItem toUse = c.getPlayer().getInventory(InventoryType.CASH).getItem(c.getPlayer().getInventory(InventoryType.CASH).findById(itemId).getSlot());
 		String medal = "";
 		IItem medalItem = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -49);
 		if (medalItem != null) {
@@ -420,7 +420,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.enableActions());
 				return;
 			}
-			IItem item = player.getInventory(InventoryType.CASH).getItem(pet.getPosition());
+			IItem item = player.getInventory(InventoryType.CASH).getItem(pet.getSlot());
 			String newName = slea.readMapleAsciiString();
 			pet.setName(newName);
 			pet.saveToDb();
@@ -493,7 +493,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 							c.announce(PacketCreator.showOwnPetLevelUp(index));
 							player.getMap().broadcastMessage(PacketCreator.showPetLevelUp(c.getPlayer(), index));
 						}
-						IItem item = player.getInventory(InventoryType.CASH).getItem(pet.getPosition());
+						IItem item = player.getInventory(InventoryType.CASH).getItem(pet.getSlot());
 						c.announce(PacketCreator.updateSlot(item));
 						player.getMap().broadcastMessage(c.getPlayer(), PacketCreator.commandResponse(player.getId(), i, 1, true), true);
 						remove(c, itemId);

@@ -206,7 +206,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				return;
 			}
 			cs.addToInventory(item);
-			mi.removeSlot(item.getPosition());
+			mi.removeSlot(item.getSlot());
 			c.announce(PacketCreator.putIntoCashInventory(item, c.getAccID()));
 		} else if (action == 0x1D) { 
 			// crush ring (action 28)

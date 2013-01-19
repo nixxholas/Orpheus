@@ -41,7 +41,7 @@ public class Pet extends Item {
 	private byte level = 1;
 	private int fullness = 100;
 	private int foothold;
-	private Point pos;
+	private Point position;
 	private int stance;
 	private boolean summoned;
 
@@ -51,13 +51,13 @@ public class Pet extends Item {
 	}
 	
 	public static Pet loadFromDb(IItem petItem) {
-		int petId = petItem.getPetId();
-		final Pet pet = new Pet(petItem.getItemId(), petItem.getPosition(), petId);
+		int uniqueId = petItem.getPetId();
+		final Pet pet = new Pet(petItem.getItemId(), petItem.getSlot(), uniqueId);
 
 		// Get pet details...
 		final Connection connection = DatabaseConnection.getConnection();
 		try (
-				PreparedStatement ps = getSelectCommand(petId, connection);
+				PreparedStatement ps = getSelectCommand(uniqueId, connection);
 				ResultSet rs = ps.executeQuery();) {
 			
 			rs.next();
@@ -168,12 +168,12 @@ public class Pet extends Item {
 		this.foothold = foothold;
 	}
 
-	public Point getPos() {
-		return pos;
+	public Point getPosition() {
+		return position;
 	}
 
-	public void setPos(Point pos) {
-		this.pos = pos;
+	public void setPosition(Point position) {
+		this.position = position;
 	}
 
 	public int getStance() {
@@ -206,7 +206,7 @@ public class Pet extends Item {
 			if (move instanceof LifeMovement) {
 				final LifeMovement lifeMove = (LifeMovement) move;
 				if (lifeMove instanceof AbsoluteLifeMovement) {
-					this.setPos(lifeMove.getPosition());
+					this.setPosition(lifeMove.getPosition());
 				}
 				
 				this.setStance(lifeMove.getNewstate());

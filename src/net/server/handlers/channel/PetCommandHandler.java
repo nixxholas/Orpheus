@@ -68,7 +68,7 @@ public final class PetCommandHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showOwnPetLevelUp(chr.getPetIndex(pet)));
 					chr.getMap().broadcastMessage(PacketCreator.showPetLevelUp(c.getPlayer(), chr.getPetIndex(pet)));
 				}
-				IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getPosition());
+				IItem petz = chr.getInventory(InventoryType.CASH).getItem(pet.getSlot());
 				c.announce(PacketCreator.updateSlot(petz));
 			}
 		}

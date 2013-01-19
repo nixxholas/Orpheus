@@ -367,12 +367,12 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 					IItem tradeItem = item.copy();
 					if (ItemConstants.isRechargable(item.getItemId())) {
 						tradeItem.setQuantity(item.getQuantity());
-						InventoryManipulator.removeFromSlot(c, ivType, item.getPosition(), item.getQuantity(), true);
+						InventoryManipulator.removeFromSlot(c, ivType, item.getSlot(), item.getQuantity(), true);
 					} else {
 						tradeItem.setQuantity(quantity);
-						InventoryManipulator.removeFromSlot(c, ivType, item.getPosition(), quantity, true);
+						InventoryManipulator.removeFromSlot(c, ivType, item.getSlot(), quantity, true);
 					}
-					tradeItem.setPosition(targetSlot);
+					tradeItem.setSlot(targetSlot);
 					chr.getTrade().addItem(tradeItem);
 					return;
 				}

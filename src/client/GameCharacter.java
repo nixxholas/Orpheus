@@ -693,7 +693,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			} else {
 				pet.setFullness(newFullness);
 				pet.saveToDb();
-				IItem petz = getInventory(InventoryType.CASH).getItem(pet.getPosition());
+				IItem petz = getInventory(InventoryType.CASH).getItem(pet.getSlot());
 				client.announce(PacketCreator.updateSlot(petz));
 			}
 		}
@@ -1414,7 +1414,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 							}
 						}
 						for (IItem item : toberemove) {
-							InventoryManipulator.removeFromSlot(client, inv.getType(), item.getPosition(), item.getQuantity(), true);
+							InventoryManipulator.removeFromSlot(client, inv.getType(), item.getSlot(), item.getQuantity(), true);
 						}
 						toberemove.clear();
 					}
@@ -1431,7 +1431,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void forceUpdateItem(InventoryType type, IItem item) {
-		client.announce(PacketCreator.clearInventoryItem(type, item.getPosition(), false));
+		client.announce(PacketCreator.clearInventoryItem(type, item.getSlot(), false));
 		client.announce(PacketCreator.addInventorySlot(type, item, false));
 	}
 
@@ -2774,6 +2774,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					}
 				}
 			}
+			
 			if (channelserver) {
 				GameMapFactory mapFactory = client.getChannelServer().getMapFactory();
 				ret.map = mapFactory.getMap(ret.mapid);
@@ -3082,10 +3083,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				ps = con.prepareStatement("INSERT INTO `playernpcs_equip` (`NpcId`, `equipid`, `equippos`) VALUES (?, ?, ?)");
 				ps.setInt(1, npcId);
 				for (IItem equip : getInventory(InventoryType.EQUIPPED)) {
-					int position = Math.abs(equip.getPosition());
+					int position = Math.abs(equip.getSlot());
 					if ((position < 12 && position > 0) || (position > 100 && position < 112)) {
 						ps.setInt(2, equip.getItemId());
-						ps.setInt(3, equip.getPosition());
+						ps.setInt(3, equip.getSlot());
 						ps.addBatch();
 					}
 				}

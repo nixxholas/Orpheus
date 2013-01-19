@@ -31,6 +31,7 @@ import java.util.Map;
  * @author Matze
  */
 public class Inventory implements Iterable<IItem> {
+	
 	private Map<Byte, IItem> inventory = new LinkedHashMap<Byte, IItem>();
 	private byte slotLimit;
 	private InventoryType type;
@@ -101,15 +102,15 @@ public class Inventory implements Iterable<IItem> {
 			return -1;
 		}
 		inventory.put(slotId, item);
-		item.setPosition(slotId);
+		item.setSlot(slotId);
 		return slotId;
 	}
 
 	public void addFromDB(IItem item) {
-		if (item.getPosition() < 0 && !type.equals(InventoryType.EQUIPPED)) {
-			throw new RuntimeException("Item with negative position in non-equipped IV wtf?");
+		if (item.getSlot() < 0 && !this.type.equals(InventoryType.EQUIPPED)) {
+			throw new RuntimeException("Item with negative position in non-equipped inventory?");
 		}
-		inventory.put(item.getPosition(), item);
+		inventory.put(item.getSlot(), item);
 	}
 
 	public void move(byte sourceSlot, byte targetSlot, short slotMax) {
@@ -119,7 +120,7 @@ public class Inventory implements Iterable<IItem> {
 			throw new RuntimeException("Trying to move empty slot");
 		}
 		if (target == null) {
-			source.setPosition(targetSlot);
+			source.setSlot(targetSlot);
 			inventory.put(targetSlot, source);
 			inventory.remove(sourceSlot);
 		} else if (target.getItemId() == source.getItemId() && !ItemConstants.isRechargable(source.getItemId())) {
@@ -140,13 +141,13 @@ public class Inventory implements Iterable<IItem> {
 	}
 
 	private void swap(IItem source, IItem target) {
-		inventory.remove(source.getPosition());
-		inventory.remove(target.getPosition());
-		byte swapPos = source.getPosition();
-		source.setPosition(target.getPosition());
-		target.setPosition(swapPos);
-		inventory.put(source.getPosition(), source);
-		inventory.put(target.getPosition(), target);
+		inventory.remove(source.getSlot());
+		inventory.remove(target.getSlot());
+		byte swapPos = source.getSlot();
+		source.setSlot(target.getSlot());
+		target.setSlot(swapPos);
+		inventory.put(source.getSlot(), source);
+		inventory.put(target.getSlot(), target);
 	}
 
 	public IItem getItem(byte slot) {
@@ -159,7 +160,8 @@ public class Inventory implements Iterable<IItem> {
 
 	public void removeItem(byte slot, short quantity, boolean allowZero) {
 		IItem item = inventory.get(slot);
-		if (item == null) {// TODO is it ok not to throw an exception here?
+		if (item == null) {
+			// TODO: is it ok not to throw an exception here?
 			return;
 		}
 		item.setQuantity((short) (item.getQuantity() - quantity));

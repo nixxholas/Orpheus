@@ -33,7 +33,7 @@ public class Item implements IItem {
 	private byte flag;
 	private long expiration = -1;
 
-	private byte position;
+	private byte slot;
 	private short quantity;
 	private int petId = -1;
 	
@@ -42,27 +42,28 @@ public class Item implements IItem {
 	
 	protected List<String> log;
 	
-	public Item(int itemId, byte position, short quantity) {
+	public Item(int itemId, byte slot, short quantity) {
 		this.itemId = itemId;
-		this.position = position;
+		this.slot = slot;
 		this.quantity = quantity;
 		this.flag = 0;
 
 		this.log = new LinkedList<String>();
 	}
 
-	public Item(int itemId, byte position, short quantity, int petid) {
+	public Item(int itemId, byte slot, short quantity, int petUniqueId) {
 		this.itemId = itemId;
-		this.position = position;
+		this.slot = slot;
 		this.quantity = quantity;
 		this.flag = 0;
+		this.petId = petUniqueId;
 		
 		this.log = new LinkedList<String>();
 	}
 
 	@Override
 	public IItem copy() {
-		Item ret = new Item(itemId, position, quantity, petId);
+		Item ret = new Item(itemId, slot, quantity, petId);
 		ret.flag = flag;
 		ret.owner = owner;
 		ret.expiration = expiration;
@@ -72,8 +73,8 @@ public class Item implements IItem {
 	}
 
 	@Override
-	public void setPosition(byte position) {
-		this.position = position;
+	public void setSlot(byte position) {
+		this.slot = position;
 	}
 
 	@Override
@@ -96,8 +97,8 @@ public class Item implements IItem {
 	}
 
 	@Override
-	public byte getPosition() {
-		return position;
+	public byte getSlot() {
+		return slot;
 	}
 
 	@Override

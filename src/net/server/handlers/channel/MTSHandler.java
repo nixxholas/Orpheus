@@ -356,7 +356,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 				if (rs.getInt("type") != 1) {
 					Item ii = new Item(rs.getInt("itemid"), (byte) 0, (short) rs.getInt("quantity"));
 					ii.setOwner(rs.getString("owner"));
-					ii.setPosition(c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
+					ii.setSlot(c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
 					i = ii.copy();
 				} else {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"), -1);
@@ -381,7 +381,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 					equip.setLevel((byte) rs.getInt("level"));
 					equip.setVicious((byte) rs.getInt("vicious"));
 					equip.setFlag((byte) rs.getInt("flag"));
-					equip.setPosition(c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
+					equip.setSlot(c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(rs.getInt("itemid"))).getNextFreeSlot());
 					i = equip.copy();
 				}
 				PreparedStatement pse = con.prepareStatement("DELETE FROM mts_items WHERE id = ? AND seller = ? AND transfer = 1");
@@ -393,7 +393,7 @@ public final class MTSHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.enableCSUse());
 				c.announce(getCart(c.getPlayer().getId()));
 				c.announce(getMTS(c.getPlayer().getCurrentTab(), c.getPlayer().getCurrentType(), c.getPlayer().getCurrentPage()));
-				c.announce(PacketCreator.MTSConfirmTransfer(i.getQuantity(), i.getPosition()));
+				c.announce(PacketCreator.MTSConfirmTransfer(i.getQuantity(), i.getSlot()));
 				c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 			}
 			rs.close();

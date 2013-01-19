@@ -28,9 +28,9 @@ public interface IItem extends Comparable<IItem> {
 
 	byte getType();
 
-	byte getPosition();
+	byte getSlot();
 
-	void setPosition(byte position);
+	void setSlot(byte slot);
 
 	int getItemId();
 

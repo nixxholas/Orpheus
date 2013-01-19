@@ -262,7 +262,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 				getClient().announce(PacketCreator.showOwnPetLevelUp(index));
 				getPlayer().getMap().broadcastMessage(getPlayer(), PacketCreator.showPetLevelUp(getPlayer(), index));
 			}
-			IItem petz = getPlayer().getInventory(InventoryType.CASH).getItem(pet.getPosition());
+			IItem petz = getPlayer().getInventory(InventoryType.CASH).getItem(pet.getSlot());
 			getPlayer().getClient().announce(PacketCreator.updateSlot(petz));
 		}
 	}
@@ -539,7 +539,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		StringBuilder sb = new StringBuilder();
 		Inventory mi = getPlayer().getInventory(InventoryType.EQUIP);
 		for (IItem i : mi.list()) {
-			sb.append("#L" + i.getPosition() + "##v" + i.getItemId() + "##l");
+			sb.append("#L" + i.getSlot() + "##v" + i.getItemId() + "##l");
 		}
 		return sb.toString();
 	}

@@ -224,7 +224,7 @@ public class PacketCreator {
 		Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
 		Map<Byte, Integer> maskedEquip = new LinkedHashMap<Byte, Integer>();
 		for (IItem item : ii) {
-			byte pos = (byte) (item.getPosition() * -1);
+			byte pos = (byte) (item.getSlot() * -1);
 			if (pos < 100 && myEquip.get(pos) == null) {
 				myEquip.put(pos, item.getItemId());
 			} else if (pos > 100 && pos != 111) { // don't ask. o.o
@@ -324,7 +324,7 @@ public class PacketCreator {
 		boolean isPet = item.getPetId() > -1;
 		boolean isRing = false;
 		IEquip equip = null;
-		byte pos = item.getPosition();
+		byte pos = item.getSlot();
 		if (item.getType() == IItem.EQUIP) {
 			equip = (IEquip) item;
 			isRing = equip.getRingId() > -1;
@@ -417,7 +417,7 @@ public class PacketCreator {
 		List<Item> equipped = new ArrayList<Item>(equippedC.size());
 		List<Item> equippedCash = new ArrayList<Item>(equippedC.size());
 		for (IItem item : equippedC) {
-			if (item.getPosition() <= -100) {
+			if (item.getSlot() <= -100) {
 				equippedCash.add((Item) item);
 			} else {
 				equipped.add((Item) item);
@@ -2217,7 +2217,7 @@ public class PacketCreator {
 		w.writeAsShort(1); // add mode
 		w.writeAsByte(type.equals(InventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
-		w.writeAsShort(item.getPosition()); // slot id
+		w.writeAsShort(item.getSlot()); // slot id
 		addItemInfo(w, item, true);
 		return w.getPacket();
 	}
@@ -2233,7 +2233,7 @@ public class PacketCreator {
 		w.writeAsShort(0x101); // update
 		w.writeAsByte(type.equals(InventoryType.EQUIPPED) ? 1 : type.asByte()); // iv
 																					// type
-		w.writeAsShort(item.getPosition()); // slot id
+		w.writeAsShort(item.getSlot()); // slot id
 		w.writeAsShort(item.getQuantity());
 		return w.getPacket();
 	}
@@ -2312,18 +2312,18 @@ public class PacketCreator {
 		w.writeAsByte(destroyed ? 2 : 3);
 		w.writeAsByte(scroll.getQuantity() > 0 ? 1 : 3);
 		w.writeAsByte(InventoryType.USE.asByte());
-		w.writeAsShort(scroll.getPosition());
+		w.writeAsShort(scroll.getSlot());
 		if (scroll.getQuantity() > 0) {
 			w.writeAsShort(scroll.getQuantity());
 		}
 		w.writeAsByte(3);
 		if (!destroyed) {
 			w.writeAsByte(InventoryType.EQUIP.asByte());
-			w.writeAsShort(item.getPosition());
+			w.writeAsShort(item.getSlot());
 			w.writeAsByte(0);
 		}
 		w.writeAsByte(InventoryType.EQUIP.asByte());
-		w.writeAsShort(item.getPosition());
+		w.writeAsShort(item.getSlot());
 		if (!destroyed) {
 			addItemInfo(w, item, true);
 		}
@@ -2436,7 +2436,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.MODIFY_INVENTORY_ITEM.getValue());
 		w.write(new byte[] {1, 1, 1});
 		w.writeAsByte(type.asByte());
-		w.writeAsShort(item.getPosition());
+		w.writeAsShort(item.getSlot());
 		w.writeAsShort(item.getQuantity());
 		return w.getPacket();
 	}
@@ -2943,7 +2943,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.PLAYER_INTERACTION.getValue());
 		w.writeAsByte(PlayerInteractionHandler.Action.SET_ITEMS.getCode());
 		w.writeAsByte(number);
-		w.writeAsByte(item.getPosition());
+		w.writeAsByte(item.getSlot());
 		addItemInfo(w, item, true);
 		return w.getPacket();
 	}
@@ -4340,7 +4340,7 @@ public class PacketCreator {
 		w.writeLengthString(pet.getName());
 		w.writeInt(pet.getUniqueId());
 		w.writeInt(0);
-		w.writeVector(pet.getPos());
+		w.writeVector(pet.getPosition());
 		w.writeAsByte(pet.getStance());
 		w.writeInt(pet.getFoothold());
 	}
@@ -5777,7 +5777,7 @@ public class PacketCreator {
 		if (item == null) {
 			w.writeAsByte(0);
 		} else {
-			w.writeAsByte(item.getPosition());
+			w.writeAsByte(item.getSlot());
 			addItemInfo(w, item, true);
 		}
 		return w.getPacket();
@@ -5837,10 +5837,10 @@ public class PacketCreator {
 		w.writeAsByte(2); // always 2
 		w.writeAsByte(3); // quantity > 0 (?)
 		w.writeAsByte(1); // Inventory type
-		w.writeAsShort(item.getPosition()); // item slot
+		w.writeAsShort(item.getSlot()); // item slot
 		w.writeAsByte(0);
 		w.writeAsByte(1);
-		w.writeAsShort(item.getPosition()); // wtf repeat
+		w.writeAsShort(item.getSlot()); // wtf repeat
 		addItemInfo(w, item, true);
 		return w.getPacket();
 	}
@@ -6066,10 +6066,10 @@ public class PacketCreator {
 		byte type = ItemConstants.getInventoryType(item.getItemId()).asByte();
 		w.write(new byte[] {0, 2, 3});
 		w.writeAsByte(type);
-		w.writeAsShort(item.getPosition());
+		w.writeAsShort(item.getSlot());
 		w.writeAsByte(0);
 		w.writeAsByte(type);
-		w.writeAsShort(item.getPosition());
+		w.writeAsShort(item.getSlot());
 		addItemInfo(w, item, true);
 		w.writeAsShort(0);
 		return w.getPacket();
@@ -6945,7 +6945,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.CASHSHOP_OPERATION.getValue());
 
 		w.writeAsByte(0x68);
-		w.writeAsShort(item.getPosition());
+		w.writeAsShort(item.getSlot());
 		addItemInfo(w, item, true);
 
 		return w.getPacket();

@@ -84,23 +84,23 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 		Inventory equip = newchar.getInventory(InventoryType.EQUIPPED);
 		if (newchar.isGM()) {
 			IItem eq_hat = ItemInfoProvider.getInstance().getEquipById(1002140);
-			eq_hat.setPosition((byte) -1);
+			eq_hat.setSlot((byte) -1);
 			equip.addFromDB(eq_hat);
 			top = 1042003;
 			bottom = 1062007;
 			weapon = 1322013;
 		}
 		IItem eq_top = ItemInfoProvider.getInstance().getEquipById(top);
-		eq_top.setPosition((byte) -5);
+		eq_top.setSlot((byte) -5);
 		equip.addFromDB(eq_top);
 		IItem eq_bottom = ItemInfoProvider.getInstance().getEquipById(bottom);
-		eq_bottom.setPosition((byte) -6);
+		eq_bottom.setSlot((byte) -6);
 		equip.addFromDB(eq_bottom);
 		IItem eq_shoes = ItemInfoProvider.getInstance().getEquipById(shoes);
-		eq_shoes.setPosition((byte) -7);
+		eq_shoes.setSlot((byte) -7);
 		equip.addFromDB(eq_shoes);
 		IItem eq_weapon = ItemInfoProvider.getInstance().getEquipById(weapon);
-		eq_weapon.setPosition((byte) -11);
+		eq_weapon.setSlot((byte) -11);
 		equip.addFromDB(eq_weapon.copy());
 		newchar.saveToDB(false);
 		c.announce(PacketCreator.addNewCharEntry(newchar));

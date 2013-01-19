@@ -242,7 +242,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                             if (ItemConstants.getInventoryType(toSteal).equals(InventoryType.EQUIP)) {
                                 item = ii.randomizeStats((Equip) ii.getEquipById(toSteal));
                             } else {
-                                item = new Item(toSteal, (byte) 0, (short) 1, -1);
+                                item = new Item(toSteal, (byte) 0, (short) 1);
                             }
                             player.getMap().spawnItemDrop(monster, player, item, monster.getPosition(), false, false);
                             monster.addStolen(toSteal);

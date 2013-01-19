@@ -68,7 +68,7 @@ public class InventoryManipulator {
 		return addById(c, itemId, quantity, owner, petid, (byte) 0, expiration);
 	}
 
-	public static boolean addById(GameClient c, int itemId, short quantity, String owner, int petid, byte flag, long expiration) {
+	public static boolean addById(GameClient c, int itemId, short quantity, String owner, int petId, byte flag, long expiration) {
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		InventoryType type = ii.getInventoryType(itemId);
 		if (!type.equals(InventoryType.EQUIP)) {
@@ -98,7 +98,7 @@ public class InventoryManipulator {
 					short newQ = (short) Math.min(quantity, slotMax);
 					if (newQ != 0) {
 						quantity -= newQ;
-						Item nItem = new Item(itemId, (byte) 0, newQ, petid);
+						Item nItem = new Item(itemId, (byte) 0, newQ, petId);
 						nItem.setFlag(flag);
 						nItem.setExpiration(expiration);
 						byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
@@ -120,7 +120,7 @@ public class InventoryManipulator {
 					}
 				}
 			} else {
-				Item nItem = new Item(itemId, (byte) 0, quantity, petid);
+				Item nItem = new Item(itemId, (byte) 0, quantity, petId);
 				nItem.setFlag(flag);
 				nItem.setExpiration(expiration);
 				byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
@@ -275,7 +275,7 @@ public class InventoryManipulator {
 		boolean allowZero = consume && ItemConstants.isRechargable(item.getItemId());
 		c.getPlayer().getInventory(type).removeItem(slot, quantity, allowZero);
 		if (item.getQuantity() == 0 && !allowZero) {
-			c.announce(PacketCreator.clearInventoryItem(type, item.getPosition(), fromDrop));
+			c.announce(PacketCreator.clearInventoryItem(type, item.getSlot(), fromDrop));
 		} else {
 			c.announce(PacketCreator.updateInventorySlot(type, (Item) item, fromDrop));
 		}
@@ -289,7 +289,7 @@ public class InventoryManipulator {
 		
 		for (IItem item : items) {
 			if (remremove <= item.getQuantity()) {
-				removeFromSlot(c, type, item.getPosition(), (short) remremove, fromDrop, consume);
+				removeFromSlot(c, type, item.getSlot(), (short) remremove, fromDrop, consume);
 				remremove = 0;
 				break;
 			} else {
@@ -297,7 +297,7 @@ public class InventoryManipulator {
 				// TODO: ... what!
 				remremove -= item.getQuantity();
 				
-				removeFromSlot(c, type, item.getPosition(), item.getQuantity(), fromDrop, consume);
+				removeFromSlot(c, type, item.getSlot(), item.getQuantity(), fromDrop, consume);
 			}
 		}
 		if (remremove > 0) {
@@ -408,10 +408,10 @@ public class InventoryManipulator {
 		if (target != null) {
 			c.getPlayer().getInventory(InventoryType.EQUIPPED).removeSlot(dst);
 		}
-		source.setPosition(dst);
+		source.setSlot(dst);
 		c.getPlayer().getInventory(InventoryType.EQUIPPED).addFromDB(source);
 		if (target != null) {
-			target.setPosition(src);
+			target.setSlot(src);
 			c.getPlayer().getInventory(InventoryType.EQUIP).addFromDB(target);
 		}
 		if (c.getPlayer().getBuffedValue(BuffStat.BOOSTER) != null && ItemConstants.isWeapon(source.getItemId())) {
@@ -445,10 +445,10 @@ public class InventoryManipulator {
 		if (target != null) {
 			c.getPlayer().getInventory(InventoryType.EQUIP).removeSlot(dst);
 		}
-		source.setPosition(dst);
+		source.setSlot(dst);
 		c.getPlayer().getInventory(InventoryType.EQUIP).addFromDB(source);
 		if (target != null) {
-			target.setPosition(src);
+			target.setSlot(src);
 			c.getPlayer().getInventory(InventoryType.EQUIPPED).addFromDB(target);
 		}
 		c.announce(PacketCreator.moveInventoryItem(InventoryType.EQUIP, src, dst, (byte) 1));

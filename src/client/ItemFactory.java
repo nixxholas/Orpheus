@@ -138,7 +138,7 @@ public enum ItemFactory {
 				ps.setString(3, account ? String.valueOf(id) : null);
 				ps.setInt(4, item.getItemId());
 				ps.setInt(5, mit.asByte());
-				ps.setInt(6, item.getPosition());
+				ps.setInt(6, item.getSlot());
 				ps.setInt(7, item.getQuantity());
 				ps.setString(8, item.getOwner());
 				ps.setInt(9, item.getPetId());
