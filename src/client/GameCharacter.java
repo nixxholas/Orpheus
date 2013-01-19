@@ -25,8 +25,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -154,15 +152,14 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int battleshipHp = 0;
 	private int mesosTraded = 0;
 	private int possibleReports = 10;
-	private int dojoPoints, dojoStage, dojoEnergy, vanquisherStage, 
-			vanquisherKills;
+	private int dojoPoints, dojoStage, dojoEnergy, vanquisherStage, vanquisherKills;
 	private int allowWarpToId;
 	private int expRate = 1, mesoRate = 1, dropRate = 1;
 	private MinigameStats omokStats, matchingCardStats;
 	private int married;
-	private long dojoFinish, lastfametime, lastUsedCashItem, lastHealed;
-	private transient int localmaxhp, localmaxmp, localstr, localdex, localluk,
-			localint_, magic, watk;
+	private long dojoFinish, lastUsedCashItem, lastHealed;
+	private transient int localMaxHp, localMaxMp, localStr, localDex, localLuk, localInt;
+	private transient int magic, watk;
 	private boolean hidden, canDoor = true, Berserk, hasMerchant;
 	private int linkedLevel = 0;
 	private String linkedName = null;
@@ -195,7 +192,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private Trade trade = null;
 	private SavedLocation[] savedLocations;
 	private SkillMacro[] skillMacros = new SkillMacro[5];
-	private List<Integer> lastmonthfameids;
+	private FameStats fameStats;
 	private Map<Quest, QuestStatus> quests;
 	private Set<Monster> controlled = new LinkedHashSet<Monster>();
 	private Map<Integer, String> entered = new LinkedHashMap<Integer, String>();
@@ -211,12 +208,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private ScheduledFuture<?> mapTimeLimitTask = null;
 	private ScheduledFuture<?>[] fullnessSchedule = new ScheduledFuture<?>[3];
 	private ScheduledFuture<?> hpDecreaseTask;
-	private ScheduledFuture<?> beholderHealingSchedule, beholderBuffSchedule,
-			BerserkSchedule;
-	private ScheduledFuture<?> expiretask;
-	private ScheduledFuture<?> recoveryTask;
+	private ScheduledFuture<?> beholderHealingSchedule, beholderBuffSchedule, berserkSchedule;
+	private ScheduledFuture<?> expirationSchedule;
+	private ScheduledFuture<?> recoverySchedule;
 	private List<ScheduledFuture<?>> timers = new ArrayList<ScheduledFuture<?>>();
-	private NumberFormat nf = new DecimalFormat("#,###,###,###");
+	// private NumberFormat nf = new DecimalFormat("#,###,###,###");
 	private ArrayList<Integer> excluded = new ArrayList<Integer>();
 	private MonsterBook monsterbook;
 	private List<Ring> crushRings = new ArrayList<Ring>();
@@ -232,7 +228,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private AutobanManager autoban;
 	private MapleStockPortfolio stockPortfolio;
 	private boolean isbanned = false;
-	private ScheduledFuture<?> pendantOfSpirit = null; // 1122017
+	private ScheduledFuture<?> pendantSchedule = null; // 1122017
 	private byte pendantExp = 0, lastmobcount = 0;
 	private TeleportRockInfo teleportRocks = new TeleportRockInfo();
 	private Map<String, MapleEvents> events = new LinkedHashMap<String, MapleEvents>();
@@ -538,14 +534,14 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				int mainstat;
 				int secondarystat;
 				if (weapon == WeaponType.BOW || weapon == WeaponType.CROSSBOW) {
-					mainstat = localdex;
-					secondarystat = localstr;
+					mainstat = localDex;
+					secondarystat = localStr;
 				} else if ((getJob().isA(Job.THIEF) || getJob().isA(Job.NIGHTWALKER1)) && (weapon == WeaponType.CLAW || weapon == WeaponType.DAGGER)) {
-					mainstat = localluk;
-					secondarystat = localdex + localstr;
+					mainstat = localLuk;
+					secondarystat = localDex + localStr;
 				} else {
-					mainstat = localstr;
-					secondarystat = localdex;
+					mainstat = localStr;
+					secondarystat = localDex;
 				}
 				maxbasedamage = (int) (((weapon.getMaxDamageMultiplier() * mainstat + secondarystat) / 100.0) * watk) + 10;
 			} else {
@@ -646,7 +642,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				pendantExp++;
 				message("Pendant of the Spirit has been equipped for " + pendantExp + " hour(s), you will now receive " + pendantExp + "0% bonus exp.");
 			} else {
-				pendantOfSpirit.cancel(false);
+				pendantSchedule.cancel(false);
 			}
 		}
 	}
@@ -855,18 +851,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return canDoor;
 	}
 
-	public FameStatus canGiveFame(GameCharacter from) {
-		if (gmLevel > 0) {
-			return FameStatus.OK;
-		} else if (lastfametime >= System.currentTimeMillis() - 3600000 * 24) {
-			return FameStatus.NOT_TODAY;
-		} else if (lastmonthfameids.contains(Integer.valueOf(from.getId()))) {
-			return FameStatus.NOT_THIS_MONTH;
-		} else {
-			return FameStatus.OK;
-		}
-	}
-
 	public void changeJob(Job newJob) {
 		this.job = newJob;
 		this.remainingSp++;
@@ -1019,8 +1003,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void checkBerserk() {
-		if (BerserkSchedule != null) {
-			BerserkSchedule.cancel(false);
+		if (berserkSchedule != null) {
+			berserkSchedule.cancel(false);
 		}
 		final GameCharacter chr = this;
 		if (job.equals(Job.DARKKNIGHT)) {
@@ -1028,7 +1012,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			final int skilllevel = getSkillLevel(BerserkX);
 			if (skilllevel > 0) {
 				Berserk = chr.getHp() * 100 / chr.getMaxHp() < BerserkX.getEffect(skilllevel).getX();
-				BerserkSchedule = TimerManager.getInstance().register(new Runnable() {
+				berserkSchedule = TimerManager.getInstance().register(new Runnable() {
 
 					@Override
 					public void run() {
@@ -1136,9 +1120,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 						effectsToCancel.add(mbsvh);
 					}
 					if (stat == BuffStat.RECOVERY) {
-						if (recoveryTask != null) {
-							recoveryTask.cancel(false);
-							recoveryTask = null;
+						if (recoverySchedule != null) {
+							recoverySchedule.cancel(false);
+							recoverySchedule = null;
 						}
 					} else if (stat == BuffStat.SUMMON || stat == BuffStat.PUPPET) {
 						int summonId = mbsvh.effect.getSourceId();
@@ -1320,10 +1304,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		client.announce(PacketCreator.serverNotice(type, message));
 	}
 
-	public String emblemCost() {
-		return nf.format(Guild.CHANGE_EMBLEM_COST);
-	}
-
 	public List<ScheduledFuture<?>> getTimers() {
 		return timers;
 	}
@@ -1365,15 +1345,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void cancelExpirationTask() {
-		if (expiretask != null) {
-			expiretask.cancel(false);
-			expiretask = null;
+		if (expirationSchedule != null) {
+			expirationSchedule.cancel(false);
+			expirationSchedule = null;
 		}
 	}
 
 	public void expirationTask() {
-		if (expiretask == null) {
-			expiretask = TimerManager.getInstance().register(new Runnable() {
+		if (expirationSchedule == null) {
+			expirationSchedule = TimerManager.getInstance().register(new Runnable() {
 
 				@Override
 				public void run() {
@@ -1413,11 +1393,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 			}, 60000);
 		}
-	}
-
-	public enum FameStatus {
-
-		OK, NOT_TODAY, NOT_THIS_MONTH
 	}
 
 	public void forceUpdateItem(InventoryType type, IItem item) {
@@ -1643,11 +1618,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int getCurrentMaxHp() {
-		return localmaxhp;
+		return localMaxHp;
 	}
 
 	public int getCurrentMaxMp() {
-		return localmaxmp;
+		return localMaxMp;
 	}
 
 	public int getDex() {
@@ -2269,7 +2244,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int getTotalLuk() {
-		return localluk;
+		return localLuk;
 	}
 
 	public int getTotalMagic() {
@@ -2312,10 +2287,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public int gmLevel() {
 		return gmLevel;
-	}
-
-	public String guildCost() {
-		return nf.format(Guild.CREATE_GUILD_COST);
 	}
 
 	private void guildUpdate() {
@@ -2396,18 +2367,24 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 		return false;
 	}
+	
+	public FameStats getFameStats() {
+		return this.fameStats;
+	}
 
-	public void hasGivenFame(GameCharacter to) {
-		lastfametime = System.currentTimeMillis();
-		lastmonthfameids.add(Integer.valueOf(to.getId()));
+	public void addFameEntry(int targetId) {
+		long timestamp = System.currentTimeMillis();
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO `famelog` (`characterid`, `characterid_to`) VALUES (?, ?)");
 			ps.setInt(1, getId());
-			ps.setInt(2, to.getId());
+			ps.setInt(2, targetId);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
+			return;
 		}
+		
+		this.fameStats.addEntry(targetId, timestamp);
 	}
 
 	public boolean hasMerchant() {
@@ -2556,7 +2533,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (improvingMaxMPLevel > 0 && (job.isA(Job.MAGICIAN) || job.isA(Job.CRUSADER) || job.isA(Job.BLAZEWIZARD1))) {
 			maxmp += improvingMaxMP.getEffect(improvingMaxMPLevel).getX();
 		}
-		maxmp += localint_ / 10;
+		maxmp += localInt / 10;
 		if (takeexp) {
 			exp.addAndGet(-ExpTable.getExpNeededForLevel(level));
 			if (exp.get() < 0) {
@@ -2577,8 +2554,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 		List<StatDelta> statup = new ArrayList<StatDelta>(10);
 		statup.add(new StatDelta(Stat.AVAILABLEAP, remainingAp));
-		statup.add(new StatDelta(Stat.HP, localmaxhp));
-		statup.add(new StatDelta(Stat.MP, localmaxmp));
+		statup.add(new StatDelta(Stat.HP, localMaxHp));
+		statup.add(new StatDelta(Stat.MP, localMaxMp));
 		statup.add(new StatDelta(Stat.EXP, exp.get()));
 		statup.add(new StatDelta(Stat.LEVEL, level));
 		statup.add(new StatDelta(Stat.MAXHP, maxhp));
@@ -2901,12 +2878,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				ps = connection.prepareStatement("SELECT `characterid_to`,`when` FROM `famelog` WHERE `characterid` = ? AND DATEDIFF(NOW(),`when`) < 30");
 				ps.setInt(1, characterId);
 				rs = ps.executeQuery();
-				character.lastfametime = 0;
-				character.lastmonthfameids = new ArrayList<Integer>(31);
-				while (rs.next()) {
-					character.lastfametime = Math.max(character.lastfametime, rs.getTimestamp("when").getTime());
-					character.lastmonthfameids.add(Integer.valueOf(rs.getInt("characterid_to")));
-				}
+				character.fameStats = new FameStats(rs);
 				rs.close();
 				ps.close();
 				character.buddylist.loadFromDb(characterId);
@@ -3139,24 +3111,24 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	private void recalcLocalStats() {
-		int oldmaxhp = localmaxhp;
-		localmaxhp = getMaxHp();
-		localmaxmp = getMaxMp();
-		localdex = getDex();
-		localint_ = getInt();
-		localstr = getStr();
-		localluk = getLuk();
+		int oldmaxhp = localMaxHp;
+		localMaxHp = getMaxHp();
+		localMaxMp = getMaxMp();
+		localDex = getDex();
+		localInt = getInt();
+		localStr = getStr();
+		localLuk = getLuk();
 		int speed = 100, jump = 100;
-		magic = localint_;
+		magic = localInt;
 		watk = 0;
 		for (IItem item : getInventory(InventoryType.EQUIPPED)) {
 			IEquip equip = (IEquip) item;
-			localmaxhp += equip.getHp();
-			localmaxmp += equip.getMp();
-			localdex += equip.getDex();
-			localint_ += equip.getInt();
-			localstr += equip.getStr();
-			localluk += equip.getLuk();
+			localMaxHp += equip.getHp();
+			localMaxMp += equip.getMp();
+			localDex += equip.getDex();
+			localInt += equip.getInt();
+			localStr += equip.getStr();
+			localLuk += equip.getLuk();
 			magic += equip.getMatk() + equip.getInt();
 			watk += equip.getWatk();
 			speed += equip.getSpeed();
@@ -3165,14 +3137,14 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		magic = Math.min(magic, 2000);
 		Integer hbhp = getBuffedValue(BuffStat.HYPERBODYHP);
 		if (hbhp != null) {
-			localmaxhp += (hbhp.doubleValue() / 100) * localmaxhp;
+			localMaxHp += (hbhp.doubleValue() / 100) * localMaxHp;
 		}
 		Integer hbmp = getBuffedValue(BuffStat.HYPERBODYMP);
 		if (hbmp != null) {
-			localmaxmp += (hbmp.doubleValue() / 100) * localmaxmp;
+			localMaxMp += (hbmp.doubleValue() / 100) * localMaxMp;
 		}
-		localmaxhp = Math.min(30000, localmaxhp);
-		localmaxmp = Math.min(30000, localmaxmp);
+		localMaxHp = Math.min(30000, localMaxHp);
+		localMaxMp = Math.min(30000, localMaxMp);
 		Integer watkbuff = getBuffedValue(BuffStat.WATK);
 		if (watkbuff != null) {
 			watk += watkbuff.intValue();
@@ -3209,7 +3181,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (jump > 123) {
 			jump = 123;
 		}
-		if (oldmaxhp != 0 && oldmaxhp != localmaxhp) {
+		if (oldmaxhp != 0 && oldmaxhp != localMaxHp) {
 			updatePartyMemberHP();
 		}
 	}
@@ -3274,7 +3246,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 		} else if (effect.isRecovery()) {
 			final byte heal = (byte) effect.getX();
-			recoveryTask = TimerManager.getInstance().register(new Runnable() {
+			recoverySchedule = TimerManager.getInstance().register(new Runnable() {
 
 				@Override
 				public void run() {
@@ -4055,8 +4027,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (thp < 0) {
 			thp = 0;
 		}
-		if (thp > localmaxhp) {
-			thp = localmaxhp;
+		if (thp > localMaxHp) {
+			thp = localMaxHp;
 		}
 		this.hp = thp;
 		if (!silent) {
@@ -4165,8 +4137,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (tmp < 0) {
 			tmp = 0;
 		}
-		if (tmp > localmaxmp) {
-			tmp = localmaxmp;
+		if (tmp > localMaxMp) {
+			tmp = localMaxMp;
 		}
 		this.mp = tmp;
 	}
@@ -4742,15 +4714,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void equipPendantOfSpirit() {
-		if (pendantOfSpirit == null) {
-			pendantOfSpirit = TimerManager.getInstance().register(new PendantHourlyAction(), 3600000); // 1 hour
+		if (pendantSchedule == null) {
+			pendantSchedule = TimerManager.getInstance().register(new PendantHourlyAction(), 3600000); // 1 hour
 		}
 	}
 
 	public void unequipPendantOfSpirit() {
-		if (pendantOfSpirit != null) {
-			pendantOfSpirit.cancel(false);
-			pendantOfSpirit = null;
+		if (pendantSchedule != null) {
+			pendantSchedule.cancel(false);
+			pendantSchedule = null;
 		}
 		pendantExp = 0;
 	}
@@ -4788,8 +4760,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		TimerManager.cancelSafely(this.hpDecreaseTask, false);
 		TimerManager.cancelSafely(this.beholderHealingSchedule, false);
 		TimerManager.cancelSafely(this.beholderBuffSchedule, false);
-		TimerManager.cancelSafely(this.BerserkSchedule, false);
-		TimerManager.cancelSafely(this.recoveryTask, false);
+		TimerManager.cancelSafely(this.berserkSchedule, false);
+		TimerManager.cancelSafely(this.recoverySchedule, false);
 
 		cancelExpirationTask();
 		for (ScheduledFuture<?> sf : timers) {

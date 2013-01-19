@@ -20,6 +20,8 @@
  */
 package net.server.handlers.channel;
 
+import client.FameStats;
+import client.FameStatus;
 import client.GameCharacter;
 import client.GameClient;
 import client.Stat;
@@ -31,28 +33,35 @@ public final class GiveFameHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		GameCharacter target = (GameCharacter) c.getPlayer().getMap().getMapObject(slea.readInt());
-		int mode = slea.readByte();
-		int famechange = 2 * mode - 1;
 		GameCharacter player = c.getPlayer();
+
+		final int targetId = slea.readInt();
+		GameCharacter target = (GameCharacter) player.getMap().getMapObject(targetId);
 		if ((target == player || player.getLevel() < 15)) {
 			return;
 		}
-		switch (player.canGiveFame(target)) {
+		
+		int mode = slea.readByte();
+		int fameChange = 2 * mode - 1;
+		final FameStats fameStats = player.getFameStats();
+		final FameStatus status = fameStats.canGiveFame(targetId);
+		switch (status) {
 			case OK:
-				if (Math.abs(target.getFame() + famechange) < 30001) {
-					target.addFame(famechange);
+				if (Math.abs(target.getFame() + fameChange) < 30001) {
+					target.addFame(fameChange);
 					target.updateSingleStat(Stat.FAME, target.getFame());
 				}
-				if (!player.isGM()) {
-					player.hasGivenFame(target);
-				}
+
+				player.addFameEntry(targetId);
+				
 				c.announce(PacketCreator.giveFameResponse(mode, target.getName(), target.getFame()));
 				target.getClient().announce(PacketCreator.receiveFame(mode, player.getName()));
 				break;
+				
 			case NOT_TODAY:
 				c.announce(PacketCreator.giveFameErrorResponse(3));
 				break;
+				
 			case NOT_THIS_MONTH:
 				c.announce(PacketCreator.giveFameErrorResponse(4));
 				break;
