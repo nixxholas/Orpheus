@@ -75,7 +75,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 			GMServer.getInstance().addInGame(player.getName(), c.getSession());
 		}
 		c.setPlayer(player);
-		c.setAccID(player.getAccountID());
+		c.setAccountId(player.getAccountID());
 		int state = c.getLoginState();
 		boolean allowLogin = true;
 		Channel cserv = c.getChannelServer();

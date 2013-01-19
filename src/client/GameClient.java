@@ -77,7 +77,7 @@ public class GameClient {
 	private IoSession session;
 	private GameCharacter player;
 	private byte channel = 1;
-	private int accId = 1;
+	private int accountId = 1;
 	private boolean loggedIn = false;
 	private boolean serverTransition = false;
 	private Calendar birthday = null;
@@ -205,7 +205,7 @@ public class GameClient {
 		} else {
 			ps = connection.prepareStatement("SELECT `id`, `name` FROM `characters` WHERE `accountid` = ? AND `world` = ?");
 		}
-		ps.setInt(1, this.getAccID());
+		ps.setInt(1, this.getAccountId());
 		ps.setInt(2, serverId);
 		return ps;
 	}
@@ -287,7 +287,7 @@ public class GameClient {
 	private PreparedStatement getSelectMacsByAccountId(
 			final Connection connection) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("SELECT `macs` FROM `accounts` WHERE `id` = ?");
-		ps.setInt(1, accId);
+		ps.setInt(1, accountId);
 		return ps;
 	}
 
@@ -338,7 +338,7 @@ public class GameClient {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `pin` = ? WHERE `id` = ?");
 			ps.setString(1, pin);
-			ps.setInt(2, accId);
+			ps.setInt(2, accountId);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
@@ -366,7 +366,7 @@ public class GameClient {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `pic` = ? WHERE `id` = ?");
 			ps.setString(1, pic);
-			ps.setInt(2, accId);
+			ps.setInt(2, accountId);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
@@ -406,7 +406,7 @@ public class GameClient {
 				if (rs.getByte("banned") == 1) {
 					return 3;
 				}
-				accId = rs.getInt("id");
+				accountId = rs.getInt("id");
 				gmlevel = rs.getInt("gm");
 				pin = rs.getString("pin");
 				pic = rs.getString("pic");
@@ -443,14 +443,14 @@ public class GameClient {
 					ps = con.prepareStatement("UPDATE `accounts` SET `password` = ?, `salt` = ? WHERE `id` = ?");
 					ps.setString(1, passhashNew);
 					ps.setString(2, saltNew);
-					ps.setInt(3, accId);
+					ps.setInt(3, accountId);
 					ps.executeUpdate();
 					ps.close();
 					rs.close();
 				}
 				
 				ps = con.prepareStatement("INSERT INTO `iplog` (`accountid`, `ip`) VALUES (?, ?)");
-				ps.setInt(1, accId);
+				ps.setInt(1, accountId);
 				ps.setString(2, session.getRemoteAddress().toString());
 				ps.executeUpdate();
 			}
@@ -483,7 +483,7 @@ public class GameClient {
 		final Calendar lTempban = Calendar.getInstance();
 		try {
 			ps = con.prepareStatement("SELECT `tempban` FROM `accounts` WHERE `id` = ?");
-			ps.setInt(1, getAccID());
+			ps.setInt(1, getAccountId());
 			rs = ps.executeQuery();
 			long blubb = rs.getLong("tempban");
 			if (blubb == 0) { // basically if timestamp in db is 0000-00-00
@@ -557,7 +557,7 @@ public class GameClient {
 		try {
 			ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `macs` = ? WHERE `id` = ?");
 			ps.setString(1, newMacData.toString());
-			ps.setInt(2, accId);
+			ps.setInt(2, accountId);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
@@ -572,12 +572,12 @@ public class GameClient {
 		}
 	}
 
-	public void setAccID(int id) {
-		this.accId = id;
+	public void setAccountId(int id) {
+		this.accountId = id;
 	}
 
-	public int getAccID() {
-		return accId;
+	public int getAccountId() {
+		return accountId;
 	}
 
 	public void updateLoginState(int newstate) {
@@ -585,7 +585,7 @@ public class GameClient {
 			Connection con = DatabaseConnection.getConnection();
 			PreparedStatement ps = con.prepareStatement("UPDATE `accounts` SET `loggedin` = ?, `lastlogin` = CURRENT_TIMESTAMP() WHERE `id` = ?");
 			ps.setInt(1, newstate);
-			ps.setInt(2, getAccID());
+			ps.setInt(2, getAccountId());
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
@@ -604,7 +604,7 @@ public class GameClient {
 		try {
 			Connection con = DatabaseConnection.getConnection();
 			PreparedStatement ps = con.prepareStatement("SELECT `loggedin`, `lastlogin`, UNIX_TIMESTAMP(`birthday`) AS `birthday` FROM `accounts` WHERE `id` = ?");
-			ps.setInt(1, getAccID());
+			ps.setInt(1, getAccountId());
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
 				rs.close();
@@ -632,7 +632,7 @@ public class GameClient {
 				loggedIn = true;
 			} else if (state == LOGIN_SERVER_TRANSITION) {
 				ps = con.prepareStatement("UPDATE `accounts` SET `loggedin` = 0 WHERE `id` = ?");
-				ps.setInt(1, getAccID());
+				ps.setInt(1, getAccountId());
 				ps.executeUpdate();
 				ps.close();
 			} else {
@@ -796,7 +796,7 @@ public class GameClient {
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT `id`, `guildid`, `guildrank`, `name`, `allianceRank` FROM `characters` WHERE `id` = ? AND `accountid` = ?");
 			ps.setInt(1, cid);
-			ps.setInt(2, accId);
+			ps.setInt(2, accountId);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
 				rs.close();
@@ -940,14 +940,14 @@ public class GameClient {
 
 	private PreparedStatement getUpdateTosById(final Connection connection) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("UPDATE `accounts` SET `tos` = 1 WHERE `id` = ?");
-		ps.setInt(1, accId);
+		ps.setInt(1, accountId);
 		return ps;
 	}
 
 	private PreparedStatement getSelectTosById(final Connection connection)
 			throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("SELECT `tos` FROM `accounts` WHERE `id` = ?");
-		ps.setInt(1, accId);
+		ps.setInt(1, accountId);
 		return ps;
 	}
 
@@ -971,7 +971,7 @@ public class GameClient {
 			try {
 				PreparedStatement ps = con.prepareStatement("UPDATE `accounts` SET `characterslots` = ? WHERE `id` = ?");
 				ps.setInt(1, this.characterSlots += 1);
-				ps.setInt(2, accId);
+				ps.setInt(2, accountId);
 				ps.executeUpdate();
 				ps.close();
 			} catch (SQLException e) {
@@ -998,7 +998,7 @@ public class GameClient {
 
 	private PreparedStatement getSelectBanReason(final Connection con) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT `greason` FROM `accounts` WHERE `id` = ?");
-		ps.setInt(1, accId);
+		ps.setInt(1, accountId);
 		return ps;
 	}
 
@@ -1019,7 +1019,7 @@ public class GameClient {
 	private PreparedStatement getUpdateAccountGender(Connection connection) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("UPDATE `accounts` SET `gender` = ? WHERE `id` = ?");
 		ps.setByte(1, gender);
-		ps.setInt(2, accId);
+		ps.setInt(2, accountId);
 		return ps;
 	}
 

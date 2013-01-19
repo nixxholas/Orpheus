@@ -66,14 +66,14 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 				// Item
 				IItem item = cItem.toItem();
 				cs.addToInventory(item);
-				c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
+				c.announce(PacketCreator.showBoughtCashItem(item, c.getAccountId()));
 			} else { 
 				// Package
 				List<IItem> cashPackage = CashItemFactory.getPackage(cItem.getItemId());
 				for (IItem item : cashPackage) {
 					cs.addToInventory(item);
 				}
-				c.announce(PacketCreator.showBoughtCashPackage(cashPackage, c.getAccID()));
+				c.announce(PacketCreator.showBoughtCashPackage(cashPackage, c.getAccountId()));
 			}
 			cs.gainCash(useNX, -cItem.getPrice());
 			c.announce(PacketCreator.showCash(chr));
@@ -92,7 +92,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			} else if (recipient == null) {
 				c.announce(PacketCreator.showCashShopMessage((byte) 0xA9));
 				return;
-			} else if (recipient.get("accountid").equals(String.valueOf(c.getAccID()))) {
+			} else if (recipient.get("accountid").equals(String.valueOf(c.getAccountId()))) {
 				c.announce(PacketCreator.showCashShopMessage((byte) 0xA8));
 				return;
 			}
@@ -207,7 +207,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 			cs.addToInventory(item);
 			mi.removeSlot(item.getSlot());
-			c.announce(PacketCreator.putIntoCashInventory(item, c.getAccID()));
+			c.announce(PacketCreator.putIntoCashInventory(item, c.getAccountId()));
 		} else if (action == 0x1D) { 
 			// crush ring (action 28)
 			if (checkBirthday(c, slea.readInt())) {
@@ -229,7 +229,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					int ringid = Ring.createRing(info);
 					item.setRingId(ringid);
 					cs.addToInventory(item);
-					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
+					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccountId()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(toCharge, -ring.getPrice());
 					chr.addCrushRing(Ring.loadFromDb(ringid));
@@ -273,7 +273,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					int ringid = Ring.createRing(getRingCreationInfo(ring, chr, partner));
 					item.setRingId(ringid);
 					cs.addToInventory(item);
-					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccID()));
+					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccountId()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(payment, -ring.getPrice());
 					chr.addFriendshipRing(Ring.loadFromDb(ringid));

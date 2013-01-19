@@ -110,7 +110,7 @@ public final class DueyHandler extends AbstractPacketHandler {
 			if (c.getPlayer().getMeso() >= finalcost) {
 				int accid = getAccIdFromCNAME(recipient, true);
 				if (accid != -1) {
-					if (accid != c.getAccID()) {
+					if (accid != c.getAccountId()) {
 						c.getPlayer().gainMeso(-finalcost, false);
 						c.announce(PacketCreator.sendDueyMSG(Actions.TOCLIENT_SUCCESSFULLY_SENT.getCode()));
 						send = true;

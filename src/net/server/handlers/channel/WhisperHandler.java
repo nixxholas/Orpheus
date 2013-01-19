@@ -50,8 +50,8 @@ public final class WhisperHandler extends AbstractPacketHandler {
 			GameCharacter player = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 			if (player != null) {
 				if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
-					if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-						BlacklistHandler.printBlacklistLog("[Whisper] [" + c.getPlayer().getName() + " > " + recipient + "] " + text, c.getAccID());
+					if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+						BlacklistHandler.printBlacklistLog("[Whisper] [" + c.getPlayer().getName() + " > " + recipient + "] " + text, c.getAccountId());
 					}
 				}
 				if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_CHAT_LOGGER && ParanoiaConstants.LOG_WHISPERS) {

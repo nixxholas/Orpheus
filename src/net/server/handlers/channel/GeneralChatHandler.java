@@ -116,14 +116,14 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 				}
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_COMMAND) {
-				if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-					BlacklistHandler.printBlacklistLog("[" + c.getPlayer().getName() + "] Used " + heading + sp[0] + ((sp.length > 1) ? " with parameters: " + Output.joinStringFrom(sp, 1) : "."), c.getAccID());
+				if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+					BlacklistHandler.printBlacklistLog("[" + c.getPlayer().getName() + "] Used " + heading + sp[0] + ((sp.length > 1) ? " with parameters: " + Output.joinStringFrom(sp, 1) : "."), c.getAccountId());
 				}
 			}
 		} else {
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
-				if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-					BlacklistHandler.printBlacklistLog("[General] [" + c.getPlayer().getName() + "] " + s, c.getAccID());
+				if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+					BlacklistHandler.printBlacklistLog("[General] [" + c.getPlayer().getName() + "] " + s, c.getAccountId());
 				}
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.PARANOIA_CHAT_LOGGER && ParanoiaConstants.LOG_GENERAL_CHAT) {

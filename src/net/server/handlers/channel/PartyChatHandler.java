@@ -54,8 +54,8 @@ public final class PartyChatHandler extends AbstractPacketHandler {
 				GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[Buddy] [" + c.getPlayer().getName() + "] " + chattext);
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
-				if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-					BlacklistHandler.printBlacklistLog("[Buddy] [" + c.getPlayer().getName() + "] " + chattext, c.getAccID());
+				if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+					BlacklistHandler.printBlacklistLog("[Buddy] [" + c.getPlayer().getName() + "] " + chattext, c.getAccountId());
 				}
 			}
 			world.buddyChat(recipients, player.getId(), player.getName(), chattext);
@@ -64,8 +64,8 @@ public final class PartyChatHandler extends AbstractPacketHandler {
 				GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[Party] [" + c.getPlayer().getName() + "] " + chattext);
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
-				if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-					BlacklistHandler.printBlacklistLog("[Party] [" + c.getPlayer().getName() + "] " + chattext, c.getAccID());
+				if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+					BlacklistHandler.printBlacklistLog("[Party] [" + c.getPlayer().getName() + "] " + chattext, c.getAccountId());
 				}
 			}
 			world.partyChat(player.getParty(), chattext, player.getName());
@@ -74,8 +74,8 @@ public final class PartyChatHandler extends AbstractPacketHandler {
 				GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[Guild] [" + c.getPlayer().getName() + "] " + chattext);
 			}
 			if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
-				if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-					BlacklistHandler.printBlacklistLog("[Guild] [" + c.getPlayer().getName() + "] " + chattext, c.getAccID());
+				if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+					BlacklistHandler.printBlacklistLog("[Guild] [" + c.getPlayer().getName() + "] " + chattext, c.getAccountId());
 				}
 			}
 			Server.getInstance().guildChat(player.getGuildId(), player.getName(), player.getId(), chattext);
@@ -86,8 +86,8 @@ public final class PartyChatHandler extends AbstractPacketHandler {
 					GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[Alliance] [" + c.getPlayer().getName() + "] " + chattext);
 				}
 				if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
-					if (BlacklistHandler.isBlacklisted(c.getAccID())) {
-						BlacklistHandler.printBlacklistLog("[Alliance] [" + c.getPlayer().getName() + "] " + chattext, c.getAccID());
+					if (BlacklistHandler.isBlacklisted(c.getAccountId())) {
+						BlacklistHandler.printBlacklistLog("[Alliance] [" + c.getPlayer().getName() + "] " + chattext, c.getAccountId());
 					}
 				}
 				Server.getInstance().allianceMessage(allianceId, PacketCreator.multiChat(player.getName(), chattext, 3), player.getId(), -1);

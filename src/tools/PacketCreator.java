@@ -658,7 +658,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.LOGIN_STATUS.getValue());
 		w.writeInt(0);
 		w.writeAsShort(0);
-		w.writeInt(c.getAccID()); // user id
+		w.writeInt(c.getAccountId()); // user id
 		w.writeAsByte(c.getGender());
 		w.writeAsByte((c.gmLevel() > 0)); // admin byte
 		w.writeAsByte(0);
@@ -6893,7 +6893,7 @@ public class PacketCreator {
 		w.writeAsShort(c.getPlayer().getCashShop().getInventory().size());
 
 		for (IItem item : c.getPlayer().getCashShop().getInventory()) {
-			addCashItemInformation(w, item, c.getAccID());
+			addCashItemInformation(w, item, c.getAccountId());
 		}
 
 		w.writeAsShort(c.getPlayer().getStorage().getSlots());
