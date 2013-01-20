@@ -32,12 +32,13 @@ public final class CharInfoRequestHandler extends AbstractPacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		reader.readInt();
-		int cid = reader.readInt();
-		GameCharacter player = (GameCharacter) c.getPlayer().getMap().getMapObject(cid);
-		if (player.isHidden() && !c.getPlayer().isGM())
+		int targetId = reader.readInt();
+		GameCharacter player = (GameCharacter) c.getPlayer().getMap().getMapObject(targetId);
+		if (player.isHidden() && !c.getPlayer().isGM()) {
 			return;
-		else if (player.isGM() && !c.getPlayer().isGM() && !ServerConstants.ALLOW_INFO_ON_GMS)
+		} else if (player.isGM() && !c.getPlayer().isGM() && !ServerConstants.ALLOW_INFO_ON_GMS) {
 			return;
+		}
 		c.announce(PacketCreator.charInfo(player));
 	}
 }

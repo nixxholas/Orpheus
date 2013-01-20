@@ -32,7 +32,7 @@ import tools.PacketCreator;
  * @author kevintjuh93
  */
 // Make them better :)
-public class MapleCoconut extends MapleEvent {
+public class MapleCoconut extends GameEvent {
 	private GameMap map = null;
 	private int MapleScore = 0;
 	private int StoryScore = 0;

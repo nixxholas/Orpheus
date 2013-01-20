@@ -24,28 +24,28 @@ package server.events.gm;
  * 
  * @author kevintjuh93
  */
-public class MapleEvent {
-	private int mapid;
+public class GameEvent {
+	private int mapId;
 	private int limit;
 
-	public MapleEvent(int mapid, int limit) {
-		this.mapid = mapid;
+	public GameEvent(int mapId, int limit) {
+		this.mapId = mapId;
 		this.limit = limit;
 	}
 
 	public int getMapId() {
-		return mapid;
+		return mapId;
 	}
 
 	public int getLimit() {
 		return limit;
 	}
 
-	public void minusLimit() {
+	public void decreaseLimit() {
 		this.limit--;
 	}
 
-	public void addLimit() {
+	public void increaseLimit() {
 		this.limit++;
 	}
 }

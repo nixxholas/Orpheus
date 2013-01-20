@@ -12,17 +12,12 @@ public enum NpcShopOperation {
 	}
 	
 	public static NpcShopOperation fromByte(byte operation) {
-		switch (operation) {
-		case 0:
-			return BUY;
-		case 1:
-			return SELL;
-		case 2:
-			return RECHARGE;
-		case 3:
-			return LEAVE;
-		default:
-			return null;
+		for (NpcShopOperation item : NpcShopOperation.values()) {
+			if (item.type == operation) {
+				return item;
+			}
 		}
+		
+		return null;
 	}
 }

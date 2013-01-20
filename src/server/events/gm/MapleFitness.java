@@ -41,8 +41,9 @@ public class MapleFitness {
 		this.schedule = TimerManager.getInstance().schedule(new Runnable() {
 			@Override
 			public void run() {
-				if (chr.getMapId() >= 109040000 && chr.getMapId() <= 109040004)
+				if (chr.getMapId() >= 109040000 && chr.getMapId() <= 109040004) {
 					chr.changeMap(chr.getMap().getReturnMap());
+				}
 			}
 		}, 900000);
 	}

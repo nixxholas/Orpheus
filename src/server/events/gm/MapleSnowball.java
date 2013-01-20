@@ -46,8 +46,9 @@ public class MapleSnowball {
 		this.team = team;
 
 		for (GameCharacter chr : map.getCharacters()) {
-			if (chr.getTeam() == team)
+			if (chr.getTeam() == team) {
 				characters.add(chr);
+			}
 		}
 	}
 
@@ -67,17 +68,19 @@ public class MapleSnowball {
 			public void run() {
 				if (map.getSnowball(team).getPosition() > map.getSnowball(team == 0 ? 1 : 0).getPosition()) {
 					for (GameCharacter chr : characters) {
-						if (chr != null)
+						if (chr != null) {
 							chr.announce(PacketCreator.rollSnowBall(false, 3, map.getSnowball(0), map.getSnowball(0)));
+						}
 					}
 					winner = true;
 				} else if (map.getSnowball(team == 0 ? 1 : 0).getPosition() > map.getSnowball(team).getPosition()) {
 					for (GameCharacter chr : characters) {
-						if (chr != null)
+						if (chr != null) {
 							chr.announce(PacketCreator.rollSnowBall(false, 4, map.getSnowball(0), map.getSnowball(0)));
+						}
 					}
 					winner = true;
-				} // Else
+				} 
 				warpOut();
 			}
 		}, 600000);
@@ -120,19 +123,21 @@ public class MapleSnowball {
 							message(5);
 						}
 					}, 10000);
-				} else
+				} else {
 					this.snowmanhp -= damage;
+				}
 				map.broadcastMessage(PacketCreator.rollSnowBall(false, 1, map.getSnowball(0), map.getSnowball(1)));
 			}
 
 		if (this.hits == 0) {
 			this.position += 1;
-			if (this.position == 45)
+			if (this.position == 45) {
 				map.getSnowball(team == 0 ? 1 : 0).message(1);
-			else if (this.position == 290)
+			} else if (this.position == 290) {
 				map.getSnowball(team == 0 ? 1 : 0).message(2);
-			else if (this.position == 560)
+			} else if (this.position == 560) {
 				map.getSnowball(team == 0 ? 1 : 0).message(3);
+			}
 
 			this.hits = 25;
 			map.broadcastMessage(PacketCreator.rollSnowBall(false, 0, map.getSnowball(0), map.getSnowball(1)));
@@ -143,8 +148,9 @@ public class MapleSnowball {
 
 	public void message(int message) {
 		for (GameCharacter chr : characters) {
-			if (chr != null)
+			if (chr != null) {
 				chr.announce(PacketCreator.snowballMessage(team, message));
+			}
 		}
 	}
 
@@ -153,10 +159,11 @@ public class MapleSnowball {
 
 			@Override
 			public void run() {
-				if (winner == true)
+				if (winner == true) {
 					map.warpOutByTeam(team, 109050000);
-				else
+				} else {
 					map.warpOutByTeam(team, 109050001);
+				}
 
 				map.setSnowball(team, null);
 			}

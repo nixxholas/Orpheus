@@ -40,14 +40,16 @@ public class MapleOla {
 		this.schedule = TimerManager.getInstance().schedule(new Runnable() {
 			@Override
 			public void run() {
-				if (chr.getMapId() >= 109030001 && chr.getMapId() <= 109030303)
+				if (chr.getMapId() >= 109030001 && chr.getMapId() <= 109030303) {
 					chr.changeMap(chr.getMap().getReturnMap());
+				}
 				resetTimes();
 			}
 		}, 360000);
 	}
 
-	public void startOla() { // TODO: Messages
+	public void startOla() { 
+		// TODO: Messages
 		chr.getMap().startEvent();
 		chr.getClient().announce(PacketCreator.getClock(360));
 		this.timeStarted = System.currentTimeMillis();

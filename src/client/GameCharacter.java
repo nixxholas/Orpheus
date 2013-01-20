@@ -4291,8 +4291,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void startFullnessSchedule(final int decrease, final Pet pet, int petSlot) {
-		if (isGM() && ServerConstants.GM_PETS_NEVER_HUNGRY || ServerConstants.PETS_NEVER_HUNGRY) {
-			// no fullness schedules :3
+		// NOTE: Oi, GM nibs, play fair!
+//		if (isGM() && ServerConstants.GM_PETS_NEVER_HUNGRY || ServerConstants.PETS_NEVER_HUNGRY) {
+		if (ServerConstants.PETS_NEVER_HUNGRY) {
 			return; 
 		}
 		ScheduledFuture<?> schedule = TimerManager.getInstance().register(

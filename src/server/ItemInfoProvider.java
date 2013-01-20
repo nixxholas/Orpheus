@@ -461,12 +461,15 @@ public class ItemInfoProvider {
 		return scrollId > 2048999 && scrollId < 2049004;
 	}
 
-	public IItem scrollEquipWithId(IItem equip, int scrollId, boolean usingWhiteScroll, boolean isGM) {
+	// NOTE: Oi, GM nibs, play fair!
+//	public IItem scrollEquipWithId(IItem equip, int scrollId, boolean usingWhiteScroll, boolean isGM) {
+	public IItem scrollEquipWithId(IItem equip, int scrollId, boolean usingWhiteScroll) {
 		if (equip instanceof Equip) {
 			Equip nEquip = (Equip) equip;
 			Map<String, Integer> stats = this.getEquipStats(scrollId);
 			Map<String, Integer> eqstats = this.getEquipStats(equip.getItemId());
-			if (((nEquip.getUpgradeSlots() > 0 || isCleanSlate(scrollId)) && Math.ceil(Math.random() * 100.0) <= stats.get("success")) || isGM) {
+			
+			if (((nEquip.getUpgradeSlots() > 0 || isCleanSlate(scrollId)) && Math.ceil(Math.random() * 100.0) <= stats.get("success"))) {
 				short flag = nEquip.getFlag();
 				switch (scrollId) {
 					case 2040727:
@@ -571,13 +574,11 @@ public class ItemInfoProvider {
 						break;
 				}
 				if (!isCleanSlate(scrollId)) {
-					if (!isGM) {
-						nEquip.setUpgradeSlots((byte) (nEquip.getUpgradeSlots() - 1));
-					}
+					nEquip.setUpgradeSlots((byte) (nEquip.getUpgradeSlots() - 1));
 					nEquip.setLevel((byte) (nEquip.getLevel() + 1));
 				}
 			} else {
-				if (!usingWhiteScroll && !isCleanSlate(scrollId) && !isGM) {
+				if (!usingWhiteScroll && !isCleanSlate(scrollId)) {
 					nEquip.setUpgradeSlots((byte) (nEquip.getUpgradeSlots() - 1));
 				}
 				if (Randomizer.nextInt(101) < stats.get("cursed")) {

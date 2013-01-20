@@ -54,7 +54,7 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import server.events.gm.MapleEvent;
+import server.events.gm.GameEvent;
 import server.expeditions.Expedition;
 import server.expeditions.ExpeditionType;
 import server.maps.HiredMerchant;
@@ -72,7 +72,7 @@ public final class Channel {
 	private Map<Integer, HiredMerchant> hiredMerchants = new HashMap<Integer, HiredMerchant>();
 	private ReentrantReadWriteLock merchant_lock = new ReentrantReadWriteLock(true);
 	private EnumMap<ExpeditionType, Expedition> expeditions = new EnumMap<ExpeditionType, Expedition>(ExpeditionType.class);
-	private MapleEvent event;
+	private GameEvent event;
 	private boolean finishedShutdown = false;
 
 	public Channel(final byte world, final byte channel) {
@@ -178,11 +178,11 @@ public final class Channel {
 		return ip;
 	}
 
-	public MapleEvent getEvent() {
+	public GameEvent getEvent() {
 		return event;
 	}
 
-	public void setEvent(MapleEvent event) {
+	public void setEvent(GameEvent event) {
 		this.event = event;
 	}
 

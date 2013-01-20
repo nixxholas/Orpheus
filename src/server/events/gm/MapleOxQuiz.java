@@ -71,8 +71,8 @@ public final class MapleOxQuiz {
 			public void run() {
 				map.broadcastMessage(PacketCreator.showOXQuiz(round, question, true));
 				for (GameCharacter chr : map.getCharacters()) {
-					if (chr != null) // make sure they aren't null... maybe
-										// something can happen in 12 seconds.
+					// make sure they aren't null... maybe something can happen in 12 seconds.
+					if (chr != null) 
 					{
 						if (!isCorrectAnswer(chr, getOXAnswer(round, question)) && !chr.isGM()) {
 							chr.changeMap(chr.getMap().getReturnMap());

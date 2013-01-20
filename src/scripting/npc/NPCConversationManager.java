@@ -56,7 +56,7 @@ import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.ShopFactory;
 import server.StatEffect;
-import server.events.gm.MapleEvent;
+import server.events.gm.GameEvent;
 import server.expeditions.Expedition;
 import server.maps.GameMap;
 import server.maps.GameMapFactory;
@@ -457,7 +457,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		return inMap;
 	}
 
-	public MapleEvent getEvent() {
+	public GameEvent getEvent() {
 		return c.getChannelServer().getEvent();
 	}
 

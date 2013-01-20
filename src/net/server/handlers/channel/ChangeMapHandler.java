@@ -83,8 +83,7 @@ public final class ChangeMapHandler extends AbstractPacketHandler {
 						chr.changeMap(to, to.getPortal(0));
 					}
 				} else if (targetid != -1 && chr.isGM()) {
-					GameMap to = c.getChannelServer().getMapFactory()
-							.getMap(targetid);
+					GameMap to = c.getChannelServer().getMapFactory().getMap(targetid);
 					chr.changeMap(to, to.getPortal(0));
 				} else if (targetid != -1 && !chr.isGM()) {
 					// Thanks celino for saving me some time (:

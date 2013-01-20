@@ -284,8 +284,8 @@ public class PacketCreator {
 			w.writeAsByte(0);
 			return;
 		}
-		w.writeAsByte(1); // world rank enabled (next 4 ints are not sent if
-						// disabled) Short??
+		// world rank enabled (next 4 ints are not sent if disabled) Short??
+		w.writeAsByte(1); 
 		w.writeInt(chr.getRank()); // world rank
 		w.writeInt(chr.getRankMove()); // move (negative is downwards)
 		w.writeInt(chr.getJobRank()); // job rank

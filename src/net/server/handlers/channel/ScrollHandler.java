@@ -86,7 +86,7 @@ public final class ScrollHandler extends AbstractPacketHandler {
 		if (scroll.getQuantity() < 1) {
 			return;
 		}
-		IEquip scrolled = (IEquip) ii.scrollEquipWithId(toScroll, scroll.getItemId(), whiteScroll, c.getPlayer().isGM());
+		IEquip scrolled = (IEquip) ii.scrollEquipWithId(toScroll, scroll.getItemId(), whiteScroll);
 		ScrollResult scrollSuccess = IEquip.ScrollResult.FAIL; // fail
 		if (scrolled == null) {
 			scrollSuccess = IEquip.ScrollResult.CURSE;
