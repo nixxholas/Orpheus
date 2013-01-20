@@ -252,7 +252,7 @@ public class AbstractPlayerInteraction {
 
 	public void givePartyExp(int amount, List<GameCharacter> party) {
 		for (GameCharacter chr : party) {
-			chr.gainExp((amount * chr.getExpRate()), true, true);
+			chr.gainExp((int) (amount * chr.rates().exp()), true, true);
 		}
 	}
 

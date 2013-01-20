@@ -99,7 +99,7 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 					if (mapitem.getMeso() > 0) {
 						if (chr.getParty() != null) {
 							int mesosamm = mapitem.getMeso();
-							if (mesosamm > 50000 * chr.getMesoRate()) {
+							if (mesosamm > 50000 * chr.rates().meso()) {
 								return;
 							}
 							int partynum = 0;

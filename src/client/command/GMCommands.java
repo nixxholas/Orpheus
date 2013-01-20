@@ -238,7 +238,7 @@ public class GMCommands extends EnumeratedCommands {
 					for (GameMapObject monstermo : monsters) {
 						Monster monster = (Monster) monstermo;
 						map.killMonster(monster, chr, true);
-						monster.giveExpToCharacter(chr, monster.getExp() * c.getPlayer().getExpRate(), true, 1);
+						monster.giveExpToCharacter(chr, (int) (monster.getExp() * c.getPlayer().rates().exp()), true, 1);
 					}
 					chr.message("Killed " + monsters.size() + " monsters.");
 					break;

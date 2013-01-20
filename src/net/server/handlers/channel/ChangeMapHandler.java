@@ -138,7 +138,7 @@ public final class ChangeMapHandler extends AbstractPacketHandler {
 				} else {
 					c.announce(PacketCreator.enableActions());
 				}
-				chr.setRates();
+				chr.refreshRates();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

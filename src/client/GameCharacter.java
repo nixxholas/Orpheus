@@ -155,7 +155,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int possibleReports = 10;
 	private int vanquisherStage, vanquisherKills;
 	private int allowWarpToId;
-	private int expRate = 1, mesoRate = 1, dropRate = 1;
+	private RateInfo rateInfo = new RateInfo();
 	private MinigameStats omokStats, matchingCardStats;
 	private DojoState dojoState = new DojoState();
 	private int married;
@@ -1631,10 +1631,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return new ArrayList<Door>(doors);
 	}
 
-	public int getDropRate() {
-		return dropRate;
-	}
-
 	public int getEnergyBar() {
 		return energybar;
 	}
@@ -1647,16 +1643,16 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return excluded;
 	}
 
+	public RateInfo rates() {
+		return this.rateInfo;
+	}
+	
 	public int getExp() {
 		return exp.get();
 	}
 
 	public int getGachaExp() {
 		return gachaexp.get();
-	}
-
-	public int getExpRate() {
-		return expRate;
 	}
 
 	public int getFace() {
@@ -1901,10 +1897,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public int getMerchantMeso() {
 		return merchantmeso;
-	}
-
-	public int getMesoRate() {
-		return mesoRate;
 	}
 
 	public int getMesosTraded() {
@@ -3836,37 +3828,37 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 	}
 
-
-
-	public void setRates() {
+	public void refreshRates() {
+		double exp, meso, drop; 
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("GMT-8"));
 		World world = Server.getInstance().getWorld(worldId);
 		int hr = cal.get(Calendar.HOUR_OF_DAY);
 		if ((haveItem(5360001) && hr > 6 && hr < 12) || (haveItem(5360002) && hr > 9 && hr < 15) || (haveItem(536000) && hr > 12 && hr < 18) || (haveItem(5360004) && hr > 15 && hr < 21) || (haveItem(536000) && hr > 18) || (haveItem(5360006) && hr < 5) || (haveItem(5360007) && hr > 2 && hr < 6) || (haveItem(5360008) && hr >= 6 && hr < 11)) {
-			this.dropRate = 2 * world.getDropRate();
-			this.mesoRate = 2 * world.getMesoRate();
+			drop = 2 * world.getDropRate();
+			meso = 2 * world.getMesoRate();
 		} else {
-			this.dropRate = world.getDropRate();
-			this.mesoRate = world.getMesoRate();
+			drop = world.getDropRate();
+			meso = world.getMesoRate();
 		}
 		if ((haveItem(5211000) && hr > 17 && hr < 21) || (haveItem(5211014) && hr > 6 && hr < 12) || (haveItem(5211015) && hr > 9 && hr < 15) || (haveItem(5211016) && hr > 12 && hr < 18) || (haveItem(5211017) && hr > 15 && hr < 21) || (haveItem(5211018) && hr > 14) || (haveItem(5211039) && hr < 5) || (haveItem(5211042) && hr > 2 && hr < 8) || (haveItem(5211045) && hr > 5 && hr < 11) || haveItem(5211048)) {
 			if (isBeginnerJob() && ServerConstants.BEGINNERS_USE_GMS_RATES) {
-				this.expRate = 2;
+				exp = 2;
 			} else {
-				this.expRate = 2 * world.getExpRate();
+				exp = 2 * world.getExpRate();
 			}
 		} else {
 			if (isBeginnerJob() && ServerConstants.BEGINNERS_USE_GMS_RATES) {
-				this.expRate = 1;
+				exp = 1;
 			} else {
-				this.expRate = world.getExpRate();
+				exp = world.getExpRate();
 			}
 		}
 		if (isHardcoreMode()) {
-			this.expRate *= 2;
-			this.mesoRate *= 2;
+			exp *= 2;
+			meso *= 2;
 		}
+		this.rateInfo = new RateInfo(exp, meso, drop);
 	}
 
 	public void setEnergyBar(int set) {

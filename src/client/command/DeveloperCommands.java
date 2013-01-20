@@ -78,7 +78,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 				case droprate:
 					c.getWorldServer().setDropRate(Integer.parseInt(sub[1]));
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
-						character.setRates();
+						character.refreshRates();
 					}
 					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
@@ -86,7 +86,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 				case exprate:
 					c.getWorldServer().setExpRate(Integer.parseInt(sub[1]));
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
-						character.setRates();
+						character.refreshRates();
 					}
 					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
@@ -115,7 +115,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 				case mesorate:
 					c.getWorldServer().setMesoRate(Integer.parseInt(sub[1]));
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
-						character.setRates();
+						character.refreshRates();
 					}
 					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
 					chr.message("Done.");

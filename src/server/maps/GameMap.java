@@ -361,14 +361,14 @@ public class GameMap {
 		final ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		final byte droptype = (byte) (mob.getStats().isExplosiveReward() ? 3 : mob.getStats().isFfaLoot() ? 2 : chr.getParty() != null ? 1 : 0);
 		final int mobpos = mob.getPosition().x;
-		int chServerrate = chr.getDropRate();
 		IItem idrop;
+		double rate = chr.rates().drop();
 		byte d = 1;
 		Point pos = new Point(0, mob.getPosition().y);
 
 		Map<MonsterStatus, MonsterStatusEffect> stati = mob.getStati();
 		if (stati.containsKey(MonsterStatus.SHOWDOWN)) {
-			chServerrate *= (stati.get(MonsterStatus.SHOWDOWN).getStati().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
+			rate *= (stati.get(MonsterStatus.SHOWDOWN).getStati().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
 		}
 
 		final MonsterInfoProvider mi = MonsterInfoProvider.getInstance();
@@ -376,7 +376,7 @@ public class GameMap {
 
 		Collections.shuffle(dropEntry);
 		for (final MonsterDropEntry de : dropEntry) {
-			if (Randomizer.nextInt(999999) < de.Chance * chServerrate) {
+			if (Randomizer.nextInt(999999) < de.Chance * rate) {
 				if (droptype == 3) {
 					pos.x = (int) (mobpos + (d % 2 == 0 ? (40 * (d + 1) / 2) : -(40 * (d / 2))));
 				} else {
@@ -389,7 +389,7 @@ public class GameMap {
 						if (chr.getBuffedValue(BuffStat.MESOUP) != null) {
 							mesos = (int) (mesos * chr.getBuffedValue(BuffStat.MESOUP).doubleValue() / 100.0);
 						}
-						spawnMesoDrop(mesos * chr.getMesoRate(), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
+						spawnMesoDrop((int) (mesos * chr.rates().meso()), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
 					}
 				} else {
 					if (ItemConstants.getInventoryType(de.ItemId) == InventoryType.EQUIP) {

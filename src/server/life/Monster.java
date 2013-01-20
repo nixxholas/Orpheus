@@ -289,7 +289,7 @@ public class Monster extends AbstractLoadedLife {
 	}
 
 	public GameCharacter killBy(GameCharacter killer) {
-		long totalBaseExpL = (this.getExp() * killer.getClient().getPlayer().getExpRate());
+		long totalBaseExpL = (long) (this.getExp() * killer.getClient().getPlayer().rates().exp());
 		int totalBaseExp = (int) (Math.min(Integer.MAX_VALUE, totalBaseExpL));
 		AttackerEntry highest = null;
 		int highdamage = 0;

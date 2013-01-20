@@ -71,7 +71,7 @@ public class CommandHandler implements GMPacketHandler {
 						break;
 				}
 				for (GameCharacter chr : world.getPlayerStorage().getAllCharacters()) {
-					chr.setRates();
+					chr.refreshRates();
 				}
 			}
 			case 3: {

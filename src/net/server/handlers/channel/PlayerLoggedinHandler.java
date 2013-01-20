@@ -239,7 +239,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		player.changeSkillLevel(SkillFactory.getSkill(10000000 * player.getJobType() + 12), (byte) (level / 10), 20, -1);
 		player.checkBerserk();
 		player.expirationTask();
-		player.setRates();
+		player.refreshRates();
 		if (ServerConstants.MAKE_NPCS_SCRIPTABLE) {
 			for (int i = 0; i < ScriptableNPCConstants.SCRIPTABLE_NPCS.length; i++) {
 				c.announce(PacketCreator.setNPCScriptable(ScriptableNPCConstants.SCRIPTABLE_NPCS[i], ScriptableNPCConstants.SCRIPTABLE_NPCS_DESC[i]));
