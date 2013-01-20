@@ -55,16 +55,16 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, true);
-		if (attack.skill == Buccaneer.ENERGY_ORB || attack.skill == ThunderBreaker.SPARK || attack.skill == Shadower.TAUNT || attack.skill == NightLord.TAUNT) {
-			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
+		if (attack.skill.id == Buccaneer.ENERGY_ORB || attack.skill.id == ThunderBreaker.SPARK || attack.skill.id == Shadower.TAUNT || attack.skill.id == NightLord.TAUNT) {
+			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
 			applyAttack(attack, player, 1);
-		} else if (attack.skill == Aran.COMBO_SMASH || attack.skill == Aran.COMBO_PENRIL || attack.skill == Aran.COMBO_TEMPEST) {
-			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
-			if (attack.skill == Aran.COMBO_SMASH && player.getCombo() >= 30) {
+		} else if (attack.skill.id == Aran.COMBO_SMASH || attack.skill.id == Aran.COMBO_PENRIL || attack.skill.id == Aran.COMBO_TEMPEST) {
+			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
+			if (attack.skill.id == Aran.COMBO_SMASH && player.getCombo() >= 30) {
 				applyAttack(attack, player, 1);
-			} else if (attack.skill == Aran.COMBO_PENRIL && player.getCombo() >= 100) {
+			} else if (attack.skill.id == Aran.COMBO_PENRIL && player.getCombo() >= 100) {
 				applyAttack(attack, player, 2);
-			} else if (attack.skill == Aran.COMBO_TEMPEST && player.getCombo() >= 200) {
+			} else if (attack.skill.id == Aran.COMBO_TEMPEST && player.getCombo() >= 200) {
 				applyAttack(attack, player, 4);
 			}
 		} else {
@@ -76,11 +76,11 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 			int projectile = 0;
 			byte bulletCount = 1;
 			StatEffect effect = null;
-			if (attack.skill != 0) {
+			if (attack.skill.id != 0) {
 				effect = attack.getAttackEffect(player, null);
 				bulletCount = effect.getBulletCount();
 				if (effect.getCooldown() > 0) {
-					c.announce(PacketCreator.skillCooldown(attack.skill, effect.getCooldown()));
+					c.announce(PacketCreator.skillCooldown(attack.skill.id, effect.getCooldown()));
 				}
 			}
 			boolean hasShadowPartner = player.getBuffedValue(BuffStat.SHADOWPARTNER) != null;
@@ -120,7 +120,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 			}
 			boolean soulArrow = player.getBuffedValue(BuffStat.SOULARROW) != null;
 			boolean shadowClaw = player.getBuffedValue(BuffStat.SHADOW_CLAW) != null;
-			if (!soulArrow && !shadowClaw && attack.skill != 11101004 && attack.skill != 15111007 && attack.skill != 14101006) {
+			if (!soulArrow && !shadowClaw && attack.skill.id != 11101004 && attack.skill.id != 15111007 && attack.skill.id != 14101006) {
 				byte bulletConsume = bulletCount;
 				if (effect != null && effect.getBulletConsume() != 0) {
 					bulletConsume = (byte) (effect.getBulletConsume() * (hasShadowPartner ? 2 : 1));
@@ -130,7 +130,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 				}
 			}
 
-			if (projectile != 0 || soulArrow || attack.skill == 11101004 || attack.skill == 15111007 || attack.skill == 14101006) {
+			if (projectile != 0 || soulArrow || attack.skill.id == 11101004 || attack.skill.id == 15111007 || attack.skill.id == 14101006) {
 				int visProjectile = projectile; // visible projectile sent to
 												// players
 				if (ItemConstants.isThrowingStar(projectile)) {
@@ -145,19 +145,19 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 						}
 					}
 				} else // bow, crossbow
-				if (soulArrow || attack.skill == 3111004 || attack.skill == 3211004 || attack.skill == 11101004 || attack.skill == 15111007 || attack.skill == 14101006) {
+				if (soulArrow || attack.skill.id == 3111004 || attack.skill.id == 3211004 || attack.skill.id == 11101004 || attack.skill.id == 15111007 || attack.skill.id == 14101006) {
 					visProjectile = 0;
 				}
 				GamePacket packet;
-				switch (attack.skill) {
+				switch (attack.skill.id) {
 					case 3121004: // Hurricane
 					case 3221001: // Pierce
 					case 5221004: // Rapid Fire
 					case 13111002: // KoC Hurricane
-						packet = PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.rangedirection, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
+						packet = PacketCreator.rangedAttack(player, attack.skill.id, attack.skill.level, attack.rangedirection, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
 						break;
 					default:
-						packet = PacketCreator.rangedAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
+						packet = PacketCreator.rangedAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, visProjectile, attack.allDamage, attack.speed, attack.direction, attack.display);
 						break;
 				}
 				player.getMap().broadcastMessage(player, packet, false, true);
@@ -172,15 +172,15 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 						player.gainMeso(-money, false);
 					}
 				}
-				if (attack.skill != 0) {
-					ISkill skill = SkillFactory.getSkill(attack.skill);
+				if (attack.skill.id != 0) {
+					ISkill skill = SkillFactory.getSkill(attack.skill.id);
 					StatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
 					if (effect_.getCooldown() > 0) {
-						if (player.skillisCooling(attack.skill)) {
+						if (player.skillisCooling(attack.skill.id)) {
 							return;
 						} else {
-							c.announce(PacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
-							player.addCooldown(attack.skill, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill), effect_.getCooldown() * 1000));
+							c.announce(PacketCreator.skillCooldown(attack.skill.id, effect_.getCooldown()));
+							player.addCooldown(attack.skill.id, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill.id), effect_.getCooldown() * 1000));
 						}
 					}
 				}

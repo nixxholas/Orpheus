@@ -56,16 +56,16 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
-		player.getMap().broadcastMessage(player, PacketCreator.closeRangeAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.speed, attack.direction, attack.display), false, true);
+		player.getMap().broadcastMessage(player, PacketCreator.closeRangeAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.speed, attack.direction, attack.display), false, true);
 		int numFinisherOrbs = 0;
 		Integer comboBuff = player.getBuffedValue(BuffStat.COMBO);
-		if (isFinisher(attack.skill)) {
+		if (isFinisher(attack.skill.id)) {
 			if (comboBuff != null) {
 				numFinisherOrbs = comboBuff.intValue() - 1;
 			}
 			player.handleOrbconsume();
 		} else if (attack.numAttacked > 0) {
-			if (attack.skill != 1111008 && comboBuff != null) {
+			if (attack.skill.id != 1111008 && comboBuff != null) {
 				int orbcount = player.getBuffedValue(BuffStat.COMBO);
 				int oid = player.isCygnus() ? DawnWarrior.COMBO : Crusader.COMBO;
 				int advcomboid = player.isCygnus() ? DawnWarrior.ADVANCED_COMBO : Hero.ADVANCED_COMBO;
@@ -99,7 +99,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 				}
 			}
 		}
-		if (attack.numAttacked > 0 && attack.skill == DragonKnight.SACRIFICE) {
+		if (attack.numAttacked > 0 && attack.skill.id == DragonKnight.SACRIFICE) {
 			// sacrifice attacks only 1 mob with 1 attack
 			int totDamageToOneMonster = 0; 
 			final Iterator<List<Integer>> dmgIt = attack.allDamage.values().iterator();
@@ -118,7 +118,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 			player.checkBerserk();
 		}
 		
-		if (attack.numAttacked > 0 && attack.skill == 1211002) {
+		if (attack.numAttacked > 0 && attack.skill.id == 1211002) {
 			boolean advcharge_prob = false;
 			int advcharge_level = player.getSkillLevel(SkillFactory.getSkill(1220010));
 			if (advcharge_level > 0) {
@@ -131,23 +131,23 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 		}
 		
 		int attackCount = 1;
-		if (attack.skill != 0) {
+		if (attack.skill.id != 0) {
 			attackCount = attack.getAttackEffect(player, null).getAttackCount();
 		}
 		
-		if (numFinisherOrbs == 0 && isFinisher(attack.skill)) {
+		if (numFinisherOrbs == 0 && isFinisher(attack.skill.id)) {
 			return;
 		}
 		
-		if (attack.skill > 0) {
-			ISkill skill = SkillFactory.getSkill(attack.skill);
+		if (attack.skill.id > 0) {
+			ISkill skill = SkillFactory.getSkill(attack.skill.id);
 			StatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
 			if (effect_.getCooldown() > 0) {
-				if (player.skillisCooling(attack.skill)) {
+				if (player.skillisCooling(attack.skill.id)) {
 					return;
 				} else {
-					c.announce(PacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
-					player.addCooldown(attack.skill, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill), effect_.getCooldown() * 1000));
+					c.announce(PacketCreator.skillCooldown(attack.skill.id, effect_.getCooldown()));
+					player.addCooldown(attack.skill.id, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill.id), effect_.getCooldown() * 1000));
 				}
 			}
 		}

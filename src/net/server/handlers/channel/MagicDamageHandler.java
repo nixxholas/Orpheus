@@ -38,20 +38,20 @@ public final class MagicDamageHandler extends AbstractDealDamageHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
 		GameCharacter player = c.getPlayer();
 		AttackInfo attack = parseDamage(slea, player, false);
-		GamePacket packet = PacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
-		if (attack.skill == 2121001 || attack.skill == 2221001 || attack.skill == 2321001) {
-			packet = PacketCreator.magicAttack(player, attack.skill, attack.skilllevel, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);
+		GamePacket packet = PacketCreator.magicAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
+		if (attack.skill.id == 2121001 || attack.skill.id == 2221001 || attack.skill.id == 2321001) {
+			packet = PacketCreator.magicAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);
 		}
 		player.getMap().broadcastMessage(player, packet, false, true);
 		StatEffect effect = attack.getAttackEffect(player, null);
-		ISkill skill = SkillFactory.getSkill(attack.skill);
+		ISkill skill = SkillFactory.getSkill(attack.skill.id);
 		StatEffect effect_ = skill.getEffect(player.getSkillLevel(skill));
 		if (effect_.getCooldown() > 0) {
-			if (player.skillisCooling(attack.skill)) {
+			if (player.skillisCooling(attack.skill.id)) {
 				return;
 			} else {
-				c.announce(PacketCreator.skillCooldown(attack.skill, effect_.getCooldown()));
-				player.addCooldown(attack.skill, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill), effect_.getCooldown() * 1000));
+				c.announce(PacketCreator.skillCooldown(attack.skill.id, effect_.getCooldown()));
+				player.addCooldown(attack.skill.id, System.currentTimeMillis(), effect_.getCooldown() * 1000, TimerManager.getInstance().schedule(new CancelCooldownAction(player, attack.skill.id), effect_.getCooldown() * 1000));
 			}
 		}
 		applyAttack(attack, player, effect.getAttackCount());

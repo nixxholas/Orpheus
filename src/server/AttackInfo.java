@@ -11,18 +11,27 @@ import client.autoban.AutobanType;
 
 public class AttackInfo {
 
-    public int numAttacked, numDamage, numAttackedAndDamage, skill, skilllevel, stance, direction, rangedirection, charge, display;
+	public static class AttackSkillInfo {
+		public int id;
+		public int level;
+		
+		private AttackSkillInfo() { }
+	}
+	
+	public AttackSkillInfo skill;
+	
+    public int numAttacked, numDamage, numAttackedAndDamage, stance, direction, rangedirection, charge, display;
     public Map<Integer, List<Integer>> allDamage;
     public boolean isHH = false;
     public int speed = 4;
 
-    public StatEffect getAttackEffect(GameCharacter chr, ISkill theSkill) {
-        ISkill mySkill = theSkill;
-        if (mySkill == null) {
-            mySkill = SkillFactory.getSkill(this.skill);
+    public StatEffect getAttackEffect(GameCharacter chr, ISkill skill) {
+        ISkill copy = skill;
+        if (copy == null) {
+            copy = SkillFactory.getSkill(this.skill.id);
         }
-        int skillLevel = chr.getSkillLevel(mySkill);
-        if (mySkill.getId() % 10000000 == 1020) {
+        int skillLevel = chr.getSkillLevel(copy);
+        if (copy.getId() % 10000000 == 1020) {
             if (chr.getPartyQuest() instanceof Pyramid) {
                 if (((Pyramid) chr.getPartyQuest()).useSkill()) {
                     skillLevel = 1;
@@ -34,11 +43,12 @@ public class AttackInfo {
         }
         if (this.display > 80) { 
         	// Hmm
-            if (!theSkill.getAction()) {
+            if (!skill.getAction()) {
             	chr.getAutobanManager().autoban(AutobanType.FAST_ATTACK, "WZ Edit; adding action to a skill: " + this.display);
                 return null;
             }
         }
-        return mySkill.getEffect(skillLevel);
+        
+        return copy.getEffect(skillLevel);
     }
 }

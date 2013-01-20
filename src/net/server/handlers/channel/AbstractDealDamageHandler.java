@@ -96,8 +96,8 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                 return;
             }
 
-            if (attack.skill != 0) {
-                theSkill = SkillFactory.getSkill(attack.skill);
+            if (attack.skill.id != 0) {
+                theSkill = SkillFactory.getSkill(attack.skill.id);
                 attackEffect = attack.getAttackEffect(player, theSkill);
                 if (attackEffect == null) {
                     player.getClient().announce(PacketCreator.enableActions());
@@ -105,10 +105,10 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                 }
 
                 if (player.getMp() < attackEffect.getMpCon()) {
-                	player.getAutobanManager().addPoint(AutobanType.MPCON, "Skill: " + attack.skill + "; Player MP: " + player.getMp() + "; MP Needed: " + attackEffect.getMpCon());
+                	player.getAutobanManager().addPoint(AutobanType.MPCON, "Skill: " + attack.skill.id + "; Player MP: " + player.getMp() + "; MP Needed: " + attackEffect.getMpCon());
                 }
 
-                if (attack.skill != Cleric.HEAL) {
+                if (attack.skill.id != Cleric.HEAL) {
                     if (player.isAlive()) {
                         attackEffect.applyTo(player);
                     } else {
@@ -116,13 +116,13 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     }
                 }
                 int mobCount = attackEffect.getMobCount();
-                if (attack.skill == DawnWarrior.FINAL_ATTACK || attack.skill == Page.FINAL_ATTACK_BW || attack.skill == Page.FINAL_ATTACK_SWORD || attack.skill == Fighter.FINAL_ATTACK_SWORD
-                        || attack.skill == Fighter.FINAL_ATTACK_AXE || attack.skill == Spearman.FINAL_ATTACK_SPEAR || attack.skill == Spearman.FINAL_ATTACK_POLEARM || attack.skill == WindArcher.FINAL_ATTACK
-                        || attack.skill == DawnWarrior.FINAL_ATTACK || attack.skill == Hunter.FINAL_ATTACK || attack.skill == Crossbowman.FINAL_ATTACK) {
+                if (attack.skill.id == DawnWarrior.FINAL_ATTACK || attack.skill.id == Page.FINAL_ATTACK_BW || attack.skill.id == Page.FINAL_ATTACK_SWORD || attack.skill.id == Fighter.FINAL_ATTACK_SWORD
+                        || attack.skill.id == Fighter.FINAL_ATTACK_AXE || attack.skill.id == Spearman.FINAL_ATTACK_SPEAR || attack.skill.id == Spearman.FINAL_ATTACK_POLEARM || attack.skill.id == WindArcher.FINAL_ATTACK
+                        || attack.skill.id == DawnWarrior.FINAL_ATTACK || attack.skill.id == Hunter.FINAL_ATTACK || attack.skill.id == Crossbowman.FINAL_ATTACK) {
                     mobCount = 15;//:(
                 }
                 if (attack.numAttacked > mobCount) {
-                	String message = "Skill: " + attack.skill + "; Count: " + attack.numAttacked + " Max: " + attackEffect.getMobCount();
+                	String message = "Skill: " + attack.skill.id + "; Count: " + attack.numAttacked + " Max: " + attackEffect.getMobCount();
                 	player.getAutobanManager().autoban(AutobanType.MOB_COUNT, message);
                     return;
                 }
@@ -139,7 +139,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
             int totDamage = 0;
             final GameMap map = player.getMap();
 
-            if (attack.skill == ChiefBandit.MESO_EXPLOSION) {
+            if (attack.skill.id == ChiefBandit.MESO_EXPLOSION) {
                 int delay = 0;
                 for (Integer oned : attack.allDamage.keySet()) {
                     GameMapObject mapobject = map.getMapObject(oned.intValue());
@@ -179,7 +179,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     }
                     totDamage += totDamageToOneMonster;
                     player.checkMonsterAggro(monster);
-                    if (player.getBuffedValue(BuffStat.PICKPOCKET) != null && (attack.skill == 0 || attack.skill == Rogue.DOUBLE_STAB || attack.skill == Bandit.SAVAGE_BLOW || attack.skill == ChiefBandit.ASSAULTER || attack.skill == ChiefBandit.BAND_OF_THIEVES || attack.skill == Shadower.ASSASSINATE || attack.skill == Shadower.TAUNT || attack.skill == Shadower.BOOMERANG_STEP)) {
+                    if (player.getBuffedValue(BuffStat.PICKPOCKET) != null && (attack.skill.id == 0 || attack.skill.id == Rogue.DOUBLE_STAB || attack.skill.id == Bandit.SAVAGE_BLOW || attack.skill.id == ChiefBandit.ASSAULTER || attack.skill.id == ChiefBandit.BAND_OF_THIEVES || attack.skill.id == Shadower.ASSASSINATE || attack.skill.id == Shadower.TAUNT || attack.skill.id == Shadower.BOOMERANG_STEP)) {
                         ISkill pickpocket = SkillFactory.getSkill(ChiefBandit.PICKPOCKET);
                         int delay = 0;
                         final int maxmeso = player.getBuffedValue(BuffStat.PICKPOCKET).intValue();
@@ -195,11 +195,11 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                                 delay += 100;
                             }
                         }
-                    } else if (attack.skill == Marksman.SNIPE) {
+                    } else if (attack.skill.id == Marksman.SNIPE) {
                         totDamageToOneMonster = 195000 + Randomizer.nextInt(5000);
-                    } else if (attack.skill == Marauder.ENERGY_DRAIN || attack.skill == ThunderBreaker.ENERGY_DRAIN || attack.skill == NightWalker.VAMPIRE || attack.skill == Assassin.DRAIN) {
-                        player.addHP(Math.min(monster.getMaxHp(), Math.min((int) ((double) totDamage * (double) SkillFactory.getSkill(attack.skill).getEffect(player.getSkillLevel(SkillFactory.getSkill(attack.skill))).getX() / 100.0), player.getMaxHp() / 2)));
-                    } else if (attack.skill == Bandit.STEAL) {
+                    } else if (attack.skill.id == Marauder.ENERGY_DRAIN || attack.skill.id == ThunderBreaker.ENERGY_DRAIN || attack.skill.id == NightWalker.VAMPIRE || attack.skill.id == Assassin.DRAIN) {
+                        player.addHP(Math.min(monster.getMaxHp(), Math.min((int) ((double) totDamage * (double) SkillFactory.getSkill(attack.skill.id).getEffect(player.getSkillLevel(SkillFactory.getSkill(attack.skill.id))).getX() / 100.0), player.getMaxHp() / 2)));
+                    } else if (attack.skill.id == Bandit.STEAL) {
                         ISkill steal = SkillFactory.getSkill(Bandit.STEAL);
                         if (Math.random() < 0.3 && steal.getEffect(player.getSkillLevel(steal)).makeChanceResult()) { //Else it drops too many cool stuff :(
                             List<MonsterDropEntry> toSteals = MonsterInfoProvider.getInstance().retrieveDrop(monster.getId());
@@ -215,13 +215,13 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                             player.getMap().spawnItemDrop(monster, player, item, monster.getPosition(), false, false);
                             monster.addStolen(toSteal);
                         }
-                    } else if (attack.skill == FPArchMage.FIRE_DEMON) {
+                    } else if (attack.skill.id == FPArchMage.FIRE_DEMON) {
                         monster.setTempEffectiveness(Element.ICE, ElementalEffectiveness.WEAK, SkillFactory.getSkill(FPArchMage.FIRE_DEMON).getEffect(player.getSkillLevel(SkillFactory.getSkill(FPArchMage.FIRE_DEMON))).getDuration() * 1000);
-                    } else if (attack.skill == ILArchMage.ICE_DEMON) {
+                    } else if (attack.skill.id == ILArchMage.ICE_DEMON) {
                         monster.setTempEffectiveness(Element.FIRE, ElementalEffectiveness.WEAK, SkillFactory.getSkill(ILArchMage.ICE_DEMON).getEffect(player.getSkillLevel(SkillFactory.getSkill(ILArchMage.ICE_DEMON))).getDuration() * 1000);
-                    } else if (attack.skill == Outlaw.HOMING_BEACON || attack.skill == Corsair.BULLSEYE) {
+                    } else if (attack.skill.id == Outlaw.HOMING_BEACON || attack.skill.id == Corsair.BULLSEYE) {
                         player.setMarkedMonster(monster.getObjectId());
-                        player.announce(PacketCreator.giveBuff(1, attack.skill, Collections.singletonList(new BuffStatDelta(BuffStat.HOMING_BEACON, monster.getObjectId()))));
+                        player.announce(PacketCreator.giveBuff(1, attack.skill.id, Collections.singletonList(new BuffStatDelta(BuffStat.HOMING_BEACON, monster.getObjectId()))));
                     }
                     if (player.getBuffedValue(BuffStat.HAMSTRING) != null) {
                         ISkill hamstring = SkillFactory.getSkill(Bowmaster.HAMSTRING);
@@ -279,7 +279,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                             }
                         }
                     }
-                    if (attack.skill != 0) {
+                    if (attack.skill.id != 0) {
                         if (attackEffect.getFixDamage() != -1) {
                             if (totDamageToOneMonster != attackEffect.getFixDamage() && totDamageToOneMonster != 0) {
                             	player.getAutobanManager().autoban(AutobanType.FIX_DAMAGE, String.valueOf(totDamageToOneMonster) + " damage");                                
@@ -296,8 +296,9 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         if (comboLevel > 0) {
                             final long currentTime = System.currentTimeMillis();
                             short combo = 0;
-                            if (attack.skill == Aran.COMBO_SMASH || attack.skill == Aran.COMBO_PENRIL || attack.skill == Aran.COMBO_TEMPEST) {
-                                player.setCombo(combo);//WHY NOT USE COMBO LOL
+                            if (attack.skill.id == Aran.COMBO_SMASH || attack.skill.id == Aran.COMBO_PENRIL || attack.skill.id == Aran.COMBO_TEMPEST) {
+                            	 // WHY NOT USE COMBO LOL
+                            	player.setCombo(combo);
                             }
                             
                             // TODO: See this amount thing? Yeah? It's not used.
@@ -344,45 +345,45 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
         }
     }
 
-    protected AttackInfo parseDamage(LittleEndianAccessor lea, GameCharacter chr, boolean ranged) {
-        AttackInfo ret = new AttackInfo();
+    protected AttackInfo parseDamage(LittleEndianAccessor lea, GameCharacter player, boolean isRanged) {
+        AttackInfo info = new AttackInfo();
         lea.readByte();
-        ret.numAttackedAndDamage = lea.readByte();
-        ret.numAttacked = (ret.numAttackedAndDamage >>> 4) & 0xF;
-        ret.numDamage = ret.numAttackedAndDamage & 0xF;
-        ret.allDamage = new HashMap<Integer, List<Integer>>();
-        ret.skill = lea.readInt();
-        if (ret.skill > 0) {
-            ret.skilllevel = chr.getSkillLevel(ret.skill);
+        info.numAttackedAndDamage = lea.readByte();
+        info.numAttacked = (info.numAttackedAndDamage >>> 4) & 0xF;
+        info.numDamage = info.numAttackedAndDamage & 0xF;
+        info.allDamage = new HashMap<Integer, List<Integer>>();
+        info.skill.id = lea.readInt();
+        if (info.skill.id > 0) {
+            info.skill.level = player.getSkillLevel(info.skill.id);
         }
-        if (ret.skill == FPArchMage.BIG_BANG || ret.skill == ILArchMage.BIG_BANG || ret.skill == Bishop.BIG_BANG || ret.skill == Gunslinger.GRENADE || ret.skill == Brawler.CORKSCREW_BLOW || ret.skill == ThunderBreaker.CORKSCREW_BLOW || ret.skill == NightWalker.POISON_BOMB) {
-            ret.charge = lea.readInt();
+        if (info.skill.id == FPArchMage.BIG_BANG || info.skill.id == ILArchMage.BIG_BANG || info.skill.id == Bishop.BIG_BANG || info.skill.id == Gunslinger.GRENADE || info.skill.id == Brawler.CORKSCREW_BLOW || info.skill.id == ThunderBreaker.CORKSCREW_BLOW || info.skill.id == NightWalker.POISON_BOMB) {
+            info.charge = lea.readInt();
         } else {
-            ret.charge = 0;
+            info.charge = 0;
         }
-        if (ret.skill == Paladin.HEAVENS_HAMMER) {
-            ret.isHH = true;
+        if (info.skill.id == Paladin.HEAVENS_HAMMER) {
+            info.isHH = true;
         }
         lea.skip(8);
-        ret.display = lea.readByte();
-        ret.direction = lea.readByte();
-        ret.stance = lea.readByte();
-        if (ret.skill == ChiefBandit.MESO_EXPLOSION) {
-            if (ret.numAttackedAndDamage == 0) {
+        info.display = lea.readByte();
+        info.direction = lea.readByte();
+        info.stance = lea.readByte();
+        if (info.skill.id == ChiefBandit.MESO_EXPLOSION) {
+            if (info.numAttackedAndDamage == 0) {
                 lea.skip(10);
                 int bullets = lea.readByte();
                 for (int j = 0; j < bullets; j++) {
                     int mesoid = lea.readInt();
                     lea.skip(1);
-                    ret.allDamage.put(Integer.valueOf(mesoid), null);
+                    info.allDamage.put(Integer.valueOf(mesoid), null);
                 }
-                return ret;
+                return info;
             } else {
                 lea.skip(6);
             }
-            for (int i = 0; i < ret.numAttacked + 1; i++) {
+            for (int i = 0; i < info.numAttacked + 1; i++) {
                 int oid = lea.readInt();
-                if (i < ret.numAttacked) {
+                if (i < info.numAttacked) {
                     lea.skip(12);
                     int bullets = lea.readByte();
                     List<Integer> allDamageNumbers = new ArrayList<Integer>();
@@ -390,50 +391,50 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         int damage = lea.readInt();
                         allDamageNumbers.add(Integer.valueOf(damage));
                     }
-                    ret.allDamage.put(Integer.valueOf(oid), allDamageNumbers);
+                    info.allDamage.put(Integer.valueOf(oid), allDamageNumbers);
                     lea.skip(4);
                 } else {
                     int bullets = lea.readByte();
                     for (int j = 0; j < bullets; j++) {
                         int mesoid = lea.readInt();
                         lea.skip(1);
-                        ret.allDamage.put(Integer.valueOf(mesoid), null);
+                        info.allDamage.put(Integer.valueOf(mesoid), null);
                     }
                 }
             }
-            return ret;
+            return info;
         }
-        if (ranged) {
+        if (isRanged) {
             lea.readByte();
-            ret.speed = lea.readByte();
+            info.speed = lea.readByte();
             lea.readByte();
-            ret.rangedirection = lea.readByte();
+            info.rangedirection = lea.readByte();
             lea.skip(7);
-            if (ret.skill == Bowmaster.HURRICANE || ret.skill == Marksman.PIERCING_ARROW || ret.skill == Corsair.RAPID_FIRE || ret.skill == WindArcher.HURRICANE) {
+            if (info.skill.id == Bowmaster.HURRICANE || info.skill.id == Marksman.PIERCING_ARROW || info.skill.id == Corsair.RAPID_FIRE || info.skill.id == WindArcher.HURRICANE) {
                 lea.skip(4);
             }
         } else {
             lea.readByte();
-            ret.speed = lea.readByte();
+            info.speed = lea.readByte();
             lea.skip(4);
         }
-        for (int i = 0; i < ret.numAttacked; i++) {
+        for (int i = 0; i < info.numAttacked; i++) {
             int oid = lea.readInt();
             lea.skip(14);
             List<Integer> allDamageNumbers = new ArrayList<Integer>();
-            for (int j = 0; j < ret.numDamage; j++) {
+            for (int j = 0; j < info.numDamage; j++) {
                 int damage = lea.readInt();
-                if (ret.skill == Marksman.SNIPE) {
+                if (info.skill.id == Marksman.SNIPE) {
                     damage += 0x80000000; //Critical
                 }
                 allDamageNumbers.add(Integer.valueOf(damage));
             }
-            if (ret.skill != 5221004) {
+            if (info.skill.id != 5221004) {
                 lea.skip(4);
             }
-            ret.allDamage.put(Integer.valueOf(oid), allDamageNumbers);
+            info.allDamage.put(Integer.valueOf(oid), allDamageNumbers);
         }
-        return ret;
+        return info;
     }
 
     private static int rand(int l, int u) {
