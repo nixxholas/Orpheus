@@ -26,6 +26,7 @@ import client.GameCharacter.CancelCooldownAction;
 import client.GameClient;
 import client.SkillFactory;
 import net.GamePacket;
+import server.AttackInfo;
 import server.StatEffect;
 import server.TimerManager;
 import tools.PacketCreator;

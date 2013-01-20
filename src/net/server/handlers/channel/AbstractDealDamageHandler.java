@@ -70,6 +70,7 @@ import constants.skills.Page;
 import constants.skills.Spearman;
 import java.util.HashMap;
 
+import server.AttackInfo;
 import server.BuffStatDelta;
 import server.ItemInfoProvider;
 import server.StatEffect;

@@ -41,6 +41,7 @@ import constants.skills.ThunderBreaker;
 import constants.skills.WindArcher;
 import tools.Randomizer;
 import net.GamePacket;
+import server.AttackInfo;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.StatEffect;

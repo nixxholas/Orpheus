@@ -1,16 +1,15 @@
-package net.server.handlers.channel;
+package server;
 
 import java.util.List;
 import java.util.Map;
 
-import server.StatEffect;
 import server.partyquest.Pyramid;
 import client.GameCharacter;
 import client.ISkill;
 import client.SkillFactory;
 import client.autoban.AutobanType;
 
-class AttackInfo {
+public class AttackInfo {
 
     public int numAttacked, numDamage, numAttackedAndDamage, skill, skilllevel, stance, direction, rangedirection, charge, display;
     public Map<Integer, List<Integer>> allDamage;
