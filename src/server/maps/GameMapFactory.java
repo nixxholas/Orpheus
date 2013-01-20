@@ -210,8 +210,8 @@ public class GameMapFactory {
 				map.setClock(mapData.getChildByPath("clock") != null);
 				map.setEverlast(mapData.getChildByPath("everlast") != null);
 				map.setTown(mapData.getChildByPath("town") != null);
-				map.setHPDec(MapleDataTool.getIntConvert("decHP", mapData, 0));
-				map.setHPDecProtect(MapleDataTool.getIntConvert("protectItem", mapData, 0));
+				map.setHpDecrease(MapleDataTool.getIntConvert("decHP", mapData, 0));
+				map.setProtectionItemId(MapleDataTool.getIntConvert("protectItem", mapData, 0));
 				map.setForcedReturnMap(MapleDataTool.getInt(mapData.getChildByPath("info/forcedReturn"), 999999999));
 				map.setBoat(mapData.getChildByPath("shipObj") != null);
 				map.setTimeLimit(MapleDataTool.getIntConvert("timeLimit", mapData.getChildByPath("info"), -1));

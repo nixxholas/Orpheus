@@ -610,6 +610,52 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.effects.clear();
 	}
 
+	private final class ItemExpirationAction implements Runnable {
+		@Override
+		public void run() {
+			long expiration, timestamp = System.currentTimeMillis();
+			Set<ISkill> keys = getSkills().keySet();
+			for (Iterator<ISkill> i = keys.iterator(); i.hasNext();) {
+				ISkill key = i.next();
+				SkillEntry skill = getSkills().get(key);
+				if (skill.expiration != -1 && skill.expiration < timestamp) {
+					changeSkillLevel(key, (byte) -1, 0, -1);
+				}
+			}
+
+			List<IItem> expired = new ArrayList<IItem>();
+			for (Inventory inv : inventory) {
+				for (IItem item : inv.list()) {
+					expiration = item.getExpiration();
+					if (expiration != -1 && (expiration < timestamp) && ((item.getFlag() & ItemConstants.LOCK) == ItemConstants.LOCK)) {
+						byte aids = item.getFlag();
+						aids &= ~(ItemConstants.LOCK);
+						// Probably need a check, else people can make expiring items into permanent items...
+						item.setFlag(aids); 
+						item.setExpiration(-1);
+						forceUpdateItem(inv.getType(), item); // TEST :3
+					} else if (expiration != -1 && expiration < timestamp) {
+						client.announce(PacketCreator.itemExpired(item.getItemId()));
+						expired.add(item);
+					}
+				}
+				for (IItem item : expired) {
+					InventoryManipulator.removeFromSlot(client, inv.getType(), item.getSlot(), item.getQuantity(), true);
+				}
+				expired.clear();
+			}
+			// announce(PacketCreator.enableActions());
+			// saveToDB(true);
+		}
+	}
+
+	private final class HpDecreaseAction implements Runnable {
+		@Override
+		public void run() {
+			doHurtHp();
+		}
+	}
+
 	private final class DojoForceWarpAction implements Runnable {
 		private final boolean rightmap;
 
@@ -957,7 +1003,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 						client.announce(PacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
 						updatePartyMemberHP();
 					}
-					if (getMap().getHPDec() > 0) {
+					if (getMap().getHpDecrease() > 0) {
 						hpDecreaseTask = TimerManager.getInstance().schedule(new Runnable() {
 
 							@Override
@@ -1274,21 +1320,17 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void doHurtHp() {
-		if (this.getInventory(InventoryType.EQUIPPED).findById(getMap().getHPDecProtect()) != null) {
+		if (this.getInventory(InventoryType.EQUIPPED).findById(getMap().getProtectionItemId()) != null) {
 			return;
 		}
-		addHP(-getMap().getHPDec());
-		hpDecreaseTask = TimerManager.getInstance().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				doHurtHp();
-			}
-		}, 10000);
+		addHP(-getMap().getHpDecrease());
+		
+		// Schedule next call.
+		this.hpDecreaseTask = TimerManager.getInstance().schedule(new HpDecreaseAction(), 10000);
 	}
 
 	public void dropMessage(String message) {
-		dropMessage(0, message);
+		this.dropMessage(0, message);
 	}
 
 	public void dropMessage(int type, String message) {
@@ -1321,7 +1363,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void enterHardcore() {
-		hardcore = true;
+		this.hardcore = true;
 		saveToDB(true);
 	}
 
@@ -1344,45 +1386,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void expirationTask() {
 		if (expirationSchedule == null) {
-			expirationSchedule = TimerManager.getInstance().register(new Runnable() {
-
-				@Override
-				public void run() {
-					long expiration, currenttime = System.currentTimeMillis();
-					Set<ISkill> keys = getSkills().keySet();
-					for (Iterator<ISkill> i = keys.iterator(); i.hasNext();) {
-						ISkill key = i.next();
-						SkillEntry skill = getSkills().get(key);
-						if (skill.expiration != -1 && skill.expiration < currenttime) {
-							changeSkillLevel(key, (byte) -1, 0, -1);
-						}
-					}
-
-					List<IItem> toberemove = new ArrayList<IItem>();
-					for (Inventory inv : inventory) {
-						for (IItem item : inv.list()) {
-							expiration = item.getExpiration();
-							if (expiration != -1 && (expiration < currenttime) && ((item.getFlag() & ItemConstants.LOCK) == ItemConstants.LOCK)) {
-								byte aids = item.getFlag();
-								aids &= ~(ItemConstants.LOCK);
-								// Probably need a check, else people can make expiring items into permanent items...
-								item.setFlag(aids); 
-								item.setExpiration(-1);
-								forceUpdateItem(inv.getType(), item); // TEST :3
-							} else if (expiration != -1 && expiration < currenttime) {
-								client.announce(PacketCreator.itemExpired(item.getItemId()));
-								toberemove.add(item);
-							}
-						}
-						for (IItem item : toberemove) {
-							InventoryManipulator.removeFromSlot(client, inv.getType(), item.getSlot(), item.getQuantity(), true);
-						}
-						toberemove.clear();
-					}
-					// announce(PacketCreator.enableActions());
-					// saveToDB(true);
-				}
-			}, 60000);
+			expirationSchedule = TimerManager.getInstance().register(new ItemExpirationAction(), 60000);
 		}
 	}
 
@@ -4677,10 +4681,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void unequipPendantOfSpirit() {
-		if (pendantSchedule != null) {
-			pendantSchedule.cancel(false);
-			pendantSchedule = null;
-		}
+		TimerManager.cancelSafely(this.pendantSchedule, false);
+		pendantSchedule = null;
 		pendantExp = 0;
 	}
 
@@ -4710,9 +4712,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void setPartyQuest(PartyQuest pq) {
 		this.partyQuest = pq;
 	}
+	
+	private void cancelTimers() {
+		for (ScheduledFuture<?> sf : this.timers) {
+			TimerManager.cancelSafely(sf, false);
+		}
+		this.timers.clear();		
+	}
 
 	public final void empty() {
-		// lol serious shit here
 		TimerManager.cancelSafely(this.dragonBloodSchedule, false);
 		TimerManager.cancelSafely(this.hpDecreaseTask, false);
 		TimerManager.cancelSafely(this.beholderHealingSchedule, false);
@@ -4720,24 +4728,20 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		TimerManager.cancelSafely(this.berserkSchedule, false);
 		TimerManager.cancelSafely(this.recoverySchedule, false);
 
-		cancelExpirationTask();
-		for (ScheduledFuture<?> sf : timers) {
-			sf.cancel(false);
-		}
-		timers.clear();
-		timers = null;
+		this.cancelExpirationTask();
+		this.cancelTimers();
 		
-		mount = null;
-		diseases = null;
-		partyQuest = null;
-		events = null;
-		skills = null;
-		mpc = null;
-		mgc = null;
-		events = null;
-		party = null;
-		family = null;
-		client = null;
+		this.timers = null;
+		this.mount = null;
+		this.diseases = null;
+		this.partyQuest = null;
+		this.events = null;
+		this.skills = null;
+		this.mpc = null;
+		this.mgc = null;
+		this.events = null;
+		this.party = null;
+		this.family = null;
+		this.client = null;
 	}
-
 }

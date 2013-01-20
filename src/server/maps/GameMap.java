@@ -103,7 +103,7 @@ public class GameMap {
 	private boolean everlast = false;
 	private int forcedReturnMap = 999999999;
 	private long timeLimit;
-	private int decHP = 0;
+	private int hpDecrease = 0;
 	private int protectItem = 0;
 	private boolean town;
 	private MapleOxQuiz ox;
@@ -1858,20 +1858,20 @@ public class GameMap {
 		boolean canSpawn(GameCharacter chr);
 	}
 
-	public int getHPDec() {
-		return decHP;
+	public int getHpDecrease() {
+		return hpDecrease;
 	}
 
-	public void setHPDec(int delta) {
-		decHP = delta;
+	public void setHpDecrease(int delta) {
+		hpDecrease = delta;
 	}
 
-	public int getHPDecProtect() {
+	public int getProtectionItemId() {
 		return protectItem;
 	}
 
-	public void setHPDecProtect(int delta) {
-		this.protectItem = delta;
+	public void setProtectionItemId(int itemId) {
+		this.protectItem = itemId;
 	}
 
 	private int hasBoat() {
