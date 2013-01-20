@@ -25,8 +25,8 @@ import net.AbstractPacketHandler;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.MakerItemFactory;
-import server.MakerItemFactory.MakerItemCreateEntry;
-import tools.Pair;
+import server.MakerRecipe;
+import server.MakerRecipeIngredient;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -40,24 +40,24 @@ public final class MakerSkillHandler extends AbstractPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		reader.readInt();
 		int toCreate = reader.readInt();
-		MakerItemCreateEntry recipe = MakerItemFactory.getItemCreateEntry(toCreate);
+		MakerRecipe recipe = MakerItemFactory.getRecipe(toCreate);
 		if (canCreate(c, recipe) && !c.getPlayer().getInventory(ii.getInventoryType(toCreate)).isFull()) {
-			for (Pair<Integer, Integer> p : recipe.getReqItems()) {
-				int toRemove = p.getLeft();
-				InventoryManipulator.removeById(c, ii.getInventoryType(toRemove), toRemove, p.getRight(), false, false);
+			for (MakerRecipeIngredient p : recipe.getIngredients()) {
+				int toRemove = p.itemId;
+				InventoryManipulator.removeById(c, ii.getInventoryType(toRemove), toRemove, p.quantity, false, false);
 			}
 			InventoryManipulator.addById(c, toCreate, (short) recipe.getRewardAmount());
 		}
 	}
 
-	private boolean canCreate(GameClient c, MakerItemCreateEntry recipe) {
+	private boolean canCreate(GameClient c, MakerRecipe recipe) {
 		return hasItems(c, recipe) && c.getPlayer().getMeso() >= recipe.getCost() && c.getPlayer().getLevel() >= recipe.getReqLevel() && c.getPlayer().getSkillLevel(c.getPlayer().getJob().getId() / 1000 * 1000 + 1007) >= recipe.getReqSkillLevel();
 	}
 
-	private boolean hasItems(GameClient c, MakerItemCreateEntry recipe) {
-		for (Pair<Integer, Integer> p : recipe.getReqItems()) {
-			int itemId = p.getLeft();
-			if (c.getPlayer().getInventory(ii.getInventoryType(itemId)).countById(itemId) < p.getRight()) {
+	private boolean hasItems(GameClient c, MakerRecipe recipe) {
+		for (MakerRecipeIngredient p : recipe.getIngredients()) {
+			int itemId = p.itemId;
+			if (c.getPlayer().getInventory(ii.getInventoryType(itemId)).countById(itemId) < p.quantity) {
 				return false;
 			}
 		}
