@@ -24,14 +24,13 @@ import client.IItem;
 import client.GameClient;
 import client.InventoryType;
 import constants.ItemConstants;
-import java.util.List;
 import net.AbstractPacketHandler;
 import net.server.Server;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.ItemInfoProvider.RewardItem;
+import server.RewardInfo;
+import server.RewardItem;
 import tools.PacketCreator;
-import tools.Pair;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -44,31 +43,33 @@ public final class ItemRewardHandler extends AbstractPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		byte slot = (byte) reader.readShort();
 		int itemId = reader.readInt(); // will load from xml I don't care.
-		if (c.getPlayer().getInventory(InventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(InventoryType.USE).countById(itemId) < 1)
+		if (c.getPlayer().getInventory(InventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(InventoryType.USE).countById(itemId) < 1) {
 			return;
+		}
+		
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
-		Pair<Integer, List<RewardItem>> rewards = ii.getItemReward(itemId);
-		for (RewardItem reward : rewards.getRight()) {
-			if (!InventoryManipulator.checkSpace(c, reward.itemid, reward.quantity, "")) {
+		RewardInfo rewards = ii.getItemReward(itemId);
+		for (RewardItem reward : rewards.getRewardItems()) {
+			if (!InventoryManipulator.checkSpace(c, reward.itemId, reward.quantity, "")) {
 				c.announce(PacketCreator.showInventoryFull());
 				break;
 			}
-			if (Randomizer.nextInt(rewards.getLeft()) < reward.prob) {
+			if (Randomizer.nextInt(rewards.total) < reward.probability) {
 				// Is it even possible to get an item with prob 1?
-				if (ItemConstants.getInventoryType(reward.itemid) == InventoryType.EQUIP) {
-					final IItem item = ii.getEquipById(reward.itemid);
+				if (ItemConstants.getInventoryType(reward.itemId) == InventoryType.EQUIP) {
+					final IItem item = ii.getEquipById(reward.itemId);
 					if (reward.period != -1) {
 						item.setExpiration(System.currentTimeMillis() + (reward.period * 60 * 60 * 10));
 					}
 					InventoryManipulator.addFromDrop(c, item, false);
 				} else {
-					InventoryManipulator.addById(c, reward.itemid, reward.quantity);
+					InventoryManipulator.addById(c, reward.itemId, reward.quantity);
 				}
 				InventoryManipulator.removeById(c, InventoryType.USE, itemId, 1, false, false);
-				if (reward.worldmsg != null) {
-					String msg = reward.worldmsg;
+				if (reward.notice != null) {
+					String msg = reward.notice;
 					msg.replaceAll("/name", c.getPlayer().getName());
-					msg.replaceAll("/item", ii.getName(reward.itemid));
+					msg.replaceAll("/item", ii.getName(reward.itemId));
 					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(6, msg));
 				}
 				break;

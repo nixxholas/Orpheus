@@ -51,7 +51,6 @@ import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
 import tools.DatabaseConnection;
-import tools.Pair;
 
 /**
  * 
@@ -90,7 +89,7 @@ public class ItemInfoProvider {
 	protected Map<Integer, Integer> triggerItemCache = new HashMap<Integer, Integer>();
 	protected Map<Integer, Integer> expCache = new HashMap<Integer, Integer>();
 	protected Map<Integer, Integer> levelCache = new HashMap<Integer, Integer>();
-	protected Map<Integer, Pair<Integer, List<RewardItem>>> rewardCache = new HashMap<Integer, Pair<Integer, List<RewardItem>>>();
+	protected Map<Integer, RewardInfo> rewardCache = new HashMap<Integer, RewardInfo>();
 	protected List<ItemNameEntry> itemNameCache = new ArrayList<ItemNameEntry>();
 	protected Map<Integer, Boolean> consumeOnPickupCache = new HashMap<Integer, Boolean>();
 	protected Map<Integer, Boolean> isQuestItemCache = new HashMap<Integer, Boolean>();
@@ -910,35 +909,23 @@ public class ItemInfoProvider {
 		}
 	}
 
-	public Pair<Integer, List<RewardItem>> getItemReward(int itemId) {// Thanks
-																		// Celino,
-																		// used
-																		// some
-																		// stuffs
-																		// :)
+	public RewardInfo getItemReward(int itemId) {
+		// Thanks Celino, used some stuffs :)
 		if (rewardCache.containsKey(itemId)) {
 			return rewardCache.get(itemId);
 		}
-		int totalprob = 0;
+
 		List<RewardItem> rewards = new ArrayList<RewardItem>();
 		for (MapleData child : getItemData(itemId).getChildByPath("reward").getChildren()) {
-			RewardItem reward = new RewardItem();
-			reward.itemid = MapleDataTool.getInt("item", child, 0);
-			reward.prob = (byte) MapleDataTool.getInt("prob", child, 0);
-			reward.quantity = (short) MapleDataTool.getInt("count", child, 0);
-			reward.effect = MapleDataTool.getString("Effect", child, "");
-			reward.worldmsg = MapleDataTool.getString("worldMsg", child, null);
-			reward.period = MapleDataTool.getInt("period", child, -1);
-
-			totalprob += reward.prob;
+			RewardItem reward = new RewardItem(child);
 
 			rewards.add(reward);
 		}
-		Pair<Integer, List<RewardItem>> hmm = new Pair<Integer, List<RewardItem>>(totalprob, rewards);
-		rewardCache.put(itemId, hmm);
-		return hmm;
+		RewardInfo info = new RewardInfo(rewards);
+		rewardCache.put(itemId, info);
+		return info;
 	}
-
+	
 	public boolean isConsumeOnPickup(int itemId) {
 		if (consumeOnPickupCache.containsKey(itemId)) {
 			return consumeOnPickupCache.get(itemId);
@@ -1173,11 +1160,5 @@ public class ItemInfoProvider {
 		public boolean runOnPickup() {
 			return runOnPickup;
 		}
-	}
-
-	public static final class RewardItem {
-		public int itemid, period;
-		public short prob, quantity;
-		public String effect, worldmsg;
 	}
 }
