@@ -33,9 +33,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DenyGuildRequestHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readByte();
-		GameCharacter cfrom = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readByte();
+		GameCharacter cfrom = c.getChannelServer().getPlayerStorage().getCharacterByName(reader.readMapleAsciiString());
 		if (cfrom != null) {
 			cfrom.getClient().announce(PacketCreator.denyGuildInvitation(c.getPlayer().getName()));
 		}

@@ -32,12 +32,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class NPCTalkHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		int oid = slea.readInt();
+		int oid = reader.readInt();
 		GameMapObject obj = c.getPlayer().getMap().getMapObject(oid);
 		if (obj instanceof Npc) {
 			Npc npc = (Npc) obj;

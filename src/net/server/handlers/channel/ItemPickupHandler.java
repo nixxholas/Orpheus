@@ -42,11 +42,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemPickupHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(final SeekableLittleEndianAccessor slea, final GameClient c) {
-		slea.readInt(); // Timestamp
-		slea.readByte();
-		Point cpos = slea.readPos();
-		int oid = slea.readInt();
+	public final void handlePacket(final SeekableLittleEndianAccessor reader, final GameClient c) {
+		reader.readInt(); // Timestamp
+		reader.readByte();
+		Point cpos = reader.readPos();
+		int oid = reader.readInt();
 		GameCharacter chr = c.getPlayer();
 		GameMapObject ob = chr.getMap().getMapObject(oid);
 		if (chr.getInventory(ItemInfoProvider.getInstance().getInventoryType(ob.getObjectId())).getNextFreeSlot() > -1) {

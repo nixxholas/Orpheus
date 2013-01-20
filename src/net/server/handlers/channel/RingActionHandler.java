@@ -37,12 +37,12 @@ import tools.Output;
 public final class RingActionHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte mode = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte mode = reader.readByte();
 		GameCharacter player = c.getPlayer();
 		switch (mode) {
 			case 0: // Send
-				String partnerName = slea.readMapleAsciiString();
+				String partnerName = reader.readMapleAsciiString();
 				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(partnerName);
 				if (partnerName.equalsIgnoreCase(player.getName())) {
 					c.getPlayer().dropMessage(1, "You cannot put your own name in it.");
@@ -59,14 +59,14 @@ public final class RingActionHandler extends AbstractPacketHandler {
 				break;
 			case 1: // Cancel send
 				c.getPlayer().dropMessage(1, "You've cancelled the request.");
-				boolean accepted = slea.readByte() > 0;
-				String proposerName = slea.readMapleAsciiString();
+				boolean accepted = reader.readByte() > 0;
+				String proposerName = reader.readMapleAsciiString();
 				if (accepted) {
 					c.announce(PacketCreator.sendEngagementRequest(proposerName));
 				}
 				break;
 			case 2:
-				slea.readByte();
+				reader.readByte();
 			case 3: // Drop Ring
 				/*
 				 * if (player.getPartner() != null) { try { Connection con =
@@ -85,13 +85,13 @@ public final class RingActionHandler extends AbstractPacketHandler {
 				 */
 				break;
 			case 9: // groom's wishlist
-				int amount = slea.readShort();
+				int amount = reader.readShort();
 				if (amount > 10) {
 					amount = 10;
 				}
 				String[] items = new String[10];
 				for (int i = 0; i < amount; i++) {
-					items[i] = slea.readMapleAsciiString();
+					items[i] = reader.readMapleAsciiString();
 				}
 				c.announce(PacketCreator.sendGroomWishlist()); // WTF<
 				break;

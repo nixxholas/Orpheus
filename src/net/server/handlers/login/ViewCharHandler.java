@@ -35,7 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ViewCharHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		try {
 			PreparedStatement ps;
 			if (ServerConstants.ENABLE_HARDCORE_MODE) {

@@ -38,11 +38,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MonsterCarnivalHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		MonsterCarnival carnival = chr.getCarnival();
-		int tab = slea.readByte();
-		int number = slea.readShort();
+		int tab = reader.readByte();
+		int number = reader.readShort();
 		if (carnival != null) {
 			if (chr.getCarnivalParty() != carnival.getPartyRed() || chr.getCarnivalParty() != carnival.getPartyBlue()) {
 				chr.getMap().broadcastMessage(PacketCreator.leaveCPQ(chr));

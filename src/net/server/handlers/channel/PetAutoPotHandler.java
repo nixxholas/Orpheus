@@ -33,16 +33,16 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetAutoPotHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		slea.readByte();
-		slea.readLong();
-		slea.readInt();
-		byte slot = (byte) slea.readShort();
-		int itemId = slea.readInt();
+		reader.readByte();
+		reader.readLong();
+		reader.readInt();
+		byte slot = (byte) reader.readShort();
+		int itemId = reader.readInt();
 		IItem toUse = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() > 0) {
 			if (toUse.getItemId() != itemId) {

@@ -37,14 +37,14 @@ import tools.Randomizer;
 public final class SkillBookHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (!c.getPlayer().isAlive()) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		slea.readInt();
-		byte slot = (byte) slea.readShort();
-		int itemId = slea.readInt();
+		reader.readInt();
+		byte slot = (byte) reader.readShort();
+		int itemId = reader.readInt();
 		GameCharacter player = c.getPlayer();
 		IItem toUse = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		if (toUse != null && toUse.getQuantity() == 1) {

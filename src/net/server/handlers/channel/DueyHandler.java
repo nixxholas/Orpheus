@@ -93,15 +93,15 @@ public final class DueyHandler extends AbstractPacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte operation = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte operation = reader.readByte();
 		if (operation == Actions.TOSERVER_SEND_ITEM.getCode()) {
 			final int fee = 5000;
-			byte inventId = slea.readByte();
-			short itemPos = slea.readShort();
-			short amount = slea.readShort();
-			int mesos = slea.readInt();
-			String recipient = slea.readMapleAsciiString();
+			byte inventId = reader.readByte();
+			short itemPos = reader.readShort();
+			short amount = reader.readShort();
+			int mesos = reader.readInt();
+			String recipient = reader.readMapleAsciiString();
 			if (mesos < 0 || (long) mesos > Integer.MAX_VALUE || ((long) mesos + fee + getFee(mesos)) > Integer.MAX_VALUE) {
 				return;
 			}
@@ -154,18 +154,17 @@ public final class DueyHandler extends AbstractPacketHandler {
 				c.getPlayer().gainMeso(-fee, false);
 			}
 		} else if (operation == Actions.TOSERVER_REMOVE_PACKAGE.getCode()) {
-			int packageid = slea.readInt();
+			int packageid = reader.readInt();
 			removeItemFromDB(packageid);
 			c.announce(PacketCreator.removeItemFromDuey(true, packageid));
 		} else if (operation == Actions.TOSERVER_CLAIM_PACKAGE.getCode()) {
-			int packageid = slea.readInt();
+			int packageid = reader.readInt();
 			List<DueyPackages> packages = new LinkedList<DueyPackages>();
 			DueyPackages dp = null;
 			Connection con = DatabaseConnection.getConnection();
 			try {
-				PreparedStatement ps = con.prepareStatement("SELECT * FROM dueypackages LEFT JOIN dueyitems USING (PackageId) WHERE PackageId = ?"); // PLEASE
-																																						// WORK
-																																						// D:
+				// PLEASE WORK D:
+				PreparedStatement ps = con.prepareStatement("SELECT * FROM dueypackages LEFT JOIN dueyitems USING (PackageId) WHERE PackageId = ?"); 
 				ps.setInt(1, packageid);
 				ResultSet rs = ps.executeQuery();
 				DueyPackages dueypack = null;
@@ -265,14 +264,14 @@ public final class DueyHandler extends AbstractPacketHandler {
 		}
 	}
 
-	public static List<DueyPackages> loadItems(GameCharacter chr) {
+	public static List<DueyPackages> loadItems(GameCharacter player) {
 		List<DueyPackages> packages = new LinkedList<DueyPackages>();
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT * FROM dueypackages LEFT JOIN dueyitems USING (PackageId) WHERE RecieverId = ?"); // PLEASE
 																																					// WORK
 																																					// D:
-			ps.setInt(1, chr.getId());
+			ps.setInt(1, player.getId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				DueyPackages dueypack = getItemByPackageId(rs);
@@ -317,15 +316,15 @@ public final class DueyHandler extends AbstractPacketHandler {
 		return fee;
 	}
 
-	private void removeItemFromDB(int packageid) {
+	private void removeItemFromDB(int packageId) {
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("DELETE FROM dueypackages WHERE PackageId = ?");
-			ps.setInt(1, packageid);
+			ps.setInt(1, packageId);
 			ps.executeUpdate();
 			ps.close();
 			ps = con.prepareStatement("DELETE FROM dueyitems WHERE PackageId = ?");
-			ps.setInt(1, packageid);
+			ps.setInt(1, packageId);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {

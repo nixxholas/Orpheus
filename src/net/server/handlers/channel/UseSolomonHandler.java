@@ -36,10 +36,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseSolomonHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readInt();
-		byte slot = (byte) slea.readShort();
-		int itemId = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readInt();
+		byte slot = (byte) reader.readShort();
+		int itemId = reader.readInt();
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		IItem slotItem = c.getPlayer().getInventory(InventoryType.USE).getItem(slot);
 		int gachaexp = ii.getExpById(itemId);

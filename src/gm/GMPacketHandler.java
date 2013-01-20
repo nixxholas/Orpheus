@@ -29,5 +29,5 @@ import tools.data.input.SeekableLittleEndianAccessor;
  */
 public interface GMPacketHandler {
 
-	void handlePacket(SeekableLittleEndianAccessor slea, IoSession session);
+	void handlePacket(SeekableLittleEndianAccessor reader, IoSession session);
 }

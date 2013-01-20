@@ -32,11 +32,11 @@ import tools.PacketCreator;
 public final class NoteActionHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int action = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int action = reader.readByte();
 		if (action == 0 && c.getPlayer().getCashShop().getAvailableNotes() > 0) {
-			String charname = slea.readMapleAsciiString();
-			String message = slea.readMapleAsciiString();
+			String charname = reader.readMapleAsciiString();
+			String message = reader.readMapleAsciiString();
 			try {
 				if (c.getPlayer().getCashShop().isOpened())
 					c.announce(PacketCreator.showCashInventory(c));
@@ -47,13 +47,13 @@ public final class NoteActionHandler extends AbstractPacketHandler {
 				e.printStackTrace();
 			}
 		} else if (action == 1) {
-			int num = slea.readByte();
-			slea.readByte();
-			slea.readByte();
+			int num = reader.readByte();
+			reader.readByte();
+			reader.readByte();
 			int fame = 0;
 			for (int i = 0; i < num; i++) {
-				int id = slea.readInt();
-				slea.readByte(); // Fame, but we read it from the database :)
+				int id = reader.readInt();
+				reader.readByte(); // Fame, but we read it from the database :)
 				PreparedStatement ps;
 				try {
 					ps = DatabaseConnection.getConnection().prepareStatement("SELECT `fame` FROM notes WHERE id=? AND deleted=0");

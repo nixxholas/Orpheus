@@ -29,16 +29,16 @@ import tools.data.output.PacketWriter;
 public final class NPCAnimation extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		PacketWriter w = new PacketWriter();
-		int length = (int) slea.available();
+		int length = (int) reader.available();
 		if (length == 6) { // NPC Talk
 			w.writeAsShort(SendOpcode.NPC_ACTION.getValue());
-			w.writeInt(slea.readInt());
-			w.writeAsShort(slea.readShort());
+			w.writeInt(reader.readInt());
+			w.writeAsShort(reader.readShort());
 			c.announce(w.getPacket());
 		} else if (length > 6) { // NPC Move
-			byte[] bytes = slea.read(length - 9);
+			byte[] bytes = reader.read(length - 9);
 			w.writeAsShort(SendOpcode.NPC_ACTION.getValue());
 			w.write(bytes);
 			c.announce(w.getPacket());

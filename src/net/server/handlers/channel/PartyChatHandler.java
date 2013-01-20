@@ -35,15 +35,15 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PartyChatHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter player = c.getPlayer();
-		int type = slea.readByte(); // 0 for buddys, 1 for partys
-		int numRecipients = slea.readByte();
+		int type = reader.readByte(); // 0 for buddys, 1 for partys
+		int numRecipients = reader.readByte();
 		int recipients[] = new int[numRecipients];
 		for (int i = 0; i < numRecipients; i++) {
-			recipients[i] = slea.readInt();
+			recipients[i] = reader.readInt();
 		}
-		String chattext = slea.readMapleAsciiString();
+		String chattext = reader.readMapleAsciiString();
 		World world = c.getWorldServer();
 		if (chattext.length() > ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
 			player.dropMessage("Your message is too long.");

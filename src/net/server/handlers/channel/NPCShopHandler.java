@@ -32,23 +32,26 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class NPCShopHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte bmode = slea.readByte();
-		if (bmode == 0) { // mode 0 = buy :)
-			short slot = slea.readShort();// slot
-			int itemId = slea.readInt();
-			short quantity = slea.readShort();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte bmode = reader.readByte();
+		if (bmode == 0) { 
+			// mode 0 = buy :)
+			short slot = reader.readShort();
+			int itemId = reader.readInt();
+			short quantity = reader.readShort();
 			c.getPlayer().getShop().buy(c, slot, itemId, quantity);
-		} else if (bmode == 1) { // sell ;)
-			short slot = slea.readShort();
-			int itemId = slea.readInt();
-			short quantity = slea.readShort();
+		} else if (bmode == 1) { 
+			// sell ;)
+			short slot = reader.readShort();
+			int itemId = reader.readInt();
+			short quantity = reader.readShort();
 			c.getPlayer().getShop().sell(c, ItemInfoProvider.getInstance().getInventoryType(itemId), slot, quantity);
-		} else if (bmode == 2) { // recharge ;)
-			byte slot = (byte) slea.readShort();
+		} else if (bmode == 2) { 
+			// recharge ;)
+			byte slot = (byte) reader.readShort();
 			c.getPlayer().getShop().recharge(c, slot);
-		} else if (bmode == 3) // leaving :(
-		{
+		} else if (bmode == 3) {
+			// leaving :(
 			c.getPlayer().setShop(null);
 		}
 	}

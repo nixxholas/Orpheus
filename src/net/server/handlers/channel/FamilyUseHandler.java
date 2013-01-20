@@ -35,12 +35,12 @@ import tools.data.output.PacketWriter;
 public final class FamilyUseHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		int[] repCost = {3, 5, 7, 8, 10, 12, 15, 20, 25, 40, 50};
-		final int type = slea.readInt();
-		GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
+		final int type = reader.readInt();
+		GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(reader.readMapleAsciiString());
 		if (type == 0 || type == 1) {
-			victim = c.getChannelServer().getPlayerStorage().getCharacterByName(slea.readMapleAsciiString());
+			victim = c.getChannelServer().getPlayerStorage().getCharacterByName(reader.readMapleAsciiString());
 			if (victim != null) {
 				if (type == 0) {
 					c.getPlayer().changeMap(victim.getMap(), victim.getMap().getPortal(0));

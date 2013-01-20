@@ -37,7 +37,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class HiredMerchantRequest extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		if (chr.getMap().getMapObjectsInRange(chr.getPosition(), 23000, Arrays.asList(GameMapObjectType.HIRED_MERCHANT)).isEmpty() && chr.getMapId() > 910000000 && chr.getMapId() < 910000023) {
 			if (!chr.hasMerchant()) {

@@ -118,14 +118,14 @@ public class GameServerHandler extends IoHandlerAdapter {
 	@Override
 	public void messageReceived(IoSession session, Object message) {
 		byte[] content = (byte[]) message;
-		SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
-		short packetId = slea.readShort();
+		SeekableLittleEndianAccessor reader = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
+		short packetId = reader.readShort();
 		GameClient client = (GameClient) session.getAttribute(GameClient.CLIENT_KEY);
 		PacketHandler packetHandler = processor.getHandler(packetId);
 
 		if (packetHandler != null && packetHandler.validateState(client)) {
 			try {
-				packetHandler.handlePacket(slea, client);
+				packetHandler.handlePacket(reader, client);
 			} catch (Throwable t) {
 			}
 		}

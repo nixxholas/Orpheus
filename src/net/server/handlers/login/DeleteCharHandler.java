@@ -29,9 +29,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DeleteCharHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		String pic = slea.readMapleAsciiString();
-		int cid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		String pic = reader.readMapleAsciiString();
+		int cid = reader.readInt();
 		if (c.checkPic(pic) || !ServerConstants.ENABLE_PIC) {
 			c.announce(PacketCreator.deleteCharResponse(cid, 0));
 			c.deleteCharacter(cid);

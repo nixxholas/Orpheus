@@ -34,22 +34,22 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class QuestActionHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte action = slea.readByte();
-		short questid = slea.readShort();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte action = reader.readByte();
+		short questid = reader.readShort();
 		GameCharacter player = c.getPlayer();
 		Quest quest = Quest.getInstance(questid);
 		if (action == 1) { // Start Quest
-			int npc = slea.readInt();
-			if (slea.available() >= 4) {
-				slea.readInt();
+			int npc = reader.readInt();
+			if (reader.available() >= 4) {
+				reader.readInt();
 			}
 			quest.start(player, npc);
 		} else if (action == 2) { // Complete Quest
-			int npc = slea.readInt();
-			slea.readInt();
-			if (slea.available() >= 2) {
-				int selection = slea.readShort();
+			int npc = reader.readInt();
+			reader.readInt();
+			if (reader.available() >= 2) {
+				int selection = reader.readShort();
 				quest.complete(player, npc, selection);
 			} else {
 				quest.complete(player, npc);
@@ -57,14 +57,14 @@ public final class QuestActionHandler extends AbstractPacketHandler {
 		} else if (action == 3) {// forfeit quest
 			quest.forfeit(player);
 		} else if (action == 4) { // scripted start quest
-			// System.out.println(slea.toString());
-			int npc = slea.readInt();
-			slea.readInt();
+			// System.out.println(reader.toString());
+			int npc = reader.readInt();
+			reader.readInt();
 			QuestScriptManager.getInstance().start(c, questid, npc);
 		} else if (action == 5) { // scripted end quests
-			// System.out.println(slea.toString());
-			int npc = slea.readInt();
-			slea.readInt();
+			// System.out.println(reader.toString());
+			int npc = reader.readInt();
+			reader.readInt();
 			QuestScriptManager.getInstance().end(c, questid, npc);
 		}
 	}

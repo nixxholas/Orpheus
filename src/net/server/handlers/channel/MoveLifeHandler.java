@@ -37,22 +37,22 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MoveLifeHandler extends AbstractMovementPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int objectid = slea.readInt();
-		short moveid = slea.readShort();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int objectid = reader.readInt();
+		short moveid = reader.readShort();
 		GameMapObject mmo = c.getPlayer().getMap().getMapObject(objectid);
 		if (mmo == null || mmo.getType() != GameMapObjectType.MONSTER) {
 			return;
 		}
 		Monster monster = (Monster) mmo;
 		List<LifeMovementFragment> res = null;
-		byte skillByte = slea.readByte();
-		byte skill = slea.readByte();
-		int skill_1 = slea.readByte() & 0xFF;
-		byte skill_2 = slea.readByte();
-		byte skill_3 = slea.readByte();
-		byte skill_4 = slea.readByte();
-		slea.read(8);
+		byte skillByte = reader.readByte();
+		byte skill = reader.readByte();
+		int skill_1 = reader.readByte() & 0xFF;
+		byte skill_2 = reader.readByte();
+		byte skill_3 = reader.readByte();
+		byte skill_4 = reader.readByte();
+		reader.read(8);
 		MobSkill toUse = null;
 		if (skillByte == 1 && monster.getNoSkills() > 0) {
 			int random = Randomizer.nextInt(monster.getNoSkills());
@@ -69,12 +69,12 @@ public final class MoveLifeHandler extends AbstractMovementPacketHandler {
 				skillData.applyEffect(c.getPlayer(), monster, true);
 			}
 		}
-		slea.readByte();
-		slea.readInt(); // whatever
-		short start_x = slea.readShort(); // hmm.. startpos?
-		short start_y = slea.readShort(); // hmm...
+		reader.readByte();
+		reader.readInt(); // whatever
+		short start_x = reader.readShort(); // hmm.. startpos?
+		short start_y = reader.readShort(); // hmm...
 		Point startPos = new Point(start_x, start_y);
-		res = parseMovement(slea);
+		res = parseMovement(reader);
 		if (monster.getController() != c.getPlayer()) {
 			if (monster.isAttackedBy(c.getPlayer())) {// aggro and controller
 														// change

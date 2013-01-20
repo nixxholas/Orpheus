@@ -44,8 +44,8 @@ import client.command.external.CommandLoader;
 public final class GeneralChatHandler extends net.AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		String s = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		String s = reader.readMapleAsciiString();
 		GameCharacter chr = c.getPlayer();
 		char heading = s.charAt(0);
 		/*
@@ -101,7 +101,7 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 						commandExecuted = AdminCommands.execute(c, sp, heading);
 						if (commandExecuted) break;
 					case 4:
-						DeveloperCommands.setSLEA(slea);
+						DeveloperCommands.setReader(reader);
 						commandExecuted = DeveloperCommands.execute(c, sp, heading);
 						if (commandExecuted) break;
 					case 3:
@@ -131,12 +131,12 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 			}
 			if (!chr.isHidden()) {
 				if (s.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
-					chr.getMap().broadcastMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGmText()), slea.readByte()));
+					chr.getMap().broadcastMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGmText()), reader.readByte()));
 				} else {
 					chr.dropMessage("Your message was too long.");
 				}
 			} else {
-				chr.getMap().broadcastGMMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGmText()), slea.readByte()));
+				chr.getMap().broadcastGMMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGmText()), reader.readByte()));
 			}
 		}
 	}

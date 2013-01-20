@@ -32,16 +32,16 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MessengerHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		String input;
-		byte mode = slea.readByte();
+		byte mode = reader.readByte();
 		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
 		Messenger messenger = player.getMessenger();
 		switch (mode) {
 			case 0x00:
 				if (messenger == null) {
-					int messengerid = slea.readInt();
+					int messengerid = reader.readInt();
 					if (messengerid == 0) {
 						MessengerCharacter messengerplayer = new MessengerCharacter(player);
 						messenger = world.createMessenger(messengerplayer);
@@ -69,7 +69,7 @@ public final class MessengerHandler extends AbstractPacketHandler {
 				break;
 			case 0x03:
 				if (messenger.getMembers().size() < 3) {
-					input = slea.readMapleAsciiString();
+					input = reader.readMapleAsciiString();
 					GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(input);
 					if (target != null) {
 						if (target.getMessenger() == null) {
@@ -90,7 +90,7 @@ public final class MessengerHandler extends AbstractPacketHandler {
 				}
 				break;
 			case 0x05:
-				String targeted = slea.readMapleAsciiString();
+				String targeted = reader.readMapleAsciiString();
 				GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(targeted);
 				if (target != null) {
 					if (target.getMessenger() != null) {
@@ -103,7 +103,7 @@ public final class MessengerHandler extends AbstractPacketHandler {
 			case 0x06:
 				if (messenger != null) {
 					MessengerCharacter messengerplayer = new MessengerCharacter(player);
-					input = slea.readMapleAsciiString();
+					input = reader.readMapleAsciiString();
 					world.messengerChat(messenger, input, messengerplayer.getName());
 				}
 				break;

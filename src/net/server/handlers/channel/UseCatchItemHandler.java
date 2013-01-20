@@ -38,13 +38,13 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseCatchItemHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		AutobanManager abm = chr.getAutobanManager();
-		abm.setTimestamp(5, slea.readInt());
-		slea.readShort();
-		int itemId = slea.readInt();
-		int monsterid = slea.readInt();
+		abm.setTimestamp(5, reader.readInt());
+		reader.readShort();
+		int itemId = reader.readInt();
+		int monsterid = reader.readInt();
 
 		Monster mob = chr.getMap().getMonsterByOid(monsterid);
 		if (chr.getInventory(ItemInfoProvider.getInstance().getInventoryType(itemId)).countById(itemId) <= 0) {

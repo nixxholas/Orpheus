@@ -28,8 +28,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CancelItemEffectHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int itemId = -slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int itemId = -reader.readInt();
 		if (ItemInfoProvider.getInstance().noCancelMouse(itemId))
 			return;
 		c.getPlayer().cancelEffect(itemId);

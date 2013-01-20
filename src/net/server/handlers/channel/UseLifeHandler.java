@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class UseLifeHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		c.announce(PacketCreator.charNameResponse(slea.readMapleAsciiString(), false));
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		c.announce(PacketCreator.charNameResponse(reader.readMapleAsciiString(), false));
 	}
 }

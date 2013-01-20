@@ -32,9 +32,9 @@ public final class DistributeAPHandler extends AbstractPacketHandler {
 	private static final int max = Short.MAX_VALUE;
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readInt();
-		int num = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readInt();
+		int num = reader.readInt();
 		if (c.getPlayer().getRemainingAp() > 0) {
 			if (addStat(c, num)) {
 				c.getPlayer().setRemainingAp(c.getPlayer().getRemainingAp() - 1);

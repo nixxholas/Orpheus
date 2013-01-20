@@ -36,18 +36,18 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetCommandHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		int petId = slea.readInt();
+		int petId = reader.readInt();
 		byte petIndex = chr.getPetIndex(petId);
 		if (petIndex == -1) {
 			return;
 		} 
 
 		Pet pet = chr.getPet(petIndex);
-		slea.readInt();
-		slea.readByte();
-		byte command = slea.readByte();
+		reader.readInt();
+		reader.readByte();
+		byte command = reader.readByte();
 		PetCommand petCommand = PetDataFactory.getPetCommand(pet.getItemId(), (int) command);
 		if (petCommand == null) {
 			return;

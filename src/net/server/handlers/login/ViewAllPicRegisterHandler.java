@@ -36,19 +36,19 @@ public final class ViewAllPicRegisterHandler extends AbstractPacketHandler {
 	private static Logger log = LoggerFactory.getLogger(ViewAllPicRegisterHandler.class);
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readByte();
-		int charId = slea.readInt();
-		byte world = (byte) slea.readInt(); // world
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readByte();
+		int charId = reader.readInt();
+		byte world = (byte) reader.readInt(); // world
 		byte channel = (byte) Randomizer.rand(0, Server.getInstance().getWorld(world).getChannels().size());
-		String mac = slea.readMapleAsciiString();
+		String mac = reader.readMapleAsciiString();
 		c.updateMacs(mac);
 		if (c.hasBannedMac()) {
 			c.getSession().close(true);
 			return;
 		}
-		slea.readMapleAsciiString();
-		String pic = slea.readMapleAsciiString();
+		reader.readMapleAsciiString();
+		String pic = reader.readMapleAsciiString();
 		c.setPic(pic);
 		try {
 			if (c.getIdleTask() != null) {

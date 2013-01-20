@@ -82,7 +82,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 	private long nextPruneTime = System.currentTimeMillis() + 20 * 60 * 1000;
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (System.currentTimeMillis() >= nextPruneTime) {
 			Iterator<Invited> itr = invited.iterator();
 			Invited inv;
@@ -95,7 +95,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 			nextPruneTime = System.currentTimeMillis() + 20 * 60 * 1000;
 		}
 		GameCharacter player = c.getPlayer();
-		byte type = slea.readByte();
+		byte type = reader.readByte();
 		switch (type) {
 			case 0x00:
 				// c.announce(PacketCreator.showGuildInfo(mc));
@@ -109,7 +109,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					c.getPlayer().dropMessage(1, "You do not have enough mesos to create a Guild.");
 					return;
 				}
-				String guildName = slea.readMapleAsciiString();
+				String guildName = reader.readMapleAsciiString();
 				if (!isGuildNameAcceptable(guildName)) {
 					c.getPlayer().dropMessage(1, "The Guild name you have chosen is not accepted.");
 					return;
@@ -133,7 +133,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				if (player.getGuildId() <= 0 || player.getGuildRank() > 2) {
 					return;
 				}
-				String name = slea.readMapleAsciiString();
+				String name = reader.readMapleAsciiString();
 				GuildInviteResponse mgr = Guild.sendInvite(c, name);
 				if (mgr != null) {
 					c.announce(mgr.getPacket());
@@ -149,8 +149,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					Output.print("[GOH] " + player.getName() + " attempted to join a guild when s/he is already in one.");
 					return;
 				}
-				gid = slea.readInt();
-				int cid = slea.readInt();
+				gid = reader.readInt();
+				int cid = reader.readInt();
 				if (cid != player.getId()) {
 					Output.print("[GOH] " + player.getName() + " attempted to join a guild with a different character id.");
 					return;
@@ -185,8 +185,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				respawnPlayer(player);
 				break;
 			case 0x07:
-				cid = slea.readInt();
-				name = slea.readMapleAsciiString();
+				cid = reader.readInt();
+				name = reader.readMapleAsciiString();
 				if (cid != player.getId() || !name.equals(player.getName()) || player.getGuildId() <= 0) {
 					System.out.println("[hax] " + player.getName() + " tried to quit guild under the name \"" + name + "\" and current guild id of " + player.getGuildId() + ".");
 					return;
@@ -199,8 +199,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				respawnPlayer(player);
 				break;
 			case 0x08:
-				cid = slea.readInt();
-				name = slea.readMapleAsciiString();
+				cid = reader.readInt();
+				name = reader.readMapleAsciiString();
 				if (player.getGuildRank() > 2 || player.getGuildId() <= 0) {
 					System.out.println("[hax] " + player.getName() + " is trying to expel without rank 1 or 2.");
 					return;
@@ -215,14 +215,14 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				}
 				String ranks[] = new String[5];
 				for (int i = 0; i < 5; i++) {
-					ranks[i] = slea.readMapleAsciiString();
+					ranks[i] = reader.readMapleAsciiString();
 				}
 
 				Server.getInstance().changeRankTitle(player.getGuildId(), ranks);
 				break;
 			case 0x0e:
-				cid = slea.readInt();
-				byte newRank = slea.readByte();
+				cid = reader.readInt();
+				byte newRank = reader.readByte();
 				if (player.getGuildRank() > 2 || (newRank <= 2 && player.getGuildRank() != 1) || player.getGuildId() <= 0) {
 					System.out.println("[hax] " + player.getName() + " is trying to change rank outside of his/her permissions.");
 					return;
@@ -241,10 +241,10 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.serverNotice(1, "You do not have enough mesos to create a Guild."));
 					return;
 				}
-				short bg = slea.readShort();
-				byte bgcolor = slea.readByte();
-				short logo = slea.readShort();
-				byte logocolor = slea.readByte();
+				short bg = reader.readShort();
+				byte bgcolor = reader.readByte();
+				short logo = reader.readShort();
+				byte logocolor = reader.readByte();
 				Server.getInstance().setGuildEmblem(player.getGuildId(), bg, bgcolor, logo, logocolor);
 				player.gainMeso(-Guild.CHANGE_EMBLEM_COST, true, false, true);
 				respawnPlayer(player);
@@ -254,14 +254,14 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					System.out.println("[hax] " + player.getName() + " tried to change guild notice while not in a guild.");
 					return;
 				}
-				String notice = slea.readMapleAsciiString();
+				String notice = reader.readMapleAsciiString();
 				if (notice.length() > 100) {
 					return;
 				}
 				Server.getInstance().setGuildNotice(player.getGuildId(), notice);
 				break;
 			default:
-				System.out.println("Unhandled GUILD_OPERATION packet: \n" + slea.toString());
+				System.out.println("Unhandled GUILD_OPERATION packet: \n" + reader.toString());
 		}
 	}
 }

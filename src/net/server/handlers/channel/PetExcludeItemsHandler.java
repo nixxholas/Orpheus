@@ -30,11 +30,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetExcludeItemsHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readLong();
-		byte amount = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readLong();
+		byte amount = reader.readByte();
 		for (int i = 0; i < amount; i++) {
-			c.getPlayer().addExcluded(slea.readInt());
+			c.getPlayer().addExcluded(reader.readInt());
 		}
 	}
 }

@@ -31,7 +31,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TouchingCashShopHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		c.announce(PacketCreator.showCash(c.getPlayer()));
 	}
 }

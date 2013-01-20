@@ -27,7 +27,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CancelDebuffHandler extends AbstractPacketHandler {// TIP: BAD STUFF LOL
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		/*
 		 * List<Disease> diseases = c.getPlayer().getDiseases();
 		 * List<Disease> diseases_ = new ArrayList<Disease>(); for

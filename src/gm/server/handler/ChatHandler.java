@@ -32,8 +32,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class ChatHandler implements GMPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, IoSession session) {
-		Server.getInstance().gmChat(slea.readMapleAsciiString(), (String) session.getAttribute("NAME"));
+	public void handlePacket(SeekableLittleEndianAccessor reader, IoSession session) {
+		Server.getInstance().gmChat(reader.readMapleAsciiString(), (String) session.getAttribute("NAME"));
 	}
 
 }

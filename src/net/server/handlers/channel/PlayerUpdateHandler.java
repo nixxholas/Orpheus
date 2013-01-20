@@ -27,7 +27,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PlayerUpdateHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		// Make it save every x minutes? No?
 	}
 }

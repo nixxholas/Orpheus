@@ -30,11 +30,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ChangeMapSpecialHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		
-		slea.readByte();
-		final String startwp = slea.readMapleAsciiString();
-		slea.readShort();
+		reader.readByte();
+		final String startwp = reader.readMapleAsciiString();
+		reader.readShort();
 		
 		final GameCharacter player = c.getPlayer();
 		final Portal portal = player.getMap().getPortal(startwp);

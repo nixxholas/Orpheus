@@ -36,15 +36,15 @@ public class ViewAllCharSelectedWithPicHandler extends AbstractPacketHandler {
 	private static Logger log = LoggerFactory.getLogger(ViewAllCharSelectedWithPicHandler.class);
 	
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 
-		String pic = slea.readMapleAsciiString();
-		int charId = slea.readInt();
-		byte world = (byte) slea.readInt();// world
+		String pic = reader.readMapleAsciiString();
+		int charId = reader.readInt();
+		byte world = (byte) reader.readInt();// world
 		c.setWorld(world);
 		byte channel = (byte) Randomizer.rand(0, Server.getInstance().getWorld(world).getChannels().size());
 		c.setChannel(channel);
-		String macs = slea.readMapleAsciiString();
+		String macs = reader.readMapleAsciiString();
 		c.updateMacs(macs);
 
 		if (c.hasBannedMac()) {

@@ -46,7 +46,7 @@ import client.GameClient;
  * @author Aaron Weiss
  */
 public class DeveloperCommands extends EnumeratedCommands {
-	private static SeekableLittleEndianAccessor slea;
+	private static SeekableLittleEndianAccessor reader;
 	private static final int gmLevel = 4;
 	private static final char heading = '!';
 	
@@ -252,7 +252,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
 						final String s = joinStringFrom(sub, 2);
-						victim.getMap().broadcastMessage(PacketCreator.getChatText(victim.getId(), s, victim.isGM(), slea.readByte()));
+						victim.getMap().broadcastMessage(PacketCreator.getChatText(victim.getId(), s, victim.isGM(), reader.readByte()));
 					} else {
 						chr.message("Usage: !say playerName multi-word message");
 					}
@@ -316,8 +316,8 @@ public class DeveloperCommands extends EnumeratedCommands {
 		}
 	}
 
-	public static void setSLEA(SeekableLittleEndianAccessor slea) {
-		DeveloperCommands.slea = slea;
+	public static void setReader(SeekableLittleEndianAccessor reader) {
+		DeveloperCommands.reader = reader;
 	}
 	
 	public static void updateRankings() {

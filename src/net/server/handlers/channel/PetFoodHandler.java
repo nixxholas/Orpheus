@@ -36,7 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetFoodHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		AutobanManager abm = chr.getAutobanManager();
 		if (abm.getLastSpam(2) + 500 > System.currentTimeMillis()) {
@@ -44,7 +44,7 @@ public final class PetFoodHandler extends AbstractPacketHandler {
 			return;
 		}
 		abm.spam(2);
-		abm.setTimestamp(1, slea.readInt());
+		abm.setTimestamp(1, reader.readInt());
 		if (chr.getNoPets() == 0) {
 			c.getSession().write(PacketCreator.enableActions());
 			return;
@@ -61,8 +61,8 @@ public final class PetFoodHandler extends AbstractPacketHandler {
 			}
 		}
 		Pet pet = chr.getPet(slot);
-		byte pos = (byte) slea.readShort();
-		int itemId = slea.readInt();
+		byte pos = (byte) reader.readShort();
+		int itemId = reader.readInt();
 		IItem use = chr.getInventory(InventoryType.USE).getItem(pos);
 		if (use == null || (itemId / 10000) != 212 || use.getItemId() != itemId)
 			return;

@@ -30,17 +30,18 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class MesoDropHandler extends AbstractPacketHandler {// FIX
+public final class MesoDropHandler extends AbstractPacketHandler {
+	// FIX
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		if (!chr.isAlive()) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		slea.skip(4);
-		int meso = slea.readInt();
+		reader.skip(4);
+		int meso = reader.readInt();
 		if (meso <= c.getPlayer().getMeso() && meso > 9 && meso < 50001) {
 			c.getPlayer().gainMeso(-meso, false, true, false);
 			c.getPlayer().getMap().spawnMesoDrop(meso, chr.getPosition(), chr, chr, true, (byte) 2);

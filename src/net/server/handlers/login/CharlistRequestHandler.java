@@ -27,11 +27,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CharlistRequestHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readByte();
-		byte world = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readByte();
+		byte world = reader.readByte();
 		c.setWorld(world);
-		c.setChannel((byte) (slea.readByte() + 1));
+		c.setChannel((byte) (reader.readByte() + 1));
 		c.sendCharList(world);
 	}
 }

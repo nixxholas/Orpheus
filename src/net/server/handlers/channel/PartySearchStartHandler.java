@@ -39,11 +39,11 @@ import client.Job;
 public class PartySearchStartHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int min = slea.readInt();
-		int max = slea.readInt();
-		slea.readInt(); // members
-		int jobs = slea.readInt();
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int min = reader.readInt();
+		int max = reader.readInt();
+		reader.readInt(); // members
+		int jobs = reader.readInt();
 		GameCharacter chr = c.getPlayer();
 		GameMap map = chr.getMap();
 		Collection<GameMapObject> mapobjs = map.getAllPlayer();

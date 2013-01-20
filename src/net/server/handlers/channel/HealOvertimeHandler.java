@@ -30,12 +30,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class HealOvertimeHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		AutobanManager abm = chr.getAutobanManager();
-		abm.setTimestamp(0, slea.readInt());
-		slea.skip(4);
-		short healHP = slea.readShort();
+		abm.setTimestamp(0, reader.readInt());
+		reader.skip(4);
+		short healHP = reader.readShort();
 		if (healHP != 0) {
 			if ((abm.getLastSpam(0) + 1500) > System.currentTimeMillis()) {
 				abm.addPoint(AutobanType.FAST_HP_HEALING, "Fast hp healing");
@@ -51,7 +51,7 @@ public final class HealOvertimeHandler extends AbstractPacketHandler {
 			abm.spam(0);
 		}
 		
-		short healMP = slea.readShort();
+		short healMP = reader.readShort();
 		if (healMP != 0 && healMP < 1000) {
 			if ((abm.getLastSpam(1) + 1500) > System.currentTimeMillis()) {
 				abm.addPoint(AutobanType.FAST_MP_HEALING, "Fast mp healing");

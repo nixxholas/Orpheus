@@ -54,8 +54,8 @@ public final class SummonDamageHandler extends AbstractPacketHandler {
 		}
 	}
 
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int oid = reader.readInt();
 		GameCharacter player = c.getPlayer();
 		if (!player.isAlive()) {
 			return;
@@ -71,15 +71,15 @@ public final class SummonDamageHandler extends AbstractPacketHandler {
 		}
 		ISkill summonSkill = SkillFactory.getSkill(summon.getSkill());
 		StatEffect summonEffect = summonSkill.getEffect(summon.getSkillLevel());
-		slea.skip(4);
+		reader.skip(4);
 		List<SummonAttackEntry> allDamage = new ArrayList<SummonAttackEntry>();
-		byte direction = slea.readByte();
-		int numAttacked = slea.readByte();
-		slea.skip(8); // Thanks Gerald :D, I failed lol (mob x,y and summon x,y)
+		byte direction = reader.readByte();
+		int numAttacked = reader.readByte();
+		reader.skip(8); // Thanks Gerald :D, I failed lol (mob x,y and summon x,y)
 		for (int x = 0; x < numAttacked; x++) {
-			int monsterOid = slea.readInt(); // attacked oid
-			slea.skip(18);
-			int damage = slea.readInt();
+			int monsterOid = reader.readInt(); // attacked oid
+			reader.skip(18);
+			int damage = reader.readInt();
 			allDamage.add(new SummonAttackEntry(monsterOid, damage));
 		}
 		player.getMap().broadcastMessage(player, PacketCreator.summonAttack(player.getId(), summon.getSkill(), direction, allDamage), summon.getPosition());

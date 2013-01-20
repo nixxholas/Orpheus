@@ -37,8 +37,8 @@ import tools.PacketCreator;
 public final class CancelBuffHandler extends AbstractPacketHandler implements PacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int sourceid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int sourceid = reader.readInt();
 		switch (sourceid) {
 			case FPArchMage.BIG_BANG:
 			case ILArchMage.BIG_BANG:

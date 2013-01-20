@@ -58,8 +58,8 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		final int cid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		final int cid = reader.readInt();
 		final Server server = Server.getInstance();
 		GameCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(cid);
 		if (player == null) {

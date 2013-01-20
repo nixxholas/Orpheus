@@ -35,11 +35,11 @@ public class CharSelectedWithPicHandler extends AbstractPacketHandler {
 	private static Logger log = LoggerFactory.getLogger(CharSelectedWithPicHandler.class);
 	
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 
-		String pic = slea.readMapleAsciiString();
-		int charId = slea.readInt();
-		String macs = slea.readMapleAsciiString();
+		String pic = reader.readMapleAsciiString();
+		int charId = reader.readInt();
+		String macs = reader.readMapleAsciiString();
 		c.updateMacs(macs);
 
 		if (c.hasBannedMac()) {

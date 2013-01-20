@@ -42,11 +42,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class WhisperHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte mode = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte mode = reader.readByte();
 		if (mode == 6) { // whisper
-			String recipient = slea.readMapleAsciiString();
-			String text = slea.readMapleAsciiString();
+			String recipient = reader.readMapleAsciiString();
+			String text = reader.readMapleAsciiString();
 			GameCharacter player = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 			if (player != null) {
 				if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.LOG_BLACKLIST_CHAT) {
@@ -73,7 +73,7 @@ public final class WhisperHandler extends AbstractPacketHandler {
 				}
 			}
 		} else if (mode == 5) { // - /find
-			String recipient = slea.readMapleAsciiString();
+			String recipient = reader.readMapleAsciiString();
 			GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 			if (victim != null && c.getPlayer().gmLevel() >= victim.gmLevel()) {
 				if (victim.getCashShop().isOpened()) {

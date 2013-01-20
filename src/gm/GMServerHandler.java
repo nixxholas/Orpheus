@@ -63,12 +63,12 @@ public class GMServerHandler extends IoHandlerAdapter {
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		byte[] content = (byte[]) message;
-		SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
-		short opcode = slea.readShort();
+		SeekableLittleEndianAccessor reader = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
+		short opcode = reader.readShort();
 		GMPacketHandler packetHandler = processor.getHandler(opcode);
 		if (packetHandler != null) {
 			try {
-				packetHandler.handlePacket(slea, session);
+				packetHandler.handlePacket(reader, session);
 			} catch (Throwable t) {
 			}
 		}

@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class UseGachaExpHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		final GameCharacter player = c.getPlayer();
 		if (player.getGachaExp() == 0) {
 			player.dropMessage(1, "Packet editing is for nibs like you.");

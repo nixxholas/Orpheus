@@ -32,9 +32,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DistributeSPHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readInt();
-		int skillid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readInt();
+		int skillid = reader.readInt();
 		GameCharacter player = c.getPlayer();
 		int remainingSp = player.getRemainingSp();
 		boolean isBeginnerSkill = false;

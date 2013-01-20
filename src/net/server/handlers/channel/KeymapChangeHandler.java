@@ -30,14 +30,14 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class KeymapChangeHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		if (slea.available() != 8) {
-			slea.readInt();
-			int numChanges = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		if (reader.available() != 8) {
+			reader.readInt();
+			int numChanges = reader.readInt();
 			for (int i = 0; i < numChanges; i++) {
-				int key = slea.readInt();
-				int type = slea.readByte();
-				int action = slea.readInt();
+				int key = reader.readInt();
+				int type = reader.readByte();
+				int action = reader.readInt();
 				ISkill skill = SkillFactory.getSkill(action);
 				if (skill != null && c.getPlayer().getSkillLevel(skill) < 1) {
 					continue;

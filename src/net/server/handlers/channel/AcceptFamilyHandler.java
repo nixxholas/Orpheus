@@ -34,10 +34,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AcceptFamilyHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		Output.print(slea.toString());
-		int inviterId = slea.readInt();
-		// String inviterName = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		Output.print(reader.toString());
+		int inviterId = reader.readInt();
+		// String inviterName = reader.readMapleAsciiString();
 		GameCharacter inviter = c.getWorldServer().getPlayerStorage().getCharacterById(inviterId);
 		if (inviter != null) {
 			inviter.getClient().announce(PacketCreator.sendFamilyJoinResponse(true, c.getPlayer().getName()));

@@ -112,39 +112,39 @@ public final class MTSHandler extends AbstractPacketHandler {
 	}
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (!c.getPlayer().getCashShop().isOpened()) {
 			return;
 		}
-		if (slea.available() > 0) {
-			final byte typeByte = slea.readByte();
+		if (reader.available() > 0) {
+			final byte typeByte = reader.readByte();
 			final MtsOperationType operationType = MtsOperationType.fromByte(typeByte);
 			switch (operationType) {
 			case INITIATE_SALE:
-				doInitiateSale(slea, c);
+				doInitiateSale(reader, c);
 				break;
 			case SEND_OFFER:
 				break;
 			case LIST_WANTED_ITEM:
-				doListWantedItem(slea);
+				doListWantedItem(reader);
 				break;
 			case CHANGE_PAGE:
-				doChangePage(slea, c);
+				doChangePage(reader, c);
 				break;
 			case SEARCH:
-				doSearch(slea, c);
+				doSearch(reader, c);
 				break;
 			case CANCEL_SALE:
-				doCancelSale(slea, c);
+				doCancelSale(reader, c);
 				break;
 			case TRANSFER_ITEM:
-				doTransferItem(slea, c);
+				doTransferItem(reader, c);
 				break;
 			case ADD_TO_CART:
-				doAddToCart(slea, c);
+				doAddToCart(reader, c);
 				break;
 			case REMOVE_FROM_CART:
-				doRemoveFromCart(slea, c);
+				doRemoveFromCart(reader, c);
 				break;
 			case INITIATE_ITEM_AUCTION:
 				break;
@@ -153,13 +153,13 @@ public final class MTSHandler extends AbstractPacketHandler {
 			case BUY_AUCTION_ITEM:
 				break;
 			case BUY_ITEM:
-				doBuyItem(slea, c);
+				doBuyItem(reader, c);
 				break;
 			case BUY_ITEM_FROM_CART:
-				doBuyItemFromCart(slea, c);
+				doBuyItemFromCart(reader, c);
 				break;
 			default:
-				System.out.println("Unhandled OP(MTS): " + typeByte + " Packet: " + slea.toString());
+				System.out.println("Unhandled OP(MTS): " + typeByte + " Packet: " + reader.toString());
 				break;
 			}
 		} else {
@@ -167,9 +167,9 @@ public final class MTSHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private void doBuyItemFromCart(SeekableLittleEndianAccessor slea,
+	private void doBuyItemFromCart(SeekableLittleEndianAccessor reader,
 			GameClient c) {
-		int id = slea.readInt(); // id of the item
+		int id = reader.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -226,9 +226,9 @@ public final class MTSHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private void doBuyItem(SeekableLittleEndianAccessor slea,
+	private void doBuyItem(SeekableLittleEndianAccessor reader,
 			GameClient c) {
-		int id = slea.readInt(); // id of the item
+		int id = reader.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -290,9 +290,9 @@ public final class MTSHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private void doRemoveFromCart(SeekableLittleEndianAccessor slea,
+	private void doRemoveFromCart(SeekableLittleEndianAccessor reader,
 			GameClient c) {
-		int id = slea.readInt(); // id of the item
+		int id = reader.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("DELETE FROM mts_cart WHERE itemid = ? AND cid = ?");
@@ -309,8 +309,8 @@ public final class MTSHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doAddToCart(SeekableLittleEndianAccessor slea, GameClient c) {
-		int id = slea.readInt(); // id of the item
+	private void doAddToCart(SeekableLittleEndianAccessor reader, GameClient c) {
+		int id = reader.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps1 = con.prepareStatement("SELECT * FROM mts_items WHERE id = ? AND seller <> ?");
@@ -344,8 +344,8 @@ public final class MTSHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doTransferItem(SeekableLittleEndianAccessor slea, GameClient c) {
-		int id = slea.readInt(); // id of the item
+	private void doTransferItem(SeekableLittleEndianAccessor reader, GameClient c) {
+		int id = reader.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -407,8 +407,8 @@ public final class MTSHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private void doCancelSale(SeekableLittleEndianAccessor slea, GameClient c) {
-		int id = slea.readInt(); // id of the item
+	private void doCancelSale(SeekableLittleEndianAccessor reader, GameClient c) {
+		int id = reader.readInt(); // id of the item
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("UPDATE mts_items SET transfer = 1 WHERE id = ? AND seller = ?");
@@ -430,12 +430,12 @@ public final class MTSHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.transferInventory(getTransfer(c.getPlayer().getId())));
 	}
 
-	private void doSearch(SeekableLittleEndianAccessor slea, GameClient c) {
-		int tab = slea.readInt();
-		int type = slea.readInt();
-		slea.readInt();
-		int ci = slea.readInt();
-		String search = slea.readMapleAsciiString();
+	private void doSearch(SeekableLittleEndianAccessor reader, GameClient c) {
+		int tab = reader.readInt();
+		int type = reader.readInt();
+		reader.readInt();
+		int ci = reader.readInt();
+		String search = reader.readMapleAsciiString();
 		MtsState state = c.getPlayer().getMtsState();
 		state.setSearch(search);
 		state.changeTab(tab);
@@ -449,10 +449,10 @@ public final class MTSHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doChangePage(SeekableLittleEndianAccessor slea, GameClient c) {
-		int tab = slea.readInt();
-		int type = slea.readInt();
-		int page = slea.readInt();
+	private void doChangePage(SeekableLittleEndianAccessor reader, GameClient c) {
+		int tab = reader.readInt();
+		int type = reader.readInt();
+		int page = reader.readInt();
 		final MtsState state = c.getPlayer().getMtsState();
 		state.changePage(page);
 		if (tab == 4 && type == 0) {
@@ -470,52 +470,52 @@ public final class MTSHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.notYetSoldInv(getNotYetSold(c.getPlayer().getId())));
 	}
 
-	private void doListWantedItem(SeekableLittleEndianAccessor slea) {
-		slea.readInt();
-		slea.readInt();
-		slea.readInt();
-		slea.readShort();
-		slea.readMapleAsciiString();
+	private void doListWantedItem(SeekableLittleEndianAccessor reader) {
+		reader.readInt();
+		reader.readInt();
+		reader.readInt();
+		reader.readShort();
+		reader.readMapleAsciiString();
 	}
 
-	private void doInitiateSale(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte itemtype = slea.readByte();
-		int itemid = slea.readInt();
-		slea.readShort();
-		slea.skip(7);
+	private void doInitiateSale(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte itemtype = reader.readByte();
+		int itemid = reader.readInt();
+		reader.readShort();
+		reader.skip(7);
 		short stars = 1;
 		if (itemtype == 1) {
-			slea.skip(32);
+			reader.skip(32);
 		} else {
-			stars = slea.readShort();
+			stars = reader.readShort();
 		}
-		slea.readMapleAsciiString(); // another useless thing (owner)
+		reader.readMapleAsciiString(); // another useless thing (owner)
 		if (itemtype == 1) {
-			slea.skip(32);
+			reader.skip(32);
 		} else {
-			slea.readShort();
+			reader.readShort();
 		}
 		byte slot = 1;
 		short quantity = 1;
 		if (itemtype != 1) {
 			if (itemid / 10000 == 207 || itemid / 10000 == 233) {
-				slea.skip(8);
+				reader.skip(8);
 			}
-			slot = (byte) slea.readInt();
+			slot = (byte) reader.readInt();
 		} else {
-			slot = (byte) slea.readInt();
+			slot = (byte) reader.readInt();
 		}
 		if (itemtype != 1) {
 			if (itemid / 10000 == 207 || itemid / 10000 == 233) {
 				quantity = stars;
-				slea.skip(4);
+				reader.skip(4);
 			} else {
-				quantity = (short) slea.readInt();
+				quantity = (short) reader.readInt();
 			}
 		} else {
-			quantity = (byte) slea.readInt();
+			quantity = (byte) reader.readInt();
 		}
-		int price = slea.readInt();
+		int price = reader.readInt();
 		if (itemtype == 1) {
 			quantity = 1;
 		}

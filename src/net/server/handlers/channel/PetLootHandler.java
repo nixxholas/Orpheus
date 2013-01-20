@@ -41,16 +41,15 @@ import server.ItemInfoProvider.scriptedItem;
 public final class PetLootHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		Pet pet = chr.getPet(chr.getPetIndex(slea.readInt()));// why would
-																	// it be an
-																	// int...?
+		// why would it be an int...?
+		Pet pet = chr.getPet(chr.getPetIndex(reader.readInt()));
 		if (!pet.isSummoned())
 			return;
 
-		slea.skip(13);
-		int oid = slea.readInt();
+		reader.skip(13);
+		int oid = reader.readInt();
 		GameMapObject ob = chr.getMap().getMapObject(oid);
 		if (ob == null || pet == null) {
 			c.announce(PacketCreator.getInventoryFull());

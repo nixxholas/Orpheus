@@ -32,12 +32,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MobDamageMobHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int from = slea.readInt();
-		slea.readInt();
-		int to = slea.readInt();
-		slea.readByte();
-		int dmg = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int from = reader.readInt();
+		reader.readInt();
+		int to = reader.readInt();
+		reader.readByte();
+		int dmg = reader.readInt();
 		GameMap map = c.getPlayer().getMap();
 		if (map.getMonsterByOid(from) != null && map.getMonsterByOid(to) != null) {
 			map.damageMonster(c.getPlayer(), map.getMonsterByOid(to), dmg);

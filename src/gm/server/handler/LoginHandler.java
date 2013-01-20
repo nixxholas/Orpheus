@@ -39,18 +39,18 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class LoginHandler implements GMPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, IoSession session) {
-		if (!GMServer.KEYWORD.equals(slea.readMapleAsciiString())) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, IoSession session) {
+		if (!GMServer.KEYWORD.equals(reader.readMapleAsciiString())) {
 			session.write(GMPacketCreator.sendLoginResponse((byte) -1, null));
 			return;
 		}
 		GMServer server = GMServer.getInstance();
-		String login = slea.readMapleAsciiString();
+		String login = reader.readMapleAsciiString();
 		if (server.contains(login)) {
 			session.write(GMPacketCreator.sendLoginResponse((byte) 0, null));
 			return;
 		}
-		String password = slea.readMapleAsciiString();
+		String password = reader.readMapleAsciiString();
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;

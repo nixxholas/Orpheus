@@ -33,10 +33,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MoveSummonHandler extends AbstractMovementPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		Point startPos = new Point(slea.readShort(), slea.readShort());
-		List<LifeMovementFragment> res = parseMovement(slea);
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int oid = reader.readInt();
+		Point startPos = new Point(reader.readShort(), reader.readShort());
+		List<LifeMovementFragment> res = parseMovement(reader);
 		GameCharacter player = c.getPlayer();
 		Collection<Summon> summons = player.getSummons().values();
 		Summon summon = null;

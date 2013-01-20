@@ -28,8 +28,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CancelChairHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int id = slea.readShort();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int id = reader.readShort();
 		if (id == -1) { // Cancel Chair
 			c.getPlayer().setChair(0);
 			c.announce(PacketCreator.cancelChair(-1));

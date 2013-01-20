@@ -27,9 +27,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TouchMonsterDamageHandler extends AbstractDealDamageHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (c.getPlayer().getEnergyBar() == 15000 || c.getPlayer().getBuffedValue(BuffStat.BODY_PRESSURE) != null) {
-			applyAttack(parseDamage(slea, c.getPlayer(), false), c.getPlayer(), 1);
+			applyAttack(parseDamage(reader, c.getPlayer(), false), c.getPlayer(), 1);
 		}
 	}
 }

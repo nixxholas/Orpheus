@@ -53,9 +53,9 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter player = c.getPlayer();
-		AttackInfo attack = parseDamage(slea, player, false);
+		AttackInfo attack = parseDamage(reader, player, false);
 		player.getMap().broadcastMessage(player, PacketCreator.closeRangeAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.speed, attack.direction, attack.display), false, true);
 		int numFinisherOrbs = 0;
 		Integer comboBuff = player.getBuffedValue(BuffStat.COMBO);

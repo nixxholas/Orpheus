@@ -28,8 +28,8 @@ import tools.PacketCreator;
 public final class MonsterBookCoverHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int id = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int id = reader.readInt();
 		if (id == 0 || id / 10000 == 238) {
 			c.getPlayer().setMonsterBookCover(id);
 			c.announce(PacketCreator.changeCover(id));

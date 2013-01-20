@@ -31,12 +31,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class RegisterPinHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte c2 = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte c2 = reader.readByte();
 		if (c2 == 0) {
 			c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
 		} else {
-			String pin = slea.readMapleAsciiString();
+			String pin = reader.readMapleAsciiString();
 			if (pin != null) {
 				c.setPin(pin);
 				c.announce(PacketCreator.pinRegistered());

@@ -31,13 +31,13 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ReactorHitHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		// CD 00 6B 00 00 00 01 00 00 00 03 00 00 00 20 03 F7 03 00 00
-		int oid = slea.readInt();
-		int charPos = slea.readInt();
-		short stance = slea.readShort();
-		slea.skip(4);
-		int skillid = slea.readInt();
+		int oid = reader.readInt();
+		int charPos = reader.readInt();
+		short stance = reader.readShort();
+		reader.skip(4);
+		int skillid = reader.readInt();
 		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
 		if (reactor != null && reactor.isAlive()) {
 			reactor.hitReactor(charPos, stance, skillid, c);

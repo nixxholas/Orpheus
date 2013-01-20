@@ -42,11 +42,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ScrollHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readInt(); // whatever...
-		byte slot = (byte) slea.readShort();
-		byte dst = (byte) slea.readShort();
-		byte ws = (byte) slea.readShort();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readInt(); // whatever...
+		byte slot = (byte) reader.readShort();
+		byte dst = (byte) reader.readShort();
+		byte ws = (byte) reader.readShort();
 		boolean whiteScroll = false; // white scroll being used?
 		boolean legendarySpirit = false; // legendary spirit skill
 		if ((ws & 2) == 2) {

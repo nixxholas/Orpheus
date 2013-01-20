@@ -36,13 +36,13 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TeleportRockHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		byte type = slea.readByte();
-		boolean vip = slea.readByte() == 1;
+		byte type = reader.readByte();
+		boolean vip = reader.readByte() == 1;
 		final TeleportRockInfo info = chr.getTeleportRockInfo();
 		if (type == 0x00) {
-			int mapId = slea.readInt();
+			int mapId = reader.readInt();
 			if (vip) {
 				info.deleteVip(mapId);
 			} else {

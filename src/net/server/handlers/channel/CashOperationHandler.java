@@ -46,18 +46,18 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CashOperationHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		CashShop cs = chr.getCashShop();
 		if (!cs.isOpened()) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		final int action = slea.readByte();
+		final int action = reader.readByte();
 		if (action == 0x03 || action == 0x1E) {
-			slea.readByte();
-			final int useNX = slea.readInt();
-			final int snCS = slea.readInt();
+			reader.readByte();
+			final int useNX = reader.readInt();
+			final int snCS = reader.readInt();
 			CashItem cItem = CashItemFactory.getItem(snCS);
 			if (cItem == null || !cItem.isOnSale() || cs.getCash(useNX) < cItem.getPrice()) {
 				return;
@@ -79,10 +79,10 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.showCash(chr));
 		} else if (action == 0x04) {
 			// TODO: check for gender
-			int birthday = slea.readInt();
-			CashItem cItem = CashItemFactory.getItem(slea.readInt());
-			Map<String, String> recipient = GameCharacter.getCharacterFromDatabase(slea.readMapleAsciiString());
-			String message = slea.readMapleAsciiString();
+			int birthday = reader.readInt();
+			CashItem cItem = CashItemFactory.getItem(reader.readInt());
+			Map<String, String> recipient = GameCharacter.getCharacterFromDatabase(reader.readMapleAsciiString());
+			String message = reader.readMapleAsciiString();
 			if (!canBuy(cItem, cs.getCash(4)) || message.length() < 1 || message.length() > 73) {
 				return;
 			}
@@ -112,7 +112,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			// Modify wish list
 			cs.clearWishList();
 			for (byte i = 0; i < 10; i++) {
-				int sn = slea.readInt();
+				int sn = reader.readInt();
 				CashItem cItem = CashItemFactory.getItem(sn);
 				if (cItem != null && cItem.isOnSale() && sn != 0) {
 					cs.addToWishList(sn);
@@ -121,11 +121,11 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.showWishList(chr, true));
 		} else if (action == 0x06) { 
 			// Increase Inventory Slots
-			slea.skip(1);
-			int cash = slea.readInt();
-			byte mode = slea.readByte();
+			reader.skip(1);
+			int cash = reader.readInt();
+			byte mode = reader.readByte();
 			if (mode == 0) {
-				byte type = slea.readByte();
+				byte type = reader.readByte();
 				if (cs.getCash(cash) < 4000) {
 					return;
 				}
@@ -135,7 +135,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showCash(chr));
 				}
 			} else {
-				CashItem cItem = CashItemFactory.getItem(slea.readInt());
+				CashItem cItem = CashItemFactory.getItem(reader.readInt());
 				int type = (cItem.getItemId() - 9110000) / 1000;
 				if (!canBuy(cItem, cs.getCash(cash))) {
 					return;
@@ -148,9 +148,9 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 		} else if (action == 0x07) { 
 			// Increase Storage Slots
-			slea.skip(1);
-			int cash = slea.readInt();
-			byte mode = slea.readByte();
+			reader.skip(1);
+			int cash = reader.readInt();
+			byte mode = reader.readByte();
 			if (mode == 0) {
 				if (cs.getCash(cash) < 4000) {
 					return;
@@ -161,7 +161,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showCash(chr));
 				}
 			} else {
-				CashItem cItem = CashItemFactory.getItem(slea.readInt());
+				CashItem cItem = CashItemFactory.getItem(reader.readInt());
 
 				if (!canBuy(cItem, cs.getCash(cash))) {
 					return;
@@ -174,9 +174,9 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 		} else if (action == 0x08) { 
 			// Increase Character Slots
-			slea.skip(1);
-			int cash = slea.readInt();
-			CashItem cItem = CashItemFactory.getItem(slea.readInt());
+			reader.skip(1);
+			int cash = reader.readInt();
+			CashItem cItem = CashItemFactory.getItem(reader.readInt());
 
 			if (!canBuy(cItem, cs.getCash(cash)))
 				return;
@@ -188,7 +188,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 		} else if (action == 0x0D) { 
 			// Take from Cash Inventory
-			IItem item = cs.findByCashId(slea.readInt());
+			IItem item = cs.findByCashId(reader.readInt());
 			if (item == null) {
 				return;
 			}
@@ -198,9 +198,9 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 		} else if (action == 0x0E) { 
 			// Put into Cash Inventory
-			int cashId = slea.readInt();
-			slea.skip(4);
-			Inventory mi = chr.getInventory(InventoryType.fromByte(slea.readByte()));
+			int cashId = reader.readInt();
+			reader.skip(4);
+			Inventory mi = chr.getInventory(InventoryType.fromByte(reader.readByte()));
 			IItem item = mi.findByCashId(cashId);
 			if (item == null) {
 				return;
@@ -210,11 +210,11 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.putIntoCashInventory(item, c.getAccountId()));
 		} else if (action == 0x1D) { 
 			// crush ring (action 28)
-			if (checkBirthday(c, slea.readInt())) {
-				int toCharge = slea.readInt();
-				int SN = slea.readInt();
-				String recipient = slea.readMapleAsciiString();
-				String text = slea.readMapleAsciiString();
+			if (checkBirthday(c, reader.readInt())) {
+				int toCharge = reader.readInt();
+				int SN = reader.readInt();
+				String recipient = reader.readMapleAsciiString();
+				String text = reader.readMapleAsciiString();
 				CashItem ring = CashItemFactory.getItem(SN);
 				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
 				if (partner == null) {
@@ -245,7 +245,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else if (action == 0x20) { 
 			// everything is 1 meso...
-			int itemId = CashItemFactory.getItem(slea.readInt()).getItemId();
+			int itemId = CashItemFactory.getItem(reader.readInt()).getItemId();
 			if (chr.getMeso() > 0) {
 				if (itemId == 4031180 || itemId == 4031192 || itemId == 4031191) {
 					chr.gainMeso(-1, false);
@@ -256,15 +256,15 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else if (action == 0x23) {
 			// Friendship :3
-			if (checkBirthday(c, slea.readInt())) {
-				int payment = slea.readByte();
-				slea.skip(3); // 0s
-				int snID = slea.readInt();
+			if (checkBirthday(c, reader.readInt())) {
+				int payment = reader.readByte();
+				reader.skip(3); // 0s
+				int snID = reader.readInt();
 				CashItem ring = CashItemFactory.getItem(snID);
-				String sentTo = slea.readMapleAsciiString();
-				int available = slea.readShort() - 1;
-				String text = slea.readAsciiString(available);
-				slea.readByte();
+				String sentTo = reader.readMapleAsciiString();
+				int available = reader.readShort() - 1;
+				String text = reader.readAsciiString(available);
+				reader.readByte();
 				GameCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(sentTo);
 				if (partner == null) {
 					chr.dropMessage("The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel.");
@@ -288,7 +288,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 			}
 			c.announce(PacketCreator.showCash(c.getPlayer()));
 		} else {
-			Output.print(slea.toString());
+			Output.print(reader.toString());
 		}
 	}
 
@@ -300,10 +300,10 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 		return new RingCreationInfo(ringItem.getItemId(), partner1.getId(), partner1.getName(), partner2.getId(), partner2.getName());
 	}
 
-	private boolean checkBirthday(GameClient c, int idate) {
-		int year = idate / 10000;
-		int month = (idate - year * 10000) / 100;
-		int day = idate - year * 10000 - month * 100;
+	private boolean checkBirthday(GameClient c, int dateNumber) {
+		int year = dateNumber / 10000;
+		int month = (dateNumber - year * 10000) / 100;
+		int day = dateNumber - year * 10000 - month * 100;
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(0);
 		cal.set(year, month - 1, day);

@@ -43,19 +43,19 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AdminCommandHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		final GameCharacter player = c.getPlayer();
 		if (!player.isGM()) {
 			return;
 		}
-		byte mode = slea.readByte();
+		byte mode = reader.readByte();
 		String victim;
 		GameCharacter target;
 		switch (mode) {
 		
 			case 0x00: 
 				// Level1~Level8 & Package1~Package2
-				int[][] toSpawn = ItemInfoProvider.getInstance().getSummonMobs(slea.readInt());
+				int[][] toSpawn = ItemInfoProvider.getInstance().getSummonMobs(reader.readInt());
 				for (int z = 0; z < toSpawn.length; z++) {
 					int[] toSpawnChild = toSpawn[z];
 					if (Randomizer.nextInt(101) <= toSpawnChild[1]) {
@@ -67,7 +67,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x01: { 
 				// /d (inv)
-				final byte typeByte = slea.readByte();
+				final byte typeByte = reader.readByte();
 				final InventoryType type = InventoryType.fromByte(typeByte);
 				final Inventory in = player.getInventory(type);
 				
@@ -85,12 +85,12 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 			
 			case 0x02: 
 				// Exp
-				player.setExp(slea.readInt());
+				player.setExp(reader.readInt());
 				break;
 				
 			case 0x03: 
 				// Ban
-				victim = slea.readMapleAsciiString();
+				victim = reader.readMapleAsciiString();
 				String reason = victim + " permanent banned by " + player.getName();
 				target = c.getChannelServer().getPlayerStorage().getCharacterByName(victim);
 				if (target != null) {
@@ -109,10 +109,10 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x04: 
 				// Block
-				victim = slea.readMapleAsciiString();
-				slea.readByte(); // type
-				int duration = slea.readInt();
-				String description = slea.readMapleAsciiString();
+				victim = reader.readMapleAsciiString();
+				reader.readByte(); // type
+				int duration = reader.readInt();
+				String description = reader.readMapleAsciiString();
 				reason = player.getName() + " used /ban to ban";
 				target = c.getChannelServer().getPlayerStorage().getCharacterByName(victim);
 				if (target != null) {
@@ -144,15 +144,15 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x12: 
 				// Send
-				victim = slea.readMapleAsciiString();
-				int mapId = slea.readInt();
+				victim = reader.readMapleAsciiString();
+				int mapId = reader.readInt();
 				c.getChannelServer().getPlayerStorage().getCharacterByName(victim).changeMap(c.getChannelServer().getMapFactory().getMap(mapId));
 				break;
 				
 			case 0x15: 
 				// Kill
-				int mobToKill = slea.readInt();
-				int amount = slea.readInt();
+				int mobToKill = reader.readInt();
+				int amount = reader.readInt();
 				List<GameMapObject> monsterx = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 				for (int x = 0; x < amount; x++) {
 					Monster monster = (Monster) monsterx.get(x);
@@ -165,13 +165,13 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x16: 
 				// Questreset
-				Quest.getInstance(slea.readShort()).reset(player);
+				Quest.getInstance(reader.readShort()).reset(player);
 				break;
 				
 			case 0x17: 
 				// Summon
-				int mobId = slea.readInt();
-				int quantity = slea.readInt();
+				int mobId = reader.readInt();
+				int quantity = reader.readInt();
 				for (int i = 0; i < quantity; i++) {
 					player.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(mobId), player.getPosition());
 				}
@@ -179,7 +179,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x18: 
 				// Maple & Mobhp
-				int mobHp = slea.readInt();
+				int mobHp = reader.readInt();
 				player.dropMessage("Monsters HP");
 				List<GameMapObject> monsters = player.getMap().getMapObjectsInRange(player.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 				for (GameMapObject mobs : monsters) {
@@ -192,8 +192,8 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x1E: 
 				// Warn
-				victim = slea.readMapleAsciiString();
-				String message = slea.readMapleAsciiString();
+				victim = reader.readMapleAsciiString();
+				String message = reader.readMapleAsciiString();
 				target = c.getChannelServer().getPlayerStorage().getCharacterByName(victim);
 				if (target != null) {
 					target.getClient().announce(PacketCreator.serverNotice(1, message));
@@ -205,14 +205,14 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 			case 0x77: 
 				// Testing purpose
-				if (slea.available() == 4)
-					Output.print("[ACH] " + slea.readInt());
-				else if (slea.available() == 2)
-					Output.print("[ACH] " + slea.readShort());
+				if (reader.available() == 4)
+					Output.print("[ACH] " + reader.readInt());
+				else if (reader.available() == 2)
+					Output.print("[ACH] " + reader.readShort());
 				break;
 				
 			default:				
-				Output.print("New GM packet encountered (MODE : " + mode + ": " + slea.toString());
+				Output.print("New GM packet encountered (MODE : " + mode + ": " + reader.toString());
 				break;
 		}
 	}

@@ -38,10 +38,10 @@ public final class LoginPasswordHandler implements PacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		int loginok = 0;
-		String login = slea.readMapleAsciiString();
-		String pwd = slea.readMapleAsciiString();
+		String login = reader.readMapleAsciiString();
+		String pwd = reader.readMapleAsciiString();
 		c.setAccountName(login);
 		
 		if (AutoRegister.getAccountExists(login)) {

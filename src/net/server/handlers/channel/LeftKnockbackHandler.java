@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class LeftKnockbackHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, final GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, final GameClient c) {
 		c.announce(PacketCreator.leftKnockBack());
 		c.announce(PacketCreator.enableActions());
 	}

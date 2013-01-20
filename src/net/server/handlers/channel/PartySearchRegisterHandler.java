@@ -32,12 +32,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class PartySearchRegisterHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		int min = slea.readInt();
-		int max = slea.readInt();
-		if (chr.getLevel() < min || chr.getLevel() > max || (max - min) > 30 || min > max) { // Client
-																								// editing
+		int min = reader.readInt();
+		int max = reader.readInt();
+		if (chr.getLevel() < min || chr.getLevel() > max || (max - min) > 30 || min > max) { 
+			// Client editing
 			return;
 		}
 	}

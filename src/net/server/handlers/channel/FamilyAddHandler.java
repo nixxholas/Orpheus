@@ -34,9 +34,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class FamilyAddHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		Output.print(slea.toString());
-		String toAdd = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		Output.print(reader.toString());
+		String toAdd = reader.readMapleAsciiString();
 		GameCharacter addChr = c.getChannelServer().getPlayerStorage().getCharacterByName(toAdd);
 		if (addChr != null) {
 			addChr.getClient().announce(PacketCreator.sendFamilyInvite(c.getPlayer().getId(), toAdd));

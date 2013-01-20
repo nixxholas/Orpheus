@@ -25,7 +25,7 @@ import net.PacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class KeepAliveHandler implements PacketHandler {
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		c.pongReceived();
 	}
 

@@ -24,7 +24,7 @@ import client.GameClient;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public interface PacketHandler {
-	void handlePacket(SeekableLittleEndianAccessor slea, GameClient c);
+	void handlePacket(SeekableLittleEndianAccessor reader, GameClient c);
 
 	boolean validateState(GameClient c);
 }

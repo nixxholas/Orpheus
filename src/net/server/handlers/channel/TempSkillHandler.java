@@ -32,7 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TempSkillHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		c.announce(PacketCreator.temporarySkills());
 	}
 

@@ -35,17 +35,17 @@ public final class RegisterPicHandler extends AbstractPacketHandler {
 	private static Logger log = LoggerFactory.getLogger(RegisterPicHandler.class);
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readByte();
-		int charId = slea.readInt();
-		String macs = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readByte();
+		int charId = reader.readInt();
+		String macs = reader.readMapleAsciiString();
 		c.updateMacs(macs);
 		if (c.hasBannedMac()) {
 			c.getSession().close(true);
 			return;
 		}
-		slea.readMapleAsciiString();
-		String pic = slea.readMapleAsciiString();
+		reader.readMapleAsciiString();
+		String pic = reader.readMapleAsciiString();
 		if (c.getPic() == null || c.getPic().equals("")) {
 			c.setPic(pic);
 			try {

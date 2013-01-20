@@ -79,22 +79,22 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 	}
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int mode = slea.readByte();
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int mode = reader.readByte();
 		GameCharacter player = c.getPlayer();
 		BuddyList buddylist = player.getBuddylist();
 		if (mode == 1) { // add
-			String addName = slea.readMapleAsciiString();
-			String group = slea.readMapleAsciiString();
+			String addName = reader.readMapleAsciiString();
+			String group = reader.readMapleAsciiString();
 			if (group.length() > 16 || addName.length() < 4 || addName.length() > 13) {
 				return; // hax.
 			}
-			BuddylistEntry ble = buddylist.get(addName);
-			if (ble != null && !ble.isVisible() && group.equals(ble.getGroup())) {
-				c.announce(PacketCreator.serverNotice(1, "You already have \"" + ble.getName() + "\" on your Buddylist"));
-			} else if (buddylist.isFull() && ble == null) {
+			BuddylistEntry entry = buddylist.get(addName);
+			if (entry != null && !entry.isVisible() && group.equals(entry.getGroup())) {
+				c.announce(PacketCreator.serverNotice(1, "You already have \"" + entry.getName() + "\" on your Buddylist"));
+			} else if (buddylist.isFull() && entry == null) {
 				c.announce(PacketCreator.serverNotice(1, "Your buddylist is already full"));
-			} else if (ble == null) {
+			} else if (entry == null) {
 				try {
 					World world = c.getWorldServer();
 					CharacterIdNameBuddyCapacity charWithId = null;
@@ -155,11 +155,11 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 				} catch (SQLException e) {
 				}
 			} else {
-				ble.changeGroup(group);
+				entry.changeGroup(group);
 				c.announce(PacketCreator.updateBuddylist(buddylist.getBuddies()));
 			}
 		} else if (mode == 2) { // accept buddy
-			int otherCid = slea.readInt();
+			int otherCid = reader.readInt();
 			if (!buddylist.isFull()) {
 				try {
 					byte channel = c.getWorldServer().find(otherCid);// worldInterface.find(otherCid);
@@ -187,7 +187,7 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 			}
 			nextPendingRequest(c);
 		} else if (mode == 3) { // delete
-			int otherCid = slea.readInt();
+			int otherCid = reader.readInt();
 			if (buddylist.containsVisible(otherCid)) {
 				notifyRemoteChannel(c, c.getWorldServer().find(otherCid), otherCid, BuddyOperation.DELETED);
 			}
@@ -197,15 +197,13 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private PreparedStatement getSelectCharacterNameById(Connection con,
-			int otherCid) throws SQLException {
+	private PreparedStatement getSelectCharacterNameById(Connection con, int otherCid) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT name FROM characters WHERE id = ?");
 		ps.setInt(1, otherCid);
 		return ps;
 	}
 
-	private PreparedStatement getInsertPendingBunny(Connection con,
-			GameCharacter player, CharacterIdNameBuddyCapacity charWithId)
+	private PreparedStatement getInsertPendingBunny(Connection con,  GameCharacter player, CharacterIdNameBuddyCapacity charWithId)
 			throws SQLException {
 		PreparedStatement ps = con.prepareStatement("INSERT INTO buddies (characterid, `buddyid`, `pending`) VALUES (?, ?, 1)");
 		ps.setInt(1, charWithId.id);
@@ -213,8 +211,7 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 		return ps;
 	}
 
-	private PreparedStatement getSelectPendingBuddy(Connection con,
-			GameCharacter player, CharacterIdNameBuddyCapacity charWithId)
+	private PreparedStatement getSelectPendingBuddy(Connection con, GameCharacter player, CharacterIdNameBuddyCapacity charWithId)
 			throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT pending FROM buddies WHERE characterid = ? AND buddyid = ?");
 		ps.setInt(1, charWithId.id);
@@ -222,8 +219,7 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 		return ps;
 	}
 
-	private PreparedStatement getSelectPendingBuddyCount(
-			Connection con, CharacterIdNameBuddyCapacity charWithId)
+	private PreparedStatement getSelectPendingBuddyCount(Connection con, CharacterIdNameBuddyCapacity charWithId)
 			throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) as buddyCount FROM buddies WHERE characterid = ? AND pending = 0");
 		ps.setInt(1, charWithId.id);

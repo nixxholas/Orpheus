@@ -38,7 +38,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class PlayerListHandler implements GMPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, IoSession session) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, IoSession session) {
 		List<String> playerList = new ArrayList<String>();
 		for (Channel ch : Server.getInstance().getAllChannels()) {
 			Collection<GameCharacter> list = ch.getPlayerStorage().getAllCharacters();

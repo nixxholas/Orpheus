@@ -34,14 +34,14 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SnowballHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		// D3 00 02 00 00 A5 01
 		GameCharacter chr = c.getPlayer();
 		GameMap map = chr.getMap();
 		final MapleSnowball snowball = map.getSnowball(chr.getTeam());
 		final MapleSnowball othersnowball = map.getSnowball(chr.getTeam() == 0 ? (byte) 1 : 0);
-		int what = slea.readByte();
-		// slea.skip(4);
+		int what = reader.readByte();
+		// reader.skip(4);
 
 		if (snowball == null || othersnowball == null || snowball.getSnowmanHP() == 0)
 			return;

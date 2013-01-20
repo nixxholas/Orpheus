@@ -30,9 +30,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CharInfoRequestHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readInt();
-		int cid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readInt();
+		int cid = reader.readInt();
 		GameCharacter player = (GameCharacter) c.getPlayer().getMap().getMapObject(cid);
 		if (player.isHidden() && !c.getPlayer().isGM())
 			return;

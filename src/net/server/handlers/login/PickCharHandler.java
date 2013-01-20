@@ -32,11 +32,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PickCharHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int charId = slea.readInt();
-		byte world = (byte) slea.readInt();// Wuuu? ):
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int charId = reader.readInt();
+		byte world = (byte) reader.readInt();// Wuuu? ):
 		c.setWorld(world);
-		String macs = slea.readMapleAsciiString();
+		String macs = reader.readMapleAsciiString();
 		c.updateMacs(macs);
 		if (c.hasBannedMac()) {
 			c.getSession().close(true);

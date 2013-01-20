@@ -35,11 +35,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ScriptedItemHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
-		slea.readInt(); // trash stamp (thx rmzero)
-		byte itemSlot = (byte) slea.readShort(); // item sl0t (thx rmzero)
-		int itemId = slea.readInt(); // itemId
+		reader.readInt(); // trash stamp (thx rmzero)
+		byte itemSlot = (byte) reader.readShort(); // item sl0t (thx rmzero)
+		int itemId = reader.readInt(); // itemId
 		scriptedItem info = ii.getScriptedItemInfo(itemId);
 		if (info == null)
 			return;

@@ -28,14 +28,14 @@ import net.AbstractPacketHandler;
 public final class SkillMacroHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int num = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int num = reader.readByte();
 		for (int i = 0; i < num; i++) {
-			String name = slea.readMapleAsciiString();
-			int shout = slea.readByte();
-			int skill1 = slea.readInt();
-			int skill2 = slea.readInt();
-			int skill3 = slea.readInt();
+			String name = reader.readMapleAsciiString();
+			int shout = reader.readByte();
+			int skill1 = reader.readInt();
+			int skill2 = reader.readInt();
+			int skill3 = reader.readInt();
 			SkillMacro macro = new SkillMacro(i, skill1, skill2, skill3, name, shout);
 			c.getPlayer().updateMacro(i, macro);
 		}

@@ -29,8 +29,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class FaceExpressionHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int emote = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int emote = reader.readInt();
 		if (emote > 7) {
 			int emoteid = 5159992 + emote;
 			if (c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(emoteid)).findById(emoteid) == null) {

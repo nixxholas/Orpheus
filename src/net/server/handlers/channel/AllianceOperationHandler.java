@@ -38,7 +38,7 @@ import tools.data.output.PacketWriter;
 public final class AllianceOperationHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		Alliance alliance = null;
 		if (c.getPlayer().getGuild() != null && c.getPlayer().getGuild().getAllianceId() > 0) {
 			alliance = Server.getInstance().getAlliance(c.getPlayer().getGuild().getAllianceId());
@@ -51,19 +51,21 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		switch (slea.readByte()) {
+		switch (reader.readByte()) {
 			case 0x01:
 				Server.getInstance().allianceMessage(alliance.getId(), sendShowInfo(c.getPlayer().getGuild().getAllianceId(), c.getPlayer().getId()), -1, -1);
 				break;
-			case 0x02: { // Leave Alliance
+			case 0x02: { 
+				// Leave Alliance
 				if (c.getPlayer().getGuild().getAllianceId() == 0 || c.getPlayer().getGuildId() < 1 || c.getPlayer().getGuildRank() != 1) {
 					return;
 				}
 				Server.getInstance().allianceMessage(alliance.getId(), sendChangeGuild(c.getPlayer().getGuildId(), c.getPlayer().getId(), c.getPlayer().getGuildId(), 2), -1, -1);
 				break;
 			}
-			case 0x03: // send alliance invite
-				String charName = slea.readMapleAsciiString();
+			case 0x03: 
+				// send alliance invite
+				String charName = reader.readMapleAsciiString();
 				byte channel = c.getWorldServer().find(charName);
 				if (channel == -1) {
 					c.getPlayer().dropMessage("The player is not online.");
@@ -74,51 +76,53 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 					} else if (victim.getGuildRank() != 1) {
 						c.getPlayer().dropMessage("The player is not the leader of his/her guild.");
 					} else {
-						Server.getInstance().allianceMessage(alliance.getId(), sendInvitation(c.getPlayer().getGuild().getAllianceId(), c.getPlayer().getId(), slea.readMapleAsciiString()), -1, -1);
+						Server.getInstance().allianceMessage(alliance.getId(), sendInvitation(c.getPlayer().getGuild().getAllianceId(), c.getPlayer().getId(), reader.readMapleAsciiString()), -1, -1);
 					}
 				}
 				break;
 			case 0x04: {
-				int guildid = slea.readInt();
-				// slea.readMapleAsciiString();//guild name
+				int guildid = reader.readInt();
+				// reader.readMapleAsciiString();//guild name
 				if (c.getPlayer().getGuild().getAllianceId() != 0 || c.getPlayer().getGuildRank() != 1 || c.getPlayer().getGuildId() < 1) {
 					return;
 				}
 				Server.getInstance().allianceMessage(alliance.getId(), sendChangeGuild(guildid, c.getPlayer().getId(), c.getPlayer().getGuildId(), 0), -1, -1);
 				break;
 			}
-			case 0x06: { // Expel Guild
-				int guildid = slea.readInt();
-				int allianceid = slea.readInt();
+			case 0x06: { 
+				// Expel Guild
+				int guildid = reader.readInt();
+				int allianceid = reader.readInt();
 				if (c.getPlayer().getGuild().getAllianceId() == 0 || c.getPlayer().getGuild().getAllianceId() != allianceid) {
 					return;
 				}
 				Server.getInstance().allianceMessage(alliance.getId(), sendChangeGuild(allianceid, c.getPlayer().getId(), guildid, 1), -1, -1);
 				break;
 			}
-			case 0x07: { // Change Alliance Leader
+			case 0x07: { 
+				// Change Alliance Leader
 				if (c.getPlayer().getGuild().getAllianceId() == 0 || c.getPlayer().getGuildId() < 1) {
 					return;
 				}
-				Server.getInstance().allianceMessage(alliance.getId(), sendChangeLeader(c.getPlayer().getGuild().getAllianceId(), c.getPlayer().getId(), slea.readInt()), -1, -1);
+				Server.getInstance().allianceMessage(alliance.getId(), sendChangeLeader(c.getPlayer().getGuild().getAllianceId(), c.getPlayer().getId(), reader.readInt()), -1, -1);
 				break;
 			}
 			case 0x08:
 				String ranks[] = new String[5];
 				for (int i = 0; i < 5; i++) {
-					ranks[i] = slea.readMapleAsciiString();
+					ranks[i] = reader.readMapleAsciiString();
 				}
 				Server.getInstance().setAllianceRanks(alliance.getId(), ranks);
 				Server.getInstance().allianceMessage(alliance.getId(), PacketCreator.changeAllianceRankTitle(alliance.getId(), ranks), -1, -1);
 				break;
 			case 0x09: {
-				int int1 = slea.readInt();
-				byte byte1 = slea.readByte();
+				int int1 = reader.readInt();
+				byte byte1 = reader.readByte();
 				Server.getInstance().allianceMessage(alliance.getId(), sendChangeRank(c.getPlayer().getGuild().getAllianceId(), c.getPlayer().getId(), int1, byte1), -1, -1);
 				break;
 			}
 			case 0x0A:
-				String notice = slea.readMapleAsciiString();
+				String notice = reader.readMapleAsciiString();
 				Server.getInstance().setAllianceNotice(alliance.getId(), notice);
 				Server.getInstance().allianceMessage(alliance.getId(), PacketCreator.allianceNotice(alliance.getId(), notice), -1, -1);
 				break;
@@ -128,52 +132,52 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 		alliance.saveToDB();
 	}
 
-	private static GamePacket sendShowInfo(int allianceid, int playerid) {
+	private static GamePacket sendShowInfo(int allianceId, int playerId) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.writeAsByte(0x02);
-		w.writeInt(allianceid);
-		w.writeInt(playerid);
+		w.writeInt(allianceId);
+		w.writeInt(playerId);
 		return w.getPacket();
 	}
 
-	private static GamePacket sendInvitation(int allianceid, int playerid, final String guildname) {
+	private static GamePacket sendInvitation(int allianceId, int playerId, final String guildName) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.writeAsByte(0x05);
-		w.writeInt(allianceid);
-		w.writeInt(playerid);
-		w.writeLengthString(guildname);
+		w.writeInt(allianceId);
+		w.writeInt(playerId);
+		w.writeLengthString(guildName);
 		return w.getPacket();
 	}
 
-	private static GamePacket sendChangeGuild(int allianceid, int playerid, int guildid, int option) {
+	private static GamePacket sendChangeGuild(int allianceId, int playerId, int guildId, int option) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.writeAsByte(0x07);
-		w.writeInt(allianceid);
-		w.writeInt(guildid);
-		w.writeInt(playerid);
+		w.writeInt(allianceId);
+		w.writeInt(guildId);
+		w.writeInt(playerId);
 		w.writeAsByte(option);
 		return w.getPacket();
 	}
 
-	private static GamePacket sendChangeLeader(int allianceid, int playerid, int victim) {
+	private static GamePacket sendChangeLeader(int allianceId, int playerId, int victim) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.writeAsByte(0x08);
-		w.writeInt(allianceid);
-		w.writeInt(playerid);
+		w.writeInt(allianceId);
+		w.writeInt(playerId);
 		w.writeInt(victim);
 		return w.getPacket();
 	}
 
-	private static GamePacket sendChangeRank(int allianceid, int playerid, int int1, byte byte1) {
+	private static GamePacket sendChangeRank(int allianceId, int playerId, int int1, byte byte1) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.ALLIANCE_OPERATION.getValue());
 		w.writeAsByte(0x09);
-		w.writeInt(allianceid);
-		w.writeInt(playerid);
+		w.writeInt(allianceId);
+		w.writeInt(playerId);
 		w.writeInt(int1);
 		w.writeInt(byte1);
 		return w.getPacket();

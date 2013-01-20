@@ -35,10 +35,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class BeholderHandler extends AbstractPacketHandler {// broken
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		Output.print("[BH] " + slea.toString());
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		Output.print("[BH] " + reader.toString());
 		Collection<Summon> summons = c.getPlayer().getSummons().values();
-		int oid = slea.readInt();
+		int oid = reader.readInt();
 		Summon summon = null;
 		for (Summon sum : summons) {
 			if (sum.getObjectId() == oid) {
@@ -46,11 +46,11 @@ public final class BeholderHandler extends AbstractPacketHandler {// broken
 			}
 		}
 		if (summon != null) {
-			int skillId = slea.readInt();
+			int skillId = reader.readInt();
 			if (skillId == DarkKnight.AURA_OF_BEHOLDER) {
-				slea.readShort(); // Not sure.
+				reader.readShort(); // Not sure.
 			} else if (skillId == DarkKnight.HEX_OF_BEHOLDER) {
-				slea.readByte(); // Not sure.
+				reader.readByte(); // Not sure.
 			} // show to others here
 		} else {
 			c.getPlayer().getSummons().clear();

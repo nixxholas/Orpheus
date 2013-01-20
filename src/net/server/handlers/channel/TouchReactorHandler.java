@@ -33,11 +33,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TouchReactorHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int oid = reader.readInt();
 		Reactor reactor = c.getPlayer().getMap().getReactorByOid(oid);
 		if (reactor != null) {
-			if (slea.readByte() != 0) {
+			if (reader.readByte() != 0) {
 				ReactorScriptManager.getInstance().touch(c, reactor);
 			} else {
 				ReactorScriptManager.getInstance().untouch(c, reactor);

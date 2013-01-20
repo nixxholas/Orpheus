@@ -345,59 +345,59 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
         }
     }
 
-    protected AttackInfo parseDamage(LittleEndianAccessor lea, GameCharacter player, boolean isRanged) {
+    protected AttackInfo parseDamage(LittleEndianAccessor reader, GameCharacter player, boolean isRanged) {
         AttackInfo info = new AttackInfo();
-        lea.readByte();
-        info.numAttackedAndDamage = lea.readByte();
+        reader.readByte();
+        info.numAttackedAndDamage = reader.readByte();
         info.numAttacked = (info.numAttackedAndDamage >>> 4) & 0xF;
         info.numDamage = info.numAttackedAndDamage & 0xF;
         info.allDamage = new HashMap<Integer, List<Integer>>();
-        info.skill.id = lea.readInt();
+        info.skill.id = reader.readInt();
         if (info.skill.id > 0) {
             info.skill.level = player.getSkillLevel(info.skill.id);
         }
         if (info.skill.id == FPArchMage.BIG_BANG || info.skill.id == ILArchMage.BIG_BANG || info.skill.id == Bishop.BIG_BANG || info.skill.id == Gunslinger.GRENADE || info.skill.id == Brawler.CORKSCREW_BLOW || info.skill.id == ThunderBreaker.CORKSCREW_BLOW || info.skill.id == NightWalker.POISON_BOMB) {
-            info.charge = lea.readInt();
+            info.charge = reader.readInt();
         } else {
             info.charge = 0;
         }
         if (info.skill.id == Paladin.HEAVENS_HAMMER) {
             info.isHH = true;
         }
-        lea.skip(8);
-        info.display = lea.readByte();
-        info.direction = lea.readByte();
-        info.stance = lea.readByte();
+        reader.skip(8);
+        info.display = reader.readByte();
+        info.direction = reader.readByte();
+        info.stance = reader.readByte();
         if (info.skill.id == ChiefBandit.MESO_EXPLOSION) {
             if (info.numAttackedAndDamage == 0) {
-                lea.skip(10);
-                int bullets = lea.readByte();
+                reader.skip(10);
+                int bullets = reader.readByte();
                 for (int j = 0; j < bullets; j++) {
-                    int mesoid = lea.readInt();
-                    lea.skip(1);
+                    int mesoid = reader.readInt();
+                    reader.skip(1);
                     info.allDamage.put(Integer.valueOf(mesoid), null);
                 }
                 return info;
             } else {
-                lea.skip(6);
+                reader.skip(6);
             }
             for (int i = 0; i < info.numAttacked + 1; i++) {
-                int oid = lea.readInt();
+                int oid = reader.readInt();
                 if (i < info.numAttacked) {
-                    lea.skip(12);
-                    int bullets = lea.readByte();
+                    reader.skip(12);
+                    int bullets = reader.readByte();
                     List<Integer> allDamageNumbers = new ArrayList<Integer>();
                     for (int j = 0; j < bullets; j++) {
-                        int damage = lea.readInt();
+                        int damage = reader.readInt();
                         allDamageNumbers.add(Integer.valueOf(damage));
                     }
                     info.allDamage.put(Integer.valueOf(oid), allDamageNumbers);
-                    lea.skip(4);
+                    reader.skip(4);
                 } else {
-                    int bullets = lea.readByte();
+                    int bullets = reader.readByte();
                     for (int j = 0; j < bullets; j++) {
-                        int mesoid = lea.readInt();
-                        lea.skip(1);
+                        int mesoid = reader.readInt();
+                        reader.skip(1);
                         info.allDamage.put(Integer.valueOf(mesoid), null);
                     }
                 }
@@ -405,32 +405,32 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
             return info;
         }
         if (isRanged) {
-            lea.readByte();
-            info.speed = lea.readByte();
-            lea.readByte();
-            info.rangedirection = lea.readByte();
-            lea.skip(7);
+            reader.readByte();
+            info.speed = reader.readByte();
+            reader.readByte();
+            info.rangedirection = reader.readByte();
+            reader.skip(7);
             if (info.skill.id == Bowmaster.HURRICANE || info.skill.id == Marksman.PIERCING_ARROW || info.skill.id == Corsair.RAPID_FIRE || info.skill.id == WindArcher.HURRICANE) {
-                lea.skip(4);
+                reader.skip(4);
             }
         } else {
-            lea.readByte();
-            info.speed = lea.readByte();
-            lea.skip(4);
+            reader.readByte();
+            info.speed = reader.readByte();
+            reader.skip(4);
         }
         for (int i = 0; i < info.numAttacked; i++) {
-            int oid = lea.readInt();
-            lea.skip(14);
+            int oid = reader.readInt();
+            reader.skip(14);
             List<Integer> allDamageNumbers = new ArrayList<Integer>();
             for (int j = 0; j < info.numDamage; j++) {
-                int damage = lea.readInt();
+                int damage = reader.readInt();
                 if (info.skill.id == Marksman.SNIPE) {
                     damage += 0x80000000; //Critical
                 }
                 allDamageNumbers.add(Integer.valueOf(damage));
             }
             if (info.skill.id != 5221004) {
-                lea.skip(4);
+                reader.skip(4);
             }
             info.allDamage.put(Integer.valueOf(oid), allDamageNumbers);
         }

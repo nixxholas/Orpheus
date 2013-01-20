@@ -39,22 +39,22 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (c.getPlayer().getGuildId() < 1) {
 			return;
 		}
-		byte mode = slea.readByte();
+		byte mode = reader.readByte();
 		int localthreadid = 0;
 		switch (mode) {
 			case 0:
-				boolean bEdit = slea.readByte() == 1;
+				boolean bEdit = reader.readByte() == 1;
 				if (bEdit) {
-					localthreadid = slea.readInt();
+					localthreadid = reader.readInt();
 				}
-				boolean bNotice = slea.readByte() == 1;
-				String title = correctLength(slea.readMapleAsciiString(), 25);
-				String text = correctLength(slea.readMapleAsciiString(), 600);
-				int icon = slea.readInt();
+				boolean bNotice = reader.readByte() == 1;
+				String title = correctLength(reader.readMapleAsciiString(), 25);
+				String text = correctLength(reader.readMapleAsciiString(), 600);
+				int icon = reader.readInt();
 				if (icon >= 0x64 && icon <= 0x6a) {
 					if (c.getPlayer().getItemQuantity(5290000 + icon - 0x64, false) > 0) {
 						return;
@@ -69,29 +69,29 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 				}
 				break;
 			case 1:
-				localthreadid = slea.readInt();
+				localthreadid = reader.readInt();
 				deleteBBSThread(c, localthreadid);
 				break;
 			case 2:
-				int start = slea.readInt();
+				int start = reader.readInt();
 				listBBSThreads(c, start * 10);
 				break;
 			case 3: // list thread + reply, followed by id (int)
-				localthreadid = slea.readInt();
+				localthreadid = reader.readInt();
 				displayThread(c, localthreadid);
 				break;
 			case 4: // reply
-				localthreadid = slea.readInt();
-				text = correctLength(slea.readMapleAsciiString(), 25);
+				localthreadid = reader.readInt();
+				text = correctLength(reader.readMapleAsciiString(), 25);
 				newBBSReply(c, localthreadid, text);
 				break;
 			case 5: // delete reply
-				localthreadid = slea.readInt(); // we don't use this
-				int replyid = slea.readInt();
+				localthreadid = reader.readInt(); // we don't use this
+				int replyid = reader.readInt();
 				deleteBBSReply(c, replyid);
 				break;
 			default:
-				Output.print("Unhandled BBS mode: " + slea.toString());
+				Output.print("Unhandled BBS mode: " + reader.toString());
 		}
 	}
 
@@ -108,7 +108,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		}
 	}
 
-	private static void newBBSReply(GameClient c, int localthreadid, String text) {
+	private static void newBBSReply(GameClient c, int localThreadId, String text) {
 		if (c.getPlayer().getGuildId() <= 0) {
 			return;
 		}
@@ -116,7 +116,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT threadid FROM bbs_threads WHERE guildid = ? AND localthreadid = ?");
 			ps.setInt(1, c.getPlayer().getGuildId());
-			ps.setInt(2, localthreadid);
+			ps.setInt(2, localThreadId);
 			ResultSet threadRS = ps.executeQuery();
 			if (!threadRS.next()) {
 				threadRS.close();
@@ -137,13 +137,13 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 			ps.setInt(1, threadid);
 			ps.execute();
 			ps.close();
-			displayThread(c, localthreadid);
+			displayThread(c, localThreadId);
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
 	}
 
-	private static void editBBSThread(GameClient client, String title, String text, int icon, int localthreadid) {
+	private static void editBBSThread(GameClient client, String title, String text, int icon, int localThreadId) {
 		GameCharacter c = client.getPlayer();
 		if (c.getGuildId() < 1) {
 			return;
@@ -155,18 +155,18 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 			ps.setInt(3, icon);
 			ps.setString(4, text);
 			ps.setInt(5, c.getGuildId());
-			ps.setInt(6, localthreadid);
+			ps.setInt(6, localThreadId);
 			ps.setInt(7, c.getId());
 			ps.setBoolean(8, c.getGuildRank() < 3);
 			ps.execute();
 			ps.close();
-			displayThread(client, localthreadid);
+			displayThread(client, localThreadId);
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
 	}
 
-	private static void newBBSThread(GameClient client, String title, String text, int icon, boolean bNotice) {
+	private static void newBBSThread(GameClient client, String title, String text, int icon, boolean isNotice) {
 		GameCharacter c = client.getPlayer();
 		if (c.getGuildId() <= 0) {
 			return;
@@ -175,7 +175,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		try {
 			Connection con = DatabaseConnection.getConnection();
 			PreparedStatement ps;
-			if (!bNotice) {
+			if (!isNotice) {
 				ps = con.prepareStatement("SELECT MAX(localthreadid) AS lastLocalId FROM bbs_threads WHERE guildid = ?");
 				ps.setInt(1, c.getGuildId());
 				ResultSet rs = ps.executeQuery();
@@ -201,7 +201,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 
 	}
 
-	public static void deleteBBSThread(GameClient client, int localthreadid) {
+	public static void deleteBBSThread(GameClient client, int localThreadId) {
 		GameCharacter player = client.getPlayer();
 		if (player.getGuildId() <= 0) {
 			return;
@@ -210,7 +210,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT threadid, postercid FROM bbs_threads WHERE guildid = ? AND localthreadid = ?");
 			ps.setInt(1, player.getGuildId());
-			ps.setInt(2, localthreadid);
+			ps.setInt(2, localThreadId);
 			ResultSet threadRS = ps.executeQuery();
 			if (!threadRS.next()) {
 				threadRS.close();
@@ -238,7 +238,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		}
 	}
 
-	public static void deleteBBSReply(GameClient client, int replyid) {
+	public static void deleteBBSReply(GameClient client, int replyId) {
 		GameCharacter player = client.getPlayer();
 		if (player.getGuildId() <= 0) {
 			return;
@@ -247,7 +247,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement("SELECT postercid, threadid FROM bbs_replies WHERE replyid = ?");
-			ps.setInt(1, replyid);
+			ps.setInt(1, replyId);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
 				rs.close();
@@ -263,7 +263,7 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 			rs.close();
 			ps.close();
 			ps = con.prepareStatement("DELETE FROM bbs_replies WHERE replyid = ?");
-			ps.setInt(1, replyid);
+			ps.setInt(1, replyId);
 			ps.execute();
 			ps.close();
 			ps = con.prepareStatement("UPDATE bbs_threads SET replycount = replycount - 1 WHERE threadid = ?");
@@ -276,20 +276,20 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 		}
 	}
 
-	public static void displayThread(GameClient client, int threadid) {
-		displayThread(client, threadid, true);
+	public static void displayThread(GameClient client, int threadId) {
+		displayThread(client, threadId, true);
 	}
 
-	public static void displayThread(GameClient client, int threadid, boolean bIsThreadIdLocal) {
+	public static void displayThread(GameClient client, int threadId, boolean isThreadIdLocal) {
 		GameCharacter player = client.getPlayer();
 		if (player.getGuildId() <= 0) {
 			return;
 		}
 		Connection con = DatabaseConnection.getConnection();
 		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM bbs_threads WHERE guildid = ? AND " + (bIsThreadIdLocal ? "local" : "") + "threadid = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM bbs_threads WHERE guildid = ? AND " + (isThreadIdLocal ? "local" : "") + "threadid = ?");
 			ps.setInt(1, player.getGuildId());
-			ps.setInt(2, threadid);
+			ps.setInt(2, threadId);
 			ResultSet threadRS = ps.executeQuery();
 			if (!threadRS.next()) {
 				threadRS.close();
@@ -300,10 +300,10 @@ public final class BBSOperationHandler extends AbstractPacketHandler {
 			PreparedStatement ps2 = null;
 			if (threadRS.getInt("replycount") >= 0) {
 				ps2 = con.prepareStatement("SELECT * FROM bbs_replies WHERE threadid = ?");
-				ps2.setInt(1, !bIsThreadIdLocal ? threadid : threadRS.getInt("threadid"));
+				ps2.setInt(1, !isThreadIdLocal ? threadId : threadRS.getInt("threadid"));
 				repliesRS = ps2.executeQuery();
 			}
-			client.announce(PacketCreator.showThread(bIsThreadIdLocal ? threadid : threadRS.getInt("localthreadid"), threadRS, repliesRS));
+			client.announce(PacketCreator.showThread(isThreadIdLocal ? threadId : threadRS.getInt("localthreadid"), threadRS, repliesRS));
 			repliesRS.close();
 			ps.close();
 			if (ps2 != null) {

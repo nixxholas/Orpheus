@@ -41,10 +41,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemIdSortHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		chr.getAutobanManager().setTimestamp(4, slea.readInt());
-		byte inv = slea.readByte();
+		chr.getAutobanManager().setTimestamp(4, reader.readInt());
+		byte inv = reader.readByte();
 		if (inv < 0 || inv > 5) {
 			c.disconnect();
 			return;

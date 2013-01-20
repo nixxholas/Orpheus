@@ -29,8 +29,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseChairHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int itemId = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int itemId = reader.readInt();
 		if (c.getPlayer().getInventory(InventoryType.SETUP).findById(itemId) == null) {
 			return;
 		}

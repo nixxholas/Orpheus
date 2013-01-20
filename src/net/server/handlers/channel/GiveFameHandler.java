@@ -32,16 +32,16 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class GiveFameHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter player = c.getPlayer();
 
-		final int targetId = slea.readInt();
+		final int targetId = reader.readInt();
 		GameCharacter target = (GameCharacter) player.getMap().getMapObject(targetId);
 		if ((target == player || player.getLevel() < 15)) {
 			return;
 		}
 		
-		int mode = slea.readByte();
+		int mode = reader.readByte();
 		int fameChange = 2 * mode - 1;
 		final FameStats fameStats = player.getFameStats();
 		final FameStatus status = fameStats.canGiveFame(targetId);

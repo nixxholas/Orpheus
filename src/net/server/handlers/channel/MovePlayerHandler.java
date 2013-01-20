@@ -29,9 +29,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MovePlayerHandler extends AbstractMovementPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.skip(9);
-		final List<LifeMovementFragment> res = parseMovement(slea);
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.skip(9);
+		final List<LifeMovementFragment> res = parseMovement(reader);
 		if (res != null) {
 			updatePosition(res, c.getPlayer(), 0);
 			c.getPlayer().getMap().movePlayer(c.getPlayer(), c.getPlayer().getPosition());

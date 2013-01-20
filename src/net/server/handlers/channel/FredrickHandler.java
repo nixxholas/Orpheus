@@ -42,9 +42,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class FredrickHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		byte operation = slea.readByte();
+		byte operation = reader.readByte();
 
 		switch (operation) {
 			case 0x19: // Will never come...

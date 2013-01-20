@@ -35,11 +35,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CoconutHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		/*
 		 * CB 00 A6 00 06 01 A6 00 = coconut id 06 01 = ?
 		 */
-		int id = slea.readShort();
+		int id = reader.readShort();
 		try {
 			GameMap map = c.getPlayer().getMap();
 			MapleCoconut event = map.getCoconut();

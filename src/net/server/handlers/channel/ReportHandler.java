@@ -36,12 +36,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ReportHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int type = slea.readByte(); // 01 = Conversation claim 00 = illegal
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int type = reader.readByte(); // 01 = Conversation claim 00 = illegal
 									// program
-		String victim = slea.readMapleAsciiString();
-		int reason = slea.readByte();
-		String description = slea.readMapleAsciiString();
+		String victim = reader.readMapleAsciiString();
+		int reason = reader.readByte();
+		String description = reader.readMapleAsciiString();
 		if (type == 0) {
 			if (c.getPlayer().getPossibleReports() > 0) {
 				if (c.getPlayer().getMeso() > 299) {
@@ -58,7 +58,7 @@ public final class ReportHandler extends AbstractPacketHandler {
 			c.getChannelServer().broadcastGMPacket(PacketCreator.serverNotice(6, victim + " was reported for: " + description));
 			addReport(c.getPlayer().getId(), GameCharacter.getIdByName(victim), 0, description, null);
 		} else if (type == 1) {
-			String chatlog = slea.readMapleAsciiString();
+			String chatlog = reader.readMapleAsciiString();
 			if (chatlog == null) {
 				return;
 			}

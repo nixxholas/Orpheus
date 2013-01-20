@@ -36,7 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class RemoteStoreHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		HiredMerchant hm = getMerchant(c);
 		if (chr.hasMerchant() && hm != null) {

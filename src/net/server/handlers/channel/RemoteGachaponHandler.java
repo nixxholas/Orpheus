@@ -33,12 +33,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class RemoteGachaponHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int type = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int type = reader.readInt();
 		if (c.getPlayer().getInventory(ItemInfoProvider.getInstance().getInventoryType(type)).countById(type) < 1) {
 			return;
 		}
-		int mode = slea.readInt();
+		int mode = reader.readInt();
 		if (type == 5451000) {
 			int npcId = 9100100;
 			if (mode != 8 && mode != 9) {

@@ -30,8 +30,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ServerStatusRequestHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte world = (byte) slea.readShort();// Wuuu? ):
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte world = (byte) reader.readShort();// Wuuu? ):
 		int status;
 		int num = 0;
 		for (byte load : Server.getInstance().getLoad(world).keySet()) {
@@ -39,8 +39,8 @@ public final class ServerStatusRequestHandler extends AbstractPacketHandler {
 		}
 		if (num >= ServerConstants.CHANNEL_LOAD) {
 			status = 2;
-		} else if (num >= ServerConstants.CHANNEL_LOAD * .8) { // More than 80
-																// percent o___o
+		} else if (num >= ServerConstants.CHANNEL_LOAD * .8) { 
+			// More than 80 percent o___o
 			status = 1;
 		} else {
 			status = 0;

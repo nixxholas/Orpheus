@@ -28,11 +28,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class AfterLoginHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte c2 = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte c2 = reader.readByte();
 		byte c3 = 5;
-		if (slea.available() > 0) {
-			c3 = slea.readByte();
+		if (reader.available() > 0) {
+			c3 = reader.readByte();
 		}
 		if (c2 == 1 && c3 == 1) {
 			if (c.getPin() == null) {
@@ -41,14 +41,14 @@ public final class AfterLoginHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.requestPin());
 			}
 		} else if (c2 == 1 && c3 == 0) {
-			String pin = slea.readMapleAsciiString();
+			String pin = reader.readMapleAsciiString();
 			if (c.checkPin(pin)) {
 				c.announce(PacketCreator.pinAccepted());
 			} else {
 				c.announce(PacketCreator.requestPinAfterFailure());
 			}
 		} else if (c2 == 2 && c3 == 0) {
-			String pin = slea.readMapleAsciiString();
+			String pin = reader.readMapleAsciiString();
 			if (c.checkPin(pin)) {
 				c.announce(PacketCreator.registerPin());
 			} else {

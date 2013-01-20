@@ -33,12 +33,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemMoveHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.skip(4);
-		final InventoryType type = InventoryType.fromByte(slea.readByte());
-		final byte sourceSlot = (byte) slea.readShort();
-		final byte targetSlot = (byte) slea.readShort();
-		final short quantity = slea.readShort();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.skip(4);
+		final InventoryType type = InventoryType.fromByte(reader.readByte());
+		final byte sourceSlot = (byte) reader.readShort();
+		final byte targetSlot = (byte) reader.readShort();
+		final short quantity = reader.readShort();
 		if (sourceSlot < 0 && targetSlot > 0) {
 			InventoryManipulator.unequip(c, sourceSlot, targetSlot);
 		} else if (targetSlot < 0) {

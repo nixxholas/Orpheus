@@ -37,27 +37,27 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CreateCharHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		String name = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		String name = reader.readMapleAsciiString();
 		if (!GameCharacter.canCreateChar(name)) {
 			return;
 		}
 		GameCharacter newchar = GameCharacter.getDefault(c);
 		newchar.setWorldId(c.getWorld());
-		int job = slea.readInt();
-		int face = slea.readInt();
+		int job = reader.readInt();
+		int face = reader.readInt();
 		newchar.setFace(face);
-		newchar.setHair(slea.readInt() + slea.readInt());
-		int skincolor = slea.readInt();
+		newchar.setHair(reader.readInt() + reader.readInt());
+		int skincolor = reader.readInt();
 		if (skincolor > 3) {
 			return;
 		}
 		newchar.setSkinColor(SkinColor.getById(skincolor));
-		int top = slea.readInt();
-		int bottom = slea.readInt();
-		int shoes = slea.readInt();
-		int weapon = slea.readInt();
-		newchar.setGender(slea.readByte());
+		int top = reader.readInt();
+		int bottom = reader.readInt();
+		int shoes = reader.readInt();
+		int weapon = reader.readInt();
+		newchar.setGender(reader.readByte());
 		newchar.setName(name);
 		if (!newchar.isGM()) {
 			if (job == 0) { 

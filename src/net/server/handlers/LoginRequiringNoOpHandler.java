@@ -31,7 +31,7 @@ public final class LoginRequiringNoOpHandler implements PacketHandler {
 		return instance;
 	}
 
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 	}
 
 	public boolean validateState(GameClient c) {

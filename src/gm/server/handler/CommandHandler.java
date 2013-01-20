@@ -36,38 +36,38 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class CommandHandler implements GMPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, IoSession session) {
-		byte command = slea.readByte();
+	public void handlePacket(SeekableLittleEndianAccessor reader, IoSession session) {
+		byte command = reader.readByte();
 		switch (command) {
 			case 0: {// notice
 				for (World world : Server.getInstance().getWorlds()) {
-					world.broadcastPacket(PacketCreator.serverNotice(0, slea.readMapleAsciiString()));
+					world.broadcastPacket(PacketCreator.serverNotice(0, reader.readMapleAsciiString()));
 				}
 				break;
 			}
 			case 1: {// server message
 				for (World world : Server.getInstance().getWorlds()) {
-					world.setServerMessage(slea.readMapleAsciiString());
+					world.setServerMessage(reader.readMapleAsciiString());
 				}
 				break;
 			}
 			case 2: {
 				Server server = Server.getInstance();
-				byte worldid = slea.readByte();
+				byte worldid = reader.readByte();
 				if (worldid >= server.getWorlds().size()) {
 					session.write(GMPacketCreator.commandResponse((byte) 2));
 					return;// incorrect world
 				}
 				World world = server.getWorld(worldid);
-				switch (slea.readByte()) {
+				switch (reader.readByte()) {
 					case 0:
-						world.setExpRate(slea.readByte());
+						world.setExpRate(reader.readByte());
 						break;
 					case 1:
-						world.setDropRate(slea.readByte());
+						world.setDropRate(reader.readByte());
 						break;
 					case 2:
-						world.setMesoRate(slea.readByte());
+						world.setMesoRate(reader.readByte());
 						break;
 				}
 				for (GameCharacter chr : world.getPlayerStorage().getAllCharacters()) {
@@ -75,7 +75,7 @@ public class CommandHandler implements GMPacketHandler {
 				}
 			}
 			case 3: {
-				String user = slea.readMapleAsciiString();
+				String user = reader.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
 					if (world.isConnected(user)) {
 						world.getPlayerStorage().getCharacterByName(user).getClient().disconnect();
@@ -87,11 +87,11 @@ public class CommandHandler implements GMPacketHandler {
 				break;
 			}
 			case 4: {
-				String user = slea.readMapleAsciiString();
+				String user = reader.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
 					if (world.isConnected(user)) {
 						GameCharacter chr = world.getPlayerStorage().getCharacterByName(user);
-						chr.ban(slea.readMapleAsciiString());
+						chr.ban(reader.readMapleAsciiString());
 						chr.sendPolice("You have been blocked by #b" + session.getAttribute("NAME") + " #kfor the HACK reason.");
 						session.write(GMPacketCreator.commandResponse((byte) 1));
 						return;
@@ -101,7 +101,7 @@ public class CommandHandler implements GMPacketHandler {
 				break;
 			}
 			case 5: {
-				String user = slea.readMapleAsciiString();
+				String user = reader.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
 					if (world.isConnected(user)) {
 						GameCharacter chr = world.getPlayerStorage().getCharacterByName(user);

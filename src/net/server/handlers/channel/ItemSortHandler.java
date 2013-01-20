@@ -32,11 +32,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemSortHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		chr.getAutobanManager().setTimestamp(2, slea.readInt());
+		chr.getAutobanManager().setTimestamp(2, reader.readInt());
 		
-		byte inventoryId = slea.readByte();
+		byte inventoryId = reader.readByte();
 		boolean isSorted = false;
 		InventoryType inventoryType = InventoryType.fromByte(inventoryId);
 		Inventory inventory = chr.getInventory(inventoryType);

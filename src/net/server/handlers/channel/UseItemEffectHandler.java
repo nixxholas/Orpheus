@@ -30,9 +30,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseItemEffectHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		IItem toUse;
-		int itemId = slea.readInt();
+		int itemId = reader.readInt();
 		if (itemId == 4290001 || itemId == 4290000) {
 			toUse = c.getPlayer().getInventory(InventoryType.ETC).findById(itemId);
 		} else {

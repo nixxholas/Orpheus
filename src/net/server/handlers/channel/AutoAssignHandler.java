@@ -34,17 +34,17 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class AutoAssignHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		slea.skip(8);
+		reader.skip(8);
 		if (chr.getRemainingAp() < 1) {
 			return;
 		}
 		int total = 0;
 		int extras = 0;
 		for (int i = 0; i < 2; i++) {
-			int type = slea.readInt();
-			int tempVal = slea.readInt();
+			int type = reader.readInt();
+			int tempVal = reader.readInt();
 			if (tempVal < 0 || tempVal > c.getPlayer().getRemainingAp()) {
 				return;
 			}
@@ -57,42 +57,42 @@ public class AutoAssignHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.enableActions());
 	}
 
-	private int gainStatByType(GameCharacter chr, Stat type, int gain) {
+	private int gainStatByType(GameCharacter player, Stat type, int gain) {
 		int newVal = 0;
 		if (type.equals(Stat.STR)) {
-			newVal = chr.getStr() + gain;
+			newVal = player.getStr() + gain;
 			if (newVal > 999) {
-				chr.setStr(999);
+				player.setStr(999);
 			} else {
-				chr.setStr(newVal);
+				player.setStr(newVal);
 			}
 		} else if (type.equals(Stat.INT)) {
-			newVal = chr.getInt() + gain;
+			newVal = player.getInt() + gain;
 			if (newVal > 999) {
-				chr.setInt(999);
+				player.setInt(999);
 			} else {
-				chr.setInt(newVal);
+				player.setInt(newVal);
 			}
 		} else if (type.equals(Stat.LUK)) {
-			newVal = chr.getLuk() + gain;
+			newVal = player.getLuk() + gain;
 			if (newVal > 999) {
-				chr.setLuk(999);
+				player.setLuk(999);
 			} else {
-				chr.setLuk(newVal);
+				player.setLuk(newVal);
 			}
 		} else if (type.equals(Stat.DEX)) {
-			newVal = chr.getDex() + gain;
+			newVal = player.getDex() + gain;
 			if (newVal > 999) {
-				chr.setDex(999);
+				player.setDex(999);
 			} else {
-				chr.setDex(newVal);
+				player.setDex(newVal);
 			}
 		}
 		if (newVal > 999) {
-			chr.updateSingleStat(type, 999);
+			player.updateSingleStat(type, 999);
 			return newVal - 999;
 		}
-		chr.updateSingleStat(type, newVal);
+		player.updateSingleStat(type, newVal);
 		return 0;
 	}
 }

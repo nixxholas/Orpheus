@@ -35,22 +35,22 @@ import server.movement.RelativeLifeMovement;
 import tools.data.input.LittleEndianAccessor;
 
 public abstract class AbstractMovementPacketHandler extends AbstractPacketHandler {
-	protected List<LifeMovementFragment> parseMovement(LittleEndianAccessor lea) {
+	protected List<LifeMovementFragment> parseMovement(LittleEndianAccessor reader) {
 		List<LifeMovementFragment> res = new ArrayList<LifeMovementFragment>();
-		byte numCommands = lea.readByte();
+		byte numCommands = reader.readByte();
 		for (byte i = 0; i < numCommands; i++) {
-			byte command = lea.readByte();
+			byte command = reader.readByte();
 			switch (command) {
 				case 0: // normal move
 				case 5:
 				case 17: { // Float
-					short xpos = lea.readShort();
-					short ypos = lea.readShort();
-					short xwobble = lea.readShort();
-					short ywobble = lea.readShort();
-					short unk = lea.readShort();
-					byte newstate = lea.readByte();
-					short duration = lea.readShort();
+					short xpos = reader.readShort();
+					short ypos = reader.readShort();
+					short xwobble = reader.readShort();
+					short ywobble = reader.readShort();
+					short unk = reader.readShort();
+					byte newstate = reader.readByte();
+					short duration = reader.readShort();
 					AbsoluteLifeMovement alm = new AbsoluteLifeMovement(command, new Point(xpos, ypos), duration, newstate);
 					alm.setUnk(unk);
 					alm.setPixelsPerSecond(new Point(xwobble, ywobble));
@@ -63,10 +63,10 @@ public abstract class AbstractMovementPacketHandler extends AbstractPacketHandle
 				case 12:
 				case 13: // Shot-jump-back thing
 				case 16: { // Float
-					short xpos = lea.readShort();
-					short ypos = lea.readShort();
-					byte newstate = lea.readByte();
-					short duration = lea.readShort();
+					short xpos = reader.readShort();
+					short ypos = reader.readShort();
+					byte newstate = reader.readByte();
+					short duration = reader.readShort();
 					RelativeLifeMovement rlm = new RelativeLifeMovement(command, new Point(xpos, ypos), duration, newstate);
 					res.add(rlm);
 					break;
@@ -77,41 +77,41 @@ public abstract class AbstractMovementPacketHandler extends AbstractPacketHandle
 				case 8: // assassinate
 				case 9: // rush
 				case 14: { // Before Jump Down - fixes item/mobs dissappears
-					lea.skip(9);
+					reader.skip(9);
 					break;
 					/*
-					 * case 14: { short xpos = lea.readShort(); short ypos =
-					 * lea.readShort(); short xwobble = lea.readShort(); short
-					 * ywobble = lea.readShort(); byte newstate =
-					 * lea.readByte(); TeleportMovement tm = new
+					 * case 14: { short xpos = reader.readShort(); short ypos =
+					 * reader.readShort(); short xwobble = reader.readShort(); short
+					 * ywobble = reader.readShort(); byte newstate =
+					 * reader.readByte(); TeleportMovement tm = new
 					 * TeleportMovement(command, new Point(xpos, ypos),
 					 * newstate); tm.setPixelsPerSecond(new Point(xwobble,
 					 * ywobble)); res.add(tm); break; }
 					 */
 				}
 				case 10: // Change Equip
-					res.add(new ChangeEquip(lea.readByte()));
+					res.add(new ChangeEquip(reader.readByte()));
 					break;
 				case 11: { // Chair
-					short xpos = lea.readShort();
-					short ypos = lea.readShort();
-					short unk = lea.readShort();
-					byte newstate = lea.readByte();
-					short duration = lea.readShort();
+					short xpos = reader.readShort();
+					short ypos = reader.readShort();
+					short unk = reader.readShort();
+					byte newstate = reader.readByte();
+					short duration = reader.readShort();
 					ChairMovement cm = new ChairMovement(command, new Point(xpos, ypos), duration, newstate);
 					cm.setUnk(unk);
 					res.add(cm);
 					break;
 				}
 				case 15: {
-					short xpos = lea.readShort();
-					short ypos = lea.readShort();
-					short xwobble = lea.readShort();
-					short ywobble = lea.readShort();
-					short unk = lea.readShort();
-					short fh = lea.readShort();
-					byte newstate = lea.readByte();
-					short duration = lea.readShort();
+					short xpos = reader.readShort();
+					short ypos = reader.readShort();
+					short xwobble = reader.readShort();
+					short ywobble = reader.readShort();
+					short unk = reader.readShort();
+					short fh = reader.readShort();
+					byte newstate = reader.readByte();
+					short duration = reader.readShort();
 					JumpDownMovement jdm = new JumpDownMovement(command, new Point(xpos, ypos), duration, newstate);
 					jdm.setUnk(unk);
 					jdm.setPixelsPerSecond(new Point(xwobble, ywobble));
@@ -121,11 +121,11 @@ public abstract class AbstractMovementPacketHandler extends AbstractPacketHandle
 				}
 				case 21: {// Causes aran to do weird stuff when attacking o.o
 					/*
-					 * byte newstate = lea.readByte(); short unk =
-					 * lea.readShort(); AranMovement am = new
+					 * byte newstate = reader.readByte(); short unk =
+					 * reader.readShort(); AranMovement am = new
 					 * AranMovement(command, null, unk, newstate); res.add(am);
 					 */
-					lea.skip(3);
+					reader.skip(3);
 					break;
 				}
 				default:

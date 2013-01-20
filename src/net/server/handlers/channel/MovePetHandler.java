@@ -30,11 +30,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MovePetHandler extends AbstractMovementPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int petId = slea.readInt();
-		slea.readLong();
-		// Point startPos = StreamUtil.readShortPoint(slea);
-		List<LifeMovementFragment> res = parseMovement(slea);
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int petId = reader.readInt();
+		reader.readLong();
+		// Point startPos = StreamUtil.readShortPoint(reader);
+		List<LifeMovementFragment> res = parseMovement(reader);
 		if (res.isEmpty()) {
 			return;
 		}

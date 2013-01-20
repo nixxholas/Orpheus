@@ -41,9 +41,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ItemRewardHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte slot = (byte) slea.readShort();
-		int itemId = slea.readInt(); // will load from xml I don't care.
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte slot = (byte) reader.readShort();
+		int itemId = reader.readInt(); // will load from xml I don't care.
 		if (c.getPlayer().getInventory(InventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(InventoryType.USE).countById(itemId) < 1)
 			return;
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();

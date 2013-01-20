@@ -33,12 +33,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class SetGenderHandler extends AbstractPacketHandler {
 	
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte type = slea.readByte(); // ?
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte type = reader.readByte(); // ?
 		
 		if (type == 0x01 && c.getGender() == 10) { 
 			// Packet shouldn't come if Gender isn't 10.
-			c.setGender(slea.readByte());
+			c.setGender(reader.readByte());
 			c.announce(PacketCreator.getAuthSuccess(c));
 			final GameClient client = c;
 			c.setIdleTask(TimerManager.getInstance().schedule(new Runnable() {

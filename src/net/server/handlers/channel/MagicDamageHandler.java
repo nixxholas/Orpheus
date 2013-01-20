@@ -35,9 +35,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MagicDamageHandler extends AbstractDealDamageHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter player = c.getPlayer();
-		AttackInfo attack = parseDamage(slea, player, false);
+		AttackInfo attack = parseDamage(reader, player, false);
 		GamePacket packet = PacketCreator.magicAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, attack.allDamage, -1, attack.speed, attack.direction, attack.display);
 		if (attack.skill.id == 2121001 || attack.skill.id == 2221001 || attack.skill.id == 2321001) {
 			packet = PacketCreator.magicAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, attack.allDamage, attack.charge, attack.speed, attack.direction, attack.display);

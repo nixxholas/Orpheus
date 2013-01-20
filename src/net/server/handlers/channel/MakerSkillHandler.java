@@ -37,9 +37,9 @@ public final class MakerSkillHandler extends AbstractPacketHandler {
 	private ItemInfoProvider ii = ItemInfoProvider.getInstance();
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.readInt();
-		int toCreate = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.readInt();
+		int toCreate = reader.readInt();
 		MakerItemCreateEntry recipe = MakerItemFactory.getItemCreateEntry(toCreate);
 		if (canCreate(c, recipe) && !c.getPlayer().getInventory(ii.getInventoryType(toCreate)).isFull()) {
 			for (Pair<Integer, Integer> p : recipe.getReqItems()) {

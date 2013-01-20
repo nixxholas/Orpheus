@@ -41,8 +41,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class ChangeChannelHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte channel = (byte) (slea.readByte() + 1);
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte channel = (byte) (reader.readByte() + 1);
 		GameCharacter chr = c.getPlayer();
 		Server server = Server.getInstance();
 		if (chr.isBanned()) {

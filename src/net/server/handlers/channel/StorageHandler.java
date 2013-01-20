@@ -39,14 +39,14 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class StorageHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
-		byte mode = slea.readByte();
+		byte mode = reader.readByte();
 		final Storage storage = chr.getStorage();
 		if (mode == 4) { // take out
-			byte type = slea.readByte();
-			byte slot = slea.readByte();
+			byte type = reader.readByte();
+			byte slot = reader.readByte();
 			slot = storage.getSlot(InventoryType.fromByte(type), slot);
 			IItem item = storage.getItem(slot);
 			if (item != null) {
@@ -75,9 +75,9 @@ public final class StorageHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.getStorageError((byte) 0x0A));
 			}
 		} else if (mode == 5) { // store
-			byte slot = (byte) slea.readShort();
-			int itemId = slea.readInt();
-			short quantity = slea.readShort();
+			byte slot = (byte) reader.readShort();
+			int itemId = reader.readInt();
+			short quantity = reader.readShort();
 			if (quantity < 1 || chr.getItemQuantity(itemId, false) < quantity) {
 				return;
 			}
@@ -105,7 +105,7 @@ public final class StorageHandler extends AbstractPacketHandler {
 
 			}
 		} else if (mode == 7) { // meso
-			int meso = slea.readInt();
+			int meso = reader.readInt();
 			int storageMesos = storage.getMeso();
 			int playerMesos = chr.getMeso();
 			if ((meso > 0 && storageMesos >= meso) || (meso < 0 && playerMesos >= -meso)) {

@@ -45,12 +45,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SkillEffectHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int skillId = slea.readInt();
-		int level = slea.readByte();
-		byte flags = slea.readByte();
-		int speed = slea.readByte();
-		byte aids = slea.readByte();// Mmmk
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int skillId = reader.readInt();
+		int level = reader.readByte();
+		byte flags = reader.readByte();
+		int speed = reader.readByte();
+		byte direction = reader.readByte();
 		switch (skillId) {
 			case FPMage.EXPLOSION:
 			case FPArchMage.BIG_BANG:
@@ -68,7 +68,7 @@ public final class SkillEffectHandler extends AbstractPacketHandler {
 			case Paladin.MONSTER_MAGNET:
 			case DarkKnight.MONSTER_MAGNET:
 			case Hero.MONSTER_MAGNET:
-				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.skillEffect(c.getPlayer(), skillId, level, flags, speed, aids), false);
+				c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.skillEffect(c.getPlayer(), skillId, level, flags, speed, direction), false);
 				return;
 			default:
 				Output.print(c.getPlayer() + " entered SkillEffectHandler without being handled using " + skillId + ".");

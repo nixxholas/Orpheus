@@ -33,10 +33,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MobDamageMobFriendlyHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int attacker = slea.readInt();
-		slea.readInt(); // charId
-		int damaged = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int attacker = reader.readInt();
+		reader.readInt(); // charId
+		int damaged = reader.readInt();
 		int damage = Randomizer.nextInt(((c.getPlayer().getMap().getMonsterByOid(damaged).getMaxHp() / 13 + c.getPlayer().getMap().getMonsterByOid(attacker).getPADamage() * 10)) * 2 + 500); // Beng's
 																																																// formula.
 		if (c.getPlayer().getMap().getMonsterByOid(damaged) == null || c.getPlayer().getMap().getMonsterByOid(attacker) == null) {

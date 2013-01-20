@@ -33,7 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class ClickGuideHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		if (c.getPlayer().getJob().equals(Job.NOBLESSE)) {
 			NPCScriptManager.getInstance().start(c, 1101008, null, null);
 		} else {

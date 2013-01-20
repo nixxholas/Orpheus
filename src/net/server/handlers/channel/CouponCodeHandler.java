@@ -38,9 +38,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CouponCodeHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.skip(2);
-		String code = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.skip(2);
+		String code = reader.readMapleAsciiString();
 		boolean validcode = false;
 		int type = -1;
 		int item = -1;

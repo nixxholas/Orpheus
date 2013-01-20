@@ -37,15 +37,16 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class WeddingHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		Output.print("Wedding Packet: " + slea);
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		Output.print("Wedding Packet: " + reader);
 		GameCharacter chr = c.getPlayer();
-		byte operation = slea.readByte();
+		byte operation = reader.readByte();
 		switch (operation) {
-			case 0x06:// Add an item to the Wedding Registry
-				byte slot = (byte) slea.readShort();
-				int itemid = slea.readInt();
-				short quantity = slea.readShort();
+			case 0x06:
+				// Add an item to the Wedding Registry
+				byte slot = (byte) reader.readShort();
+				int itemid = reader.readInt();
+				short quantity = reader.readShort();
 				InventoryType type = ItemInfoProvider.getInstance().getInventoryType(itemid);
 				IItem item = chr.getInventory(type).getItem(slot);
 				if (itemid == item.getItemId() && quantity <= item.getQuantity()) {

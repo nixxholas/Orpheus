@@ -33,7 +33,7 @@ public final class ServerlistRequestHandler extends AbstractPacketHandler {
 	private static final String[] names = ServerConstants.WORLD_NAMES;
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		Server server = Server.getInstance();
 		World world;
 		for (byte i = 0; i < Math.min(server.getLoad().size(), names.length); i++) {
@@ -41,8 +41,8 @@ public final class ServerlistRequestHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.getServerList(i, names[i], world.getFlag(), world.getEventMessage(), server.getLoad(i)));
 		}
 		c.announce(PacketCreator.getEndOfServerList());
-		c.announce(PacketCreator.selectWorld(0));// too lazy to make a
-														// check lol
+		// too lazy to make a check lol
+		c.announce(PacketCreator.selectWorld(0));
 		c.announce(PacketCreator.sendRecommended(server.worldRecommendedList()));
 	}
 }

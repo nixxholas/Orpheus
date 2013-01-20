@@ -33,11 +33,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DoorHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
-		boolean mode = (slea.readByte() == 0); // specifies if backwarp or not,
-												// 1 town to target, 0 target to
-												// town
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int oid = reader.readInt();
+
+		// specifies if backwarp or not, 1 town to target, 0 target to town
+		boolean mode = (reader.readByte() == 0); 
+		
 		for (GameMapObject obj : c.getPlayer().getMap().getMapObjects()) {
 			if (obj instanceof Door) {
 				Door door = (Door) obj;

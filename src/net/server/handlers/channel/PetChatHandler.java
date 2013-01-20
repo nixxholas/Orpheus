@@ -28,12 +28,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PetChatHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int petId = slea.readInt();
-		slea.readInt();
-		slea.readByte();
-		int act = slea.readByte();
-		String text = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int petId = reader.readInt();
+		reader.readInt();
+		reader.readByte();
+		int act = reader.readByte();
+		String text = reader.readMapleAsciiString();
 		c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PacketCreator.petChat(c.getPlayer().getId(), c.getPlayer().getPetIndex(petId), act, text), true);
 	}
 }

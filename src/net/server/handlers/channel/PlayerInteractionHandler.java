@@ -61,20 +61,20 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte mode = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte mode = reader.readByte();
 		GameCharacter chr = c.getPlayer();
 		if (mode == Action.CREATE.getCode()) {
-			byte createType = slea.readByte();
+			byte createType = reader.readByte();
 			if (createType == 3) {// trade
 				Trade.startTrade(chr);
 			} else if (createType == 1) { // omok mini game
 				if (chr.getChalkboard() != null || FieldLimit.CANNOTMINIGAME.check(chr.getMap().getFieldLimit())) {
 					return;
 				}
-				String desc = slea.readMapleAsciiString();
-				slea.readByte(); // 20 6E 4E
-				int type = slea.readByte(); // 20 6E 4E
+				String desc = reader.readMapleAsciiString();
+				reader.readByte(); // 20 6E 4E
+				int type = reader.readByte(); // 20 6E 4E
 				Minigame game = new Minigame(chr, desc);
 				chr.setActiveMinigame(game);
 				game.setPieceType(type);
@@ -86,9 +86,9 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				if (chr.getChalkboard() != null) {
 					return;
 				}
-				String desc = slea.readMapleAsciiString();
-				slea.readByte(); // 20 6E 4E
-				int type = slea.readByte(); // 20 6E 4E
+				String desc = reader.readMapleAsciiString();
+				reader.readByte(); // 20 6E 4E
+				int type = reader.readByte(); // 20 6E 4E
 				Minigame game = new Minigame(chr, desc);
 				game.setPieceType(type);
 				if (type == 0) {
@@ -107,9 +107,9 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				if (!chr.getMap().getMapObjectsInRange(chr.getPosition(), 23000, Arrays.asList(GameMapObjectType.SHOP, GameMapObjectType.HIRED_MERCHANT)).isEmpty()) {
 					return;
 				}
-				String desc = slea.readMapleAsciiString();
-				slea.skip(3);
-				int itemId = slea.readInt();
+				String desc = reader.readMapleAsciiString();
+				reader.skip(3);
+				int itemId = reader.readInt();
 				if (chr.getInventory(InventoryType.CASH).countById(itemId) < 1) {
 					return;
 				}
@@ -130,7 +130,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				}
 			}
 		} else if (mode == Action.INVITE.getCode()) {
-			int otherPlayer = slea.readInt();
+			int otherPlayer = reader.readInt();
 			Trade.inviteTrade(chr, chr.getMap().getCharacterById(otherPlayer));
 		} else if (mode == Action.DECLINE.getCode()) {
 			Trade.declineTrade(chr);
@@ -138,7 +138,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 			if (chr.getTrade() != null && chr.getTrade().getPartner() != null) {
 				Trade.visitTrade(chr, chr.getTrade().getPartner().getChr());
 			} else {
-				int oid = slea.readInt();
+				int oid = reader.readInt();
 				GameMapObject ob = chr.getMap().getMapObject(oid);
 				if (ob instanceof PlayerShop) {
 					PlayerShop shop = (PlayerShop) ob;
@@ -186,19 +186,19 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 		} else if (mode == Action.CHAT.getCode()) { // chat lol
 			HiredMerchant merchant = chr.getHiredMerchant();
 			if (chr.getTrade() != null) {
-				chr.getTrade().chat(slea.readMapleAsciiString());
+				chr.getTrade().chat(reader.readMapleAsciiString());
 			} else if (chr.getPlayerShop() != null) { // mini game
 				PlayerShop shop = chr.getPlayerShop();
 				if (shop != null) {
-					shop.chat(c, slea.readMapleAsciiString());
+					shop.chat(c, reader.readMapleAsciiString());
 				}
 			} else if (chr.getActiveMinigame() != null) {
 				Minigame game = chr.getActiveMinigame();
 				if (game != null) {
-					game.chat(c, slea.readMapleAsciiString());
+					game.chat(c, reader.readMapleAsciiString());
 				}
 			} else if (merchant != null) {
-				String message = chr.getName() + " : " + slea.readMapleAsciiString();
+				String message = chr.getName() + " : " + reader.readMapleAsciiString();
 				byte slot = (byte) (merchant.getVisitorSlot(c.getPlayer()) + 1);
 				merchant.getMessages().add(new HiredMerchantMessage(message, slot));
 				merchant.broadcastToVisitors(PacketCreator.hiredMerchantChat(message, slot));
@@ -244,7 +244,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 			PlayerShop shop = chr.getPlayerShop();
 			HiredMerchant merchant = chr.getHiredMerchant();
 			if (shop != null && shop.isOwner(c.getPlayer())) {
-				slea.readByte();// 01
+				reader.readByte();// 01
 				chr.getMap().broadcastMessage(PacketCreator.addCharBox(c.getPlayer(), 4));
 			} else if (merchant != null && merchant.isOwner(c.getPlayer())) {
 				chr.setHasMerchant(true);
@@ -252,7 +252,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				chr.getMap().addMapObject(merchant);
 				chr.setHiredMerchant(null);
 				chr.getMap().broadcastMessage(PacketCreator.spawnHiredMerchant(merchant));
-				slea.readByte();
+				reader.readByte();
 			}
 		} else if (mode == Action.READY.getCode()) {
 			Minigame game = chr.getActiveMinigame();
@@ -296,7 +296,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 			}
 		} else if (mode == Action.ANSWER_TIE.getCode()) {
 			Minigame game = chr.getActiveMinigame();
-			slea.readByte();
+			reader.readByte();
 			if (game.getGameType().equals("omok")) {
 				game.broadcast(PacketCreator.getMiniGameTie(game));
 			}
@@ -311,15 +311,14 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				game.broadcast(PacketCreator.getMiniGameSkipVisitor(game));
 			}
 		} else if (mode == Action.MOVE_OMOK.getCode()) {
-			int x = slea.readInt(); // x point
-			int y = slea.readInt(); // y point
-			int type = slea.readByte(); // piece ( 1 or 2; Owner has one piece,
-										// visitor has another, it switches
-										// every game.)
+			// piece ( 1 or 2; Owner has one piece, visitor has another, it switches every game.)
+			int x = reader.readInt(); // x point
+			int y = reader.readInt(); // y point
+			int type = reader.readByte(); 
 			chr.getActiveMinigame().setPiece(x, y, type, c.getPlayer());
 		} else if (mode == Action.SELECT_CARD.getCode()) {
-			int turn = slea.readByte(); // 1st turn = 1; 2nd turn = 0
-			int slot = slea.readByte(); // slot
+			int turn = reader.readByte(); // 1st turn = 1; 2nd turn = 0
+			int slot = reader.readByte(); // slot
 			Minigame game = chr.getActiveMinigame();
 			int firstslot = game.getFirstSlot();
 			if (turn == 1) {
@@ -343,22 +342,17 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				game.broadcast(PacketCreator.getMatchCardSelect(game, turn, slot, firstslot, 1));
 			}
 		} else if (mode == Action.SET_MESO.getCode()) {
-			chr.getTrade().setMeso(slea.readInt());
+			chr.getTrade().setMeso(reader.readInt());
 		} else if (mode == Action.SET_ITEMS.getCode()) {
 			ItemInfoProvider ii = ItemInfoProvider.getInstance();
-			InventoryType ivType = InventoryType.fromByte(slea.readByte());
-			IItem item = chr.getInventory(ivType).getItem((byte) slea.readShort());
-			short quantity = slea.readShort();
-			byte targetSlot = slea.readByte();
+			InventoryType ivType = InventoryType.fromByte(reader.readByte());
+			IItem item = chr.getInventory(ivType).getItem((byte) reader.readShort());
+			short quantity = reader.readShort();
+			byte targetSlot = reader.readByte();
 			if (chr.getTrade() != null) {
 				if ((quantity <= item.getQuantity() && quantity >= 0) || ItemConstants.isRechargable(item.getItemId())) {
-					if (ii.isDropRestricted(item.getItemId())) { // ensure that
-																	// undroppable
-																	// items do
-																	// not make
-																	// it to the
-																	// trade
-																	// window
+					if (ii.isDropRestricted(item.getItemId())) { 
+						// ensure that undroppable items do not make it to the trade window
 						if (!((item.getFlag() & ItemConstants.KARMA) == ItemConstants.KARMA || (item.getFlag() & ItemConstants.SPIKES) == ItemConstants.SPIKES)) {
 							c.announce(PacketCreator.enableActions());
 							return;
@@ -380,14 +374,14 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 		} else if (mode == Action.CONFIRM.getCode()) {
 			Trade.completeTrade(c.getPlayer());
 		} else if (mode == Action.ADD_ITEM.getCode() || mode == Action.PUT_ITEM.getCode()) {
-			InventoryType type = InventoryType.fromByte(slea.readByte());
-			byte slot = (byte) slea.readShort();
-			short bundles = slea.readShort();
+			InventoryType type = InventoryType.fromByte(reader.readByte());
+			byte slot = (byte) reader.readShort();
+			short bundles = reader.readShort();
 			if (chr.getItemQuantity(chr.getInventory(type).getItem(slot).getItemId(), false) < bundles || chr.getInventory(type).getItem(slot).getFlag() == ItemConstants.UNTRADEABLE) {
 				return;
 			}
-			short perBundle = slea.readShort();
-			int price = slea.readInt();
+			short perBundle = reader.readShort();
+			int price = reader.readInt();
 			if (perBundle < 0 || perBundle * bundles > 2000 || bundles < 0 || price < 0) {
 				return;
 			}
@@ -417,7 +411,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 		} else if (mode == Action.REMOVE_ITEM.getCode()) {
 			PlayerShop shop = chr.getPlayerShop();
 			if (shop != null && shop.isOwner(c.getPlayer())) {
-				int slot = slea.readShort();
+				int slot = reader.readShort();
 				PlayerShopItem item = shop.getItems().get(slot);
 				IItem ivItem = item.getItem().copy();
 				shop.removeItem(slot);
@@ -468,8 +462,8 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.updateHiredMerchant(merchant, chr));
 
 		} else if (mode == Action.BUY.getCode() || mode == Action.MERCHANT_BUY.getCode()) {
-			int item = slea.readByte();
-			short quantity = slea.readShort();
+			int item = reader.readByte();
+			short quantity = reader.readShort();
 			PlayerShop shop = chr.getPlayerShop();
 			HiredMerchant merchant = chr.getHiredMerchant();
 			if (merchant != null && merchant.getOwner().equals(chr.getName())) {
@@ -485,7 +479,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 		} else if (mode == Action.TAKE_ITEM_BACK.getCode()) {
 			HiredMerchant merchant = chr.getHiredMerchant();
 			if (merchant != null && merchant.isOwner(c.getPlayer())) {
-				int slot = slea.readShort();
+				int slot = reader.readShort();
 				PlayerShopItem item = merchant.getItems().get(slot);
 				if (item.getBundles() > 0) {
 					IItem iitem = item.getItem();
@@ -517,7 +511,7 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.enableActions());
 		} else if (mode == Action.BAN_PLAYER.getCode()) {
 			if (chr.getPlayerShop() != null && chr.getPlayerShop().isOwner(c.getPlayer())) {
-				chr.getPlayerShop().banPlayer(slea.readMapleAsciiString());
+				chr.getPlayerShop().banPlayer(reader.readMapleAsciiString());
 			}
 		}
 	}

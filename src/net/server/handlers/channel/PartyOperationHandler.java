@@ -33,8 +33,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class PartyOperationHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int operation = slea.readByte();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int operation = reader.readByte();
 		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
 		Party party = player.getParty();
@@ -70,7 +70,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 				break;
 			}
 			case 3: {// join
-				int partyid = slea.readInt();
+				int partyid = reader.readInt();
 				if (c.getPlayer().getParty() == null) {
 					party = world.getParty(partyid);
 					if (party != null) {
@@ -91,7 +91,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 				break;
 			}
 			case 4: {// invite
-				String name = slea.readMapleAsciiString();
+				String name = reader.readMapleAsciiString();
 				GameCharacter invited = world.getPlayerStorage().getCharacterByName(name);
 				if (invited != null) {
 					if (invited.getParty() == null) {
@@ -109,7 +109,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 				break;
 			}
 			case 5: { // expel
-				int cid = slea.readInt();
+				int cid = reader.readInt();
 				if (partyplayer.equals(party.getLeader())) {
 					PartyCharacter expelled = party.getMemberById(cid);
 					if (expelled != null) {
@@ -125,7 +125,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 			}
 
 			case 6: {
-				int newLeader = slea.readInt();
+				int newLeader = reader.readInt();
 				PartyCharacter newLeadr = party.getMemberById(newLeader);
 				party.setLeader(newLeadr);
 				world.updateParty(party.getId(), PartyOperation.CHANGE_LEADER, newLeadr);

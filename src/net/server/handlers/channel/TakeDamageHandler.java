@@ -48,12 +48,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class TakeDamageHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter player = c.getPlayer();
-		slea.readInt();
-		byte damagefrom = slea.readByte();
-		slea.readByte(); // Element
-		int damage = slea.readInt();
+		reader.readInt();
+		byte damagefrom = reader.readByte();
+		reader.readByte(); // Element
+		int damage = reader.readInt();
 		int oid = 0, monsteridfrom = 0, pgmr = 0, direction = 0;
 		int pos_x = 0, pos_y = 0, fake = 0;
 		boolean is_pgmr = false, is_pg = true;
@@ -61,8 +61,8 @@ public final class TakeDamageHandler extends AbstractPacketHandler {
 		Monster attacker = null;
 		final GameMap map = player.getMap();
 		if (damagefrom != -3) {
-			monsteridfrom = slea.readInt();
-			oid = slea.readInt();
+			monsteridfrom = reader.readInt();
+			oid = reader.readInt();
 			attacker = (Monster) map.getMapObject(oid);
 			List<loseItem> loseItems = null;
 			if (attacker != null) {
@@ -98,7 +98,7 @@ public final class TakeDamageHandler extends AbstractPacketHandler {
 				return;
 			}
 
-			direction = slea.readByte();
+			direction = reader.readByte();
 		}
 		if (damagefrom != -1 && damagefrom != -2 && attacker != null) {
 			MobAttackInfo attackInfo = MobAttackInfoFactory.getMobAttackInfo(attacker, damagefrom);

@@ -29,8 +29,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class CheckCharNameHandler extends AbstractPacketHandler {
 	
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		String name = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		String name = reader.readMapleAsciiString();
 		c.announce(PacketCreator.charNameResponse(name, !GameCharacter.canCreateChar(name)));
 	}
 }

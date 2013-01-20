@@ -33,7 +33,7 @@ public final class RelogRequestHandler extends AbstractPacketHandler {
 	}
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		c.announce(PacketCreator.getRelogResponse());
 	}
 }

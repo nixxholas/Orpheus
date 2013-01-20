@@ -31,10 +31,10 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SpouseChatHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		Output.print(slea.toString());
-		// slea.readMapleAsciiString();//recipient
-		// String msg = slea.readMapleAsciiString();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		Output.print(reader.toString());
+		// reader.readMapleAsciiString();//recipient
+		// String msg = reader.readMapleAsciiString();
 		// if (!CommandProcessor.processCommand(c, msg))
 		// if (c.getPlayer().isMarried()) {
 		// GameCharacter wife =

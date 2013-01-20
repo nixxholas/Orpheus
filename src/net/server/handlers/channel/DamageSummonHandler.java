@@ -32,11 +32,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class DamageSummonHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int skillid = slea.readInt(); // Bugged? might not be skillid.
-		int unkByte = slea.readByte();
-		int damage = slea.readInt();
-		int monsterIdFrom = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int skillid = reader.readInt(); // Bugged? might not be skillid.
+		int unkByte = reader.readByte();
+		int damage = reader.readInt();
+		int monsterIdFrom = reader.readInt();
 		if (SkillFactory.getSkill(skillid) != null) {
 			GameCharacter player = c.getPlayer();
 			Summon summon = player.getSummons().get(skillid);

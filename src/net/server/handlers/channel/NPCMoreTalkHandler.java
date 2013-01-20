@@ -33,12 +33,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class NPCMoreTalkHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		byte lastMsg = slea.readByte(); // 00 (last msg type I think)
-		byte action = slea.readByte(); // 00 = end chat, 01 == follow
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		byte lastMsg = reader.readByte(); // 00 (last msg type I think)
+		byte action = reader.readByte(); // 00 = end chat, 01 == follow
 		if (lastMsg == 2) {
 			if (action != 0) {
-				String returnText = slea.readMapleAsciiString();
+				String returnText = reader.readMapleAsciiString();
 				if (c.getQM() != null) {
 					c.getQM().setGetText(returnText);
 					if (c.getQM().isStart()) {
@@ -57,10 +57,10 @@ public final class NPCMoreTalkHandler extends AbstractPacketHandler {
 			}
 		} else {
 			int selection = -1;
-			if (slea.available() >= 4) {
-				selection = slea.readInt();
-			} else if (slea.available() > 0) {
-				selection = slea.readByte();
+			if (reader.available() >= 4) {
+				selection = reader.readInt();
+			} else if (reader.available() > 0) {
+				selection = reader.readByte();
 			}
 			if (c.getQM() != null) {
 				if (c.getQM().isStart()) {

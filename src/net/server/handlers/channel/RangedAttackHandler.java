@@ -52,9 +52,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class RangedAttackHandler extends AbstractDealDamageHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter player = c.getPlayer();
-		AttackInfo attack = parseDamage(slea, player, true);
+		AttackInfo attack = parseDamage(reader, player, true);
 		if (attack.skill.id == Buccaneer.ENERGY_ORB || attack.skill.id == ThunderBreaker.SPARK || attack.skill.id == Shadower.TAUNT || attack.skill.id == NightLord.TAUNT) {
 			player.getMap().broadcastMessage(player, PacketCreator.rangedAttack(player, attack.skill.id, attack.skill.level, attack.stance, attack.numAttackedAndDamage, 0, attack.allDamage, attack.speed, attack.direction, attack.display), false);
 			applyAttack(attack, player, 1);

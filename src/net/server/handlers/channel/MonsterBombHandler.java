@@ -29,8 +29,8 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class MonsterBombHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		int oid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		int oid = reader.readInt();
 		Monster monster = c.getPlayer().getMap().getMonsterByOid(oid);
 		if (!c.getPlayer().isAlive() || monster == null) {
 			return;

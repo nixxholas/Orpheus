@@ -49,12 +49,12 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class SpecialMoveHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		chr.getAutobanManager().setTimestamp(4, slea.readInt());
-		int skillid = slea.readInt();
+		chr.getAutobanManager().setTimestamp(4, reader.readInt());
+		int skillid = reader.readInt();
 		Point pos = null;
-		int __skillLevel = slea.readByte();
+		int __skillLevel = reader.readByte();
 		ISkill skill = SkillFactory.getSkill(skillid);
 		int skillLevel = chr.getSkillLevel(skill);
 		if (skillid % 10000000 == 1010 || skillid % 10000000 == 1011) {
@@ -77,19 +77,19 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 		}
 		if (skillid == Hero.MONSTER_MAGNET || skillid == Paladin.MONSTER_MAGNET || skillid == DarkKnight.MONSTER_MAGNET) { // Monster
 																															// Magnet
-			int num = slea.readInt();
+			int num = reader.readInt();
 			int mobId;
 			byte success;
 			for (int i = 0; i < num; i++) {
-				mobId = slea.readInt();
-				success = slea.readByte();
+				mobId = reader.readInt();
+				success = reader.readByte();
 				chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.showMagnet(mobId, success), false);
 				Monster monster = chr.getMap().getMonsterByOid(mobId);
 				if (monster != null) {
 					monster.switchController(c.getPlayer(), monster.isControllerHasAggro());
 				}
 			}
-			byte direction = slea.readByte();
+			byte direction = reader.readByte();
 			chr.getMap().broadcastMessage(c.getPlayer(), PacketCreator.showBuffeffect(chr.getId(), skillid, chr.getSkillLevel(skillid), direction), false);
 			c.announce(PacketCreator.enableActions());
 			return;
@@ -115,10 +115,10 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 			chr.setMp(chr.getMp() + gain);
 			chr.updateSingleStat(Stat.MP, chr.getMp());
 		} else if (skillid % 10000000 == 1004) {
-			slea.readShort();
+			reader.readShort();
 		}
-		if (slea.available() == 5) {
-			pos = new Point(slea.readShort(), slea.readShort());
+		if (reader.available() == 5) {
+			pos = new Point(reader.readShort(), reader.readShort());
 		}
 		if (chr.isAlive()) {
 			if (skill.getId() != Priest.MYSTIC_DOOR || chr.canDoor()) {

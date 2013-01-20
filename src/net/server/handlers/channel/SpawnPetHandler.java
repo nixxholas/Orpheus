@@ -44,12 +44,12 @@ public final class SpawnPetHandler extends AbstractPacketHandler {
 	private static MapleDataProvider dataRoot = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		GameCharacter chr = c.getPlayer();
-		slea.readInt();
-		byte slot = slea.readByte();
-		slea.readByte();
-		boolean lead = slea.readByte() == 1;
+		reader.readInt();
+		byte slot = reader.readByte();
+		reader.readByte();
+		boolean lead = reader.readByte() == 1;
 		final IItem petItem = chr.getInventory(InventoryType.CASH).getItem(slot);
 		Pet pet = Pet.loadFromDb(petItem);
 		if (pet == null) {
@@ -57,8 +57,8 @@ public final class SpawnPetHandler extends AbstractPacketHandler {
 		}
 		
 		int itemId = pet.getItemId();
-		if (itemId == 5000028 || itemId == 5000047) // Handles Dragon AND Robos
-		{
+		if (itemId == 5000028 || itemId == 5000047) {
+			// Handles Dragon AND Robos
 			if (chr.haveItem(itemId + 1)) {
 				chr.dropMessage(5, "You can't hatch your " + (itemId == 5000028 ? "Dragon egg" : "Robo egg") + " if you already have a Baby " + (itemId == 5000028 ? "Dragon." : "Robo."));
 				c.getSession().write(PacketCreator.enableActions());

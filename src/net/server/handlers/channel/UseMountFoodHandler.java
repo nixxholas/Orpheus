@@ -34,9 +34,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public final class UseMountFoodHandler extends AbstractPacketHandler {
 
 	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
-		slea.skip(6);
-		int itemid = slea.readInt();
+	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
+		reader.skip(6);
+		int itemid = reader.readInt();
 		if (c.getPlayer().getInventory(InventoryType.USE).findById(itemid) != null) {
 			if (c.getPlayer().getMount() != null && c.getPlayer().getMount().getTiredness() > 0) {
 				c.getPlayer().getMount().setTiredness(Math.max(c.getPlayer().getMount().getTiredness() - 30, 0));

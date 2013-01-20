@@ -34,7 +34,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class EnterCashShopHandler extends AbstractPacketHandler {
 
 	@Override
-	public void handlePacket(SeekableLittleEndianAccessor slea, GameClient c) {
+	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		try {
 			GameCharacter player = c.getPlayer();
 
