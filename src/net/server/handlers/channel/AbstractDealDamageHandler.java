@@ -69,7 +69,6 @@ import constants.skills.Hunter;
 import constants.skills.Page;
 import constants.skills.Spearman;
 import java.util.HashMap;
-import java.util.Map;
 
 import server.BuffStatDelta;
 import server.ItemInfoProvider;
@@ -83,47 +82,12 @@ import server.maps.GameMap;
 import server.maps.GameMapItem;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
-import server.partyquest.Pyramid;
 import tools.PacketCreator;
 import tools.data.input.LittleEndianAccessor;
 
 public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
 
-    public static class AttackInfo {
-
-        public int numAttacked, numDamage, numAttackedAndDamage, skill, skilllevel, stance, direction, rangedirection, charge, display;
-        public Map<Integer, List<Integer>> allDamage;
-        public boolean isHH = false;
-        public int speed = 4;
-
-        public StatEffect getAttackEffect(GameCharacter chr, ISkill theSkill) {
-            ISkill mySkill = theSkill;
-            if (mySkill == null) {
-                mySkill = SkillFactory.getSkill(this.skill);
-            }
-            int skillLevel = chr.getSkillLevel(mySkill);
-            if (mySkill.getId() % 10000000 == 1020) {
-                if (chr.getPartyQuest() instanceof Pyramid) {
-                    if (((Pyramid) chr.getPartyQuest()).useSkill()) {
-                        skillLevel = 1;
-                    }
-                }
-            }
-            if (skillLevel == 0) {
-                return null;
-            }
-            if (this.display > 80) { 
-            	// Hmm
-                if (!theSkill.getAction()) {
-                	chr.getAutobanManager().autoban(AutobanType.FAST_ATTACK, "WZ Edit; adding action to a skill: " + this.display);
-                    return null;
-                }
-            }
-            return mySkill.getEffect(skillLevel);
-        }
-    }
-
-	protected synchronized void applyAttack(AttackInfo attack, final GameCharacter player, int attackCount) {
+    protected synchronized void applyAttack(AttackInfo attack, final GameCharacter player, int attackCount) {
         ISkill theSkill = null;
         StatEffect attackEffect = null;
         try {
@@ -166,10 +130,11 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                 return;
             }
 
-            //WTF IS THIS F3,1
-        /*if (attackCount != attack.numDamage && attack.skill != ChiefBandit.MESO_EXPLOSION && attack.skill != NightWalker.VAMPIRE && attack.skill != WindArcher.WIND_SHOT && attack.skill != Aran.COMBO_SMASH && attack.skill != Aran.COMBO_PENRIL && attack.skill != Aran.COMBO_TEMPEST && attack.skill != NightLord.NINJA_AMBUSH && attack.skill != Shadower.NINJA_AMBUSH) {
-            return;
-            }*/
+            // WTF IS THIS F3,1
+//			if (attackCount != attack.numDamage && attack.skill != ChiefBandit.MESO_EXPLOSION && attack.skill != NightWalker.VAMPIRE && attack.skill != WindArcher.WIND_SHOT && attack.skill != Aran.COMBO_SMASH && attack.skill != Aran.COMBO_PENRIL && attack.skill != Aran.COMBO_TEMPEST && attack.skill != NightLord.NINJA_AMBUSH && attack.skill != Shadower.NINJA_AMBUSH) {
+//			    return;
+//			}
+            
             int totDamage = 0;
             final GameMap map = player.getMap();
 
