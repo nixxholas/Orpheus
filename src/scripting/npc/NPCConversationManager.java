@@ -418,7 +418,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	public void warpParty(int id) {
 		for (GameCharacter player : getPartyMembers()) {
 			if (id == 925020100) {
-				player.setDojoParty(true);
+				player.getDojoState().setDojoParty(true);
 			}
 			player.changeMap(getWarpMap(id));
 		}

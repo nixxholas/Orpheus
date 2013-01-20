@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import net.AbstractPacketHandler;
 import tools.DatabaseConnection;
 import tools.PacketCreator;
+import tools.ReportResponseType;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -37,8 +38,10 @@ public final class ReportHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		int type = reader.readByte(); // 01 = Conversation claim 00 = illegal
-									// program
+		// 00 = illegal program
+		// 01 = Conversation claim
+		int type = reader.readByte(); 
+
 		String victim = reader.readMapleAsciiString();
 		int reason = reader.readByte();
 		String description = reader.readMapleAsciiString();
@@ -48,11 +51,11 @@ public final class ReportHandler extends AbstractPacketHandler {
 					c.getPlayer().decreaseReports();
 					c.getPlayer().gainMeso(-300, true);
 				} else {
-					c.announce(PacketCreator.reportResponse((byte) 4));
+					c.announce(PacketCreator.reportResponse(ReportResponseType.GENERAL_FAILURE));
 					return;
 				}
 			} else {
-				c.announce(PacketCreator.reportResponse((byte) 2));
+				c.announce(PacketCreator.reportResponse(ReportResponseType.MAXIMUM_REACHED));
 				return;
 			}
 			c.getChannelServer().broadcastGMPacket(PacketCreator.serverNotice(6, victim + " was reported for: " + description));
@@ -67,7 +70,7 @@ public final class ReportHandler extends AbstractPacketHandler {
 					c.getPlayer().decreaseReports();
 					c.getPlayer().gainMeso(-300, true);
 				} else {
-					c.announce(PacketCreator.reportResponse((byte) 4));
+					c.announce(PacketCreator.reportResponse(ReportResponseType.GENERAL_FAILURE));
 					return;
 				}
 			}

@@ -126,6 +126,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	private byte worldId;
 	private int accountId, id;
+	private String name;
 	private int rank, rankMove, jobRank, jobRankMove;
 	private int level, str, dex, luk, int_, hp, maxhp, mp, maxmp;
 	private int hpMpApUsed;
@@ -138,7 +139,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int gender;
 	private int chair;
 	private int itemEffect;
-	private int guildid, guildrank, allianceRank;
+	private int guildId, guildRank, allianceRank;
 	private int messengerposition = 4;
 	private int slots = 0;
 	private int energybar;
@@ -152,19 +153,18 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int battleshipHp = 0;
 	private int mesosTraded = 0;
 	private int possibleReports = 10;
-	private int dojoPoints, dojoStage, dojoEnergy, vanquisherStage, vanquisherKills;
+	private int vanquisherStage, vanquisherKills;
 	private int allowWarpToId;
 	private int expRate = 1, mesoRate = 1, dropRate = 1;
 	private MinigameStats omokStats, matchingCardStats;
+	private DojoState dojoState = new DojoState();
 	private int married;
-	private long dojoFinish, lastUsedCashItem, lastHealed;
+	private long lastUsedCashItem, lastHealed;
 	private transient int localMaxHp, localMaxMp, localStr, localDex, localLuk, localInt;
 	private transient int magic, watk;
 	private boolean hidden, canDoor = true, Berserk, hasMerchant;
 	private int linkedLevel = 0;
 	private String linkedName = null;
-	private boolean finishedDojoTutorial, dojoParty;
-	private String name;
 	private String chalktext;
 	private MtsState mtsState = new MtsState();
 	private AtomicInteger exp = new AtomicInteger();
@@ -179,7 +179,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private PartyCharacter mpc = null;
 	private Inventory[] inventory;
 	private Job job = Job.BEGINNER;
-	private GameMap map, dojoMap; // Make a Dojo pq instance
+	private GameMap map; // Make a Dojo pq instance
 	private Messenger messenger = null;
 	private Minigame activeMinigame;
 	private Mount mount;
@@ -300,6 +300,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.coolDowns.put(Integer.valueOf(skillId), new CooldownValueHolder(skillId, startTime, length, timer));
 	}
 
+	public DojoState getDojoState() {
+		return this.dojoState;
+	}
+	
 	public void addCrushRing(Ring r) {
 		crushRings.add(r);
 	}
@@ -320,19 +324,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 
 		return null;
-	}
-
-	public int addDojoPointsByMap() {
-		int pts = 0;
-		if (dojoPoints < 17000) {
-			// TODO: bash head into desk because of this line:
-			pts = 1 + ((getMap().getId() - 1) / 100 % 100) / 6;
-			if (!dojoParty) {
-				pts++;
-			}
-			this.dojoPoints += pts;
-		}
-		return pts;
 	}
 
 	public void addDoor(Door door) {
@@ -897,7 +888,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 		client.announce(PacketCreator.updatePlayerStats(statup));
 		silentPartyUpdate();
-		if (this.guildid > 0) {
+		if (this.guildId > 0) {
 			getGuild().broadcast(PacketCreator.jobMessage(0, job.getId(), name), this.getId());
 		}
 		guildUpdate();
@@ -1169,11 +1160,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void disbandGuild() {
-		if (guildid < 1 || guildrank != 1) {
+		if (guildId < 1 || guildRank != 1) {
 			return;
 		}
 		try {
-			Server.getInstance().disbandGuild(guildid);
+			Server.getInstance().disbandGuild(guildId);
 		} catch (Exception e) {
 		}
 	}
@@ -1477,7 +1468,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.client.announce(PacketCreator.genericGuildMessage((byte) code));
 	}
 
-	public int getAccountID() {
+	public int getAccountId() {
 		return accountId;
 	}
 
@@ -1628,22 +1619,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public int getDex() {
 		return dex;
 	}
-
-	public int getDojoEnergy() {
-		return dojoEnergy;
-	}
-
-	public boolean getDojoParty() {
-		return dojoParty;
-	}
-
-	public int getDojoPoints() {
-		return dojoPoints;
-	}
-
-	public int getDojoStage() {
-		return dojoStage;
-	}
 	
 	public int getRebirths() {
 		return rebirths;
@@ -1701,10 +1676,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return familyId;
 	}
 
-	public boolean getFinishedDojoTutorial() {
-		return finishedDojoTutorial;
-	}
-
 	public List<Ring> getFriendshipRings() {
 		Collections.sort(friendshipRings);
 		return friendshipRings;
@@ -1727,7 +1698,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int getGuildId() {
-		return guildid;
+		return guildId;
 	}
 	
 	public static int getGuildIdById(int cid) {
@@ -1750,7 +1721,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int getGuildRank() {
-		return guildrank;
+		return guildRank;
 	}
 
 	public int getHair() {
@@ -2290,7 +2261,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	private void guildUpdate() {
-		if (this.guildid < 1) {
+		if (this.guildId < 1) {
 			return;
 		}
 		mgc.setLevel(level);
@@ -2400,7 +2371,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			dropMessage(1, "You don't have enough mesos.");
 			return;
 		}
-		Server.getInstance().increaseGuildCapacity(guildid);
+		Server.getInstance().increaseGuildCapacity(guildId);
 		gainMeso(-getGuild().getIncreaseGuildCost(getGuild().getCapacity()), true, false, false);
 	}
 
@@ -2571,7 +2542,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 		setMPC(new PartyCharacter(this));
 		silentPartyUpdate();
-		if (this.guildid > 0) {
+		if (this.guildId > 0) {
 			getGuild().broadcast(PacketCreator.levelUpMessage(2, level, name), this.getId());
 		}
 		if (ServerConstants.PERFECT_PITCH) {
@@ -2622,7 +2593,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			character.skinColor = SkinColor.getById(rs.getInt("skincolor"));
 			character.gender = rs.getInt("gender");
 			character.job = Job.getById(rs.getInt("job"));
-			character.finishedDojoTutorial = rs.getInt("finishedDojoTutorial") == 1;
 			character.vanquisherKills = rs.getInt("vanquisherKills");
 			character.omokStats = new MinigameStats(rs.getInt("omokwins"), rs.getInt("omoklosses"), rs.getInt("omokties"), 2000);
 			character.matchingCardStats = new MinigameStats(rs.getInt("matchcardwins"), rs.getInt("matchcardlosses"), rs.getInt("matchcardties"), 2000);
@@ -2639,16 +2609,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			int mountexp = rs.getInt("mountexp");
 			int mountlevel = rs.getInt("mountlevel");
 			int mounttiredness = rs.getInt("mounttiredness");
-			character.guildid = rs.getInt("guildid");
-			character.guildrank = rs.getInt("guildrank");
+			character.guildId = rs.getInt("guildid");
+			character.guildRank = rs.getInt("guildrank");
 			character.allianceRank = rs.getInt("allianceRank");
 			character.familyId = rs.getInt("familyId");
 			character.bookCover = rs.getInt("monsterbookcover");
 			character.monsterbook = new MonsterBook();
 			character.monsterbook.loadCards(characterId);
 			character.vanquisherStage = rs.getInt("vanquisherStage");
-			character.dojoPoints = rs.getInt("dojoPoints");
-			character.dojoStage = rs.getInt("lastDojoStage");
+			character.dojoState = new DojoState(rs);
 			if (ServerConstants.USE_MAPLE_STOCKS) {
 				character.stockPortfolio = MapleStockPortfolio.load(characterId);
 			}
@@ -2656,7 +2625,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				character.hardcore = rs.getInt("hardcore") == 1;
 				character.dead = rs.getInt("dead") == 1;
 			}
-			if (character.guildid > 0) {
+			if (character.guildId > 0) {
 				character.mgc = new GuildCharacter(character);
 			}
 			int buddyCapacity = rs.getInt("buddyCapacity");
@@ -3050,7 +3019,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			message("You have used a safety charm, so your EXP points have not been decreased.");
 			InventoryManipulator.removeById(client, ItemInfoProvider.getInstance().getInventoryType(charmID[i]), charmID[i], 1, true, false);
 		} else if (mapId > 925020000 && mapId < 925030000) {
-			this.dojoStage = 0;
+			this.dojoState.setStage(0);
 		} else if (mapId > 980000100 && mapId < 980000700) {
 			getMap().broadcastMessage(this, PacketCreator.CPQDied(this));
 		} else if (getJob() != Job.BEGINNER) { // Hmm...
@@ -3439,8 +3408,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public void saveGuildStatus() {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE `characters` SET `guildid` = ?, `guildrank` = ?, `allianceRank` = ? WHERE `id` = ?");
-			ps.setInt(1, guildid);
-			ps.setInt(2, guildrank);
+			ps.setInt(1, guildId);
+			ps.setInt(2, guildRank);
 			ps.setInt(3, allianceRank);
 			ps.setInt(4, id);
 			ps.execute();
@@ -3558,9 +3527,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 			ps.setInt(37, bookCover);
 			ps.setInt(38, vanquisherStage);
-			ps.setInt(39, dojoPoints);
-			ps.setInt(40, dojoStage);
-			ps.setInt(41, finishedDojoTutorial ? 1 : 0);
+			ps.setInt(39, this.dojoState.getPoints());
+			ps.setInt(40, this.dojoState.getStage());
+			ps.setInt(41, this.dojoState.hasFinishedTutorial() ? 1 : 0);
 			ps.setInt(42, vanquisherKills);
 			ps.setInt(43, matchingCardStats.getWins());
 			ps.setInt(44, matchingCardStats.getLosses());
@@ -3865,27 +3834,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 	}
 
-	public void setDojoEnergy(int x) {
-		this.dojoEnergy = x;
-	}
 
-	public void setDojoParty(boolean b) {
-		this.dojoParty = b;
-	}
-
-	public void setDojoPoints(int x) {
-		this.dojoPoints = x;
-	}
-
-	public void setDojoStage(int x) {
-		this.dojoStage = x;
-	}
-
-	public void setDojoStart() {
-		this.dojoMap = map;
-		int stage = (map.getId() / 100) % 100;
-		this.dojoFinish = System.currentTimeMillis() + (stage > 36 ? 15 : stage / 6 + 5) * 60000;
-	}
 
 	public void setRates() {
 		Calendar cal = Calendar.getInstance();
@@ -3950,10 +3899,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.familyId = familyId;
 	}
 
-	public void setFinishedDojoTutorial() {
-		this.finishedDojoTutorial = true;
-	}
-
 	public void setGender(int gender) {
 		this.gender = gender;
 	}
@@ -3963,12 +3908,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void setGuildId(int _id) {
-		guildid = _id;
-		if (guildid > 0) {
+		guildId = _id;
+		if (guildId > 0) {
 			if (mgc == null) {
 				mgc = new GuildCharacter(this);
 			} else {
-				mgc.setGuildId(guildid);
+				mgc.setGuildId(guildId);
 			}
 		} else {
 			mgc = null;
@@ -3976,7 +3921,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void setGuildRank(int _rank) {
-		guildrank = _rank;
+		guildRank = _rank;
 		if (mgc != null) {
 			mgc.setGuildRank(_rank);
 		}
@@ -4264,20 +4209,20 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void showDojoClock() {
-		int stage = (map.getId() / 100) % 100;
+	public void showDojoClock(int mapId) {
+		int stage = (mapId / 100) % 100;
 		long seconds;
 		if (stage % 6 == 1) {
 			seconds = (stage > 36 ? 15 : stage / 6 + 5) * 60;
 		} else {
-			seconds = (dojoFinish - System.currentTimeMillis()) / 1000;
+			seconds = (this.dojoState.getFinishTimestamp() - System.currentTimeMillis()) / 1000;
 		}
 		if (stage % 6 > 0) {
 			client.announce(PacketCreator.getClock((int) seconds));
 		}
-		int clockid = (dojoMap.getId() / 100) % 100;
+		int clockId = (mapId / 100) % 100;
 		final boolean rightmap;
-		if (map.getId() > clockid / 6 * 6 + 6 || map.getId() < clockid / 6 * 6) {
+		if (mapId > clockId / 6 * 6 + 6 || mapId < clockId / 6 * 6) {
 			rightmap = false;
 		} else {
 			rightmap = true;

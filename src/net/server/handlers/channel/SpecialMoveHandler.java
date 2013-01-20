@@ -59,7 +59,7 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 		int skillLevel = chr.getSkillLevel(skill);
 		if (skillid % 10000000 == 1010 || skillid % 10000000 == 1011) {
 			skillLevel = 1;
-			chr.setDojoEnergy(0);
+			chr.getDojoState().setEnergy(0);
 			c.announce(PacketCreator.getEnergy("energy", 0));
 		}
 		if (skillLevel == 0 || skillLevel != __skillLevel)

@@ -110,10 +110,10 @@ public class GMCommands extends EnumeratedCommands {
 					if (ParanoiaConstants.ALLOW_BLACKLIST_COMMAND && ParanoiaConstants.ENABLE_BLACKLISTING) {
 						if (sub.length >= 2) {
 							victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
-							if (BlacklistHandler.isBlacklisted(victim.getAccountID())) {
+							if (BlacklistHandler.isBlacklisted(victim.getAccountId())) {
 								chr.dropMessage(victim.getName() + " is already blacklisted.");
 							} else {
-								BlacklistHandler.addToBlacklist(victim.getAccountID());
+								BlacklistHandler.addToBlacklist(victim.getAccountId());
 								chr.message("Done.");
 							}
 						} else {

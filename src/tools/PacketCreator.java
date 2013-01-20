@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import client.BuddylistEntry;
+import client.DojoState;
 import client.IEquip;
 import client.IEquip.ScrollResult;
 import client.IItem;
@@ -5847,13 +5848,13 @@ public class PacketCreator {
 	 *            The mode
 	 * @return Report Reponse packet
 	 */
-	public static GamePacket reportResponse(byte mode) {
+	public static GamePacket reportResponse(ReportResponseType type) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.REPORT_RESPONSE.getValue());
-		w.writeAsByte(mode);
+		w.writeAsByte(type.asByte());
 		return w.getPacket();
 	}
-
+	
 	public static GamePacket sendHammerData(int hammerUsed) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.VICIOUS_HAMMER.getValue());
@@ -6487,7 +6488,8 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.SHOW_STATUS_INFO.getValue());
 		w.writeAsByte(10);
 		w.write(new byte[] {(byte) 0xB7, 4}); // ?
-		w.writeLengthString("pt=" + chr.getDojoPoints() + ";belt=" + belt + ";tuto=" + (chr.getFinishedDojoTutorial() ? "1" : "0"));
+		final DojoState state = chr.getDojoState();
+		w.writeLengthString("pt=" + state.getPoints() + ";belt=" + belt + ";tuto=" + (state.hasFinishedTutorial() ? "1" : "0"));
 		return w.getPacket();
 	}
 

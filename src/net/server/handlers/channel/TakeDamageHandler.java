@@ -20,6 +20,7 @@
  */
 package net.server.handlers.channel;
 
+import client.DojoState;
 import client.ISkill;
 import client.Item;
 import client.BuffStat;
@@ -195,9 +196,12 @@ public final class TakeDamageHandler extends AbstractPacketHandler {
 			player.checkBerserk();
 		}
 		if (map.getId() >= 925020000 && map.getId() < 925030000) {
-			player.setDojoEnergy(player.isGM() ? 300 : player.getDojoEnergy() < 300 ? player.getDojoEnergy() + 1 : 0); // Fking
-																														// gm's
-			player.getClient().announce(PacketCreator.getEnergy("energy", player.getDojoEnergy()));
+			// Fking gm's
+			// Play fair you GM nibs.
+			//player.setEnergy(player.isGM() ? 300 : player.getEnergy() < 300 ? player.getEnergy() + 1 : 0);
+			final DojoState state = player.getDojoState();
+			state.setEnergy(state.getEnergy() < 300 ? state.getEnergy() + 1 : 0);
+			player.getClient().announce(PacketCreator.getEnergy("energy", state.getEnergy()));
 		}
 	}
 }
