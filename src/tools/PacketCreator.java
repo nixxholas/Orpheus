@@ -48,6 +48,7 @@ import client.FamilyEntry;
 import client.Inventory;
 import client.InventoryType;
 import client.KeyBinding;
+import client.LinkedCharacterInfo;
 import client.MinigameStats;
 import client.MonsterBook;
 import client.Mount;
@@ -191,11 +192,12 @@ public class PacketCreator {
 		addCharStats(w, chr);
 		w.writeAsByte(chr.getBuddylist().getCapacity());
 
-		if (chr.getLinkedName() == null) {
+		final LinkedCharacterInfo info = chr.getLinkedCharacter();
+		if (info == null) {
 			w.writeAsByte(0);
 		} else {
 			w.writeAsByte(1);
-			w.writeLengthString(chr.getLinkedName());
+			w.writeLengthString(info.name);
 		}
 
 		w.writeInt(chr.getMeso());

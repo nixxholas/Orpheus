@@ -163,8 +163,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private transient int localMaxHp, localMaxMp, localStr, localDex, localLuk, localInt;
 	private transient int magic, watk;
 	private boolean hidden, canDoor = true, Berserk, hasMerchant;
-	private int linkedLevel = 0;
-	private String linkedName = null;
+	private LinkedCharacterInfo linkedCharacter = null;
 	private String chalktext;
 	private MtsState mtsState = new MtsState();
 	private AtomicInteger exp = new AtomicInteger();
@@ -2757,8 +2756,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps.setInt(2, characterId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				character.linkedName = rs.getString("name");
-				character.linkedLevel = rs.getInt("level");
+				character.linkedCharacter = new LinkedCharacterInfo(rs);
 			}
 			rs.close();
 			ps.close();
@@ -4455,12 +4453,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.gottenRiceHat = b;
 	}
 
-	public int getLinkedLevel() {
-		return linkedLevel;
-	}
-
-	public String getLinkedName() {
-		return linkedName;
+	public LinkedCharacterInfo getLinkedCharacter() {
+		return this.linkedCharacter;
 	}
 
 	public CashShop getCashShop() {

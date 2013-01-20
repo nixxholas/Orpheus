@@ -28,6 +28,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Family;
 import client.InventoryType;
+import client.LinkedCharacterInfo;
 import client.SkillFactory;
 import gm.server.GMServer;
 import java.sql.SQLException;
@@ -232,7 +233,10 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		c.announce(PacketCreator.updateGender(player));
 		player.checkMessenger();
 		c.announce(PacketCreator.enableReport());
-		player.changeSkillLevel(SkillFactory.getSkill(10000000 * player.getJobType() + 12), (byte) (player.getLinkedLevel() / 10), 20, -1);
+		
+		final LinkedCharacterInfo info = player.getLinkedCharacter();
+		final int level = info == null ? 0 : info.level;
+		player.changeSkillLevel(SkillFactory.getSkill(10000000 * player.getJobType() + 12), (byte) (level / 10), 20, -1);
 		player.checkBerserk();
 		player.expirationTask();
 		player.setRates();
