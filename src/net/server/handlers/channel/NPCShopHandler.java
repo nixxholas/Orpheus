@@ -23,6 +23,7 @@ package net.server.handlers.channel;
 import client.GameClient;
 import net.AbstractPacketHandler;
 import server.ItemInfoProvider;
+import server.Shop;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -33,26 +34,51 @@ public final class NPCShopHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		byte bmode = reader.readByte();
-		if (bmode == 0) { 
-			// mode 0 = buy :)
-			short slot = reader.readShort();
-			int itemId = reader.readInt();
-			short quantity = reader.readShort();
-			c.getPlayer().getShop().buy(c, slot, itemId, quantity);
-		} else if (bmode == 1) { 
-			// sell ;)
-			short slot = reader.readShort();
-			int itemId = reader.readInt();
-			short quantity = reader.readShort();
-			c.getPlayer().getShop().sell(c, ItemInfoProvider.getInstance().getInventoryType(itemId), slot, quantity);
-		} else if (bmode == 2) { 
-			// recharge ;)
-			byte slot = (byte) reader.readShort();
-			c.getPlayer().getShop().recharge(c, slot);
-		} else if (bmode == 3) {
-			// leaving :(
-			c.getPlayer().setShop(null);
+		byte operation = reader.readByte();
+		final Shop shop = c.getPlayer().getShop();
+		switch (NpcShopOperation.fromByte(operation)) {
+		case BUY:
+			handleBuy(reader, c, shop);
+			break;
+			
+		case SELL:
+			handleSell(reader, c, shop);
+			break;
+			
+		case RECHARGE:
+			handleRecharge(reader, c, shop);
+			break;
+			
+		case LEAVE:
+			handleLeave(c);
+			break;
+			
+		default:
+			// TODO: disconnect!
+			break;		
 		}
+	}
+
+	private void handleBuy(SeekableLittleEndianAccessor reader, GameClient c, final Shop shop) {
+		short slot = reader.readShort();
+		int itemId = reader.readInt();
+		short quantity = reader.readShort();
+		shop.buy(c, slot, itemId, quantity);
+	}
+	
+	private void handleSell(SeekableLittleEndianAccessor reader, GameClient c, final Shop shop) {
+		short slot = reader.readShort();
+		int itemId = reader.readInt();
+		short quantity = reader.readShort();
+		shop.sell(c, ItemInfoProvider.getInstance().getInventoryType(itemId), slot, quantity);
+	}
+
+	private void handleRecharge(SeekableLittleEndianAccessor reader, GameClient c, final Shop shop) {
+		byte slot = (byte) reader.readShort();
+		shop.recharge(c, slot);
+	}
+	
+	private void handleLeave(GameClient c) {
+		c.getPlayer().setShop(null);
 	}
 }
