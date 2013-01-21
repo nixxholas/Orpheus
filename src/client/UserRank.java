@@ -21,7 +21,12 @@
 package client;
 
 public enum UserRank {
-	PLAYER(0), DONOR(1), SUPPORT(2), GM(3), DEVELOPER(4), ADMINISTRATOR(5);
+	PLAYER(0), 
+	DONOR(1), 
+	SUPPORT(2), 
+	GM(3), 
+	DEVELOPER(4), 
+	ADMINISTRATOR(5);
 	
 	private int id;
 	
