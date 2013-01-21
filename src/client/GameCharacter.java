@@ -2123,7 +2123,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public String getStaffRank() {
-		return MapleRank.getById(gmLevel).toString();
+		return UserRank.getById(gmLevel).toString();
 	}
 
 	public final List<QuestStatus> getStartedQuests() {

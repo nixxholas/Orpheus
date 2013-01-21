@@ -36,7 +36,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.Job;
 import client.Pet;
-import client.MapleRank;
+import client.UserRank;
 
 /**
  * @author Aaron Weiss
@@ -61,7 +61,7 @@ public class SupportCommands extends EnumeratedCommands {
 					return false;
 				case announce:
 					String message = joinStringFrom(sub, 1);
-					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(6, chr.getName() + " (" + MapleRank.getById(chr.gmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
+					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(6, chr.getName() + " (" + UserRank.getById(chr.gmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
 					break;
 				case cleardrops:
 					chr.getMap().clearDrops(chr);

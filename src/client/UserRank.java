@@ -20,30 +20,30 @@
  */
 package client;
 
-public enum MapleRank {
+public enum UserRank {
 	PLAYER(0), DONOR(1), SUPPORT(2), GM(3), DEVELOPER(4), ADMINISTRATOR(5);
 	
-	private int rankid;
+	private int id;
 	
-	private MapleRank(int rankid) {
-		this.rankid = rankid;
+	private UserRank(int id) {
+		this.id = id;
 	}
 	
 	public int getId() {
-		return rankid;
+		return id;
 	}
 	
-	public static MapleRank getById(int id) {
-		for (MapleRank l : MapleRank.values()) {
-			if (l.getId() == id) {
-				return l;
+	public static UserRank getById(int id) {
+		for (UserRank rank : UserRank.values()) {
+			if (rank.id == id) {
+				return rank;
 			}
 		}
 		return null;
 	}
 
-	public boolean isA(MapleRank maplerank) {
-		return getId() == maplerank.getId();
+	public boolean is(UserRank rank) {
+		return this.id == rank.id;
 	}
 	
 	public String toStringWithArticle() {

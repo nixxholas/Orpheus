@@ -39,7 +39,7 @@ import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
 import client.Job;
-import client.MapleRank;
+import client.UserRank;
 import client.Stat;
 import client.MapleStock;
 
@@ -138,7 +138,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					} else {
 						victim = chr;
 					}
-					chr.message(victim.getName() + " is " + MapleRank.getById(victim.gmLevel()).toStringWithArticle());
+					chr.message(victim.getName() + " is " + UserRank.getById(victim.gmLevel()).toStringWithArticle());
 					break;
 				case checkstats:
 					if (sub.length > 1) {
@@ -177,7 +177,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					chr.dropMessage("GM List");
 					try {
 						while (rs.next()) {
-							chr.dropMessage(rs.getString("name") + " (" + MapleRank.getById(rs.getInt("gm")).toString() + ")");
+							chr.dropMessage(rs.getString("name") + " (" + UserRank.getById(rs.getInt("gm")).toString() + ")");
 						}
 					} catch (SQLException e) {
 					}
