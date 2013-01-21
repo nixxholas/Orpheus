@@ -45,18 +45,18 @@ public class Guild {
 	public final static int CREATE_GUILD_COST = 1500000;
 	public final static int CHANGE_EMBLEM_COST = 5000000;
 
+	private int id, leaderCharacterId;
+	private byte worldId;
+	private String name, notice;
+	private GuildEmblem emblem;
+	private int gp, capacity, signature, allianceId;
+	private boolean isDirty = true;
+	
 	private final List<GuildCharacter> members = new ArrayList<GuildCharacter>();
 	private final Map<Byte, List<Integer>> notifications = new LinkedHashMap<Byte, List<Integer>>();
-
 	// 1 = master, 2 = jr, 5 = lowest member
 	private String rankTitles[] = new String[5]; 
 
-	private String name, notice;
-	private int id, gp, logo, logoColor, leader, capacity, logoBG, logoBGColor,
-			signature, allianceId;
-	private byte worldId;
-	private boolean isDirty = true;
-	
 	private Guild(int id) {
 		this.id = id;
 	}
@@ -75,15 +75,12 @@ public class Guild {
 				
 				result.name = rs.getString("name");
 				result.gp = rs.getInt("GP");
-				result.logo = rs.getInt("logo");
-				result.logoColor = rs.getInt("logoColor");
-				result.logoBG = rs.getInt("logoBG");
-				result.logoBGColor = rs.getInt("logoBGColor");
+				result.emblem = new GuildEmblem(rs.getInt("logo"), rs.getInt("logoColor"), rs.getInt("logoBG"), rs.getInt("logoBGColor"));
 				result.capacity = rs.getInt("capacity");
 				for (int i = 1; i <= 5; i++) {
 					result.rankTitles[i - 1] = rs.getString("rank" + i + "title");
 				}
-				result.leader = rs.getInt("leader");
+				result.leaderCharacterId = rs.getInt("leader");
 				result.notice = rs.getString("notice");
 				result.signature = rs.getInt("signature");
 				result.allianceId = rs.getInt("allianceId");
@@ -125,10 +122,11 @@ public class Guild {
 		if (!isDirty) {
 			return;
 		}
-		Set<Byte> chs = Server.getInstance().getChannelServer(worldId);
-		if (notifications.keySet().size() != chs.size()) {
+		
+		Set<Byte> channels = Server.getInstance().getChannelServer(worldId);
+		if (notifications.keySet().size() != channels.size()) {
 			notifications.clear();
-			for (Byte ch : chs) {
+			for (Byte ch : channels) {
 				notifications.put(ch, new LinkedList<Integer>());
 			}
 		} else {
@@ -136,17 +134,22 @@ public class Guild {
 				l.clear();
 			}
 		}
+		
 		synchronized (members) {
 			for (GuildCharacter member : members) {
 				if (!member.isOnline()) {
 					continue;
 				}
-				List<Integer> ch = notifications.get(member.getChannel());
-				if (ch != null)
-					ch.add(member.getId());
+				
+				List<Integer> channelCharacterIds = notifications.get(member.getChannel());
+				if (channelCharacterIds != null) {
+					channelCharacterIds.add(member.getId());
+				}
+				
 				// Unable to connect to Channel... error was here
 			}
 		}
+		
 		isDirty = false;
 	}
 
@@ -162,10 +165,10 @@ public class Guild {
 				builder.append("`capacity` = ?, `notice` = ? WHERE `guildid` = ?");
 				PreparedStatement ps = con.prepareStatement(builder.toString());
 				ps.setInt(1, gp);
-				ps.setInt(2, logo);
-				ps.setInt(3, logoColor);
-				ps.setInt(4, logoBG);
-				ps.setInt(5, logoBGColor);
+				ps.setInt(2, emblem.getForegroundId());
+				ps.setInt(3, emblem.getForegroundColor());
+				ps.setInt(4, emblem.getBackgroundId());
+				ps.setInt(5, emblem.getBackgroundColor());
 				for (int i = 6; i < 11; i++) {
 					ps.setString(i, rankTitles[i - 6]);
 				}
@@ -194,43 +197,15 @@ public class Guild {
 	}
 
 	public int getLeaderId() {
-		return leader;
+		return leaderCharacterId;
 	}
 
 	public int getGP() {
 		return gp;
 	}
 
-	public int getLogo() {
-		return logo;
-	}
-
-	public void setLogo(int l) {
-		logo = l;
-	}
-
-	public int getLogoColor() {
-		return logoColor;
-	}
-
-	public void setLogoColor(int c) {
-		logoColor = c;
-	}
-
-	public int getLogoBG() {
-		return logoBG;
-	}
-
-	public void setLogoBG(int bg) {
-		logoBG = bg;
-	}
-
-	public int getLogoBGColor() {
-		return logoBGColor;
-	}
-
-	public void setLogoBGColor(int c) {
-		logoBGColor = c;
+	public GuildEmblem getEmblem() {
+		return this.emblem;
 	}
 
 	public String getNotice() {
@@ -486,29 +461,26 @@ public class Guild {
 		this.broadcast(null, -1, GuildOperation.DISBAND);
 	}
 
-	public void setGuildEmblem(short bg, byte bgcolor, short logo, byte logocolor) {
-		this.logoBG = bg;
-		this.logoBGColor = bgcolor;
-		this.logo = logo;
-		this.logoColor = logocolor;
+	public void setGuildEmblem(short backgroundId, byte backgroundColor, short foregroundId, byte foregroundColor) {
+		this.emblem = new GuildEmblem(foregroundId, foregroundColor, backgroundId, backgroundColor);
 		this.writeToDB(false);
 		this.broadcast(null, -1, GuildOperation.EMBELMCHANGE);
 	}
 
 	public GuildCharacter getMember(int characterId) {
-		for (GuildCharacter mgc : members) {
-			if (mgc.getId() == characterId) {
-				return mgc;
+		for (GuildCharacter member : members) {
+			if (member.getId() == characterId) {
+				return member;
 			}
 		}
 		return null;
 	}
 
 	public boolean increaseCapacity() {
-		if (capacity > 99) {
+		if (this.capacity > 99) {
 			return false;
 		}
-		capacity += 5;
+		this.capacity += 5;
 		this.writeToDB(false);
 		this.broadcast(PacketCreator.guildCapacityChange(this.id, this.capacity));
 		return true;

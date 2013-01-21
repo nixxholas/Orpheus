@@ -79,6 +79,7 @@ import net.server.Server;
 import net.server.guild.Alliance;
 import net.server.guild.Guild;
 import net.server.guild.GuildCharacter;
+import net.server.guild.GuildEmblem;
 import net.server.guild.GuildSummary;
 import server.CashShop.CashItem;
 import server.CashShop.CashItemFactory;
@@ -1856,10 +1857,12 @@ public class PacketCreator {
 			GuildSummary gs = chr.getClient().getWorldServer().getGuildSummary(chr.getGuildId());
 			if (gs != null) {
 				w.writeLengthString(gs.getName());
-				w.writeAsShort(gs.getLogoBG());
-				w.writeAsByte(gs.getLogoBGColor());
-				w.writeAsShort(gs.getLogo());
-				w.writeAsByte(gs.getLogoColor());
+
+				final GuildEmblem emblem = gs.getEmblem();
+				w.writeAsShort(emblem.getBackgroundId());
+				w.writeAsByte(emblem.getBackgroundColor());
+				w.writeAsShort(emblem.getForegroundId());
+				w.writeAsByte(emblem.getForegroundColor());
 			} else {
 				w.writeLengthString("");
 				w.write(new byte[6]);
@@ -3958,10 +3961,13 @@ public class PacketCreator {
 			w.writeInt(mgc.getAllianceRank());
 		}
 		w.writeInt(g.getCapacity());
-		w.writeAsShort(g.getLogoBG());
-		w.writeAsByte(g.getLogoBGColor());
-		w.writeAsShort(g.getLogo());
-		w.writeAsByte(g.getLogoColor());
+		
+		final GuildEmblem emblem = g.getEmblem();
+		w.writeAsShort(emblem.getBackgroundId());
+		w.writeAsByte(emblem.getBackgroundColor());
+		w.writeAsShort(emblem.getForegroundId());
+		w.writeAsByte(emblem.getForegroundColor());
+		
 		w.writeLengthString(g.getNotice());
 		w.writeInt(g.getGP());
 		w.writeInt(g.getAllianceId());
@@ -4087,15 +4093,17 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket guildEmblemChange(int gid, short bg, byte bgcolor, short logo, byte logocolor) {
+	public static GamePacket guildEmblemChange(int guildId, GuildEmblem emblem) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.GUILD_OPERATION.getValue());
 		w.writeAsByte(0x42);
-		w.writeInt(gid);
-		w.writeAsShort(bg);
-		w.writeAsByte(bgcolor);
-		w.writeAsShort(logo);
-		w.writeAsByte(logocolor);
+		w.writeInt(guildId);
+
+		w.writeAsShort(emblem.getBackgroundId());
+		w.writeAsByte(emblem.getBackgroundColor());
+		w.writeAsShort(emblem.getForegroundId());
+		w.writeAsByte(emblem.getForegroundColor());
+		
 		return w.getPacket();
 	}
 
@@ -6140,10 +6148,13 @@ public class PacketCreator {
 			w.writeInt(mgc.getAllianceRank());
 		}
 		w.writeInt(guild.getCapacity());
-		w.writeAsShort(guild.getLogoBG());
-		w.writeAsByte(guild.getLogoBGColor());
-		w.writeAsShort(guild.getLogo());
-		w.writeAsByte(guild.getLogoColor());
+
+		final GuildEmblem emblem = guild.getEmblem();
+		w.writeAsShort(emblem.getBackgroundId());
+		w.writeAsByte(emblem.getBackgroundColor());
+		w.writeAsShort(emblem.getForegroundId());
+		w.writeAsByte(emblem.getForegroundColor());
+		
 		w.writeLengthString(guild.getNotice());
 		w.writeInt(guild.getGP());
 		w.writeInt(guild.getAllianceId());

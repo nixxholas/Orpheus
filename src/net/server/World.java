@@ -219,111 +219,118 @@ public class World {
 		}
 	}
 
-	public void setGuildAndRank(int cid, int guildid, int rank) {
-		GameCharacter player = getPlayerStorage().getCharacterById(cid);
+	public void setGuildAndRank(int characterId, int guildId, int rank) {
+		GameCharacter player = getPlayerStorage().getCharacterById(characterId);
 		if (player == null) {
 			return;
 		}
 		boolean bDifferentGuild;
-		if (guildid == -1 && rank == -1) {
+		if (guildId == -1 && rank == -1) {
 			bDifferentGuild = true;
 		} else {
-			bDifferentGuild = guildid != player.getGuildId();
-			player.setGuildId(guildid);
+			bDifferentGuild = guildId != player.getGuildId();
+			player.setGuildId(guildId);
 			player.setGuildRank(rank);
 			player.saveGuildStatus();
 		}
 		if (bDifferentGuild) {
-			player.getMap().broadcastMessage(player, PacketCreator.removePlayerFromMap(cid), false);
+			player.getMap().broadcastMessage(player, PacketCreator.removePlayerFromMap(characterId), false);
 			player.getMap().broadcastMessage(player, PacketCreator.spawnPlayerMapObject(player), false);
 		}
 	}
 
-	public void changeEmblem(int gid, List<Integer> affectedPlayers, GuildSummary mgs) {
-		updateGuildSummary(gid, mgs);
-		sendPacket(affectedPlayers, PacketCreator.guildEmblemChange(gid, mgs.getLogoBG(), mgs.getLogoBGColor(), mgs.getLogo(), mgs.getLogoColor()), -1);
+	public void changeEmblem(int guildId, List<Integer> affectedPlayers, GuildSummary summary) {
+		updateGuildSummary(guildId, summary);
+		sendPacket(affectedPlayers, PacketCreator.guildEmblemChange(guildId, summary.getEmblem()), -1);
 		setGuildAndRank(affectedPlayers, -1, -1, -1); // respawn player
 	}
 
 	public void sendPacket(List<Integer> targetIds, GamePacket packet, int exception) {
-		GameCharacter c;
-		for (int i : targetIds) {
-			if (i == exception) {
+		for (int id : targetIds) {
+			if (id == exception) {
 				continue;
 			}
-			c = getPlayerStorage().getCharacterById(i);
-			if (c != null) {
-				c.getClient().getSession().write(packet);
+			
+			final GameCharacter character = getPlayerStorage().getCharacterById(id);
+			if (character != null) {
+				character.getClient().getSession().write(packet);
 			}
 		}
 	}
 
-	public Party createParty(PartyCharacter chrfor) {
-		int partyid = runningPartyId.getAndIncrement();
-		Party party = new Party(partyid, chrfor);
+	public Party createParty(PartyCharacter initiator) {
+		int partyId = runningPartyId.getAndIncrement();
+		Party party = new Party(partyId, initiator);
 		parties.put(party.getId(), party);
 		return party;
 	}
 
-	public Party getParty(int partyid) {
-		return parties.get(partyid);
+	public Party getParty(int partyId) {
+		return parties.get(partyId);
 	}
 
-	public Party disbandParty(int partyid) {
-		return parties.remove(partyid);
+	public Party disbandParty(int partyId) {
+		return parties.remove(partyId);
 	}
 
 	public void updateParty(Party party, PartyOperation operation, PartyCharacter target) {
-		for (PartyCharacter partychar : party.getMembers()) {
-			GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
-			if (chr != null) {
+		for (PartyCharacter member : party.getMembers()) {
+			GameCharacter character = getPlayerStorage().getCharacterByName(member.getName());
+			if (character != null) {
 				if (operation == PartyOperation.DISBAND) {
-					chr.setParty(null);
-					chr.setMPC(null);
+					character.setParty(null);
+					character.setPartyCharacter(null);
 				} else {
-					chr.setParty(party);
-					chr.setMPC(partychar);
+					character.setParty(party);
+					character.setPartyCharacter(member);
 				}
-				chr.getClient().getSession().write(PacketCreator.updateParty(chr.getClient().getChannel(), party, operation, target));
+				character.getClient().getSession().write(PacketCreator.updateParty(character.getClient().getChannel(), party, operation, target));
 			}
 		}
+		
 		switch (operation) {
 			case LEAVE:
 			case EXPEL:
-				GameCharacter chr = getPlayerStorage().getCharacterByName(target.getName());
-				if (chr != null) {
-					chr.getClient().getSession().write(PacketCreator.updateParty(chr.getClient().getChannel(), party, operation, target));
-					chr.setParty(null);
-					chr.setMPC(null);
+				GameCharacter character = getPlayerStorage().getCharacterByName(target.getName());
+				if (character != null) {
+					character.getClient().getSession().write(PacketCreator.updateParty(character.getClient().getChannel(), party, operation, target));
+					character.setParty(null);
+					character.setPartyCharacter(null);
 				}
 			default:
 				return;
 		}
 	}
 
-	public void updateParty(int partyid, PartyOperation operation, PartyCharacter target) {
-		Party party = getParty(partyid);
+	public void updateParty(int partyId, PartyOperation operation, PartyCharacter target) {
+		Party party = getParty(partyId);
 		if (party == null) {
 			throw new IllegalArgumentException("no party with the specified partyid exists");
 		}
+		
 		switch (operation) {
 			case JOIN:
 				party.addMember(target);
 				break;
+				
 			case EXPEL:
 			case LEAVE:
 				party.removeMember(target);
 				break;
+				
 			case DISBAND:
-				disbandParty(partyid);
+				disbandParty(partyId);
 				break;
+				
 			case SILENT_UPDATE:
 			case LOG_ONOFF:
 				party.updateMember(target);
 				break;
+				
 			case CHANGE_LEADER:
 				party.setLeader(target);
 				break;
+				
 			default:
 				Output.print("Unhandled updateParty operation " + operation.name() + ".");
 		}
@@ -332,61 +339,61 @@ public class World {
 
 	public byte find(String name) {
 		byte channel = -1;
-		GameCharacter chr = getPlayerStorage().getCharacterByName(name);
-		if (chr != null) {
-			channel = chr.getClient().getChannel();
+		GameCharacter character = getPlayerStorage().getCharacterByName(name);
+		if (character != null) {
+			channel = character.getClient().getChannel();
 		}
 		return channel;
 	}
 
 	public byte find(int id) {
 		byte channel = -1;
-		GameCharacter chr = getPlayerStorage().getCharacterById(id);
-		if (chr != null) {
-			channel = chr.getClient().getChannel();
+		GameCharacter character = getPlayerStorage().getCharacterById(id);
+		if (character != null) {
+			channel = character.getClient().getChannel();
 		}
 		return channel;
 	}
 
-	public void partyChat(Party party, String chattext, String namefrom) {
+	public void partyChat(Party party, String message, String sender) {
 		for (PartyCharacter partychar : party.getMembers()) {
-			if (!(partychar.getName().equals(namefrom))) {
+			if (!(partychar.getName().equals(sender))) {
 				GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
 				if (chr != null) {
-					chr.getClient().getSession().write(PacketCreator.multiChat(namefrom, chattext, 1));
+					chr.getClient().getSession().write(PacketCreator.multiChat(sender, message, 1));
 				}
 			}
 		}
 	}
 
-	public void buddyChat(int[] recipientCharacterIds, int cidFrom, String nameFrom, String chattext) {
+	public void buddyChat(int[] recipientCharacterIds, int senderCharacterId, String sender, String message) {
 		PlayerStorage playerStorage = getPlayerStorage();
-		for (int characterId : recipientCharacterIds) {
-			GameCharacter chr = playerStorage.getCharacterById(characterId);
+		for (int recepientId : recipientCharacterIds) {
+			GameCharacter chr = playerStorage.getCharacterById(recepientId);
 			if (chr != null) {
-				if (chr.getBuddylist().containsVisible(cidFrom)) {
-					chr.getClient().getSession().write(PacketCreator.multiChat(nameFrom, chattext, 0));
+				if (chr.getBuddylist().containsVisible(senderCharacterId)) {
+					chr.getClient().getSession().write(PacketCreator.multiChat(sender, message, 0));
 				}
 			}
 		}
 	}
 
-	public CharacterIdChannelPair[] multiBuddyFind(int charIdFrom, int[] characterIds) {
+	public CharacterIdChannelPair[] multiBuddyFind(int senderId, int[] characterIds) {
 		List<CharacterIdChannelPair> foundsChars = new ArrayList<CharacterIdChannelPair>(characterIds.length);
-		for (Channel ch : getChannels()) {
-			for (int charid : ch.multiBuddyFind(charIdFrom, characterIds)) {
-				foundsChars.add(new CharacterIdChannelPair(charid, ch.getId()));
+		for (Channel channel : getChannels()) {
+			for (int characterId : channel.multiBuddyFind(senderId, characterIds)) {
+				foundsChars.add(new CharacterIdChannelPair(characterId, channel.getId()));
 			}
 		}
 		return foundsChars.toArray(new CharacterIdChannelPair[foundsChars.size()]);
 	}
 
-	public Messenger getMessenger(int messengerid) {
-		return messengers.get(messengerid);
+	public Messenger getMessenger(int messengerId) {
+		return messengers.get(messengerId);
 	}
 
-	public void leaveMessenger(int messengerid, MessengerCharacter target) {
-		Messenger messenger = getMessenger(messengerid);
+	public void leaveMessenger(int messengerId, MessengerCharacter target) {
+		Messenger messenger = getMessenger(messengerId);
 		if (messenger == null) {
 			throw new IllegalArgumentException("No messenger with the specified messengerid exists");
 		}
@@ -395,30 +402,30 @@ public class World {
 		removeMessengerPlayer(messenger, position);
 	}
 
-	public void messengerInvite(String sender, int messengerid, String target, byte fromchannel) {
+	public void messengerInvite(String senderName, int messengerId, String target, byte sourceChannelId) {
 		if (isConnected(target)) {
 			Messenger messenger = getPlayerStorage().getCharacterByName(target).getMessenger();
 			if (messenger == null) {
-				getPlayerStorage().getCharacterByName(target).getClient().getSession().write(PacketCreator.messengerInvite(sender, messengerid));
-				GameCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(sender);
+				getPlayerStorage().getCharacterByName(target).getClient().getSession().write(PacketCreator.messengerInvite(senderName, messengerId));
+				GameCharacter from = getChannel(sourceChannelId).getPlayerStorage().getCharacterByName(senderName);
 				from.getClient().getSession().write(PacketCreator.messengerNote(target, 4, 1));
 			} else {
-				GameCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(sender);
-				from.getClient().getSession().write(PacketCreator.messengerChat(sender + " : " + target + " is already using Maple Messenger"));
+				GameCharacter from = getChannel(sourceChannelId).getPlayerStorage().getCharacterByName(senderName);
+				from.getClient().getSession().write(PacketCreator.messengerChat(senderName + " : " + target + " is already using Maple Messenger"));
 			}
 		}
 	}
 
-	public void addMessengerPlayer(Messenger messenger, String namefrom, byte fromchannel, int position) {
+	public void addMessengerPlayer(Messenger messenger, String senderName, byte sourceChannelId, int position) {
 		for (MessengerCharacter messengerchar : messenger.getMembers()) {
-			if (!(messengerchar.getName().equals(namefrom))) {
+			if (!(messengerchar.getName().equals(senderName))) {
 				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
-					GameCharacter from = getChannel(fromchannel).getPlayerStorage().getCharacterByName(namefrom);
-					chr.getClient().getSession().write(PacketCreator.addMessengerPlayer(namefrom, from, position, (byte) (fromchannel - 1)));
+					GameCharacter from = getChannel(sourceChannelId).getPlayerStorage().getCharacterByName(senderName);
+					chr.getClient().getSession().write(PacketCreator.addMessengerPlayer(senderName, from, position, (byte) (sourceChannelId - 1)));
 					from.getClient().getSession().write(PacketCreator.addMessengerPlayer(chr.getName(), chr, messengerchar.getPosition(), (byte) (messengerchar.getChannel() - 1)));
 				}
-			} else if ((messengerchar.getName().equals(namefrom))) {
+			} else if ((messengerchar.getName().equals(senderName))) {
 				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(PacketCreator.joinMessenger(messengerchar.getPosition()));
@@ -436,63 +443,63 @@ public class World {
 		}
 	}
 
-	public void messengerChat(Messenger messenger, String chattext, String namefrom) {
+	public void messengerChat(Messenger messenger, String message, String senderName) {
 		for (MessengerCharacter messengerchar : messenger.getMembers()) {
-			if (!(messengerchar.getName().equals(namefrom))) {
+			if (!(messengerchar.getName().equals(senderName))) {
 				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
 				if (chr != null) {
-					chr.getClient().getSession().write(PacketCreator.messengerChat(chattext));
+					chr.getClient().getSession().write(PacketCreator.messengerChat(message));
 				}
 			}
 		}
 	}
 
-	public void declineChat(String target, String namefrom) {
-		if (isConnected(target)) {
-			GameCharacter chr = getPlayerStorage().getCharacterByName(target);
-			if (chr != null && chr.getMessenger() != null) {
-				chr.getClient().getSession().write(PacketCreator.messengerNote(namefrom, 5, 0));
+	public void declineChat(String targetName, String senderName) {
+		if (isConnected(targetName)) {
+			GameCharacter character = getPlayerStorage().getCharacterByName(targetName);
+			if (character != null && character.getMessenger() != null) {
+				character.getClient().getSession().write(PacketCreator.messengerNote(senderName, 5, 0));
 			}
 		}
 	}
 
-	public void updateMessenger(int messengerid, String namefrom, byte fromchannel) {
-		Messenger messenger = getMessenger(messengerid);
-		int position = messenger.getPositionByName(namefrom);
-		updateMessenger(messenger, namefrom, position, fromchannel);
+	public void updateMessenger(int messengerId, String senderName, byte sourceChannelId) {
+		Messenger messenger = getMessenger(messengerId);
+		int position = messenger.getPositionByName(senderName);
+		updateMessenger(messenger, senderName, position, sourceChannelId);
 	}
 
-	public void updateMessenger(Messenger messenger, String namefrom, int position, byte fromchannel) {
-		for (MessengerCharacter messengerchar : messenger.getMembers()) {
-			Channel ch = getChannel(fromchannel);
-			if (!(messengerchar.getName().equals(namefrom))) {
-				GameCharacter chr = ch.getPlayerStorage().getCharacterByName(messengerchar.getName());
-				if (chr != null) {
-					chr.getClient().getSession().write(PacketCreator.updateMessengerPlayer(namefrom, getChannel(fromchannel).getPlayerStorage().getCharacterByName(namefrom), position, (byte) (fromchannel - 1)));
+	public void updateMessenger(Messenger messenger, String senderName, int position, byte sourceChannelId) {
+		for (MessengerCharacter member : messenger.getMembers()) {
+			Channel channel = getChannel(sourceChannelId);
+			if (!(member.getName().equals(senderName))) {
+				GameCharacter character = channel.getPlayerStorage().getCharacterByName(member.getName());
+				if (character != null) {
+					character.getClient().getSession().write(PacketCreator.updateMessengerPlayer(senderName, getChannel(sourceChannelId).getPlayerStorage().getCharacterByName(senderName), position, (byte) (sourceChannelId - 1)));
 				}
 			}
 		}
 	}
 
-	public void silentLeaveMessenger(int messengerid, MessengerCharacter target) {
-		Messenger messenger = getMessenger(messengerid);
+	public void silentLeaveMessenger(int messengerId, MessengerCharacter target) {
+		Messenger messenger = getMessenger(messengerId);
 		if (messenger == null) {
 			throw new IllegalArgumentException("No messenger with the specified messengerid exists");
 		}
 		messenger.silentRemoveMember(target);
 	}
 
-	public void joinMessenger(int messengerid, MessengerCharacter target, String from, byte fromchannel) {
-		Messenger messenger = getMessenger(messengerid);
+	public void joinMessenger(int messengerId, MessengerCharacter target, String senderName, byte sourceChannelId) {
+		Messenger messenger = getMessenger(messengerId);
 		if (messenger == null) {
 			throw new IllegalArgumentException("No messenger with the specified messengerid exists");
 		}
 		messenger.addMember(target);
-		addMessengerPlayer(messenger, from, fromchannel, target.getPosition());
+		addMessengerPlayer(messenger, senderName, sourceChannelId, target.getPosition());
 	}
 
-	public void silentJoinMessenger(int messengerid, MessengerCharacter target, int position) {
-		Messenger messenger = getMessenger(messengerid);
+	public void silentJoinMessenger(int messengerId, MessengerCharacter target, int position) {
+		Messenger messenger = getMessenger(messengerId);
 		if (messenger == null) {
 			throw new IllegalArgumentException("No messenger with the specified messengerid exists");
 		}
@@ -506,47 +513,48 @@ public class World {
 		return messenger;
 	}
 
-	public boolean isConnected(String charName) {
-		return getPlayerStorage().getCharacterByName(charName) != null;
+	public boolean isConnected(String characterName) {
+		return getPlayerStorage().getCharacterByName(characterName) != null;
 	}
 
-	public void whisper(String sender, String target, byte channel, String message) {
-		if (isConnected(target)) {
-			getPlayerStorage().getCharacterByName(target).getClient().getSession().write(PacketCreator.getWhisper(sender, channel, message));
+	public void whisper(String senderName, String targetName, byte sourceChannelId, String message) {
+		if (isConnected(targetName)) {
+			getPlayerStorage().getCharacterByName(targetName).getClient().getSession().write(PacketCreator.getWhisper(senderName, sourceChannelId, message));
 		}
 	}
 
-	public BuddyAddResult requestBuddyAdd(String addName, byte channelFrom, int cidFrom, String nameFrom) {
+	public BuddyAddResult requestBuddyAdd(String addName, byte sourceChannelId, int senderId, String senderName) {
 		GameCharacter addChar = getPlayerStorage().getCharacterByName(addName);
 		if (addChar != null) {
 			BuddyList buddylist = addChar.getBuddylist();
 			if (buddylist.isFull()) {
 				return BuddyAddResult.BUDDYLIST_FULL;
 			}
-			if (!buddylist.contains(cidFrom)) {
-				buddylist.addBuddyRequest(addChar.getClient(), cidFrom, nameFrom, channelFrom);
-			} else if (buddylist.containsVisible(cidFrom)) {
+			if (!buddylist.contains(senderId)) {
+				buddylist.addBuddyRequest(addChar.getClient(), senderId, senderName, sourceChannelId);
+			} else if (buddylist.containsVisible(senderId)) {
 				return BuddyAddResult.ALREADY_ON_LIST;
 			}
 		}
 		return BuddyAddResult.OK;
 	}
 
-	public void buddyChanged(int cid, int cidFrom, String name, byte channel, BuddyOperation operation) {
-		GameCharacter addChar = getPlayerStorage().getCharacterById(cid);
+	public void buddyChanged(int characterId, int senderId, String characterName, byte channelId, BuddyOperation operation) {
+		GameCharacter addChar = getPlayerStorage().getCharacterById(characterId);
 		if (addChar != null) {
 			BuddyList buddylist = addChar.getBuddylist();
 			switch (operation) {
 				case ADDED:
-					if (buddylist.contains(cidFrom)) {
-						buddylist.put(new BuddylistEntry(name, "Default Group", cidFrom, channel, true));
-						addChar.getClient().getSession().write(PacketCreator.updateBuddyChannel(cidFrom, (byte) (channel - 1)));
+					if (buddylist.contains(senderId)) {
+						buddylist.put(new BuddylistEntry(characterName, "Default Group", senderId, channelId, true));
+						addChar.getClient().getSession().write(PacketCreator.updateBuddyChannel(senderId, (byte) (channelId - 1)));
 					}
 					break;
+					
 				case DELETED:
-					if (buddylist.contains(cidFrom)) {
-						buddylist.put(new BuddylistEntry(name, "Default Group", cidFrom, (byte) -1, buddylist.get(cidFrom).isVisible()));
-						addChar.getClient().getSession().write(PacketCreator.updateBuddyChannel(cidFrom, (byte) -1));
+					if (buddylist.contains(senderId)) {
+						buddylist.put(new BuddylistEntry(characterName, "Default Group", senderId, (byte) -1, buddylist.get(senderId).isVisible()));
+						addChar.getClient().getSession().write(PacketCreator.updateBuddyChannel(senderId, (byte) -1));
 					}
 					break;
 			}

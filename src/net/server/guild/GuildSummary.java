@@ -23,39 +23,21 @@ package net.server.guild;
 public class GuildSummary implements java.io.Serializable {
 	private static final long serialVersionUID = 2107845458870315533L;
 	private String name;
-	private short logoBG;
-	private byte logoBGColor;
-	private short logo;
-	private byte logoColor;
+	private GuildEmblem emblem;
 	private int allianceId;
 
 	public GuildSummary(Guild g) {
 		this.name = g.getName();
-		this.logoBG = (short) g.getLogoBG();
-		this.logoBGColor = (byte) g.getLogoBGColor();
-		this.logo = (short) g.getLogo();
-		this.logoColor = (byte) g.getLogoColor();
+		this.emblem = g.getEmblem();
 		this.allianceId = g.getAllianceId();
 	}
 
 	public String getName() {
 		return name;
 	}
-
-	public short getLogoBG() {
-		return logoBG;
-	}
-
-	public byte getLogoBGColor() {
-		return logoBGColor;
-	}
-
-	public short getLogo() {
-		return logo;
-	}
-
-	public byte getLogoColor() {
-		return logoColor;
+	
+	public GuildEmblem getEmblem() {
+		return this.emblem;
 	}
 
 	public int getAllianceId() {

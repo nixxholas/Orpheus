@@ -1916,7 +1916,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return mpc;
 	}
 
-	public void setMPC(PartyCharacter mpc) {
+	public void setPartyCharacter(PartyCharacter mpc) {
 		this.mpc = mpc;
 	}
 
@@ -2535,7 +2535,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		client.announce(PacketCreator.updatePlayerStats(statup));
 		getMap().broadcastMessage(this, PacketCreator.showForeignEffect(getId(), 0), false);
 		recalcLocalStats();
-		setMPC(new PartyCharacter(this));
+		setPartyCharacter(new PartyCharacter(this));
 		silentPartyUpdate();
 		if (this.guildId > 0) {
 			getGuild().broadcast(PacketCreator.levelUpMessage(2, level, name), this.getId());

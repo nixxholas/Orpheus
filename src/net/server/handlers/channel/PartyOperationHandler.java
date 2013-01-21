@@ -45,7 +45,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 					partyplayer = new PartyCharacter(player);
 					party = world.createParty(partyplayer);
 					player.setParty(party);
-					player.setMPC(partyplayer);
+					player.setPartyCharacter(partyplayer);
 					c.announce(PacketCreator.partyCreated());
 				} else {
 					c.announce(PacketCreator.serverNotice(5, "You can't create a party as you are already in one."));
