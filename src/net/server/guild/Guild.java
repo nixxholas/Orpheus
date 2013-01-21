@@ -306,7 +306,7 @@ public class Guild {
 					broadcast = false;
 				}
 				member.setOnline(online);
-				member.setChannel(channel);
+				member.setChannelId(channel);
 				break;
 			}
 		}

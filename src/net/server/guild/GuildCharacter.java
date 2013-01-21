@@ -27,10 +27,10 @@ public class GuildCharacter implements Serializable {
 	private static final long serialVersionUID = -8012634292341191559L;
 	private int level;
 	private int id;
-	private byte world, channel;
-	private int jobid;
-	private int guildrank;
-	private int guildid;
+	private byte worldId, channelId;
+	private int jobId;
+	private int guildRank;
+	private int guildId;
 	private int allianceRank;
 	private boolean online;
 	private String name;
@@ -39,28 +39,28 @@ public class GuildCharacter implements Serializable {
 		this.name = c.getName();
 		this.level = c.getLevel();
 		this.id = c.getId();
-		this.channel = c.getClient().getChannel();
-		this.world = c.getWorldId();
-		this.jobid = c.getJob().getId();
-		this.guildrank = c.getGuildRank();
-		this.guildid = c.getGuildId();
+		this.channelId = c.getClient().getChannel();
+		this.worldId = c.getWorldId();
+		this.jobId = c.getJob().getId();
+		this.guildRank = c.getGuildRank();
+		this.guildId = c.getGuildId();
 		this.online = true;
 		this.allianceRank = c.getAllianceRank();
 	}
 
-	public GuildCharacter(int _id, int _lv, String _name, byte _channel, byte _world, int _job, int _rank, int _gid, boolean _on, int _allianceRank) {
-		this.level = _lv;
-		this.id = _id;
-		this.name = _name;
-		if (_on) {
-			this.channel = _channel;
-			this.world = _world;
+	public GuildCharacter(int id, int level, String name, byte channelId, byte worldId, int jobId, int rank, int guildId, boolean online, int allianceRank) {
+		this.level = level;
+		this.id = id;
+		this.name = name;
+		if (online) {
+			this.channelId = channelId;
+			this.worldId = worldId;
 		}
-		this.jobid = _job;
-		this.online = _on;
-		this.guildrank = _rank;
-		this.guildid = _gid;
-		this.allianceRank = _allianceRank;
+		this.jobId = jobId;
+		this.online = online;
+		this.guildRank = rank;
+		this.guildId = guildId;
+		this.allianceRank = allianceRank;
 	}
 
 	public int getLevel() {
@@ -75,40 +75,40 @@ public class GuildCharacter implements Serializable {
 		return id;
 	}
 
-	public void setChannel(byte ch) {
-		channel = ch;
+	public void setChannelId(byte ch) {
+		channelId = ch;
 	}
 
 	public byte getChannel() {
-		return channel;
+		return channelId;
 	}
 
 	public byte getWorld() {
-		return world;
+		return worldId;
 	}
 
 	public int getJobId() {
-		return jobid;
+		return jobId;
 	}
 
 	public void setJobId(int job) {
-		jobid = job;
+		jobId = job;
 	}
 
 	public int getGuildId() {
-		return guildid;
+		return guildId;
 	}
 
 	public void setGuildId(int gid) {
-		guildid = gid;
+		guildId = gid;
 	}
 
 	public void setGuildRank(int rank) {
-		guildrank = rank;
+		guildRank = rank;
 	}
 
 	public int getGuildRank() {
-		return guildrank;
+		return guildRank;
 	}
 
 	public boolean isOnline() {
