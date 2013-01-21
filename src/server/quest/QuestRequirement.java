@@ -26,6 +26,7 @@ import client.GameCharacter;
 import client.InventoryType;
 import client.Job;
 import client.Pet;
+import client.QuestCompletionState;
 import client.QuestStatus;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +66,7 @@ public class QuestRequirement {
 				return false;
 			
 			case INTERVAL:
-				return !c.getQuest(quest).getStatus().equals(QuestStatus.Status.COMPLETED) || c.getQuest(quest).getCompletionTime() <= System.currentTimeMillis() - MapleDataTool.getInt(getData()) * 60 * 1000;
+				return !c.getQuest(quest).getCompletionState().equals(QuestCompletionState.COMPLETED) || c.getQuest(quest).getCompletionTime() <= System.currentTimeMillis() - MapleDataTool.getInt(getData()) * 60 * 1000;
 			
 			case ITEM:
 				ItemInfoProvider ii = ItemInfoProvider.getInstance();
@@ -107,10 +108,10 @@ public class QuestRequirement {
 			case QUEST:
 				for (MapleData questEntry : getData().getChildren()) {
 					QuestStatus q = c.getQuest(Quest.getInstance(MapleDataTool.getInt(questEntry.getChildByPath("id"))));
-					if (q == null && QuestStatus.Status.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))).equals(QuestStatus.Status.NOT_STARTED)) {
+					if (q == null && QuestCompletionState.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))).equals(QuestCompletionState.NOT_STARTED)) {
 						continue;
 					}
-					if (q == null || !q.getStatus().equals(QuestStatus.Status.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))))) {
+					if (q == null || !q.getCompletionState().equals(QuestCompletionState.getById(MapleDataTool.getInt(questEntry.getChildByPath("state"))))) {
 						return false;
 					}
 				}

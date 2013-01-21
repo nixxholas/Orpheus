@@ -31,15 +31,19 @@ public enum InventoryType {
 	public byte asByte() {
 		return type;
 	}
+	
+	public boolean is(InventoryType other) {
+		return other != null && this.type == other.type;
+	}
 
 	public short getBitfieldEncoding() {
 		return (short) (2 << type);
 	}
 
 	public static InventoryType fromByte(byte type) {
-		for (InventoryType l : InventoryType.values()) {
-			if (l.asByte() == type) {
-				return l;
+		for (InventoryType value : InventoryType.values()) {
+			if (value.type == type) {
+				return value;
 			}
 		}
 		return null;

@@ -20,8 +20,10 @@
  */
 package net.server.handlers.channel;
 
+import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
+import client.Mount;
 import constants.ExpTable;
 import net.AbstractPacketHandler;
 import server.InventoryManipulator;
@@ -36,19 +38,25 @@ public final class UseMountFoodHandler extends AbstractPacketHandler {
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		reader.skip(6);
-		int itemid = reader.readInt();
-		if (c.getPlayer().getInventory(InventoryType.USE).findById(itemid) != null) {
-			if (c.getPlayer().getMount() != null && c.getPlayer().getMount().getTiredness() > 0) {
-				c.getPlayer().getMount().setTiredness(Math.max(c.getPlayer().getMount().getTiredness() - 30, 0));
-				c.getPlayer().getMount().setExp(2 * c.getPlayer().getMount().getLevel() + 6 + c.getPlayer().getMount().getExp());
-				int level = c.getPlayer().getMount().getLevel();
-				boolean levelup = c.getPlayer().getMount().getExp() >= ExpTable.getMountExpNeededForLevel(level) && level < 31;
-				if (levelup) {
-					c.getPlayer().getMount().setLevel(level + 1);
-				}
-				c.getPlayer().getMap().broadcastMessage(PacketCreator.updateMount(c.getPlayer().getId(), c.getPlayer().getMount(), levelup));
-				InventoryManipulator.removeById(c, InventoryType.USE, itemid, 1, true, false);
+		final int itemId = reader.readInt();
+	
+		final GameCharacter player = c.getPlayer();
+		if (player.getInventory(InventoryType.USE).findById(itemId) == null) {
+			// TODO: Why was this called if they don't have the item? Hax?
+			return;
+		}
+		
+		final Mount mount = player.getMount();
+		if (mount != null && mount.getFatigue() > 0) {
+			mount.setFatigue(Math.max(mount.getFatigue() - 30, 0));
+			mount.setExp(2 * mount.getLevel() + 6 + mount.getExp());
+			int level = mount.getLevel();
+			boolean levelUp = mount.getExp() >= ExpTable.getMountExpNeededForLevel(level) && level < 31;
+			if (levelUp) {
+				mount.setLevel(level + 1);
 			}
+			player.getMap().broadcastMessage(PacketCreator.updateMount(player.getId(), mount, levelUp));
+			InventoryManipulator.removeById(c, InventoryType.USE, itemId, 1, true, false);
 		}
 	}
 }

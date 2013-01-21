@@ -1,6 +1,7 @@
 package client;
 
 public final class ItemInventoryEntry {
+	
 	public final IItem item;
 	public final InventoryType type;
 	

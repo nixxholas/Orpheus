@@ -710,7 +710,7 @@ public class StatEffect {
 			applyMonsterBuff(applyfrom);
 
 		if (this.getFatigue() != 0)
-			applyto.getMount().setTiredness(applyto.getMount().getTiredness() + this.getFatigue());
+			applyto.getMount().setFatigue(applyto.getMount().getFatigue() + this.getFatigue());
 
 		if (summonMovementType != null && pos != null) {
 			final Summon tosummon = new Summon(applyfrom, sourceid, pos, summonMovementType);

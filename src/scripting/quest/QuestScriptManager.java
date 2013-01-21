@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.script.Invocable;
 import client.GameClient;
-import client.QuestStatus;
+import client.QuestCompletionState;
+
 import java.lang.reflect.UndeclaredThrowableException;
 import scripting.AbstractScriptManager;
 import server.quest.Quest;
@@ -45,7 +46,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 
 	public void start(GameClient c, short questid, int npc) {
 		Quest quest = Quest.getInstance(questid);
-		if (!c.getPlayer().getQuest(quest).getStatus().equals(QuestStatus.Status.NOT_STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
+		if (!c.getPlayer().getQuest(quest).getCompletionState().equals(QuestCompletionState.NOT_STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
 			dispose(c);
 			return;
 		}
@@ -85,7 +86,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 
 	public void end(GameClient c, short questid, int npc) {
 		Quest quest = Quest.getInstance(questid);
-		if (!c.getPlayer().getQuest(quest).getStatus().equals(QuestStatus.Status.STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
+		if (!c.getPlayer().getQuest(quest).getCompletionState().equals(QuestCompletionState.STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
 			dispose(c);
 			return;
 		}

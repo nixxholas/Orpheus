@@ -25,19 +25,20 @@ import tools.PacketCreator;
  * @author PurpleMadness Patrick :O
  */
 public class Mount {
-	private int itemid;
-	private int skillid;
-	private int tiredness;
+
+	private int itemId;
+	private int skillId;
+	private int fatigue;
 	private int exp;
 	private int level;
-	private ScheduledFuture<?> tirednessSchedule;
+	private ScheduledFuture<?> fatigueSchedule;
 	private GameCharacter owner;
 	private boolean active;
 
-	public Mount(GameCharacter owner, int id, int skillid) {
-		this.itemid = id;
-		this.skillid = skillid;
-		this.tiredness = 0;
+	public Mount(GameCharacter owner, int itemId, int skillId) {
+		this.itemId = itemId;
+		this.skillId = skillId;
+		this.fatigue = 0;
 		this.level = 1;
 		this.exp = 0;
 		this.owner = owner;
@@ -45,11 +46,11 @@ public class Mount {
 	}
 
 	public int getItemId() {
-		return itemid;
+		return itemId;
 	}
 
 	public int getSkillId() {
-		return skillid;
+		return skillId;
 	}
 
 	/**
@@ -60,14 +61,14 @@ public class Mount {
 	 * @return the id
 	 */
 	public int getId() {
-		if (this.itemid < 1903000) {
-			return itemid - 1901999;
+		if (this.itemId < 1903000) {
+			return itemId - 1901999;
 		}
 		return 5;
 	}
 
-	public int getTiredness() {
-		return tiredness;
+	public int getFatigue() {
+		return fatigue;
 	}
 
 	public int getExp() {
@@ -78,47 +79,40 @@ public class Mount {
 		return level;
 	}
 
-	public void setTiredness(int newtiredness) {
-		this.tiredness = newtiredness;
-		if (tiredness < 0) {
-			tiredness = 0;
+	public void setFatigue(int value) {
+		this.fatigue = value;
+		if (fatigue < 0) {
+			fatigue = 0;
 		}
 	}
 
-	public void increaseTiredness() {
-		this.tiredness++;
+	public void increaseFatigue() {
+		this.fatigue++;
 		owner.getMap().broadcastMessage(PacketCreator.updateMount(owner.getId(), this, false));
-		if (tiredness > 99) {
-			this.tiredness = 95;
+		if (fatigue > 99) {
+			this.fatigue = 95;
 			owner.dispelSkill(owner.getJobType() * 10000000 + 1004);
 		}
 	}
 
-	public void setExp(int newexp) {
-		this.exp = newexp;
+	public void setExp(int value) {
+		this.exp = value;
 	}
 
-	public void setLevel(int newlevel) {
-		this.level = newlevel;
+	public void setLevel(int value) {
+		this.level = value;
 	}
 
-	public void setItemId(int newitemid) {
-		this.itemid = newitemid;
+	public void setItemId(int value) {
+		this.itemId = value;
 	}
 
 	public void startSchedule() {
-		this.tirednessSchedule = TimerManager.getInstance().register(new Runnable() {
-			@Override
-			public void run() {
-				increaseTiredness();
-			}
-		}, 60000, 60000);
+		this.fatigueSchedule = TimerManager.getInstance().register(new IncreaseFatigueAction(), 60000, 60000);
 	}
 
 	public void cancelSchedule() {
-		if (this.tirednessSchedule != null) {
-			this.tirednessSchedule.cancel(false);
-		}
+		TimerManager.cancelSafely(this.fatigueSchedule, false);
 	}
 
 	public void setActive(boolean set) {
@@ -131,7 +125,14 @@ public class Mount {
 
 	public void empty() {
 		cancelSchedule();
-		this.tirednessSchedule = null;
+		this.fatigueSchedule = null;
 		this.owner = null;
+	}
+
+	private final class IncreaseFatigueAction implements Runnable {
+		@Override
+		public void run() {
+			increaseFatigue();
+		}
 	}
 }

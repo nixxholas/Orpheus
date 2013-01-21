@@ -39,6 +39,7 @@ public class PetDataFactory {
 		if (ret != null) {
 			return ret;
 		}
+		
 		synchronized (petCommands) {
 			ret = petCommands.get(petId + "" + skillId);
 			if (ret == null) {

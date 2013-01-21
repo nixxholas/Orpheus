@@ -729,7 +729,7 @@ public class GameClient {
 				for (QuestStatus status : player.getStartedQuests()) {
 					Quest quest = status.getQuest();
 					if (quest.getTimeLimit() > 0) {
-						QuestStatus newStatus = new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
+						QuestStatus newStatus = new QuestStatus(quest, QuestCompletionState.NOT_STARTED);
 						newStatus.setForfeited(player.getQuest(quest).getForfeited() + 1);
 						player.updateQuest(newStatus);
 					}

@@ -24,6 +24,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import tools.DatabaseCall;
 import tools.DatabaseConnection;
 
 /**
@@ -58,14 +60,13 @@ public enum ItemFactory {
 
 		final String sql = query.toString();
 		final Connection connection = DatabaseConnection.getConnection();
-		try (
-				PreparedStatement ps = getSelectItems(connection, sql, this.value, id);
-				ResultSet rs = ps.executeQuery();) {
+		try (DatabaseCall call = DatabaseCall.query(getSelectItems(connection, sql, this.value, id))) {
+			ResultSet rs = call.resultSet();
 			
 			while (rs.next()) {
-				InventoryType mit = InventoryType.fromByte(rs.getByte("inventorytype"));
+				InventoryType type = InventoryType.fromByte(rs.getByte("inventorytype"));
 
-				if (mit.equals(InventoryType.EQUIP) || mit.equals(InventoryType.EQUIPPED)) {
+				if (type.is(InventoryType.EQUIP) || type.is(InventoryType.EQUIPPED)) {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"));
 					equip.setOwner(rs.getString("owner"));
 					equip.setQuantity((short) rs.getInt("quantity"));
@@ -93,14 +94,14 @@ public enum ItemFactory {
 					equip.setExpiration(rs.getLong("expiration"));
 					equip.setGiftFrom(rs.getString("giftFrom"));
 					equip.setRingId(rs.getInt("ringid"));
-					items.add(new ItemInventoryEntry(equip, mit));
+					items.add(new ItemInventoryEntry(equip, type));
 				} else {
 					Item item = new Item(rs.getInt("itemid"), (byte) rs.getInt("position"), (short) rs.getInt("quantity"), rs.getInt("petid"));
 					item.setOwner(rs.getString("owner"));
 					item.setExpiration(rs.getLong("expiration"));
 					item.setGiftFrom(rs.getString("giftFrom"));
 					item.setFlag((byte) rs.getInt("flag"));
-					items.add(new ItemInventoryEntry(item, mit));
+					items.add(new ItemInventoryEntry(item, type));
 				}
 			}
 		}
@@ -134,12 +135,12 @@ public enum ItemFactory {
 
 			for (ItemInventoryEntry entry : entries) {
 				IItem item = entry.item;
-				InventoryType mit = entry.type;
+				InventoryType type = entry.type;
 				ps.setInt(1, value);
 				ps.setString(2, account ? null : String.valueOf(id));
 				ps.setString(3, account ? String.valueOf(id) : null);
 				ps.setInt(4, item.getItemId());
-				ps.setInt(5, mit.asByte());
+				ps.setInt(5, type.asByte());
 				ps.setInt(6, item.getSlot());
 				ps.setInt(7, item.getQuantity());
 				ps.setString(8, item.getOwner());
@@ -149,7 +150,7 @@ public enum ItemFactory {
 				ps.setString(12, item.getGiftFrom());
 				ps.executeUpdate();
 
-				if (mit.equals(InventoryType.EQUIP) || mit.equals(InventoryType.EQUIPPED)) {
+				if (type.is(InventoryType.EQUIP) || type.is(InventoryType.EQUIPPED)) {
 					ResultSet rs = ps.getGeneratedKeys();
 
 					if (!rs.next())

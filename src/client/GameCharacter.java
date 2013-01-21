@@ -693,7 +693,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		@Override
 		public void run() {
 			announce(PacketCreator.questExpire(quest.getId()));
-			QuestStatus newStatus = new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
+			QuestStatus newStatus = new QuestStatus(quest, QuestCompletionState.NOT_STARTED);
 			newStatus.setForfeited(getQuest(quest).getForfeited() + 1);
 			updateQuest(newStatus);
 		}
@@ -1595,7 +1595,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public final List<QuestStatus> getCompletedQuests() {
 		List<QuestStatus> ret = new LinkedList<QuestStatus>();
 		for (QuestStatus q : quests.values()) {
-			if (q.getStatus().equals(QuestStatus.Status.COMPLETED)) {
+			if (q.getCompletionState().equals(QuestCompletionState.COMPLETED)) {
 				ret.add(q);
 			}
 		}
@@ -2028,7 +2028,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public final byte getQuestStatus(final int quest) {
 		for (final QuestStatus q : quests.values()) {
 			if (q.getQuest().getId() == quest) {
-				return (byte) q.getStatus().getId();
+				return (byte) q.getCompletionState().getId();
 			}
 		}
 		return 0;
@@ -2036,7 +2036,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public QuestStatus getQuest(Quest quest) {
 		if (!quests.containsKey(quest)) {
-			return new QuestStatus(quest, QuestStatus.Status.NOT_STARTED);
+			return new QuestStatus(quest, QuestCompletionState.NOT_STARTED);
 		}
 		return quests.get(quest);
 	}
@@ -2129,7 +2129,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public final List<QuestStatus> getStartedQuests() {
 		List<QuestStatus> ret = new LinkedList<QuestStatus>();
 		for (QuestStatus q : quests.values()) {
-			if (q.getStatus().equals(QuestStatus.Status.STARTED)) {
+			if (q.getCompletionState().equals(QuestCompletionState.STARTED)) {
 				ret.add(q);
 			}
 		}
@@ -2139,7 +2139,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public final int getStartedQuestsSize() {
 		int i = 0;
 		for (QuestStatus q : quests.values()) {
-			if (q.getStatus().equals(QuestStatus.Status.STARTED)) {
+			if (q.getCompletionState().equals(QuestCompletionState.STARTED)) {
 				if (q.getQuest().getInfoNumber() > 0) {
 					i++;
 				}
@@ -2760,7 +2760,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				PreparedStatement psf = connection.prepareStatement("SELECT `mapid` FROM `medalmaps` WHERE `queststatusid` = ?");
 				while (rs.next()) {
 					Quest q = Quest.getInstance(rs.getShort("quest"));
-					QuestStatus status = new QuestStatus(q, QuestStatus.Status.getById(rs.getInt("status")));
+					QuestStatus status = new QuestStatus(q, QuestCompletionState.getById(rs.getInt("status")));
 					long cTime = rs.getLong("time");
 					if (cTime > -1) {
 						status.setCompletionTime(cTime * 1000);
@@ -2858,7 +2858,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 			character.mount.setExp(mountexp);
 			character.mount.setLevel(mountlevel);
-			character.mount.setTiredness(mounttiredness);
+			character.mount.setFatigue(mounttiredness);
 			character.mount.setActive(false);
 			return character;
 		} catch (Exception e) {
@@ -2918,7 +2918,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void mobKilled(int id) {
 		for (QuestStatus q : quests.values()) {
-			if (q.getStatus() == QuestStatus.Status.COMPLETED || q.getQuest().canComplete(this, null)) {
+			if (q.getCompletionState() == QuestCompletionState.COMPLETED || q.getQuest().canComplete(this, null)) {
 				continue;
 			}
 			String progress = q.getProgress(id);
@@ -3506,7 +3506,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			if (mount != null) {
 				ps.setInt(30, mount.getLevel());
 				ps.setInt(31, mount.getExp());
-				ps.setInt(32, mount.getTiredness());
+				ps.setInt(32, mount.getFatigue());
 			} else {
 				ps.setInt(30, 1);
 				ps.setInt(31, 0);
@@ -3662,7 +3662,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps.setInt(1, id);
 			for (QuestStatus q : quests.values()) {
 				ps.setInt(2, q.getQuest().getId());
-				ps.setInt(3, q.getStatus().getId());
+				ps.setInt(3, q.getCompletionState().getId());
 				ps.setInt(4, (int) (q.getCompletionTime() / 1000));
 				ps.setInt(5, q.getForfeited());
 				ps.executeUpdate();
@@ -4365,15 +4365,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void updateQuest(QuestStatus quest) {
 		quests.put(quest.getQuest(), quest);
-		if (quest.getStatus().equals(QuestStatus.Status.STARTED)) {
+		if (quest.getCompletionState().equals(QuestCompletionState.STARTED)) {
 			announce(PacketCreator.questProgress((short) quest.getQuest().getId(), quest.getProgress(0)));
 			if (quest.getQuest().getInfoNumber() > 0) {
 				announce(PacketCreator.questProgress(quest.getQuest().getInfoNumber(), Integer.toString(quest.getMedalProgress())));
 			}
 			announce(PacketCreator.updateQuestInfo((short) quest.getQuest().getId(), quest.getNpc()));
-		} else if (quest.getStatus().equals(QuestStatus.Status.COMPLETED)) {
+		} else if (quest.getCompletionState().equals(QuestCompletionState.COMPLETED)) {
 			announce(PacketCreator.completeQuest((short) quest.getQuest().getId(), quest.getCompletionTime()));
-		} else if (quest.getStatus().equals(QuestStatus.Status.NOT_STARTED)) {
+		} else if (quest.getCompletionState().equals(QuestCompletionState.NOT_STARTED)) {
 			announce(PacketCreator.forfeitQuest((short) quest.getQuest().getId()));
 		}
 	}

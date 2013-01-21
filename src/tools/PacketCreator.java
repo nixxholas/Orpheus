@@ -1954,7 +1954,7 @@ public class PacketCreator {
 		} else {
 			w.writeInt(chr.getMount().getLevel());
 			w.writeInt(chr.getMount().getExp());
-			w.writeInt(chr.getMount().getTiredness());
+			w.writeInt(chr.getMount().getFatigue());
 		}
 		if (chr.getPlayerShop() != null && chr.getPlayerShop().isOwner(chr)) {
 			if (chr.getPlayerShop().hasFreeSlot()) {
@@ -2587,7 +2587,7 @@ public class PacketCreator {
 			w.writeAsByte(mount.getId());
 			w.writeInt(mount.getLevel());
 			w.writeInt(mount.getExp());
-			w.writeInt(mount.getTiredness());
+			w.writeInt(mount.getFatigue());
 		} else {
 			w.writeAsByte(0);
 		}
@@ -4618,7 +4618,7 @@ public class PacketCreator {
 		w.writeInt(charid);
 		w.writeInt(mount.getLevel());
 		w.writeInt(mount.getExp());
-		w.writeInt(mount.getTiredness());
+		w.writeInt(mount.getFatigue());
 		w.writeAsByte(levelup ? (byte) 1 : (byte) 0);
 		return w.getPacket();
 	}

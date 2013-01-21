@@ -80,19 +80,19 @@ import server.StatEffect;
 import server.life.Element;
 
 public class SkillFactory {
-	private static Map<Integer, ISkill> skills = new HashMap<Integer, ISkill>();
-	private static MapleDataProvider SkillWz = MapleDataProviderFactory.getDataProvider(MapleDataProviderFactory.fileInWZPath("Skill.wz"));
+	private static Map<Integer, ISkill> skillCache = new HashMap<Integer, ISkill>();
+	private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(MapleDataProviderFactory.fileInWZPath("Skill.wz"));
 
 	public static ISkill getSkill(int id) {
-		if (!skills.isEmpty()) {
-			return skills.get(Integer.valueOf(id));
+		if (!skillCache.isEmpty()) {
+			return skillCache.get(Integer.valueOf(id));
 		}
 		return null;
 	}
 
 	public static void loadAllSkills() {
 		// System.out.println("Loading Skills:::");
-		final MapleDataDirectoryEntry root = SkillWz.getRoot();
+		final MapleDataDirectoryEntry root = data.getRoot();
 
 		for (MapleDataFileEntry skillWzImage : root.getFiles()) {
 			if (skillWzImage.getName().length() > 8) {
@@ -100,7 +100,7 @@ public class SkillFactory {
 				continue;
 			}
 			
-			for (MapleData skillData : SkillWz.getData(skillWzImage.getName())) { 
+			for (MapleData skillData : data.getData(skillWzImage.getName())) { 
 				if (!skillData.getName().equals("skill")) {
 					// skip directories that aren't the skill info.
 					continue;
@@ -109,7 +109,7 @@ public class SkillFactory {
 				for (MapleData skillIdData : skillData) {
 					if (skillIdData != null) {
 						final int skillid = Integer.parseInt(skillIdData.getName());
-						skills.put(skillid, loadFromData(skillid, skillIdData));
+						skillCache.put(skillid, loadFromData(skillid, skillIdData));
 					}
 				}
 			}

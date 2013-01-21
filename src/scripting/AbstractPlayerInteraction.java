@@ -30,7 +30,7 @@ import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
 import client.Pet;
-import client.QuestStatus;
+import client.QuestCompletionState;
 import client.SkillFactory;
 import constants.ItemConstants;
 import java.awt.Point;
@@ -124,13 +124,13 @@ public class AbstractPlayerInteraction {
 		c.announce(PacketCreator.updateQuest((short) questid, status));
 	}
 
-	public QuestStatus.Status getQuestStatus(int id) {
-		return c.getPlayer().getQuest(Quest.getInstance(id)).getStatus();
+	public QuestCompletionState getQuestStatus(int id) {
+		return c.getPlayer().getQuest(Quest.getInstance(id)).getCompletionState();
 	}
 
 	public boolean isQuestCompleted(int quest) {
 		try {
-			return getQuestStatus(quest) == QuestStatus.Status.COMPLETED;
+			return getQuestStatus(quest) == QuestCompletionState.COMPLETED;
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -138,7 +138,7 @@ public class AbstractPlayerInteraction {
 
 	public boolean isQuestStarted(int quest) {
 		try {
-			return getQuestStatus(quest) == QuestStatus.Status.STARTED;
+			return getQuestStatus(quest) == QuestCompletionState.STARTED;
 		} catch (NullPointerException e) {
 			return false;
 		}

@@ -27,8 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import client.GameCharacter;
+import client.QuestCompletionState;
 import client.QuestStatus;
-import client.QuestStatus.Status;
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -133,7 +133,7 @@ public class Quest {
 	}
 
 	private boolean canStart(GameCharacter c, int npcid) {
-		if (c.getQuest(this).getStatus() != Status.NOT_STARTED && !(c.getQuest(this).getStatus() == Status.COMPLETED && repeatable)) {
+		if (c.getQuest(this).getCompletionState() != QuestCompletionState.NOT_STARTED && !(c.getQuest(this).getCompletionState() == QuestCompletionState.COMPLETED && repeatable)) {
 			return false;
 		}
 		for (QuestRequirement r : startReqs) {
@@ -145,7 +145,7 @@ public class Quest {
 	}
 
 	public boolean canComplete(GameCharacter c, Integer npcid) {
-		if (!c.getQuest(this).getStatus().equals(Status.STARTED)) {
+		if (!c.getQuest(this).getCompletionState().equals(QuestCompletionState.STARTED)) {
 			return false;
 		}
 		for (QuestRequirement r : completeReqs) {
@@ -183,17 +183,17 @@ public class Quest {
 	}
 
 	public void reset(GameCharacter c) {
-		c.updateQuest(new QuestStatus(this, QuestStatus.Status.NOT_STARTED));
+		c.updateQuest(new QuestStatus(this, QuestCompletionState.NOT_STARTED));
 	}
 
 	public void forfeit(GameCharacter c) {
-		if (!c.getQuest(this).getStatus().equals(Status.STARTED)) {
+		if (!c.getQuest(this).getCompletionState().equals(QuestCompletionState.STARTED)) {
 			return;
 		}
 		if (timeLimit > 0) {
 			c.announce(PacketCreator.removeQuestTimeLimit(id));
 		}
-		QuestStatus newStatus = new QuestStatus(this, QuestStatus.Status.NOT_STARTED);
+		QuestStatus newStatus = new QuestStatus(this, QuestCompletionState.NOT_STARTED);
 		newStatus.setForfeited(c.getQuest(this).getForfeited() + 1);
 		c.updateQuest(newStatus);
 	}
@@ -202,7 +202,7 @@ public class Quest {
 		if (!canStart(c, npc))
 			return false;
 
-		QuestStatus newStatus = new QuestStatus(this, QuestStatus.Status.STARTED, npc);
+		QuestStatus newStatus = new QuestStatus(this, QuestCompletionState.STARTED, npc);
 		newStatus.setForfeited(c.getQuest(this).getForfeited());
 
 		if (timeLimit > 0)
@@ -218,7 +218,7 @@ public class Quest {
 		if (!canComplete(c, npc))
 			return false;
 
-		QuestStatus newStatus = new QuestStatus(this, QuestStatus.Status.COMPLETED, npc);
+		QuestStatus newStatus = new QuestStatus(this, QuestCompletionState.COMPLETED, npc);
 		newStatus.setForfeited(c.getQuest(this).getForfeited());
 		newStatus.setCompletionTime(System.currentTimeMillis());
 		c.announce(PacketCreator.showSpecialEffect(9));

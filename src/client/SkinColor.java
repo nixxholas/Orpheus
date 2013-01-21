@@ -19,7 +19,7 @@ package client;
 
 public enum SkinColor {
 	NORMAL(0), DARK(1), BLACK(2), PALE(3), BLUE(4), GREEN(5), WHITE(9), PINK(10);
-	final int id;
+	private final int id;
 
 	private SkinColor(int id) {
 		this.id = id;
@@ -30,9 +30,9 @@ public enum SkinColor {
 	}
 
 	public static SkinColor getById(int id) {
-		for (SkinColor l : SkinColor.values()) {
-			if (l.getId() == id) {
-				return l;
+		for (SkinColor value : SkinColor.values()) {
+			if (value.getId() == id) {
+				return value;
 			}
 		}
 		return null;

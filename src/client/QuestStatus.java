@@ -30,50 +30,29 @@ import tools.StringUtil;
  * @author Matze
  */
 public class QuestStatus {
-	public enum Status {
-		UNDEFINED(-1), NOT_STARTED(0), STARTED(1), COMPLETED(2);
-		final int status;
-
-		private Status(int id) {
-			status = id;
-		}
-
-		public int getId() {
-			return status;
-		}
-
-		public static Status getById(int id) {
-			for (Status l : Status.values()) {
-				if (l.getId() == id) {
-					return l;
-				}
-			}
-			return null;
-		}
-	}
-
+	
 	private Quest quest;
-	private Status status;
+	private QuestCompletionState completionState;
 	private Map<Integer, String> progress = new LinkedHashMap<Integer, String>();
 	private List<Integer> medalProgress = new LinkedList<Integer>();
 	private int npc;
 	private long completionTime;
 	private int forfeited = 0;
 
-	public QuestStatus(Quest quest, Status status) {
+	public QuestStatus(Quest quest, QuestCompletionState questCompletionState) {
 		this.quest = quest;
-		this.setStatus(status);
+		this.setCompletionState(questCompletionState);
 		this.completionTime = System.currentTimeMillis();
-		if (status == Status.STARTED)
+		if (questCompletionState == QuestCompletionState.STARTED)
 			registerMobs();
 	}
 
-	public QuestStatus(Quest quest, Status status, int npc) {
+	public QuestStatus(Quest quest, QuestCompletionState questCompletionState, int npc) {
 		this.quest = quest;
-		this.setStatus(status);
+		this.setCompletionState(questCompletionState);
 		this.setNpc(npc);
 		this.completionTime = System.currentTimeMillis();
-		if (status == Status.STARTED) {
+		if (questCompletionState == QuestCompletionState.STARTED) {
 			registerMobs();
 		}
 	}
@@ -82,12 +61,12 @@ public class QuestStatus {
 		return quest;
 	}
 
-	public Status getStatus() {
-		return status;
+	public QuestCompletionState getCompletionState() {
+		return completionState;
 	}
 
-	public final void setStatus(Status status) {
-		this.status = status;
+	public final void setCompletionState(QuestCompletionState questCompletionState) {
+		this.completionState = questCompletionState;
 	}
 
 	public int getNpc() {
@@ -104,10 +83,10 @@ public class QuestStatus {
 		}
 	}
 
-	public boolean addMedalMap(int mapid) {
-		if (medalProgress.contains(mapid))
+	public boolean addMedalMap(int mapId) {
+		if (medalProgress.contains(mapId))
 			return false;
-		medalProgress.add(mapid);
+		medalProgress.add(mapId);
 		return true;
 	}
 
@@ -129,8 +108,8 @@ public class QuestStatus {
 		return false;
 	}
 
-	public void setProgress(int id, String pr) {
-		progress.put(id, pr);
+	public void setProgress(int id, String data) {
+		progress.put(id, data);
 	}
 
 	public boolean madeProgress() {
