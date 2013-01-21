@@ -83,7 +83,7 @@ public class Door extends AbstractGameMapObject {
 		for (GameMapObject obj : town.getMapObjects()) {
 			if (obj instanceof Door) {
 				Door door = (Door) obj;
-				if (door.getOwner().getParty() != null && owner.getParty().containsMembers(door.getOwner().getMPC())) {
+				if (door.getOwner().getParty() != null && owner.getParty().containsMembers(door.getOwner().getPartyCharacter())) {
 					freePortals.remove(door.getTownPortal());
 				}
 			}
@@ -94,7 +94,7 @@ public class Door extends AbstractGameMapObject {
 	public void sendSpawnData(GameClient client) {
 		if (target.getId() == client.getPlayer().getMapId() || owner == client.getPlayer() && owner.getParty() == null) {
 			client.getSession().write(PacketCreator.spawnDoor(owner.getId(), town.getId() == client.getPlayer().getMapId() ? townPortal.getPosition() : targetPosition, true));
-			if (owner.getParty() != null && (owner == client.getPlayer() || owner.getParty().containsMembers(client.getPlayer().getMPC()))) {
+			if (owner.getParty() != null && (owner == client.getPlayer() || owner.getParty().containsMembers(client.getPlayer().getPartyCharacter()))) {
 				client.getSession().write(PacketCreator.partyPortal(town.getId(), target.getId(), targetPosition));
 			}
 			client.getSession().write(PacketCreator.spawnPortal(town.getId(), target.getId(), targetPosition));
@@ -102,8 +102,8 @@ public class Door extends AbstractGameMapObject {
 	}
 
 	public void sendDestroyData(GameClient client) {
-		if (target.getId() == client.getPlayer().getMapId() || owner == client.getPlayer() || owner.getParty() != null && owner.getParty().containsMembers(client.getPlayer().getMPC())) {
-			if (owner.getParty() != null && (owner == client.getPlayer() || owner.getParty().containsMembers(client.getPlayer().getMPC()))) {
+		if (target.getId() == client.getPlayer().getMapId() || owner == client.getPlayer() || owner.getParty() != null && owner.getParty().containsMembers(client.getPlayer().getPartyCharacter())) {
+			if (owner.getParty() != null && (owner == client.getPlayer() || owner.getParty().containsMembers(client.getPlayer().getPartyCharacter()))) {
 				client.getSession().write(PacketCreator.partyPortal(999999999, 999999999, new Point(-1, -1)));
 			}
 			client.getSession().write(PacketCreator.removeDoor(owner.getId(), false));
@@ -112,7 +112,7 @@ public class Door extends AbstractGameMapObject {
 	}
 
 	public void warp(GameCharacter chr, boolean toTown) {
-		if (chr == owner || owner.getParty() != null && owner.getParty().containsMembers(chr.getMPC())) {
+		if (chr == owner || owner.getParty() != null && owner.getParty().containsMembers(chr.getPartyCharacter())) {
 			if (!toTown) {
 				chr.changeMap(target, targetPosition);
 			} else {

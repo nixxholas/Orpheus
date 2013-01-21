@@ -177,7 +177,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				player.setGuildRank(5); // start at lowest rank
 				int s;
 
-				s = Server.getInstance().addGuildMember(player.getMGC());
+				s = Server.getInstance().addGuildMember(player.getGuildCharacter());
 				if (s == 0) {
 					c.getPlayer().dropMessage(1, "The Guild you are trying to join is already full.");
 					player.setGuildId(0);
@@ -196,8 +196,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					return;
 				}
 
-				Server.getInstance().leaveGuild(player.getMGC());
-				c.announce(PacketCreator.showGuildInfo(null));
+				Server.getInstance().leaveGuild(player.getGuildCharacter());
+				c.announce(PacketCreator.showEmptyGuildInfo());
 				player.setGuildId(0);
 				player.saveGuildStatus();
 				respawnPlayer(player);
@@ -211,7 +211,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					return;
 				}
 
-				Server.getInstance().expelMember(player.getMGC(), name, cid);
+				Server.getInstance().expelMember(player.getGuildCharacter(), name, cid);
 				break;
 				
 			case 0x0D:

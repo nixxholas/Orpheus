@@ -235,7 +235,7 @@ public class AbstractPlayerInteraction {
 	}
 
 	public boolean isLeader() {
-		return getParty().getLeader().equals(getPlayer().getMPC());
+		return getParty().getLeader().equals(getPlayer().getPartyCharacter());
 	}
 
 	public void givePartyItems(int id, short quantity, List<GameCharacter> party) {

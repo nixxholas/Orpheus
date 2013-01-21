@@ -79,7 +79,7 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 				}
 			} else if (heading == '@' || heading == '/') {
 				boolean commandExecuted = true;
-				switch (chr.gmLevel()) {
+				switch (chr.getGmLevel()) {
 					case 5:
 					case 4:
 					case 3: 
@@ -96,7 +96,7 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 				}
 			} else {
 				boolean commandExecuted = false;
-				switch (chr.gmLevel()) {
+				switch (chr.getGmLevel()) {
 					case 5:
 						commandExecuted = AdminCommands.execute(c, sp, heading);
 						if (commandExecuted) break;

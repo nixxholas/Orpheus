@@ -449,7 +449,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 				if (victim != null) {
 					GameMap target = victim.getMap();
 					if (c.getChannelServer().getMapFactory().getMap(victim.getMapId()).getForcedReturnId() == 999999999 || victim.getMapId() < 100000000) {
-						if (victim.gmLevel() <= player.gmLevel()) {
+						if (victim.getGmLevel() <= player.getGmLevel()) {
 							if (itemId == 5041000 || victim.getMapId() / player.getMapId() == 1) { 
 								// viprock & same continent
 								player.changeMap(target, target.findClosestSpawnpoint(victim.getPosition()));

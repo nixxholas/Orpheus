@@ -47,7 +47,7 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 			c.getPlayer().dropMessage("You are not in an alliance.");
 			c.announce(PacketCreator.enableActions());
 			return;
-		} else if (c.getPlayer().getMGC().getAllianceRank() > 2 || !alliance.getGuilds().contains(c.getPlayer().getGuildId())) {
+		} else if (c.getPlayer().getGuildCharacter().getAllianceRank() > 2 || !alliance.getGuilds().contains(c.getPlayer().getGuildId())) {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}

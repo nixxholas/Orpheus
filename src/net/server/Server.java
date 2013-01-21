@@ -549,8 +549,8 @@ public class Server implements Runnable {
 		World world = getWorld(worldId);
 		for (GameCharacter character : world.getPlayerStorage().getAllCharacters()) {
 			if (character.getGuildId() > 0) {
-				setGuildMemberOnline(character.getMGC(), true, world.getId());
-				memberLevelJobUpdate(character.getMGC());
+				setGuildMemberOnline(character.getGuildCharacter(), true, world.getId());
+				memberLevelJobUpdate(character.getGuildCharacter());
 			}
 		}
 		world.reloadGuildSummary();

@@ -65,7 +65,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		GameCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(cid);
 		if (player == null) {
 			try {
-				player = GameCharacter.loadCharFromDB(cid, c, true);
+				player = GameCharacter.loadFromDb(cid, c, true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -177,13 +177,13 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.getFamilyInfo(f.getMember(player.getId())));
 		}
 		if (player.getGuildId() > 0) {
-			Guild playerGuild = server.getGuild(player.getGuildId(), player.getMGC());
+			Guild playerGuild = server.getGuild(player.getGuildId(), player.getGuildCharacter());
 			if (playerGuild == null) {
 				player.deleteGuild(player.getGuildId());
-				player.resetMGC();
+				player.resetGuildCharacter();
 				player.setGuildId(0);
 			} else {
-				server.setGuildMemberOnline(player.getMGC(), true, c.getChannel());
+				server.setGuildMemberOnline(player.getGuildCharacter(), true, c.getChannel());
 				c.announce(PacketCreator.showGuildInfo(player));
 				int allianceId = player.getGuild().getAllianceId();
 				if (allianceId > 0) {
@@ -206,7 +206,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		}
 		player.showNote();
 		if (player.getParty() != null) {
-			PartyCharacter pchar = player.getMPC();
+			PartyCharacter pchar = player.getPartyCharacter();
 			pchar.setChannel(c.getChannel());
 			pchar.setMapId(player.getMapId());
 			pchar.setOnline(true);

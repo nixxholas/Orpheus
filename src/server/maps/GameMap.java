@@ -167,7 +167,7 @@ public class GameMap {
 		chrRLock.lock();
 		try {
 			for (GameCharacter chr : characters) {
-				if (chr != source && (chr.gmLevel() > source.gmLevel())) {
+				if (chr != source && (chr.getGmLevel() > source.getGmLevel())) {
 					chr.getClient().announce(packet);
 				}
 			}
@@ -366,9 +366,9 @@ public class GameMap {
 		byte d = 1;
 		Point pos = new Point(0, mob.getPosition().y);
 
-		Map<MonsterStatus, MonsterStatusEffect> stati = mob.getStati();
+		Map<MonsterStatus, MonsterStatusEffect> stati = mob.getStatuses();
 		if (stati.containsKey(MonsterStatus.SHOWDOWN)) {
-			rate *= (stati.get(MonsterStatus.SHOWDOWN).getStati().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
+			rate *= (stati.get(MonsterStatus.SHOWDOWN).getStatuses().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
 		}
 
 		final MonsterInfoProvider mi = MonsterInfoProvider.getInstance();
@@ -1068,7 +1068,7 @@ public class GameMap {
 			@Override
 			public void sendPackets(GameClient c) {
 				c.announce(PacketCreator.spawnDoor(door.getOwner().getId(), door.getTargetPosition(), false));
-				if (door.getOwner().getParty() != null && (door.getOwner() == c.getPlayer() || door.getOwner().getParty().containsMembers(c.getPlayer().getMPC()))) {
+				if (door.getOwner().getParty() != null && (door.getOwner() == c.getPlayer() || door.getOwner().getParty().containsMembers(c.getPlayer().getPartyCharacter()))) {
 					c.announce(PacketCreator.partyPortal(door.getTown().getId(), door.getTarget().getId(), door.getTargetPosition()));
 				}
 				c.announce(PacketCreator.spawnPortal(door.getTown().getId(), door.getTarget().getId(), door.getTargetPosition()));

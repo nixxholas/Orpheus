@@ -59,7 +59,7 @@ public final class ViewCharHandler extends AbstractPacketHandler {
 				if (!inside) {
 					worlds.add(cworld);
 				}
-				GameCharacter chr = GameCharacter.loadCharFromDB(rs.getInt("id"), c, false);
+				GameCharacter chr = GameCharacter.loadFromDb(rs.getInt("id"), c, false);
 				chars.add(chr);
 				charsNum++;
 			}

@@ -67,7 +67,7 @@ public class Monster extends AbstractLoadedLife {
 	private EventInstanceManager eventInstance = null;
 	private Collection<MonsterListener> listeners = new LinkedList<MonsterListener>();
 	private GameCharacter highestDamageChar;
-	private EnumMap<MonsterStatus, MonsterStatusEffect> stati = new EnumMap<MonsterStatus, MonsterStatusEffect>(MonsterStatus.class);
+	private EnumMap<MonsterStatus, MonsterStatusEffect> statuses = new EnumMap<MonsterStatus, MonsterStatusEffect>(MonsterStatus.class);
 	private GameMap map;
 	private int VenomMultiplier = 0;
 	private boolean fake = false;
@@ -275,8 +275,8 @@ public class Monster extends AbstractLoadedLife {
 						personalExp *= 1.0 + (holySymbol.doubleValue() / 100.0);
 					}
 				}
-				if (stati.containsKey(MonsterStatus.SHOWDOWN)) {
-					personalExp *= (stati.get(MonsterStatus.SHOWDOWN).getStati().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
+				if (statuses.containsKey(MonsterStatus.SHOWDOWN)) {
+					personalExp *= (statuses.get(MonsterStatus.SHOWDOWN).getStatuses().get(MonsterStatus.SHOWDOWN).doubleValue() / 100.0 + 1.0);
 				}
 			}
 			if (exp < 0) {// O.O ><
@@ -442,8 +442,8 @@ public class Monster extends AbstractLoadedLife {
 		} else {
 			c.getSession().write(PacketCreator.spawnMonster(this, false));
 		}
-		if (stati.size() > 0) {
-			for (final MonsterStatusEffect mse : this.stati.values()) {
+		if (statuses.size() > 0) {
+			for (final MonsterStatusEffect mse : this.statuses.values()) {
 				c.getSession().write(PacketCreator.applyMonsterStatus(getObjectId(), mse));
 			}
 		}
@@ -475,7 +475,7 @@ public class Monster extends AbstractLoadedLife {
 	}
 
 	public ElementalEffectiveness getEffectiveness(Element e) {
-		if (stati.size() > 0 && stati.get(MonsterStatus.DOOM) != null) {
+		if (statuses.size() > 0 && statuses.get(MonsterStatus.DOOM) != null) {
 			return ElementalEffectiveness.NORMAL; // like blue snails
 		}
 		return stats.getEffectiveness(e);
@@ -518,17 +518,17 @@ public class Monster extends AbstractLoadedLife {
 			return false;
 		}
 
-		final Map<MonsterStatus, Integer> statis = status.getStati();
+		final Map<MonsterStatus, Integer> statis = status.getStatuses();
 		if (stats.isBoss()) {
 			if (!(statis.containsKey(MonsterStatus.SPEED) && statis.containsKey(MonsterStatus.NINJA_AMBUSH) && statis.containsKey(MonsterStatus.WATK))) {
 				return false;
 			}
 		}
 		for (MonsterStatus stat : statis.keySet()) {
-			final MonsterStatusEffect oldEffect = stati.get(stat);
+			final MonsterStatusEffect oldEffect = statuses.get(stat);
 			if (oldEffect != null) {
 				oldEffect.removeActiveStatus(stat);
-				if (oldEffect.getStati().isEmpty()) {
+				if (oldEffect.getStatuses().isEmpty()) {
 					oldEffect.cancelTask();
 					oldEffect.cancelDamageSchedule();
 				}
@@ -540,14 +540,14 @@ public class Monster extends AbstractLoadedLife {
 			@Override
 			public void run() {
 				if (isAlive()) {
-					GamePacket packet = PacketCreator.cancelMonsterStatus(getObjectId(), status.getStati());
+					GamePacket packet = PacketCreator.cancelMonsterStatus(getObjectId(), status.getStatuses());
 					map.broadcastMessage(packet, getPosition());
 					if (getController() != null && !getController().isMapObjectVisible(Monster.this)) {
 						getController().getClient().getSession().write(packet);
 					}
 				}
-				for (MonsterStatus stat : status.getStati().keySet()) {
-					stati.remove(stat);
+				for (MonsterStatus stat : status.getStatuses().keySet()) {
+					statuses.remove(stat);
 				}
 				setVenomMulti(0);
 				status.cancelDamageSchedule();
@@ -601,8 +601,8 @@ public class Monster extends AbstractLoadedLife {
 			status.setValue(MonsterStatus.NINJA_AMBUSH, Integer.valueOf(damage));
 			status.setDamageSchedule(timerManager.register(new DamageTask(damage, from, status, cancelTask, 2), 1000, 1000));
 		}
-		for (MonsterStatus stat : status.getStati().keySet()) {
-			stati.put(stat, status);
+		for (MonsterStatus stat : status.getStatuses().keySet()) {
+			statuses.put(stat, status);
 		}
 		int animationTime = status.getSkill().getAnimationTime();
 		GamePacket packet = PacketCreator.applyMonsterStatus(getObjectId(), status);
@@ -627,7 +627,7 @@ public class Monster extends AbstractLoadedLife {
 						getController().getClient().getSession().write(packet);
 					}
 					for (final MonsterStatus stat : stats.keySet()) {
-						stati.remove(stat);
+						statuses.remove(stat);
 					}
 				}
 			}
@@ -642,7 +642,7 @@ public class Monster extends AbstractLoadedLife {
 	}
 
 	public boolean isBuffed(MonsterStatus status) {
-		return stati.containsKey(status);
+		return statuses.containsKey(status);
 	}
 
 	public void setFake(boolean fake) {
@@ -1085,8 +1085,8 @@ public class Monster extends AbstractLoadedLife {
 		return stats.getPADamage();
 	}
 
-	public Map<MonsterStatus, MonsterStatusEffect> getStati() {
-		return stati;
+	public Map<MonsterStatus, MonsterStatusEffect> getStatuses() {
+		return statuses;
 	}
 
 	public final void empty() {
@@ -1095,7 +1095,7 @@ public class Monster extends AbstractLoadedLife {
 		} catch (Exception e) {
 		} // who cares
 		this.monsterLock = null;
-		final Iterator<MonsterStatusEffect> mseIt = stati.values().iterator();
+		final Iterator<MonsterStatusEffect> mseIt = statuses.values().iterator();
 		MonsterStatusEffect mse;
 		while (mseIt.hasNext()) {
 			mse = mseIt.next();
@@ -1104,7 +1104,7 @@ public class Monster extends AbstractLoadedLife {
 			mseIt.remove();
 			mse = null;
 		}
-		this.stati = null;
+		this.statuses = null;
 		this.usedSkills = null;
 		this.listeners = null;
 		this.skillsUsed = null;

@@ -38,7 +38,7 @@ public final class PartyOperationHandler extends AbstractPacketHandler {
 		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
 		Party party = player.getParty();
-		PartyCharacter partyplayer = player.getMPC();
+		PartyCharacter partyplayer = player.getPartyCharacter();
 		switch (operation) {
 			case 1: { // create
 				if (player.getParty() == null) {

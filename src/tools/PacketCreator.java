@@ -21,6 +21,7 @@
 package tools;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.net.InetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -3627,55 +3628,60 @@ public class PacketCreator {
 		w.writeInt(secondmask);
 	}
 
-	public static GamePacket applyMonsterStatus(final int oid, final MonsterStatusEffect mse) {
+	public static GamePacket applyMonsterStatus(final int oid, final MonsterStatusEffect effect) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.APPLY_MONSTER_STATUS.getValue());
 		w.writeInt(oid);
 		w.writeLong(0);
-		writeIntMask(w, mse.getStati());
-		for (Map.Entry<MonsterStatus, Integer> stat : mse.getStati().entrySet()) {
-			w.writeAsShort(stat.getValue());
-			if (mse.isMonsterSkill()) {
-				w.writeAsShort(mse.getMobSkill().getSkillId());
-				w.writeAsShort(mse.getMobSkill().getSkillLevel());
+		
+		final Map<MonsterStatus, Integer> statuses = effect.getStatuses();
+		writeIntMask(w, statuses);
+		for (Integer statValue : statuses.values()) {
+			w.writeAsShort(statValue);
+			if (effect.isMonsterSkill()) {
+				w.writeAsShort(effect.getMobSkill().getSkillId());
+				w.writeAsShort(effect.getMobSkill().getSkillLevel());
 			} else {
-				w.writeInt(mse.getSkill().getId());
+				w.writeInt(effect.getSkill().getId());
 			}
-			w.writeAsShort(-1); // might actually be the buffTime but it's not
-									// displayed anywhere
+			
+			// might actually be the buffTime but it's not displayed anywhere
+			w.writeAsShort(-1); 
 		}
 		w.writeAsShort(0);
 		w.writeInt(0);
 		return w.getPacket();
 	}
 
-	public static GamePacket cancelMonsterStatus(int oid, Map<MonsterStatus, Integer> stats) {
+	public static GamePacket cancelMonsterStatus(int oid, Map<MonsterStatus, Integer> statusValues) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.CANCEL_MONSTER_STATUS.getValue());
 		w.writeInt(oid);
 		w.writeLong(0);
 		w.writeInt(0);
 		int mask = 0;
-		for (MonsterStatus stat : stats.keySet()) {
-			mask |= stat.getValue();
+		for (MonsterStatus status : statusValues.keySet()) {
+			mask |= status.getValue();
 		}
 		w.writeInt(mask);
 		w.writeInt(0);
 		return w.getPacket();
 	}
 
-	public static GamePacket getClock(int time) { // time in seconds
+	public static GamePacket getClock(int seconds) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.CLOCK.getValue());
-		w.writeAsByte(2); // clock type. if you send 3 here you have to send
-						// another byte (which does not matter at all) before
-						// the timestamp
-		w.writeInt(time);
+
+		// clock type. if you send 3 here you have to send another 
+		// byte (which does not matter at all) before the timestamp
+		w.writeAsByte(2); 
+		
+		w.writeInt(seconds);
 		return w.getPacket();
 	}
 
-	public static GamePacket getClockTime(int hour, int min, int sec) { // Current
-																			// Time
+	// parameters are current time
+	public static GamePacket getClockTime(int hour, int min, int sec) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.CLOCK.getValue());
 		w.writeAsByte(1); // Clock-Type
@@ -3685,34 +3691,37 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnMist(int oid, int ownerCid, int skill, int level, Mist mist) {
+	public static GamePacket spawnMist(int objectId, int ownerId, int skill, int level, Mist mist) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.SPAWN_MIST.getValue());
-		w.writeInt(oid);
+		w.writeInt(objectId);
 		w.writeInt(mist.isMobMist() ? 0 : mist.isPoisonMist() ? 1 : 2);
-		w.writeInt(ownerCid);
+		w.writeInt(ownerId);
 		w.writeInt(skill);
 		w.writeAsByte(level);
-		w.writeAsShort(mist.getSkillDelay()); // Skill delay
-		w.writeInt(mist.getBox().x);
-		w.writeInt(mist.getBox().y);
-		w.writeInt(mist.getBox().x + mist.getBox().width);
-		w.writeInt(mist.getBox().y + mist.getBox().height);
+		w.writeAsShort(mist.getSkillDelay());
+		
+		final Rectangle box = mist.getBox();
+		w.writeInt(box.x);
+		w.writeInt(box.y);
+		w.writeInt(box.x + box.width);
+		w.writeInt(box.y + box.height);
+		
 		w.writeInt(0);
 		return w.getPacket();
 	}
 
-	public static GamePacket removeMist(int oid) {
+	public static GamePacket removeMist(int objectId) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.REMOVE_MIST.getValue());
-		w.writeInt(oid);
+		w.writeInt(objectId);
 		return w.getPacket();
 	}
 
-	public static GamePacket damageSummon(int cid, int summonSkillId, int damage, int unkByte, int monsterIdFrom) {
+	public static GamePacket damageSummon(int characterId, int summonSkillId, int damage, int unkByte, int monsterIdFrom) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.DAMAGE_SUMMON.getValue());
-		w.writeInt(cid);
+		w.writeInt(characterId);
 		w.writeInt(summonSkillId);
 		w.writeAsByte(unkByte);
 		w.writeInt(damage);
@@ -3721,10 +3730,10 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket damageMonster(int oid, int damage) {
+	public static GamePacket damageMonster(int objectId, int damage) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.DAMAGE_MONSTER.getValue());
-		w.writeInt(oid);
+		w.writeInt(objectId);
 		w.writeAsByte(0);
 		w.writeInt(damage);
 		w.writeAsByte(0);
@@ -3733,8 +3742,8 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket healMonster(int oid, int heal) {
-		return damageMonster(oid, -heal);
+	public static GamePacket healMonster(int objectId, int heal) {
+		return damageMonster(objectId, -heal);
 	}
 
 	public static GamePacket updateBuddylist(Collection<BuddylistEntry> buddylist) {
@@ -3744,16 +3753,22 @@ public class PacketCreator {
 		w.writeAsByte(buddylist.size());
 		for (BuddylistEntry buddy : buddylist) {
 			if (buddy.isVisible()) {
-				w.writeInt(buddy.getCharacterId()); // cid
+				w.writeInt(buddy.getCharacterId());
 				w.writePaddedString(buddy.getName(), 13);
-				w.writeAsByte(0); // opposite status
+				
+				// opposite status
+				w.writeAsByte(0);
+				
 				w.writeInt(buddy.getChannel() - 1);
 				w.writePaddedString(buddy.getGroup(), 13);
-				w.writeInt(0);// mapid?
+				
+				// mapid?
+				w.writeInt(0);
 			}
 		}
 		for (int x = 0; x < buddylist.size(); x++) {
-			w.writeInt(0);// mapid?
+			// mapid?
+			w.writeInt(0);
 		}
 		return w.getPacket();
 	}
@@ -3851,8 +3866,10 @@ public class PacketCreator {
 		w.writeVector(pos);
 		w.writeAsShort(stance);
 		w.writeAsByte(0);
-		w.writeAsByte(5); // frame delay, set to 5 since there doesn't appear to
-						// be a fixed formula for it
+
+		// frame delay, set to 5 since there doesn't appear to be a fixed formula for it
+		w.writeAsByte(5);
+		
 		return w.getPacket();
 	}
 
@@ -3920,51 +3937,65 @@ public class PacketCreator {
 		w.writeLengthString(path);
 		return w.getPacket();
 	}
-
-	public static GamePacket showGuildInfo(GameCharacter c) {
+	
+	public static GamePacket showEmptyGuildInfo() {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.GUILD_OPERATION.getValue());
-		w.writeAsByte(0x1A); // signature for showing guild info
-		if (c == null) { // show empty guild (used for leaving, expelled)
-			w.writeAsByte(0);
-			return w.getPacket();
-		}
-		Guild g = c.getClient().getWorldServer().getGuild(c.getMGC());
-		if (g == null) { // failed to read from DB - don't show a guild
+		
+		// signature for showing guild info
+		w.writeAsByte(0x1A);
+	
+		// show empty guild (used for leaving, expelled)
+		w.writeAsByte(0);
+		return w.getPacket();
+	}
+
+	public static GamePacket showGuildInfo(GameCharacter character) {
+		PacketWriter w = new PacketWriter();
+		w.writeAsShort(SendOpcode.GUILD_OPERATION.getValue());
+		// signature for showing guild info
+		w.writeAsByte(0x1A);
+		
+		Guild guild = character.getClient().getWorldServer().getGuild(character.getGuildCharacter());
+		if (guild == null) { 
+			// failed to read from DB - don't show a guild
 			w.writeAsByte(0);
 			return w.getPacket();
 		} else {
-			c.setGuildRank(c.getGuildRank());
+			character.setGuildRank(character.getGuildRank());
 		}
-		w.writeAsByte(1); // bInGuild
-		w.writeInt(g.getId());
-		w.writeLengthString(g.getName());
-		for (int i = 1; i <= 5; i++) {
-			w.writeLengthString(g.getRankTitle(i));
-		}
-		Collection<GuildCharacter> members = g.getMembers();
-		w.writeAsByte(members.size()); // then it is the size of all the members
-		for (GuildCharacter mgc : members) {// and each of their character
-													// ids o_O
-			w.writeInt(mgc.getId());
-		}
-		for (GuildCharacter mgc : members) {
-			w.writePaddedString(mgc.getName(), 13);
-			w.writeInt(mgc.getJobId());
-			w.writeInt(mgc.getLevel());
-			w.writeInt(mgc.getGuildRank());
-			w.writeInt(mgc.isOnline() ? 1 : 0);
-			w.writeInt(g.getSignature());
-			w.writeInt(mgc.getAllianceRank());
-		}
-		w.writeInt(g.getCapacity());
 		
-		final GuildEmblem emblem = g.getEmblem();
+		w.writeAsByte(1); // bInGuild
+		w.writeInt(guild.getId());
+		w.writeLengthString(guild.getName());
+		for (int i = 1; i <= 5; i++) {
+			w.writeLengthString(guild.getRankTitle(i));
+		}
+		Collection<GuildCharacter> members = guild.getMembers();
+		
+		// then it is the size of all the members and each of their character ids o_O
+		w.writeAsByte(members.size());  
+		for (GuildCharacter member : members) {
+			w.writeInt(member.getId());
+		}
+		
+		for (GuildCharacter member : members) {
+			w.writePaddedString(member.getName(), 13);
+			w.writeInt(member.getJobId());
+			w.writeInt(member.getLevel());
+			w.writeInt(member.getGuildRank());
+			w.writeInt(member.isOnline() ? 1 : 0);
+			w.writeInt(guild.getSignature());
+			w.writeInt(member.getAllianceRank());
+		}
+		w.writeInt(guild.getCapacity());
+		
+		final GuildEmblem emblem = guild.getEmblem();
 		emblem.serialize(w);
 		
-		w.writeLengthString(g.getNotice());
-		w.writeInt(g.getGP());
-		w.writeInt(g.getAllianceId());
+		w.writeLengthString(guild.getNotice());
+		w.writeInt(guild.getGP());
+		w.writeInt(guild.getAllianceId());
 		return w.getPacket();
 	}
 
@@ -6183,7 +6214,7 @@ public class PacketCreator {
 		w.writeInt(2); // probably capacity
 		w.writeAsShort(0);
 		for (Integer guildd : alliance.getGuilds()) {
-			getGuildInfo(w, Server.getInstance().getGuild(guildd, c.getPlayer().getMGC()));
+			getGuildInfo(w, Server.getInstance().getGuild(guildd, c.getPlayer().getGuildCharacter()));
 		}
 		return w.getPacket();
 	}

@@ -140,7 +140,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int chair;
 	private int itemEffect;
 	private int guildId, guildRank, allianceRank;
-	private int messengerposition = 4;
+	private int messengerPosition = 4;
 	private int slots = 0;
 	private int energybar;
 	private int rebirths;
@@ -174,8 +174,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private EventInstanceManager eventInstance = null;
 	private HiredMerchant hiredMerchant = null;
 	private GameClient client;
-	private GuildCharacter mgc = null;
-	private PartyCharacter mpc = null;
+	private GuildCharacter guildCharacter = null;
+	private PartyCharacter partyCharacter = null;
 	private Inventory[] inventory;
 	private Job job = Job.BEGINNER;
 	private GameMap map; // Make a Dojo pq instance
@@ -213,7 +213,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private List<ScheduledFuture<?>> timers = new ArrayList<ScheduledFuture<?>>();
 	// private NumberFormat nf = new DecimalFormat("#,###,###,###");
 	private ArrayList<Integer> excluded = new ArrayList<Integer>();
-	private MonsterBook monsterbook;
+	private MonsterBook monsterBook;
 	private List<Ring> crushRings = new ArrayList<Ring>();
 	private List<Ring> friendshipRings = new ArrayList<Ring>();
 	private Ring marriageRing;
@@ -997,7 +997,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					setPosition(pos);
 					map.addPlayer(GameCharacter.this);
 					if (party != null) {
-						mpc.setMapId(to.getId());
+						partyCharacter.setMapId(to.getId());
 						silentPartyUpdate();
 						client.announce(PacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
 						updatePartyMemberHP();
@@ -1061,9 +1061,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void checkMessenger() {
-		if (messenger != null && messengerposition < 4 && messengerposition > -1) {
+		if (messenger != null && messengerPosition < 4 && messengerPosition > -1) {
 			World worldz = Server.getInstance().getWorld(worldId);
-			worldz.silentJoinMessenger(messenger.getId(), new MessengerCharacter(this, messengerposition), messengerposition);
+			worldz.silentJoinMessenger(messenger.getId(), new MessengerCharacter(this, messengerPosition), messengerPosition);
 			worldz.updateMessenger(getMessenger().getId(), name, client.getChannel());
 		}
 	}
@@ -1903,21 +1903,24 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return mesosTraded;
 	}
 
+	public Messenger getMessenger() {
+		return messenger;
+	}
+	
 	public int getMessengerPosition() {
-		return messengerposition;
+		return messengerPosition;
 	}
 
-	public GuildCharacter getMGC() {
-		return mgc;
+	public GuildCharacter getGuildCharacter() {
+		return guildCharacter;
 	}
 
-	public PartyCharacter getMPC() {
-		// if (mpc == null) mpc = new PartyCharacter(this);
-		return mpc;
+	public PartyCharacter getPartyCharacter() {
+		return partyCharacter;
 	}
 
-	public void setPartyCharacter(PartyCharacter mpc) {
-		this.mpc = mpc;
+	public void setPartyCharacter(PartyCharacter member) {
+		this.partyCharacter = member;
 	}
 
 	public Minigame getActiveMinigame() {
@@ -1933,7 +1936,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public MonsterBook getMonsterBook() {
-		return monsterbook;
+		return monsterBook;
 	}
 
 	public int getMonsterBookCover() {
@@ -1946,10 +1949,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public int getMp() {
 		return mp;
-	}
-
-	public Messenger getMessenger() {
-		return messenger;
 	}
 
 	public String getName() {
@@ -2123,7 +2122,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public String getStaffRank() {
-		return UserRank.getById(gmLevel).toString();
+		return UserRank.getById(this.gmLevel).toString();
 	}
 
 	public final List<QuestStatus> getStartedQuests() {
@@ -2251,7 +2250,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public int gmLevel() {
+	public int getGmLevel() {
 		return gmLevel;
 	}
 
@@ -2259,10 +2258,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (this.guildId < 1) {
 			return;
 		}
-		mgc.setLevel(level);
-		mgc.setJobId(job.getId());
+		guildCharacter.setLevel(level);
+		guildCharacter.setJobId(job.getId());
 		try {
-			Server.getInstance().memberLevelJobUpdate(this.mgc);
+			Server.getInstance().memberLevelJobUpdate(this.guildCharacter);
 			int allianceId = getGuild().getAllianceId();
 			if (allianceId > 0) {
 				Server.getInstance().allianceMessage(allianceId, PacketCreator.updateAllianceJobLevel(this), getId(), -1);
@@ -2550,7 +2549,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		// saveToDB(true); NAH!
 	}
 
-	public static GameCharacter loadCharFromDB(int characterId, GameClient client, boolean forChannelServer) throws SQLException {
+	public static GameCharacter loadFromDb(int characterId, GameClient client, boolean forChannelServer) throws SQLException {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			GameCharacter character = new GameCharacter();
@@ -2609,8 +2608,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			character.allianceRank = rs.getInt("allianceRank");
 			character.familyId = rs.getInt("familyId");
 			character.bookCover = rs.getInt("monsterbookcover");
-			character.monsterbook = new MonsterBook();
-			character.monsterbook.loadCards(characterId);
+			character.monsterBook = new MonsterBook();
+			character.monsterBook.loadCards(characterId);
 			character.vanquisherStage = rs.getInt("vanquisherStage");
 			character.dojoState = new DojoState(rs);
 			if (ServerConstants.USE_MAPLE_STOCKS) {
@@ -2621,7 +2620,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				character.dead = rs.getInt("dead") == 1;
 			}
 			if (character.guildId > 0) {
-				character.mgc = new GuildCharacter(character);
+				character.guildCharacter = new GuildCharacter(character);
 			}
 			int buddyCapacity = rs.getInt("buddyCapacity");
 			character.buddylist = new BuddyList(buddyCapacity);
@@ -2693,8 +2692,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				int partyid = rs.getInt("party");
 				Party party = Server.getInstance().getWorld(character.worldId).getParty(partyid);
 				if (party != null) {
-					character.mpc = party.getMemberById(character.id);
-					if (character.mpc != null) {
+					character.partyCharacter = party.getMemberById(character.id);
+					if (character.partyCharacter != null) {
 						character.party = party;
 					}
 				}
@@ -2705,7 +2704,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					Messenger messenger = Server.getInstance().getWorld(character.worldId).getMessenger(messengerid);
 					if (messenger != null) {
 						character.messenger = messenger;
-						character.messengerposition = position;
+						character.messengerPosition = position;
 					}
 				}
 			}
@@ -3345,8 +3344,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void resetMGC() {
-		this.mgc = null;
+	public void resetGuildCharacter() {
+		this.guildCharacter = null;
 	}
 	
 	public void rebirthBeginner() {
@@ -3498,7 +3497,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps.setInt(27, buddylist.getCapacity());
 			if (messenger != null) {
 				ps.setInt(28, messenger.getId());
-				ps.setInt(29, messengerposition);
+				ps.setInt(29, messengerPosition);
 			} else {
 				ps.setInt(28, 0);
 				ps.setInt(29, 4);
@@ -3517,7 +3516,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 
 			if (update) {
-				monsterbook.saveCards(getId());
+				monsterBook.saveCards(getId());
 			}
 			ps.setInt(37, bookCover);
 			ps.setInt(38, vanquisherStage);
@@ -3777,8 +3776,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void setAllianceRank(int rank) {
 		allianceRank = rank;
-		if (mgc != null) {
-			mgc.setAllianceRank(rank);
+		if (guildCharacter != null) {
+			guildCharacter.setAllianceRank(rank);
 		}
 	}
 
@@ -3897,27 +3896,27 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.gender = gender;
 	}
 
-	public void setGM(int level) {
+	public void setGmLevel(int level) {
 		this.gmLevel = level;
 	}
 
-	public void setGuildId(int _id) {
-		guildId = _id;
+	public void setGuildId(int value) {
+		guildId = value;
 		if (guildId > 0) {
-			if (mgc == null) {
-				mgc = new GuildCharacter(this);
+			if (guildCharacter == null) {
+				guildCharacter = new GuildCharacter(this);
 			} else {
-				mgc.setGuildId(guildId);
+				guildCharacter.setGuildId(guildId);
 			}
 		} else {
-			mgc = null;
+			guildCharacter = null;
 		}
 	}
 
 	public void setGuildRank(int _rank) {
 		guildRank = _rank;
-		if (mgc != null) {
-			mgc.setGuildRank(_rank);
+		if (guildCharacter != null) {
+			guildCharacter.setGuildRank(_rank);
 		}
 	}
 
@@ -4072,7 +4071,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void setMessengerPosition(int position) {
-		this.messengerposition = position;
+		this.messengerPosition = position;
 	}
 
 	public void setActiveMinigame(Minigame miniGame) {
@@ -4100,7 +4099,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void setParty(Party party) {
 		if (party == null) {
-			this.mpc = null;
+			this.partyCharacter = null;
 		}
 		this.party = party;
 	}
@@ -4264,7 +4263,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void silentPartyUpdate() {
 		if (party != null) {
-			Server.getInstance().getWorld(worldId).updateParty(party.getId(), PartyOperation.SILENT_UPDATE, getMPC());
+			Server.getInstance().getWorld(worldId).updateParty(party.getId(), PartyOperation.SILENT_UPDATE, getPartyCharacter());
 		}
 	}
 
@@ -4413,7 +4412,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	@Override
 	public void sendSpawnData(GameClient client) {
-		if (!this.isHidden() || client.getPlayer().gmLevel() > 0) {
+		if (!this.isHidden() || client.getPlayer().getGmLevel() > 0) {
 			client.announce(PacketCreator.spawnPlayerMapObject(this));
 		}
 	}
@@ -4705,8 +4704,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.partyQuest = null;
 		this.events = null;
 		this.skills = null;
-		this.mpc = null;
-		this.mgc = null;
+		this.partyCharacter = null;
+		this.guildCharacter = null;
 		this.events = null;
 		this.party = null;
 		this.family = null;

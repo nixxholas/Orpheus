@@ -138,7 +138,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					} else {
 						victim = chr;
 					}
-					chr.message(victim.getName() + " is " + UserRank.getById(victim.gmLevel()).toStringWithArticle());
+					chr.message(victim.getName() + " is " + UserRank.getById(victim.getGmLevel()).toStringWithArticle());
 					break;
 				case checkstats:
 					if (sub.length > 1) {

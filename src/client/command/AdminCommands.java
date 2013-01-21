@@ -75,7 +75,7 @@ public class AdminCommands extends EnumeratedCommands {
 				case setgmlevel:
 					victim = c.getChannelServer().getPlayerStorage().getCharacterByName(sub[1]);
 					victim.saveToDB(true);
-					victim.setGM(Integer.parseInt(sub[2]));
+					victim.setGmLevel(Integer.parseInt(sub[2]));
 					chr.message("Done.");
 					victim.getClient().disconnect();
 					break;

@@ -130,7 +130,7 @@ public class GameClient {
 		List<GameCharacter> chars = new ArrayList<GameCharacter>(15);
 		try {
 			for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
-				chars.add(GameCharacter.loadCharFromDB(cni.id, this, false));
+				chars.add(GameCharacter.loadFromDb(cni.id, this, false));
 			}
 		} catch (Exception e) {
 		}
@@ -735,7 +735,7 @@ public class GameClient {
 					}
 				}
 				if (player.getParty() != null) {
-					PartyCharacter chrp = player.getMPC();
+					PartyCharacter chrp = player.getPartyCharacter();
 					chrp.setOnline(false);
 					worlda.updateParty(player.getParty().getId(), PartyOperation.LOG_ONOFF, chrp);
 				}
@@ -745,7 +745,7 @@ public class GameClient {
 					worlda.loggedOn(player.getName(), player.getId(), channel, player.getBuddylist().getBuddyIds());
 				}
 				if (player.getGuildId() > 0) {
-					Server.getInstance().setGuildMemberOnline(player.getMGC(), false, (byte) -1);
+					Server.getInstance().setGuildMemberOnline(player.getGuildCharacter(), false, (byte) -1);
 					int allianceId = player.getGuild().getAllianceId();
 					if (allianceId > 0) {
 						Server.getInstance().allianceMessage(allianceId, PacketCreator.allianceMemberOnline(player, false), player.getId(), -1);

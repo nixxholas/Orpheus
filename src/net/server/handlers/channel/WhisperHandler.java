@@ -75,7 +75,7 @@ public final class WhisperHandler extends AbstractPacketHandler {
 		} else if (mode == 5) { // - /find
 			String recipient = reader.readMapleAsciiString();
 			GameCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
-			if (victim != null && c.getPlayer().gmLevel() >= victim.gmLevel()) {
+			if (victim != null && c.getPlayer().getGmLevel() >= victim.getGmLevel()) {
 				if (victim.getCashShop().isOpened()) {
 					c.announce(PacketCreator.getFindReply(victim.getName(), -1, 2));
 					// } else if (victim.inMTS()) {
@@ -90,7 +90,7 @@ public final class WhisperHandler extends AbstractPacketHandler {
 					ps.setString(1, recipient);
 					ResultSet rs = ps.executeQuery();
 					if (rs.next()) {
-						if (rs.getInt("gm") > c.getPlayer().gmLevel()) {
+						if (rs.getInt("gm") > c.getPlayer().getGmLevel()) {
 							c.announce(PacketCreator.getWhisperReply(recipient, (byte) 0));
 							return;
 						}

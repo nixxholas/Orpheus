@@ -28,26 +28,27 @@ import tools.ArrayMap;
 
 public class MonsterStatusEffect {
 
-	private Map<MonsterStatus, Integer> stati;
-	private ISkill skill;
-	private MobSkill mobskill;
-	private boolean monsterSkill;
+	private final Map<MonsterStatus, Integer> statuses;
+	private final ISkill skill;
+	private final MobSkill mobskill;
+	private final boolean monsterSkill;
+	
 	private ScheduledFuture<?> cancelTask;
 	private ScheduledFuture<?> damageSchedule;
 
 	public MonsterStatusEffect(Map<MonsterStatus, Integer> stati, ISkill skillId, MobSkill mobskill, boolean monsterSkill) {
-		this.stati = new ArrayMap<MonsterStatus, Integer>(stati);
+		this.statuses = new ArrayMap<MonsterStatus, Integer>(stati);
 		this.skill = skillId;
 		this.monsterSkill = monsterSkill;
 		this.mobskill = mobskill;
 	}
 
-	public Map<MonsterStatus, Integer> getStati() {
-		return stati;
+	public Map<MonsterStatus, Integer> getStatuses() {
+		return statuses;
 	}
 
 	public Integer setValue(MonsterStatus status, Integer newVal) {
-		return stati.put(status, newVal);
+		return statuses.put(status, newVal);
 	}
 
 	public ISkill getSkill() {
@@ -74,7 +75,7 @@ public class MonsterStatusEffect {
 	}
 
 	public void removeActiveStatus(MonsterStatus stat) {
-		stati.remove(stat);
+		statuses.remove(stat);
 	}
 
 	public void setDamageSchedule(ScheduledFuture<?> damageSchedule) {
