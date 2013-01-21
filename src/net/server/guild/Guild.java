@@ -75,7 +75,7 @@ public class Guild {
 				
 				result.name = rs.getString("name");
 				result.gp = rs.getInt("GP");
-				result.emblem = new GuildEmblem(rs.getInt("logo"), rs.getInt("logoColor"), rs.getInt("logoBG"), rs.getInt("logoBGColor"));
+				result.emblem = new GuildEmblem(rs);
 				result.capacity = rs.getInt("capacity");
 				for (int i = 1; i <= 5; i++) {
 					result.rankTitles[i - 1] = rs.getString("rank" + i + "title");
@@ -104,15 +104,13 @@ public class Guild {
 		}	
 	}
 	
-	private static PreparedStatement getSelectMembersCommand(
-			Connection connection, int guildId) throws SQLException {
+	private static PreparedStatement getSelectMembersCommand(Connection connection, int guildId) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("SELECT `id`, `name`, `level`, `job`, `guildrank`, `allianceRank` FROM `characters` WHERE `guildid` = ? ORDER BY `guildrank` ASC, `name` ASC");
 			ps.setInt(1, guildId);
 		return ps;
 	}
 
-	private static PreparedStatement getSelectGuildCommand(
-			Connection connection, int guildId) throws SQLException {
+	private static PreparedStatement getSelectGuildCommand(Connection connection, int guildId) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("SELECT * FROM `guilds` WHERE `guildid` = ?");
 		ps.setInt(1, guildId);
 		return ps;
@@ -165,10 +163,10 @@ public class Guild {
 				builder.append("`capacity` = ?, `notice` = ? WHERE `guildid` = ?");
 				PreparedStatement ps = con.prepareStatement(builder.toString());
 				ps.setInt(1, gp);
-				ps.setInt(2, emblem.getForegroundId());
-				ps.setInt(3, emblem.getForegroundColor());
-				ps.setInt(4, emblem.getBackgroundId());
-				ps.setInt(5, emblem.getBackgroundColor());
+				ps.setInt(2, emblem.foregroundId);
+				ps.setInt(3, emblem.foregroundColor);
+				ps.setInt(4, emblem.backgroundId);
+				ps.setInt(5, emblem.backgroundColor);
 				for (int i = 6; i < 11; i++) {
 					ps.setString(i, rankTitles[i - 6]);
 				}
@@ -249,7 +247,7 @@ public class Guild {
 					if (notifications.get(b).size() > 0) {
 						if (operation == GuildOperation.DISBAND) {
 							Server.getInstance().getWorld(worldId).setGuildAndRank(notifications.get(b), 0, 5, exceptionId);
-						} else if (operation == GuildOperation.EMBELMCHANGE) {
+						} else if (operation == GuildOperation.CHANGE_EMBLEM) {
 							Server.getInstance().getWorld(worldId).changeEmblem(this.id, notifications.get(b), new GuildSummary(this));
 						} else {
 							Server.getInstance().getWorld(worldId).sendPacket(notifications.get(b), packet, exceptionId);
@@ -464,7 +462,7 @@ public class Guild {
 	public void setGuildEmblem(short backgroundId, byte backgroundColor, short foregroundId, byte foregroundColor) {
 		this.emblem = new GuildEmblem(foregroundId, foregroundColor, backgroundId, backgroundColor);
 		this.writeToDB(false);
-		this.broadcast(null, -1, GuildOperation.EMBELMCHANGE);
+		this.broadcast(null, -1, GuildOperation.CHANGE_EMBLEM);
 	}
 
 	public GuildCharacter getMember(int characterId) {

@@ -1859,10 +1859,7 @@ public class PacketCreator {
 				w.writeLengthString(gs.getName());
 
 				final GuildEmblem emblem = gs.getEmblem();
-				w.writeAsShort(emblem.getBackgroundId());
-				w.writeAsByte(emblem.getBackgroundColor());
-				w.writeAsShort(emblem.getForegroundId());
-				w.writeAsByte(emblem.getForegroundColor());
+				emblem.serialize(w);
 			} else {
 				w.writeLengthString("");
 				w.write(new byte[6]);
@@ -3963,10 +3960,7 @@ public class PacketCreator {
 		w.writeInt(g.getCapacity());
 		
 		final GuildEmblem emblem = g.getEmblem();
-		w.writeAsShort(emblem.getBackgroundId());
-		w.writeAsByte(emblem.getBackgroundColor());
-		w.writeAsShort(emblem.getForegroundId());
-		w.writeAsByte(emblem.getForegroundColor());
+		emblem.serialize(w);
 		
 		w.writeLengthString(g.getNotice());
 		w.writeInt(g.getGP());
@@ -4099,10 +4093,7 @@ public class PacketCreator {
 		w.writeAsByte(0x42);
 		w.writeInt(guildId);
 
-		w.writeAsShort(emblem.getBackgroundId());
-		w.writeAsByte(emblem.getBackgroundColor());
-		w.writeAsShort(emblem.getForegroundId());
-		w.writeAsByte(emblem.getForegroundColor());
+		emblem.serialize(w);
 		
 		return w.getPacket();
 	}
@@ -6150,10 +6141,7 @@ public class PacketCreator {
 		w.writeInt(guild.getCapacity());
 
 		final GuildEmblem emblem = guild.getEmblem();
-		w.writeAsShort(emblem.getBackgroundId());
-		w.writeAsByte(emblem.getBackgroundColor());
-		w.writeAsShort(emblem.getForegroundId());
-		w.writeAsByte(emblem.getForegroundColor());
+		emblem.serialize(w);
 		
 		w.writeLengthString(guild.getNotice());
 		w.writeInt(guild.getGP());
