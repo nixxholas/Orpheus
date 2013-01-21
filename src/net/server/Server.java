@@ -96,38 +96,38 @@ public class Server implements Runnable {
 		return worldRecommendedList;
 	}
 
-	public void removeChannel(byte worldid, byte channel) {
-		channels.remove(channel);
-		if (load.contains(worldid)) {
-			load.get(worldid).remove(channel);
+	public void removeChannel(byte worldId, byte channelId) {
+		channels.remove(channelId);
+		if (load.contains(worldId)) {
+			load.get(worldId).remove(channelId);
 		}
-		World world = worlds.get(worldid);
+		World world = worlds.get(worldId);
 		if (world != null) {
-			world.removeChannel(channel);
+			world.removeChannel(channelId);
 		}
 	}
 
-	public Channel getChannel(byte world, byte channel) {
-		return worlds.get(world).getChannel(channel);
+	public Channel getChannel(byte worldId, byte channelId) {
+		return worlds.get(worldId).getChannel(channelId);
 	}
 
-	public List<Channel> getChannelsFromWorld(byte world) {
-		return worlds.get(world).getChannels();
+	public List<Channel> getChannelsFromWorld(byte worldId) {
+		return worlds.get(worldId).getChannels();
 	}
 
 	public List<Channel> getAllChannels() {
-		List<Channel> channelz = new ArrayList<Channel>();
+		List<Channel> list = new ArrayList<Channel>();
 		for (World world : worlds) {
 			for (Channel ch : world.getChannels()) {
-				channelz.add(ch);
+				list.add(ch);
 			}
 		}
 
-		return channelz;
+		return list;
 	}
 
-	public String getIP(byte world, byte channel) {
-		return channels.get(world).get(channel);
+	public String getIP(byte worldId, byte channelId) {
+		return channels.get(worldId).get(channelId);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class Server implements Runnable {
 		acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new GameCodecFactory()));
 		TimerManager tMan = TimerManager.getInstance();
 		tMan.start();
-		tMan.register(tMan.purge(), 300000);// Purging ftw...
+		tMan.register(tMan.purge(), 300000); // Purging ftw...
 		boolean bindRankings = true;
 		String[] events = ServerConstants.EVENTS.split(" ");
 		for (int i = 0; i < events.length; i++) {
@@ -212,7 +212,7 @@ public class Server implements Runnable {
 		Output.print("Loading completed in " + ((System.currentTimeMillis() - startTime)) + "ms.");
 		Output.print("Loading items.");
 		startTime = System.currentTimeMillis();
-		CashItemFactory.getSpecialCashItems();// just load who cares o.o
+		CashItemFactory.getSpecialCashItems(); // just load who cares o.o
 		ItemInfoProvider.getInstance().getAllItems();
 		Output.print("Loading completed in " + ((System.currentTimeMillis() - startTime)) + "ms.");
 		if (isGMServerEnabled()) {
@@ -247,22 +247,31 @@ public class Server implements Runnable {
 	}
 
 	public void shutdown() {
-		try {
-			worlds.clear();
-			worlds = null;
-			channels.clear();
-			channels = null;
-			worldRecommendedList.clear();
-			worldRecommendedList = null;
-			load.clear();
-			load = null;
-			TimerManager.getInstance().stop();
-			acceptor.unbind();
-			Output.print("Server is now offline.");
-		} catch (NullPointerException e) {
-			// We're already off. Let's get out of here...
+		clearSafely(this.worlds);
+		worlds = null;
+		
+		clearSafely(this.channels);
+		channels = null;
+
+		clearSafely(this.worldRecommendedList);
+		worldRecommendedList = null;
+
+		clearSafely(this.load);
+		load = null;
+
+		TimerManager.getInstance().stop();
+		acceptor.unbind();
+		
+		Output.print("Server is now offline.");
+		
+		// BOEIEND :D
+		System.exit(0);
+	}
+	
+	private static <T> void clearSafely(List<T> list) {
+		if (list != null) {
+			list.clear();
 		}
-		System.exit(0);// BOEIEND :D
 	}
 
 	public static void main(String args[]) {
@@ -333,8 +342,8 @@ public class Server implements Runnable {
 		}
 	}
 
-	public boolean addGuildtoAlliance(int aId, int guildId) {
-		Alliance alliance = alliances.get(aId);
+	public boolean addGuildtoAlliance(int allianceId, int guildId) {
+		Alliance alliance = alliances.get(allianceId);
 		if (alliance != null) {
 			alliance.addGuild(guildId);
 			return true;
@@ -342,8 +351,8 @@ public class Server implements Runnable {
 		return false;
 	}
 
-	public boolean removeGuildFromAlliance(int aId, int guildId) {
-		Alliance alliance = alliances.get(aId);
+	public boolean removeGuildFromAlliance(int allianceId, int guildId) {
+		Alliance alliance = alliances.get(allianceId);
 		if (alliance != null) {
 			alliance.removeGuild(guildId);
 			return true;
@@ -351,8 +360,8 @@ public class Server implements Runnable {
 		return false;
 	}
 
-	public boolean setAllianceRanks(int aId, String[] ranks) {
-		Alliance alliance = alliances.get(aId);
+	public boolean setAllianceRanks(int allianceId, String[] ranks) {
+		Alliance alliance = alliances.get(allianceId);
 		if (alliance != null) {
 			alliance.setRankTitle(ranks);
 			return true;
@@ -360,8 +369,8 @@ public class Server implements Runnable {
 		return false;
 	}
 
-	public boolean setAllianceNotice(int aId, String notice) {
-		Alliance alliance = alliances.get(aId);
+	public boolean setAllianceNotice(int allianceId, String notice) {
+		Alliance alliance = alliances.get(allianceId);
 		if (alliance != null) {
 			alliance.setNotice(notice);
 			return true;
@@ -369,17 +378,17 @@ public class Server implements Runnable {
 		return false;
 	}
 
-	public boolean increaseAllianceCapacity(int aId, int inc) {
-		Alliance alliance = alliances.get(aId);
+	public boolean increaseAllianceCapacity(int allianceId, int increase) {
+		Alliance alliance = alliances.get(allianceId);
 		if (alliance != null) {
-			alliance.increaseCapacity(inc);
+			alliance.increaseCapacity(increase);
 			return true;
 		}
 		return false;
 	}
 
-	public Set<Byte> getChannelServer(byte world) {
-		return new HashSet<Byte>(channels.get(world).keySet());
+	public Set<Byte> getChannelServer(byte worldId) {
+		return new HashSet<Byte>(channels.get(worldId).keySet());
 	}
 
 	public byte getHighestChannelId() {
@@ -396,130 +405,130 @@ public class Server implements Runnable {
 		return Guild.createGuild(leaderId, name);
 	}
 
-	public Guild getGuild(int id, GuildCharacter mgc) {
+	public Guild getGuild(int id, GuildCharacter member) {
 		synchronized (guilds) {
 			if (guilds.get(id) != null) {
 				return guilds.get(id);
 			}
-			if (mgc == null) {
+			if (member == null) {
 				return null;
 			}
-			Guild g = new Guild(mgc);
-			if (g.getId() == -1) {
+			Guild guild = Guild.loadFromDb(member);
+			if (guild == null) {
 				return null;
 			}
-			guilds.put(id, g);
-			return g;
+			guilds.put(id, guild);
+			return guild;
 		}
 	}
 
-	public void clearGuilds() {// remake
+	public void clearGuilds() {
+		// remake
 		synchronized (guilds) {
 			guilds.clear();
 		}
 		// for (List<Channel> world : worlds.values()) {
 		// reloadGuildCharacters();
-
 	}
 
-	public void setGuildMemberOnline(GuildCharacter mgc, boolean bOnline, byte channel) {
-		Guild g = getGuild(mgc.getGuildId(), mgc);
-		g.setOnline(mgc.getId(), bOnline, channel);
+	public void setGuildMemberOnline(GuildCharacter member, boolean isOnline, byte channelId) {
+		Guild guild = getGuild(member.getGuildId(), member);
+		guild.setOnline(member.getId(), isOnline, channelId);
 	}
 
-	public int addGuildMember(GuildCharacter mgc) {
-		Guild g = guilds.get(mgc.getGuildId());
-		if (g != null) {
-			return g.addGuildMember(mgc);
+	public int addGuildMember(GuildCharacter member) {
+		Guild guild = guilds.get(member.getGuildId());
+		if (guild != null) {
+			return guild.addGuildMember(member);
 		}
 		return 0;
 	}
 
-	public boolean setGuildAllianceId(int gId, int aId) {
-		Guild guild = guilds.get(gId);
+	public boolean setGuildAllianceId(int guildId, int allianceId) {
+		Guild guild = guilds.get(guildId);
 		if (guild != null) {
-			guild.setAllianceId(aId);
+			guild.setAllianceId(allianceId);
 			return true;
 		}
 		return false;
 	}
 
-	public void leaveGuild(GuildCharacter mgc) {
-		Guild g = guilds.get(mgc.getGuildId());
-		if (g != null) {
-			g.leaveGuild(mgc);
+	public void leaveGuild(GuildCharacter member) {
+		Guild guild = guilds.get(member.getGuildId());
+		if (guild != null) {
+			guild.leaveGuild(member);
 		}
 	}
 
-	public void guildChat(int gid, String name, int cid, String msg) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			g.guildChat(name, cid, msg);
+	public void guildChat(int guildId, String name, int characterId, String message) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			guild.guildChat(name, characterId, message);
 		}
 	}
 
-	public void changeRank(int gid, int cid, int newRank) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			g.changeRank(cid, newRank);
+	public void changeRank(int guildId, int characterId, int newRank) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			guild.changeRank(characterId, newRank);
 		}
 	}
 
-	public void expelMember(GuildCharacter initiator, String name, int cid) {
-		Guild g = guilds.get(initiator.getGuildId());
-		if (g != null) {
-			g.expelMember(initiator, name, cid);
+	public void expelMember(GuildCharacter initiator, String name, int characterId) {
+		Guild guild = guilds.get(initiator.getGuildId());
+		if (guild != null) {
+			guild.expelMember(initiator, name, characterId);
 		}
 	}
 
-	public void setGuildNotice(int gid, String notice) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			g.setGuildNotice(notice);
+	public void setGuildNotice(int guildId, String notice) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			guild.setGuildNotice(notice);
 		}
 	}
 
-	public void memberLevelJobUpdate(GuildCharacter mgc) {
-		Guild g = guilds.get(mgc.getGuildId());
-		if (g != null) {
-			g.memberLevelJobUpdate(mgc);
+	public void memberLevelJobUpdate(GuildCharacter member) {
+		Guild guild = guilds.get(member.getGuildId());
+		if (guild != null) {
+			guild.memberLevelJobUpdate(member);
 		}
 	}
 
-	public void changeRankTitle(int gid, String[] ranks) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			g.changeRankTitle(ranks);
+	public void changeRankTitle(int guildId, String[] ranks) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			guild.changeRankTitle(ranks);
 		}
 	}
 
-	public void setGuildEmblem(int gid, short bg, byte bgcolor, short logo, byte logocolor) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			g.setGuildEmblem(bg, bgcolor, logo, logocolor);
+	public void setGuildEmblem(int guildId, short bg, byte bgcolor, short logo, byte logocolor) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			guild.setGuildEmblem(bg, bgcolor, logo, logocolor);
 		}
 	}
 
-	public void disbandGuild(int gid) {
+	public void disbandGuild(int guildId) {
 		synchronized (guilds) {
-			Guild g = guilds.get(gid);
-			g.disbandGuild();
-			guilds.remove(gid);
+			Guild guild = guilds.get(guildId);
+			guild.disbandGuild();
+			guilds.remove(guildId);
 		}
 	}
 
-	public boolean increaseGuildCapacity(int gid) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			return g.increaseCapacity();
+	public boolean increaseGuildCapacity(int guildId) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			return guild.increaseCapacity();
 		}
 		return false;
 	}
 
-	public void gainGP(int gid, int amount) {
-		Guild g = guilds.get(gid);
-		if (g != null) {
-			g.gainGP(amount);
+	public void gainGP(int guildId, int amount) {
+		Guild guild = guilds.get(guildId);
+		if (guild != null) {
+			guild.gainGP(amount);
 		}
 	}
 
@@ -527,29 +536,29 @@ public class Server implements Runnable {
 		return buffStorage;
 	}
 
-	public void deleteGuildCharacter(GuildCharacter mgc) {
-		setGuildMemberOnline(mgc, false, (byte) -1);
-		if (mgc.getGuildRank() > 1) {
-			leaveGuild(mgc);
+	public void deleteGuildCharacter(GuildCharacter member) {
+		setGuildMemberOnline(member, false, (byte) -1);
+		if (member.getGuildRank() > 1) {
+			leaveGuild(member);
 		} else {
-			disbandGuild(mgc.getGuildId());
+			disbandGuild(member.getGuildId());
 		}
 	}
 
-	public void reloadGuildCharacters(byte world) {
-		World worlda = getWorld(world);
-		for (GameCharacter character : worlda.getPlayerStorage().getAllCharacters()) {
+	public void reloadGuildCharacters(byte worldId) {
+		World world = getWorld(worldId);
+		for (GameCharacter character : world.getPlayerStorage().getAllCharacters()) {
 			if (character.getGuildId() > 0) {
-				setGuildMemberOnline(character.getMGC(), true, worlda.getId());
+				setGuildMemberOnline(character.getMGC(), true, world.getId());
 				memberLevelJobUpdate(character.getMGC());
 			}
 		}
-		worlda.reloadGuildSummary();
+		world.reloadGuildSummary();
 	}
 
-	public void broadcastMessage(byte world, GamePacket packet) {
-		for (Channel ch : getChannelsFromWorld(world)) {
-			ch.broadcastPacket(packet);
+	public void broadcastMessage(byte worldId, GamePacket packet) {
+		for (Channel channel : getChannelsFromWorld(worldId)) {
+			channel.broadcastPacket(packet);
 		}
 	}
 
@@ -567,75 +576,85 @@ public class Server implements Runnable {
 		server.broadcastOutGame(GMPacketCreator.chat(message), exclude);
 	}
 
-	public final Runnable shutdown(final boolean restart) { // only once :D
-		return new Runnable() {
+	public final Runnable shutdown(final boolean restart) { 
+		// only once :D
+		return new ShutdownAction(restart);
+	}
+	
+	private final class ShutdownAction implements Runnable {
+		private final boolean restart;
 
-			@Override
-			public void run() {
-				Output.printNewLine();
-				Output.print("The server is now " + (restart ? "restarting." : "shutting down."));
-				for (World w : getWorlds()) {
-					w.shutdown();
-				}
-				for (World w : getWorlds()) {
-					while (w.getPlayerStorage().getAllCharacters().size() > 0) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException ie) {
-							// Well, shit.
-							w.getPlayerStorage().disconnectAll(); // try to save us.
-						}
-					}
-				}
-				for (Channel ch : getAllChannels()) {
-					while (ch.getConnectedClients() > 0) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException ie) {
-							// Well, shit.
-							ch.getPlayerStorage().disconnectAll(); // try to save us.
-						}
-					}
-				}
+		private ShutdownAction(boolean restart) {
+			this.restart = restart;
+		}
 
-				TimerManager.getInstance().purge();
-				TimerManager.getInstance().stop();
-
-				for (Channel ch : getAllChannels()) {
-					while (!ch.finishedShutdown()) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException ie) {
-							// Well, damn.
-							ch.shutdown(); // try to save us.
-						}
-					}
-				}
-				worlds.clear();
-				worlds = null;
-				channels.clear();
-				channels = null;
-				worldRecommendedList.clear();
-				worldRecommendedList = null;
-				load.clear();
-				load = null;
-				Output.print("Server is now offline.");
-				acceptor.unbind();
-				acceptor = null;
-				if (!restart) {
-					shutdown();
-					System.exit(0);
-				} else {
-					Output.print("\r\nThe server is now restarting.");
+		@Override
+		public void run() {
+			Output.printNewLine();
+			Output.print("The server is now " + (restart ? "restarting." : "shutting down."));
+			for (World w : getWorlds()) {
+				w.shutdown();
+			}
+			for (World w : getWorlds()) {
+				while (w.getPlayerStorage().getAllCharacters().size() > 0) {
 					try {
-						instance.finalize();// FUU I CAN AND IT'S FREE
-					} catch (Throwable ex) {
+						Thread.sleep(1000);
+					} catch (InterruptedException ie) {
+						// Well, shit.
+						w.getPlayerStorage().disconnectAll(); // try to save us.
 					}
-					instance = null;
-					System.gc();
-					getInstance().run();// DID I DO EVERYTHING?! D:
 				}
 			}
-		};
+			for (Channel ch : getAllChannels()) {
+				while (ch.getConnectedClients() > 0) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException ie) {
+						// Well, shit.
+						ch.getPlayerStorage().disconnectAll(); // try to save us.
+					}
+				}
+			}
+
+			TimerManager.getInstance().purge();
+			TimerManager.getInstance().stop();
+
+			for (Channel ch : getAllChannels()) {
+				while (!ch.finishedShutdown()) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException ie) {
+						// Well, damn.
+						ch.shutdown(); // try to save us.
+					}
+				}
+			}
+			worlds.clear();
+			worlds = null;
+			channels.clear();
+			channels = null;
+			worldRecommendedList.clear();
+			worldRecommendedList = null;
+			load.clear();
+			load = null;
+			Output.print("Server is now offline.");
+			acceptor.unbind();
+			acceptor = null;
+			if (!restart) {
+				shutdown();
+				System.exit(0);
+			} else {
+				Output.print("\r\nThe server is now restarting.");
+				try {
+					// FUU I CAN AND IT'S FREE
+					instance.finalize();
+				} catch (Throwable ex) {
+				}
+				instance = null;
+				System.gc();
+				getInstance().run(); 
+				// DID I DO EVERYTHING?! D:
+			}
+		}
 	}
 }

@@ -32,6 +32,8 @@ import java.util.Set;
 import client.GameCharacter;
 import client.GameClient;
 import java.util.LinkedList;
+
+import tools.DatabaseCall;
 import tools.DatabaseConnection;
 import tools.Output;
 import net.GamePacket;
@@ -43,7 +45,8 @@ public class Guild {
 	public final static int CREATE_GUILD_COST = 1500000;
 	public final static int CHANGE_EMBLEM_COST = 5000000;
 
-	private List<GuildCharacter> members;
+	private final List<GuildCharacter> members = new ArrayList<GuildCharacter>();
+	private final Map<Byte, List<Integer>> notifications = new LinkedHashMap<Byte, List<Integer>>();
 
 	// 1 = master, 2 = jr, 5 = lowest member
 	private String rankTitles[] = new String[5]; 
@@ -52,58 +55,70 @@ public class Guild {
 	private int id, gp, logo, logoColor, leader, capacity, logoBG, logoBGColor,
 			signature, allianceId;
 	private byte worldId;
-	private Map<Byte, List<Integer>> notifications = new LinkedHashMap<Byte, List<Integer>>();
 	private boolean isDirty = true;
-
-	public Guild(GuildCharacter initiator) {
-		int guildid = initiator.getGuildId();
-		worldId = initiator.getWorld();
-		members = new ArrayList<GuildCharacter>();
+	
+	private Guild(int id) {
+		this.id = id;
+	}
+	
+	public static Guild loadFromDb(GuildCharacter initiator) {
+		int guildId = initiator.getGuildId();
+		int worldId = initiator.getWorld();
 		Connection con = DatabaseConnection.getConnection();
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM `guilds` WHERE `guildid` = " + guildid);
-			ResultSet rs = ps.executeQuery();
-			if (!rs.first()) {
-				id = -1;
-				ps.close();
-				rs.close();
-				return;
-			}
-			id = guildid;
-			name = rs.getString("name");
-			gp = rs.getInt("GP");
-			logo = rs.getInt("logo");
-			logoColor = rs.getInt("logoColor");
-			logoBG = rs.getInt("logoBG");
-			logoBGColor = rs.getInt("logoBGColor");
-			capacity = rs.getInt("capacity");
-			for (int i = 1; i <= 5; i++) {
-				rankTitles[i - 1] = rs.getString("rank" + i + "title");
-			}
-			leader = rs.getInt("leader");
-			notice = rs.getString("notice");
-			signature = rs.getInt("signature");
-			allianceId = rs.getInt("allianceId");
-			ps.close();
-			rs.close();
-			ps = con.prepareStatement("SELECT `id`, `name`, `level`, `job`, `guildrank`, `allianceRank` FROM `characters` WHERE `guildid` = ? ORDER BY `guildrank` ASC, `name` ASC");
-			ps.setInt(1, guildid);
-			rs = ps.executeQuery();
-			if (!rs.first()) {
-				rs.close();
-				ps.close();
-				return;
-			}
-			do {
-				members.add(new GuildCharacter(rs.getInt("id"), rs.getInt("level"), rs.getString("name"), (byte) -1, worldId, rs.getInt("job"), rs.getInt("guildrank"), guildid, false, rs.getInt("allianceRank")));
-			} while (rs.next());
-			setOnline(initiator.getId(), true, initiator.getChannel());
-			ps.close();
-			rs.close();
-		} catch (SQLException se) {
-			Output.print("Unable to read guild information from database.\n" + se);
-			return;
-		}
+		try {			
+			Guild result = new Guild(guildId);
+			try (DatabaseCall guildCall = DatabaseCall.query(getSelectGuildCommand(con, guildId))) {
+				ResultSet rs = guildCall.resultSet();
+				if (!rs.first()) {
+					return null;
+				}
+				
+				result.name = rs.getString("name");
+				result.gp = rs.getInt("GP");
+				result.logo = rs.getInt("logo");
+				result.logoColor = rs.getInt("logoColor");
+				result.logoBG = rs.getInt("logoBG");
+				result.logoBGColor = rs.getInt("logoBGColor");
+				result.capacity = rs.getInt("capacity");
+				for (int i = 1; i <= 5; i++) {
+					result.rankTitles[i - 1] = rs.getString("rank" + i + "title");
+				}
+				result.leader = rs.getInt("leader");
+				result.notice = rs.getString("notice");
+				result.signature = rs.getInt("signature");
+				result.allianceId = rs.getInt("allianceId");
+			} 
+			
+			try (DatabaseCall membersCall = DatabaseCall.query(getSelectMembersCommand(con, guildId))) {
+				ResultSet rs = membersCall.resultSet();
+				if (!rs.first()) {
+					return null;
+				}
+				do {
+					result.members.add(new GuildCharacter(rs.getInt("id"), rs.getInt("level"), rs.getString("name"), (byte) -1, (byte) worldId, rs.getInt("job"), rs.getInt("guildrank"), guildId, false, rs.getInt("allianceRank")));
+				} while (rs.next());
+				result.setOnline(initiator.getId(), true, initiator.getChannel());
+			} 
+			
+			return result;
+		} catch (SQLException e) {
+			Output.print("Unable to read guild information from database.\n" + e);
+			return null;
+		}	
+	}
+	
+	private static PreparedStatement getSelectMembersCommand(
+			Connection connection, int guildId) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT `id`, `name`, `level`, `job`, `guildrank`, `allianceRank` FROM `characters` WHERE `guildid` = ? ORDER BY `guildrank` ASC, `name` ASC");
+			ps.setInt(1, guildId);
+		return ps;
+	}
+
+	private static PreparedStatement getSelectGuildCommand(
+			Connection connection, int guildId) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM `guilds` WHERE `guildid` = ?");
+		ps.setInt(1, guildId);
+		return ps;
 	}
 
 	public void buildNotifications() {
