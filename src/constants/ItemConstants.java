@@ -27,37 +27,41 @@ import client.InventoryType;
  * @author Jay Estrella
  */
 public final class ItemConstants {
-	public final static int LOCK = 0x01;
-	public final static int SPIKES = 0x02;
-	public final static int COLD = 0x04;
-	public final static int UNTRADEABLE = 0x08;
-	public final static int KARMA = 0x10;
-	public final static int PET_COME = 0x80;
-	public final static int UNKNOWN_SKILL = 0x100;
-	public final static float ITEM_ARMOR_EXP = 1 / 350000;
-	public static final float ITEM_WEAPON_EXP = 1 / 700000;
+	public static final int LOCK = 0x01;
+	public static final int SPIKES = 0x02;
+	public static final int COLD = 0x04;
+	public static final int UNTRADEABLE = 0x08;
+	public static final int KARMA = 0x10;
+	public static final int PET_COME = 0x80;
+	public static final int UNKNOWN_SKILL = 0x100;
+	public static final double ITEM_ARMOR_EXP = 1 / 350000;
+	public static final double ITEM_WEAPON_EXP = 1 / 700000;
 
-	public final static boolean EXPIRING_ITEMS = true;
+	public static final boolean EXPIRING_ITEMS = true;
 
 	public static int getFlagByInt(int type) {
 		if (type == 128) {
 			return PET_COME;
 		} else if (type == 256) {
 			return UNKNOWN_SKILL;
+		} else {
+			return 0;
 		}
-		return 0;
 	}
-
+	
 	public static boolean isThrowingStar(int itemId) {
-		return itemId / 10000 == 207;
+		final int major = itemId / 10000;
+		return major == 207;
 	}
 
 	public static boolean isBullet(int itemId) {
-		return itemId / 10000 == 233;
+		final int major = itemId / 10000;
+		return major == 233;
 	}
 
 	public static boolean isRechargable(int itemId) {
-		return itemId / 10000 == 233 || itemId / 10000 == 207;
+		final int major = itemId / 10000;
+		return major == 207 || major == 233;
 	}
 
 	public static boolean isArrowForCrossBow(int itemId) {
@@ -74,9 +78,10 @@ public final class ItemConstants {
 
 	public static InventoryType getInventoryType(final int itemId) {
 		final byte type = (byte) (itemId / 1000000);
-		if (type < 1 || type > 5) {
+		if (type < 1 || 5 < type) {
 			return InventoryType.UNDEFINED;
 		}
+		
 		return InventoryType.fromByte(type);
 	}
 
@@ -85,6 +90,6 @@ public final class ItemConstants {
 	}
 
 	public static boolean isWeapon(int itemId) {
-		return itemId >= 1302000 && itemId < 1492024;
+		return 1302000 <= itemId && itemId < 1492024;
 	}
 }
