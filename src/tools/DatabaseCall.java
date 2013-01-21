@@ -53,7 +53,7 @@ public class DatabaseCall implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws SQLException {
 		this.isClosed = true;
 		
 		final PreparedStatement statementCopy = this.statement;
