@@ -100,6 +100,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 			case 0x00:
 				// c.announce(PacketCreator.showGuildInfo(mc));
 				break;
+				
 			case 0x02:
 				if (player.getGuildId() > 0 || player.getMapId() != 200000301) {
 					c.getPlayer().dropMessage(1, "You cannot create a new Guild while in one.");
@@ -129,6 +130,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				c.getPlayer().dropMessage(1, "You have successfully created a Guild.");
 				respawnPlayer(player);
 				break;
+				
 			case 0x05:
 				if (player.getGuildId() <= 0 || player.getGuildRank() > 2) {
 					return;
@@ -144,6 +146,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 					}
 				}
 				break;
+				
 			case 0x06:
 				if (player.getGuildId() > 0) {
 					Output.print("[GOH] " + player.getName() + " attempted to join a guild when s/he is already in one.");
@@ -184,6 +187,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				player.saveGuildStatus(); // update database
 				respawnPlayer(player);
 				break;
+				
 			case 0x07:
 				cid = reader.readInt();
 				name = reader.readMapleAsciiString();
@@ -198,6 +202,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				player.saveGuildStatus();
 				respawnPlayer(player);
 				break;
+				
 			case 0x08:
 				cid = reader.readInt();
 				name = reader.readMapleAsciiString();
@@ -208,7 +213,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 
 				Server.getInstance().expelMember(player.getMGC(), name, cid);
 				break;
-			case 0x0d:
+				
+			case 0x0D:
 				if (player.getGuildId() <= 0 || player.getGuildRank() != 1) {
 					System.out.println("[hax] " + player.getName() + " tried to change guild rank titles when s/he does not have permission.");
 					return;
@@ -220,7 +226,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 
 				Server.getInstance().changeRankTitle(player.getGuildId(), ranks);
 				break;
-			case 0x0e:
+				
+			case 0x0E:
 				cid = reader.readInt();
 				byte newRank = reader.readByte();
 				if (player.getGuildRank() > 2 || (newRank <= 2 && player.getGuildRank() != 1) || player.getGuildId() <= 0) {
@@ -232,7 +239,8 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				}
 				Server.getInstance().changeRank(player.getGuildId(), cid, newRank);
 				break;
-			case 0x0f:
+				
+			case 0x0F:
 				if (player.getGuildId() <= 0 || player.getGuildRank() != 1 || player.getMapId() != 200000301) {
 					System.out.println("[hax] " + player.getName() + " tried to change guild emblem without being the guild leader.");
 					return;
@@ -249,6 +257,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				player.gainMeso(-Guild.CHANGE_EMBLEM_COST, true, false, true);
 				respawnPlayer(player);
 				break;
+				
 			case 0x10:
 				if (player.getGuildId() <= 0 || player.getGuildRank() > 2) {
 					System.out.println("[hax] " + player.getName() + " tried to change guild notice while not in a guild.");
@@ -260,6 +269,7 @@ public final class GuildOperationHandler extends AbstractPacketHandler {
 				}
 				Server.getInstance().setGuildNotice(player.getGuildId(), notice);
 				break;
+				
 			default:
 				System.out.println("Unhandled GUILD_OPERATION packet: \n" + reader.toString());
 		}
