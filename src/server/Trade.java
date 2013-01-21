@@ -52,20 +52,23 @@ public class Trade {
 	}
 
 	private static int getFee(int meso) {
-		int fee = 0;
+		final double tax;
 		if (meso >= 100000000) {
-			fee = (int) Math.round(0.06 * meso);
+			tax = 0.06;
 		} else if (meso >= 25000000) {
-			fee = meso / 20;
+			tax = 0.05;
 		} else if (meso >= 10000000) {
-			fee = meso / 25;
+			tax = 0.04;
 		} else if (meso >= 5000000) {
-			fee = (int) Math.round(.03 * meso);
+			tax = 0.03;
 		} else if (meso >= 1000000) {
-			fee = (int) Math.round(.018 * meso);
+			tax = 0.018;
 		} else if (meso >= 100000) {
-			fee = meso / 125;
+			tax = 0.008;
+		} else {
+			tax = 0.0;
 		}
+		int fee = (int) Math.round(tax * meso);
 		return fee;
 	}
 

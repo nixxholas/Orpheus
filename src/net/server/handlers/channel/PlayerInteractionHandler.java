@@ -66,9 +66,11 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 		GameCharacter chr = c.getPlayer();
 		if (mode == Action.CREATE.getCode()) {
 			byte createType = reader.readByte();
-			if (createType == 3) {// trade
+			if (createType == 3) {
+				// trade
 				Trade.startTrade(chr);
-			} else if (createType == 1) { // omok mini game
+			} else if (createType == 1) { 
+				// omok mini game
 				if (chr.getChalkboard() != null || FieldLimit.CANNOTMINIGAME.check(chr.getMap().getFieldLimit())) {
 					return;
 				}
@@ -82,7 +84,8 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				chr.getMap().addMapObject(game);
 				chr.getMap().broadcastMessage(PacketCreator.addOmokBox(chr, 1, 0));
 				game.sendOmok(c, type);
-			} else if (createType == 2) { // matchcard
+			} else if (createType == 2) { 
+				// matchcard
 				if (chr.getChalkboard() != null) {
 					return;
 				}
@@ -103,7 +106,8 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				chr.getMap().addMapObject(game);
 				chr.getMap().broadcastMessage(PacketCreator.addMatchCardBox(chr, 1, 0));
 				game.sendMatchCard(c, type);
-			} else if (createType == 4 || createType == 5) { // shop
+			} else if (createType == 4 || createType == 5) { 
+				// shop
 				if (!chr.getMap().getMapObjectsInRange(chr.getPosition(), 23000, Arrays.asList(GameMapObjectType.SHOP, GameMapObjectType.HIRED_MERCHANT)).isEmpty()) {
 					return;
 				}
@@ -183,11 +187,13 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 					chr.setHiredMerchant(merchant);
 				}
 			}
-		} else if (mode == Action.CHAT.getCode()) { // chat lol
+		} else if (mode == Action.CHAT.getCode()) { 
+			// chat lol
 			HiredMerchant merchant = chr.getHiredMerchant();
 			if (chr.getTrade() != null) {
 				chr.getTrade().chat(reader.readMapleAsciiString());
-			} else if (chr.getPlayerShop() != null) { // mini game
+			} else if (chr.getPlayerShop() != null) { 
+				// mini game
 				PlayerShop shop = chr.getPlayerShop();
 				if (shop != null) {
 					shop.chat(c, reader.readMapleAsciiString());
@@ -419,7 +425,8 @@ public final class PlayerInteractionHandler extends AbstractPacketHandler {
 				InventoryManipulator.addFromDrop(c, ivItem, false);
 				c.announce(PacketCreator.getPlayerShopItemUpdate(shop));
 			}
-		} else if (mode == Action.MERCHANT_MESO.getCode()) {// Hmmmm
+		} else if (mode == Action.MERCHANT_MESO.getCode()) {
+			// Hmmmm
 			/*
 			 * if (!chr.getHiredMerchant().isOwner(chr) || chr.getMerchantMeso()
 			 * < 1) return; int possible = Integer.MAX_VALUE -
