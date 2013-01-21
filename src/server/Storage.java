@@ -44,6 +44,7 @@ import tools.PacketCreator;
  * @author Matze
  */
 public class Storage {
+	
 	private int id;
 	private List<IItem> items;
 	private int meso;
@@ -59,7 +60,7 @@ public class Storage {
 
 	private static Storage create(int id, byte world) {
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO storages (accountid, world, slots, meso) VALUES (?, ?, 4, 0)");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("INSERT INTO `storages` (`accountid`, `world`, `slots`, `meso`) VALUES (?, ?, 4, 0)");
 			ps.setInt(1, id);
 			ps.setByte(2, world);
 			ps.executeUpdate();
@@ -75,7 +76,7 @@ public class Storage {
 		int storeId;
 		try {
 			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT storageid, slots, meso FROM storages WHERE accountid = ? AND world = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT `storageid`, `slots`, `meso` FROM `storages` WHERE `accountid` = ? AND `world` = ?");
 			ps.setInt(1, id);
 			ps.setByte(2, world);
 			ResultSet rs = ps.executeQuery();
@@ -119,7 +120,7 @@ public class Storage {
 	public void saveToDB() {
 		try {
 			Connection con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("UPDATE storages SET slots = ?, meso = ? WHERE storageid = ?");
+			PreparedStatement ps = con.prepareStatement("UPDATE `storages` SET `slots` = ?, `meso` = ? WHERE `storageid` = ?");
 			ps.setInt(1, slots);
 			ps.setInt(2, meso);
 			ps.setInt(3, id);
