@@ -21,23 +21,36 @@
 package server.life;
 
 public enum Element {
-	NEUTRAL, FIRE, ICE, LIGHTING, POISON, HOLY;
+	// TODO: A better name for this class would be ElementEffectiveness
+	NEUTRAL,
+	FIRE, 
+	ICE, 
+	LIGHTING, 
+	POISON, 
+	HOLY;
 
 	public static Element getFromChar(char c) {
 		switch (Character.toUpperCase(c)) {
 			case 'F':
 				return FIRE;
+			
 			case 'I':
 				return ICE;
+			
 			case 'L':
 				return LIGHTING;
+			
 			case 'S':
 				return POISON;
+			
 			case 'H':
 				return HOLY;
+			
 			case 'P':
 				return NEUTRAL;
+
+			default:
+				throw new IllegalArgumentException("Unknown elemAttr character: " + c);
 		}
-		throw new IllegalArgumentException("unknown element char " + c);
 	}
 }

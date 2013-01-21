@@ -21,64 +21,102 @@ import net.IntValueHolder;
 
 public enum Stat implements IntValueHolder {
 
-	SKIN(0x1), FACE(0x2), HAIR(0x4), LEVEL(0x10), JOB(0x20), STR(0x40), DEX(0x80), INT(0x100), LUK(0x200), HP(0x400), MAXHP(0x800), MP(0x1000), MAXMP(0x2000), AVAILABLEAP(0x4000), AVAILABLESP(0x8000), EXP(0x10000), FAME(0x20000), MESO(0x40000), PET(0x180008), GACHAEXP(0x200000);
-	private final int i;
+	SKIN(0x1), 
+	FACE(0x2), 
+	HAIR(0x4), 
+	LEVEL(0x10), 
+	JOB(0x20), 
+	STR(0x40), 
+	DEX(0x80), 
+	INT(0x100), 
+	LUK(0x200), 
+	HP(0x400), 
+	MAXHP(0x800), 
+	MP(0x1000), 
+	MAXMP(0x2000), 
+	AVAILABLEAP(0x4000), 
+	AVAILABLESP(0x8000), 
+	EXP(0x10000), 
+	FAME(0x20000), 
+	MESO(0x40000), 
+	PET(0x180008), 
+	GACHAEXP(0x200000);
+	
+	private final int value;
 
-	private Stat(int i) {
-		this.i = i;
+	private Stat(int value) {
+		this.value = value;
 	}
 
 	@Override
 	public int getValue() {
-		return i;
+		return value;
 	}
 	
 	public String toString() {
 		switch (this) {
-			default:
-				return "Unknown";
 			case SKIN:
 				return "Skin";
+				
 			case FACE:
 				return "Face";
+				
 			case HAIR:
 				return "Hair";
+				
 			case LEVEL:
 				return "Level";
+			
 			case JOB:
 				return "Job";
+			
 			case STR:
 				return "Strength";
+			
 			case DEX:
 				return "Dexterity";
+			
 			case INT:
 				return "Intellect";
+			
 			case LUK:
 				return "Luck";
+			
 			case HP:
 				return "HP";
+			
 			case MAXHP:
 				return "Max HP";
+			
 			case MP:
 				return "MP";
+			
 			case MAXMP:
 				return "Max MP";
+			
 			case AVAILABLEAP:
 				return "Available AP";
+			
 			case AVAILABLESP:
 				return "Available SP";
+			
 			case EXP:
 				return "Experience";
+			
 			case FAME:
 				return "Fame";
+			
 			case MESO:
 				return "Mesos";
+				
+			default:
+				return "Unknown";
 		}
 	}
 
 	public static Stat getByValue(int value) {
 		for (Stat stat : Stat.values()) {
-			if (stat.getValue() == value) {
+			if (stat.value == value) {
 				return stat;
 			}
 		}
@@ -89,14 +127,19 @@ public enum Stat implements IntValueHolder {
 		switch (encoded) {
 			case 64:
 				return STR;
+				
 			case 128:
 				return DEX;
+				
 			case 256:
 				return INT;
+				
 			case 512:
 				return LUK;
+				
+			default:
+				return null;	
 		}
-		return null;
 	}
 
 	public static Stat getByString(String type) {
@@ -138,7 +181,8 @@ public enum Stat implements IntValueHolder {
 			return MESO;
 		} else if (type.equals("PET")) {
 			return PET;
+		} else {
+			return null;
 		}
-		return null;
 	}
 }

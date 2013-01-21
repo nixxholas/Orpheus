@@ -68,7 +68,9 @@ import constants.skills.ThunderBreaker;
 import constants.skills.WhiteKnight;
 import constants.skills.WindArcher;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import provider.MapleData;
 import provider.MapleDataDirectoryEntry;
@@ -117,42 +119,42 @@ public class SkillFactory {
 	}
 
 	public static Skill loadFromData(int id, MapleData data) {
-		Skill ret = new Skill(id);
 		boolean isBuff = false;
+		final Element element;
 		int skillType = MapleDataTool.getInt("skillType", data, -1);
-		String elem = MapleDataTool.getString("elemAttr", data, null);
-		if (elem != null) {
-			ret.element = Element.getFromChar(elem.charAt(0));
+		String elementString = MapleDataTool.getString("elemAttr", data, null);
+		if (elementString != null) {
+			element = Element.getFromChar(elementString.charAt(0));
 		} else {
-			ret.element = Element.NEUTRAL;
+			element = Element.NEUTRAL;
 		}
+		
+		boolean isAction = false;
 		MapleData effect = data.getChildByPath("effect");
 		if (skillType != -1) {
 			if (skillType == 2) {
 				isBuff = true;
 			}
 		} else {
-			MapleData action_ = data.getChildByPath("action");
-			boolean action = false;
-			if (action_ == null) {
+			MapleData actionString = data.getChildByPath("action");
+			if (actionString == null) {
 				if (data.getChildByPath("prepare/action") != null) {
-					action = true;
+					isAction = true;
 				} else {
 					switch (id) {
 						case 5201001:
 						case 5221009:
-							action = true;
+							isAction = true;
 							break;
 					}
 				}
 			} else {
-				action = true;
+				isAction = true;
 			}
-			ret.action = action;
 			MapleData hit = data.getChildByPath("hit");
 			MapleData ball = data.getChildByPath("ball");
 			isBuff = effect != null && hit == null && ball == null;
-			isBuff |= action_ != null && MapleDataTool.getString("0", action_, "").equals("alert2");
+			isBuff |= actionString != null && MapleDataTool.getString("0", actionString, "").equals("alert2");
 			switch (id) {
 				case Hero.RUSH:
 				case Paladin.RUSH:
@@ -179,6 +181,7 @@ public class SkillFactory {
 				case NightWalker.VAMPIRE:
 					isBuff = false;
 					break;
+					
 				case Beginner.RECOVERY:
 				case Beginner.NIMBLE_FEET:
 				case Beginner.MONSTER_RIDER:
@@ -353,16 +356,21 @@ public class SkillFactory {
 					break;
 			}
 		}
+		
+		final List<StatEffect> effects = new ArrayList<StatEffect>();
 		for (MapleData level : data.getChildByPath("level")) {
-			ret.effects.add(StatEffect.loadSkillEffectFromData(level, id, isBuff));
+			effects.add(StatEffect.loadSkillEffectFromData(level, id, isBuff));
 		}
-		ret.animationTime = 0;
+		
+		int animationTime = 0;
 		if (effect != null) {
 			for (MapleData effectEntry : effect) {
-				ret.animationTime += MapleDataTool.getIntConvert("delay", effectEntry, 0);
+				animationTime += MapleDataTool.getIntConvert("delay", effectEntry, 0);
 			}
 		}
-		return ret;
+		
+		Skill result = new Skill(id, element, animationTime, isAction, effects);
+		return result;
 	}
 
 	public static String getSkillName(int skillid) {

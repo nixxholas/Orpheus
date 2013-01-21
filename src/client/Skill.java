@@ -23,19 +23,25 @@ import server.StatEffect;
 import server.life.Element;
 
 public class Skill implements ISkill {
-	public int id;
-	public List<StatEffect> effects = new ArrayList<StatEffect>();
-	public Element element;
-	public int animationTime;
-	public boolean action;
+	private final int skillId;
+	private final Element element;
+	private final int animationTime;
+	private final boolean isAction;
 
-	public Skill(int id) {
-		this.id = id;
+	private final List<StatEffect> effects;
+
+	public Skill(int id, Element element, int animationTime, boolean action, List<StatEffect> effects) {
+		this.skillId = id;
+		this.element = element;
+		this.animationTime = animationTime;
+		this.isAction = action;
+		
+		this.effects = new ArrayList<StatEffect>(effects);
 	}
 
 	@Override
 	public int getId() {
-		return id;
+		return skillId;
 	}
 
 	@Override
@@ -50,7 +56,7 @@ public class Skill implements ISkill {
 
 	@Override
 	public boolean isFourthJob() {
-		return (id / 10000) % 10 == 2;
+		return (skillId / 10000) % 10 == 2;
 	}
 
 	@Override
@@ -65,11 +71,11 @@ public class Skill implements ISkill {
 
 	@Override
 	public boolean isBeginnerSkill() {
-		return id % 10000000 < 10000;
+		return skillId % 10000000 < 10000;
 	}
 
 	@Override
 	public boolean getAction() {
-		return action;
+		return isAction;
 	}
 }
