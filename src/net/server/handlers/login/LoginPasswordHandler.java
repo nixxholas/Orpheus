@@ -20,6 +20,7 @@
  */
 package net.server.handlers.login;
 
+import client.AuthResult;
 import client.AutoRegister;
 import client.GameClient;
 import java.util.Calendar;
@@ -39,7 +40,7 @@ public final class LoginPasswordHandler implements PacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		int loginok = 0;
+		AuthResult loginok = AuthResult.SUCCESS;
 		String login = reader.readMapleAsciiString();
 		String pwd = reader.readMapleAsciiString();
 		c.setAccountName(login);
@@ -54,7 +55,7 @@ public final class LoginPasswordHandler implements PacketHandler {
 		}
 
 		if (c.hasBannedIP() || c.hasBannedMac()) {
-			c.announce(PacketCreator.getLoginFailed(3));
+			c.announce(PacketCreator.getLoginFailed(AuthResult.DELETED_OR_BLOCKED));
 		}
 		Calendar tempban = c.getTempBanCalendar();
 		if (tempban != null) {
@@ -64,15 +65,15 @@ public final class LoginPasswordHandler implements PacketHandler {
 				return;
 			}
 		}
-		if (loginok == 3) {
+		if (loginok.is(AuthResult.DELETED_OR_BLOCKED)) {
 			c.announce(PacketCreator.getPermBan(c.getGReason()));
 			return;
-		} else if (loginok != 0) {
+		} else if (!loginok.is(AuthResult.SUCCESS)) {
 			c.announce(PacketCreator.getLoginFailed(loginok));
 			return;
 		}
 		if (!c.isDeveloper() && Server.getInstance().isDebugging()) {
-			c.announce(PacketCreator.getLoginFailed(7));
+			c.announce(PacketCreator.getLoginFailed(AuthResult.ALREADY_LOGGED_IN));
 		}
 		if (c.finishLogin() == 0) {
 			c.announce(PacketCreator.getAuthSuccess(c));
@@ -85,7 +86,7 @@ public final class LoginPasswordHandler implements PacketHandler {
 				}
 			}, 600000));
 		} else {
-			c.announce(PacketCreator.getLoginFailed(7));
+			c.announce(PacketCreator.getLoginFailed(AuthResult.ALREADY_LOGGED_IN));
 		}
 	}
 }

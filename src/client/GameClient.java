@@ -409,13 +409,13 @@ public class GameClient {
 		return false;
 	}
 
-	public int login(String accountName, String password) {
+	public AuthResult login(String accountName, String password) {
 		loginAttempts++;
 		if (loginAttempts > 4) {
 			getSession().close(true);
 		}
 		
-		int loginok = 5;
+		AuthResult loginok = AuthResult.NOT_REGISTERED;
 		Connection connection = DatabaseConnection.getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -425,7 +425,7 @@ public class GameClient {
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				if (rs.getByte("banned") == 1) {
-					return 3;
+					return AuthResult.DELETED_OR_BLOCKED;
 				}
 				accountId = rs.getInt("id");
 				gmlevel = rs.getInt("gm");
@@ -442,19 +442,19 @@ public class GameClient {
 				rs.close();
 				if (getLoginState() > LOGIN_NOTLOGGEDIN) { // already loggedin
 					loggedIn = false;
-					loginok = 7;
+					loginok = AuthResult.ALREADY_LOGGED_IN;
 				} else if (password.equals(passhash) || checkHash(passhash, "SHA-1", password) || checkHash(passhash, "SHA-512", password + salt)) {
 					if (tos == 0) {
-						loginok = 23;
+						loginok = AuthResult.TERMS_OF_SERVICE;
 					} else {
-						loginok = 0;
+						loginok = AuthResult.SUCCESS;
 					}
 				} else {
 					loggedIn = false;
-					loginok = 4;
+					loginok = AuthResult.INCORRECT_PASSWORD;
 				}
 				
-				if (loginok == 0) {
+				if (loginok.is(AuthResult.SUCCESS)) {
 					// We're going to change the hashing algorithm to SHA-512 with salt, so we can be secure! :3
 					SecureRandom random = new SecureRandom();
 					byte bytes[] = new byte[32]; // 32 bit salt (results may vary. depends on RNG algorithm)
@@ -491,7 +491,7 @@ public class GameClient {
 			}
 		}
 
-		if (loginok == 0) {
+		if (loginok.is(AuthResult.SUCCESS)) {
 			loginAttempts = 0;
 		}
 		return loginok;

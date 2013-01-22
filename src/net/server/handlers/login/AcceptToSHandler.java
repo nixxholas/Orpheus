@@ -20,6 +20,7 @@
  */
 package net.server.handlers.login;
 
+import client.AuthResult;
 import client.GameClient;
 import net.AbstractPacketHandler;
 import tools.PacketCreator;
@@ -47,7 +48,7 @@ public final class AcceptToSHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.getAuthSuccess(c));
 		} else {
 			// shouldn't happen XD
-			c.announce(PacketCreator.getLoginFailed(9));
+			c.announce(PacketCreator.getLoginFailed(AuthResult.SYSTEM_ERROR));
 		}
 	}
 }

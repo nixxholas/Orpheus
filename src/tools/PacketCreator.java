@@ -32,6 +32,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import client.AuthResult;
 import client.BuddylistEntry;
 import client.DojoState;
 import client.IEquip;
@@ -575,10 +577,10 @@ public class PacketCreator {
 	 *            The reason logging in failed.
 	 * @return The login failed packet.
 	 */
-	public static GamePacket getLoginFailed(int reason) {
+	public static GamePacket getLoginFailed(AuthResult reason) {
 		PacketWriter w = new PacketWriter(8);
 		w.writeAsShort(SendOpcode.LOGIN_STATUS.getValue());
-		w.writeInt(reason);
+		w.writeInt(reason.getCode());
 		w.writeAsShort(0);
 		return w.getPacket();
 	}
@@ -612,8 +614,8 @@ public class PacketCreator {
 	 *            The reason logging in failed.
 	 * @return The login failed packet.
 	 */
-	public static GamePacket getAfterLoginError(int reason) {// same as above
-																// o.o
+	public static GamePacket getAfterLoginError(int reason) {
+		// same as above o.o
 		PacketWriter w = new PacketWriter(8);
 		w.writeAsShort(SendOpcode.AFTER_LOGIN_ERROR.getValue());
 		w.writeAsShort(reason);// using other types then stated above = CRASH
