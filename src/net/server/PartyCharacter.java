@@ -27,28 +27,36 @@ import client.GameCharacter;
 
 public class PartyCharacter implements Serializable {
 	private static final long serialVersionUID = -6460122214407438511L;
-	private String name;
+	
 	private int id;
+	private String name;
+	private byte channelId, worldId;
+	private int mapId;
+	private boolean online;
+
+	private Job job;
+	private int jobId;
+	
 	private int level;
-	private byte channel, world;
-	private int jobid;
-	private int mapid;
+	
 	private int doorTown = 999999999;
 	private int doorTarget = 999999999;
 	private Point doorPosition = new Point(0, 0);
-	private boolean online;
-	private Job job;
 
 	public PartyCharacter(GameCharacter character) {
-		this.name = character.getName();
-		this.level = character.getLevel();
-		this.channel = character.getClient().getChannelId();
-		this.world = character.getWorldId();
 		this.id = character.getId();
-		this.jobid = character.getJob().getId();
-		this.mapid = character.getMapId();
+		this.name = character.getName();
+		this.worldId = character.getClient().getWorldId();
+		this.channelId = character.getClient().getChannelId();
+		this.mapId = character.getMapId();
+
 		this.online = true;
+
+		this.jobId = character.getJob().getId();
 		this.job = character.getJob();
+		
+		this.level = character.getLevel();
+		
 		if (character.getDoors().size() > 0) {
 			this.doorTown = character.getDoors().get(0).getTown().getId();
 			this.doorTarget = character.getDoors().get(0).getTarget().getId();
@@ -68,12 +76,12 @@ public class PartyCharacter implements Serializable {
 		return level;
 	}
 
-	public byte getChannel() {
-		return channel;
+	public byte getChannelId() {
+		return channelId;
 	}
 
-	public void setChannel(byte channel) {
-		this.channel = channel;
+	public void setChannelId(byte channel) {
+		this.channelId = channel;
 	}
 
 	public boolean isOnline() {
@@ -85,11 +93,11 @@ public class PartyCharacter implements Serializable {
 	}
 
 	public int getMapId() {
-		return mapid;
+		return mapId;
 	}
 
 	public void setMapId(int mapid) {
-		this.mapid = mapid;
+		this.mapId = mapid;
 	}
 
 	public String getName() {
@@ -101,7 +109,7 @@ public class PartyCharacter implements Serializable {
 	}
 
 	public int getJobId() {
-		return jobid;
+		return jobId;
 	}
 
 	public int getDoorTown() {
@@ -146,7 +154,7 @@ public class PartyCharacter implements Serializable {
 		return true;
 	}
 
-	public byte getWorld() {
-		return world;
+	public byte getWorldId() {
+		return worldId;
 	}
 }

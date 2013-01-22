@@ -93,7 +93,7 @@ public class GMCommands extends EnumeratedCommands {
 						if (victim != null) {
 							String ip = victim.getClient().getSession().getRemoteAddress().toString().split(":")[0];
 							chr.dropMessage(victim.getName() + "'s IP was " + ip + "."); // print the IP just for the banner.
-							serv.broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(6, victim.getName() + " has been banned for " + reason + "."));
+							serv.broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, victim.getName() + " has been banned for " + reason + "."));
 							reason += " (IP: " + ip + ")"; // Add the IP afterward, no need to share that with everyone.
 							victim.ban(reason);
 						} else {
@@ -359,7 +359,7 @@ public class GMCommands extends EnumeratedCommands {
 					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8510000), chr.getPosition());
 					break;
 				case notice:
-					Server.getInstance().broadcastMessage(chr.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + joinStringFrom(sub, 1)));
+					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + joinStringFrom(sub, 1)));
 					break;
 				case saveall:
 					for (Channel chan : Server.getInstance().getAllChannels()) {

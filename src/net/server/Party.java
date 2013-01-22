@@ -30,8 +30,8 @@ public class Party {
 	private List<PartyCharacter> members = new LinkedList<PartyCharacter>();
 	private int id;
 
-	public Party(int id, PartyCharacter chrfor) {
-		this.leader = chrfor;
+	public Party(int id, PartyCharacter leader) {
+		this.leader = leader;
 		this.members.add(this.leader);
 		this.id = id;
 	}
@@ -48,8 +48,8 @@ public class Party {
 		members.remove(member);
 	}
 
-	public void setLeader(PartyCharacter victim) {
-		this.leader = victim;
+	public void setLeader(PartyCharacter newLeader) {
+		this.leader = newLeader;
 	}
 
 	public void updateMember(PartyCharacter member) {
@@ -61,9 +61,9 @@ public class Party {
 	}
 
 	public PartyCharacter getMemberById(int id) {
-		for (PartyCharacter chr : members) {
-			if (chr.getId() == id) {
-				return chr;
+		for (PartyCharacter member : members) {
+			if (member.getId() == id) {
+				return member;
 			}
 		}
 		return null;
@@ -75,10 +75,6 @@ public class Party {
 
 	public int getId() {
 		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public PartyCharacter getLeader() {

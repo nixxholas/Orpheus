@@ -104,7 +104,7 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 							}
 							int partynum = 0;
 							for (PartyCharacter partymem : chr.getParty().getMembers()) {
-								if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId() && partymem.getChannel() == c.getChannelId()) {
+								if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId() && partymem.getChannelId() == c.getChannelId()) {
 									partynum++;
 								}
 							}

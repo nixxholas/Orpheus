@@ -3505,21 +3505,21 @@ public class PacketCreator {
 		}
 		for (PartyCharacter partychar : partymembers) {
 			if (partychar.isOnline()) {
-				w.writeInt(partychar.getChannel() - 1);
+				w.writeInt(partychar.getChannelId() - 1);
 			} else {
 				w.writeInt(-2);
 			}
 		}
 		w.writeInt(party.getLeader().getId());
 		for (PartyCharacter partychar : partymembers) {
-			if (partychar.getChannel() == forchannel) {
+			if (partychar.getChannelId() == forchannel) {
 				w.writeInt(partychar.getMapId());
 			} else {
 				w.writeInt(0);
 			}
 		}
 		for (PartyCharacter partychar : partymembers) {
-			if (partychar.getChannel() == forchannel && !leaving) {
+			if (partychar.getChannelId() == forchannel && !leaving) {
 				w.writeInt(partychar.getDoorTown());
 				w.writeInt(partychar.getDoorTarget());
 				w.writeInt(partychar.getDoorPosition().x);

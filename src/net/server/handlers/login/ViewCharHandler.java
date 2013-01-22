@@ -67,14 +67,14 @@ public final class ViewCharHandler extends AbstractPacketHandler {
 			ps.close();
 			int unk = charsNum + 3 - charsNum % 3;
 			c.announce(PacketCreator.showAllCharacter(charsNum, unk));
-			for (byte w : worlds) {
-				List<GameCharacter> chrsinworld = new ArrayList<GameCharacter>();
+			for (byte worldId : worlds) {
+				List<GameCharacter> characters = new ArrayList<GameCharacter>();
 				for (GameCharacter chr : chars) {
-					if (chr.getWorldId() == w) {
-						chrsinworld.add(chr);
+					if (chr.getWorldId() == worldId) {
+						characters.add(chr);
 					}
 				}
-				c.announce(PacketCreator.showAllCharacterInfo(w, chrsinworld));
+				c.announce(PacketCreator.showAllCharacterInfo(worldId, characters));
 			}
 		} catch (Exception e) {
 		}

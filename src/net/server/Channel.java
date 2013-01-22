@@ -221,7 +221,7 @@ public final class Channel {
 	public List<GameCharacter> getPartyMembers(Party party) {
 		List<GameCharacter> partym = new ArrayList<GameCharacter>(8);
 		for (PartyCharacter partychar : party.getMembers()) {
-			if (partychar.getChannel() == getId()) {
+			if (partychar.getChannelId() == getId()) {
 				GameCharacter chr = getPlayerStorage().getCharacterByName(partychar.getName());
 				if (chr != null) {
 					partym.add(chr);

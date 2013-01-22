@@ -60,12 +60,12 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		final int cid = reader.readInt();
+		final int characterId = reader.readInt();
 		final Server server = Server.getInstance();
-		GameCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(cid);
+		GameCharacter player = c.getWorldServer().getPlayerStorage().getCharacterById(characterId);
 		if (player == null) {
 			try {
-				player = GameCharacter.loadFromDb(cid, c, true);
+				player = GameCharacter.loadFromDb(characterId, c, true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -109,7 +109,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 			c.updateLoginState(GameClient.LOGIN_LOGGEDIN);
 		}
 		cserv.addPlayer(player);
-		List<PlayerBuffValueHolder> buffs = server.getPlayerBuffStorage().getBuffsFromStorage(cid);
+		List<PlayerBuffValueHolder> buffs = server.getPlayerBuffStorage().getBuffsFromStorage(characterId);
 		if (buffs != null) {
 			player.silentGiveBuffs(buffs);
 		}
@@ -207,7 +207,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		player.showNote();
 		if (player.getParty() != null) {
 			PartyCharacter pchar = player.getPartyCharacter();
-			pchar.setChannel(c.getChannelId());
+			pchar.setChannelId(c.getChannelId());
 			pchar.setMapId(player.getMapId());
 			pchar.setOnline(true);
 			world.updateParty(player.getParty().getId(), PartyOperation.LOG_ONOFF, pchar);
@@ -246,10 +246,10 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 			}
 		}
 		if (ServerConstants.GREET_PLAYERS_ON_LOGIN && !player.isGM()) {
-			Server.getInstance().broadcastMessage(player.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " has logged in."));
+			Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " has logged in."));
 		}
 		if (ServerConstants.GREET_GMS_ON_LOGIN && player.isGM()) {
-			Server.getInstance().broadcastMessage(player.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " (" + player.getStaffRank() + ") has logged in."));
+			Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + player.getName() + " (" + player.getStaffRank() + ") has logged in."));
 		}
 	}
 }

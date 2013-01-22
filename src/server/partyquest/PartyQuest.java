@@ -39,11 +39,11 @@ public class PartyQuest {
 	public PartyQuest(Party party) {
 		this.party = party;
 		PartyCharacter leader = party.getLeader();
-		channel = leader.getChannel();
-		world = leader.getWorld();
+		channel = leader.getChannelId();
+		world = leader.getWorldId();
 		int mapid = leader.getMapId();
 		for (PartyCharacter pchr : party.getMembers()) {
-			if (pchr.getChannel() == channel && pchr.getMapId() == mapid) {
+			if (pchr.getChannelId() == channel && pchr.getMapId() == mapid) {
 				GameCharacter chr = Server.getInstance().getWorld(world).getChannel(channel).getPlayerStorage().getCharacterById(pchr.getId());
 				if (chr != null)
 					this.participants.add(chr);

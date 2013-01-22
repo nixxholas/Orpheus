@@ -297,13 +297,16 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void maxMastery() {
-		for (MapleData skill_ : MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/" + "String.wz")).getData("Skill.img").getChildren()) {
+		// TODO: Uh... do we not cache this?
+		for (MapleData skillData : MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/" + "String.wz")).getData("Skill.img").getChildren()) {
             try {
-                ISkill skill = SkillFactory.getSkill(Integer.parseInt(skill_.getName()));
+                ISkill skill = SkillFactory.getSkill(Integer.parseInt(skillData.getName()));
                 getPlayer().changeSkillLevel(skill, (byte) skill.getMaxLevel(), skill.getMaxLevel(), -1);
             } catch (NumberFormatException nfe) {
+            	// TODO: Dude. C'mon.
                 break;
             } catch (NullPointerException npe) {
+            	// TODO: Really? REALLY?
                 continue;
             }
         }

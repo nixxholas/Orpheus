@@ -3151,7 +3151,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (party != null) {
 			byte channel = client.getChannelId();
 			for (PartyCharacter partychar : party.getMembers()) {
-				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
+				if (partychar.getMapId() == getMapId() && partychar.getChannelId() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(worldId).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
 						client.announce(PacketCreator.updatePartyMemberHP(other.getId(), other.getHp(), other.getCurrentMaxHp()));
@@ -4343,7 +4343,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (party != null) {
 			byte channel = client.getChannelId();
 			for (PartyCharacter partychar : party.getMembers()) {
-				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
+				if (partychar.getMapId() == getMapId() && partychar.getChannelId() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(worldId).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
 					if (other != null) {
 						other.client.announce(PacketCreator.updatePartyMemberHP(getId(), this.hp, maxhp));
