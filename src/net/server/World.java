@@ -402,16 +402,17 @@ public class World {
 		removeMessengerPlayer(messenger, position);
 	}
 
-	public void messengerInvite(String senderName, int messengerId, String target, byte sourceChannelId) {
-		if (isConnected(target)) {
-			Messenger messenger = getPlayerStorage().getCharacterByName(target).getMessenger();
-			if (messenger == null) {
-				getPlayerStorage().getCharacterByName(target).getClient().getSession().write(PacketCreator.messengerInvite(senderName, messengerId));
+	public void messengerInvite(String senderName, int messengerId, String targetName, byte sourceChannelId) {
+		if (isConnected(targetName)) {
+			final GameCharacter target = getPlayerStorage().getCharacterByName(targetName);
+			MessengerState state = target.getMessengerState();
+			if (!state.isActive()) {
+				target.getClient().getSession().write(PacketCreator.messengerInvite(senderName, messengerId));
 				GameCharacter from = getChannel(sourceChannelId).getPlayerStorage().getCharacterByName(senderName);
-				from.getClient().getSession().write(PacketCreator.messengerNote(target, 4, 1));
+				from.getClient().getSession().write(PacketCreator.messengerNote(targetName, 4, 1));
 			} else {
 				GameCharacter from = getChannel(sourceChannelId).getPlayerStorage().getCharacterByName(senderName);
-				from.getClient().getSession().write(PacketCreator.messengerChat(senderName + " : " + target + " is already using Maple Messenger"));
+				from.getClient().getSession().write(PacketCreator.messengerChat(senderName + " : " + targetName + " is already using Maple Messenger"));
 			}
 		}
 	}
@@ -443,10 +444,11 @@ public class World {
 		}
 	}
 
-	public void messengerChat(Messenger messenger, String message, String senderName) {
-		for (MessengerCharacter messengerchar : messenger.getMembers()) {
-			if (!(messengerchar.getName().equals(senderName))) {
-				GameCharacter chr = getPlayerStorage().getCharacterByName(messengerchar.getName());
+	public void messengerChat(int messengerId, String message, String senderName) {
+		final Messenger messenger = getMessenger(messengerId);
+		for (MessengerCharacter member : messenger.getMembers()) {
+			if (!(member.getName().equals(senderName))) {
+				GameCharacter chr = getPlayerStorage().getCharacterByName(member.getName());
 				if (chr != null) {
 					chr.getClient().getSession().write(PacketCreator.messengerChat(message));
 				}
@@ -457,7 +459,7 @@ public class World {
 	public void declineChat(String targetName, String senderName) {
 		if (isConnected(targetName)) {
 			GameCharacter character = getPlayerStorage().getCharacterByName(targetName);
-			if (character != null && character.getMessenger() != null) {
+			if (character != null && character.getMessengerState() != null) {
 				character.getClient().getSession().write(PacketCreator.messengerNote(senderName, 5, 0));
 			}
 		}

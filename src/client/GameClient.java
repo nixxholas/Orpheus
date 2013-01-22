@@ -42,6 +42,7 @@ import javax.script.ScriptEngine;
 import net.GamePacket;
 import tools.DatabaseConnection;
 import net.server.Channel;
+import net.server.MessengerState;
 import net.server.Server;
 import net.server.MessengerCharacter;
 import net.server.PartyCharacter;
@@ -713,10 +714,11 @@ public class GameClient {
 						Output.print("An error occurred while saving Hired Merchant items.");
 					}
 				}
-				if (player.getMessenger() != null) {
+				final MessengerState state = player.getMessengerState();
+				if (state.isActive()) {
 					MessengerCharacter messengerplayer = new MessengerCharacter(player);
-					worlda.leaveMessenger(player.getMessenger().getId(), messengerplayer);
-					player.setMessenger(null);
+					worlda.leaveMessenger(state.getId(), messengerplayer);
+					state.reset();
 				}
 				NPCScriptManager npcsm = NPCScriptManager.getInstance();
 				if (npcsm != null) {

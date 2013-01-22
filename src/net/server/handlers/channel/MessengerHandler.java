@@ -23,8 +23,10 @@ package net.server.handlers.channel;
 import client.GameCharacter;
 import client.GameClient;
 import net.AbstractPacketHandler;
+import net.GamePacket;
 import net.server.Messenger;
 import net.server.MessengerCharacter;
+import net.server.MessengerState;
 import net.server.World;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -33,78 +35,80 @@ public final class MessengerHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		String input;
 		byte mode = reader.readByte();
 		GameCharacter player = c.getPlayer();
 		World world = c.getWorldServer();
-		Messenger messenger = player.getMessenger();
+		MessengerState state = player.getMessengerState();
 		switch (mode) {
 			case 0x00:
-				if (messenger == null) {
-					int messengerid = reader.readInt();
-					if (messengerid == 0) {
-						MessengerCharacter messengerplayer = new MessengerCharacter(player);
-						messenger = world.createMessenger(messengerplayer);
-						player.setMessenger(messenger);
-						player.setMessengerPosition(0);
+				if (!state.isActive()) {
+					int messengerId = reader.readInt();
+					if (messengerId == 0) {
+						MessengerCharacter member = new MessengerCharacter(player);
+						final Messenger messenger = world.createMessenger(member);
+						state.accept(messenger, 0);
 					} else {
-						messenger = world.getMessenger(messengerid);
+						final Messenger messenger = world.getMessenger(messengerId);
 						int position = messenger.getLowestPosition();
-						MessengerCharacter messengerplayer = new MessengerCharacter(player, position);
+						MessengerCharacter member = new MessengerCharacter(player, position);
 						if (messenger.getMembers().size() < 3) {
-							player.setMessenger(messenger);
-							player.setMessengerPosition(position);
-							world.joinMessenger(messenger.getId(), messengerplayer, player.getName(), messengerplayer.getChannel());
+							state.accept(messenger, position);
+							world.joinMessenger(messenger.getId(), member, player.getName(), member.getChannel());
 						}
 					}
 				}
 				break;
+				
 			case 0x02:
-				if (messenger != null) {
-					MessengerCharacter messengerplayer = new MessengerCharacter(player);
-					world.leaveMessenger(messenger.getId(), messengerplayer);
-					player.setMessenger(null);
-					player.setMessengerPosition(4);
+				if (state.isActive()) {
+					MessengerCharacter member = new MessengerCharacter(player);
+					world.leaveMessenger(state.getId(), member);
+					state.reset();
 				}
 				break;
+				
 			case 0x03:
-				if (messenger.getMembers().size() < 3) {
-					input = reader.readMapleAsciiString();
-					GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(input);
-					if (target != null) {
-						if (target.getMessenger() == null) {
-							target.getClient().announce(PacketCreator.messengerInvite(c.getPlayer().getName(), messenger.getId()));
-							c.announce(PacketCreator.messengerNote(input, 4, 1));
+				if (state.isActive()) {
+					if (state.hasCapacity()) {
+						String input = reader.readMapleAsciiString();
+						GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(input);
+						if (target != null) {
+							if (!target.getMessengerState().isActive()) {
+								final GamePacket invite = PacketCreator.messengerInvite(c.getPlayer().getName(), state.getId());
+								target.getClient().announce(invite);
+								c.announce(PacketCreator.messengerNote(input, 4, 1));
+							} else {
+								c.announce(PacketCreator.messengerChat(player.getName() + " : " + input + " is already using Maple Messenger"));
+							}
 						} else {
-							c.announce(PacketCreator.messengerChat(player.getName() + " : " + input + " is already using Maple Messenger"));
+							if (world.find(input) > -1) {
+								world.messengerInvite(c.getPlayer().getName(), state.getId(), input, c.getChannel());
+							} else {
+								c.announce(PacketCreator.messengerNote(input, 4, 0));
+							}
 						}
 					} else {
-						if (world.find(input) > -1) {
-							world.messengerInvite(c.getPlayer().getName(), messenger.getId(), input, c.getChannel());
-						} else {
-							c.announce(PacketCreator.messengerNote(input, 4, 0));
-						}
+						c.announce(PacketCreator.messengerChat(player.getName() + " : You cannot have more than 3 people in the Maple Messenger"));
 					}
-				} else {
-					c.announce(PacketCreator.messengerChat(player.getName() + " : You cannot have more than 3 people in the Maple Messenger"));
 				}
 				break;
+				
 			case 0x05:
 				String targeted = reader.readMapleAsciiString();
 				GameCharacter target = c.getChannelServer().getPlayerStorage().getCharacterByName(targeted);
 				if (target != null) {
-					if (target.getMessenger() != null) {
+					if (target.getMessengerState().isActive()) {
 						target.getClient().announce(PacketCreator.messengerNote(player.getName(), 5, 0));
 					}
 				} else {
 					world.declineChat(targeted, player.getName());
 				}
 				break;
+				
 			case 0x06:
-				if (messenger != null) {
-					MessengerCharacter messengerplayer = new MessengerCharacter(player);
-					input = reader.readMapleAsciiString();
-					world.messengerChat(messenger, input, messengerplayer.getName());
+				if (state.isActive()) {
+					String input = reader.readMapleAsciiString();
+					world.messengerChat(state.getId(), input, player.getName());
 				}
 				break;
 		}

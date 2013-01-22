@@ -47,6 +47,7 @@ import net.GamePacket;
 import net.server.Channel;
 import net.server.Messenger;
 import net.server.MessengerCharacter;
+import net.server.MessengerState;
 import net.server.Party;
 import net.server.PartyCharacter;
 import net.server.PartyOperation;
@@ -140,7 +141,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int chair;
 	private int itemEffect;
 	private int guildId, guildRank, allianceRank;
-	private int messengerPosition = 4;
+	private MessengerState messengerState = new MessengerState();
 	private int slots = 0;
 	private int energybar;
 	private int rebirths;
@@ -175,14 +176,13 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private HiredMerchant hiredMerchant = null;
 	private GameClient client;
 	private GuildCharacter guildCharacter = null;
+	private Party party;
 	private PartyCharacter partyCharacter = null;
 	private Inventory[] inventory;
 	private Job job = Job.BEGINNER;
 	private GameMap map; // Make a Dojo pq instance
-	private Messenger messenger = null;
 	private Minigame activeMinigame;
 	private Mount mount;
-	private Party party;
 	private Pet[] pets = new Pet[3];
 	private PlayerShop playerShop = null;
 	private Shop shop = null;
@@ -220,15 +220,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private static String[] ariantRoomLeader = new String[3];
 	private static int[] ariantRoomSlot = new int[3];
 	private CashShop cashshop;
-	private long portaldelay = 0, lastcombo = 0;
-	private short combocounter = 0;
+	private long portaldelay = 0, lastCombo = 0;
+	private short comboCount = 0;
 	private List<String> blockedPortals = new ArrayList<String>();
 	public ArrayList<String> area_data = new ArrayList<String>();
 	private AutobanManager autoban;
 	private MapleStockPortfolio stockPortfolio;
 	private boolean isbanned = false;
 	private ScheduledFuture<?> pendantSchedule = null; // 1122017
-	private byte pendantExp = 0, lastmobcount = 0;
+	private byte pendantExp = 0, lastMobCount = 0;
 	private TeleportRockInfo teleportRocks = new TeleportRockInfo();
 	private Map<String, MapleEvents> events = new LinkedHashMap<String, MapleEvents>();
 	private PartyQuest partyQuest = null;
@@ -514,9 +514,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public int calculateMaxBaseDamage(int watk) {
-		int maxbasedamage;
+		int maxBaseDamage;
 		if (watk == 0) {
-			maxbasedamage = 1;
+			maxBaseDamage = 1;
 		} else {
 			IItem weapon_item = getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
 			if (weapon_item != null) {
@@ -533,12 +533,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					mainstat = localStr;
 					secondarystat = localDex;
 				}
-				maxbasedamage = (int) (((weapon.getMaxDamageMultiplier() * mainstat + secondarystat) / 100.0) * watk) + 10;
+				maxBaseDamage = (int) (((weapon.getMaxDamageMultiplier() * mainstat + secondarystat) / 100.0) * watk) + 10;
 			} else {
-				maxbasedamage = 0;
+				maxBaseDamage = 0;
 			}
 		}
-		return maxbasedamage;
+		return maxBaseDamage;
 	}
 
 	public void cancelAllBuffs(boolean disconnect) {
@@ -558,40 +558,40 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void setCombo(short count) {
-		if (combocounter > 30000) {
-			combocounter = 30000;
-			return;
+		if (this.comboCount > 30000) {
+			this.comboCount = 30000;
 		} else {
-			combocounter = count;
+			// only announce the combo if it actually changed to the new value.
+			this.comboCount = count;
+			announce(PacketCreator.showCombo(comboCount));
 		}
-		announce(PacketCreator.showCombo(combocounter));
 	}
 
 	public void setLastCombo(long time) {
-		;
-		lastcombo = time;
+		this.lastCombo = time;
 	}
 
 	public short getCombo() {
-		return combocounter;
+		return this.comboCount;
 	}
 
 	public long getLastCombo() {
-		return lastcombo;
+		return this.lastCombo;
 	}
 
-	public int getLastMobCount() { // Used for skills that have mobCount at 1.
-									// (a/b)
-		return lastmobcount;
+	public int getLastMobCount() { 
+		// Used for skills that have mobCount at 1. (a/b)
+		return this.lastMobCount;
 	}
 
 	public void setLastMobCount(byte count) {
-		lastmobcount = count;
+		this.lastMobCount = count;
 	}
 
 	public void newClient(GameClient c) {
-		c.setAccountName(this.client.getAccountName());// No null's for
-														// accountName
+		// No nulls for accountName
+		c.setAccountName(this.client.getAccountName());
+
 		this.client = c;
 		Portal portal = map.findClosestSpawnpoint(getPosition());
 		if (portal == null) {
@@ -607,6 +607,35 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			mbsvh.schedule.cancel(false);
 		}
 		this.effects.clear();
+	}
+
+	private final class ChangeMapAction implements Runnable {
+		private final Point pos;
+		private final GameMap to;
+
+		private ChangeMapAction(Point pos, GameMap to) {
+			this.pos = pos;
+			this.to = to;
+		}
+
+		@Override
+		public void run() {
+			map.removePlayer(GameCharacter.this);
+			if (client.getChannelServer().getPlayerStorage().getCharacterById(getId()) != null) {
+				map = to;
+				setPosition(pos);
+				map.addPlayer(GameCharacter.this);
+				if (party != null) {
+					partyCharacter.setMapId(to.getId());
+					silentPartyUpdate();
+					client.announce(PacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
+					updatePartyMemberHP();
+				}
+				if (getMap().getHpDecrease() > 0) {
+					hpDecreaseTask = TimerManager.getInstance().schedule(new HpDecreaseAction(), 10000);
+				}
+			}
+		}
 	}
 
 	private final class ItemExpirationAction implements Runnable {
@@ -987,33 +1016,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	private void changeMapInternal(final GameMap to, final Point pos, GamePacket warpPacket) {
-		warpPacket.setOnSend(new Runnable() {
-
-			@Override
-			public void run() {
-				map.removePlayer(GameCharacter.this);
-				if (client.getChannelServer().getPlayerStorage().getCharacterById(getId()) != null) {
-					map = to;
-					setPosition(pos);
-					map.addPlayer(GameCharacter.this);
-					if (party != null) {
-						partyCharacter.setMapId(to.getId());
-						silentPartyUpdate();
-						client.announce(PacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
-						updatePartyMemberHP();
-					}
-					if (getMap().getHpDecrease() > 0) {
-						hpDecreaseTask = TimerManager.getInstance().schedule(new Runnable() {
-
-							@Override
-							public void run() {
-								doHurtHp();
-							}
-						}, 10000);
-					}
-				}
-			}
-		});
+		warpPacket.setOnSend(new ChangeMapAction(pos, to));
 		client.announce(warpPacket);
 	}
 
@@ -1061,10 +1064,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void checkMessenger() {
-		if (messenger != null && messengerPosition < 4 && messengerPosition > -1) {
-			World worldz = Server.getInstance().getWorld(worldId);
-			worldz.silentJoinMessenger(messenger.getId(), new MessengerCharacter(this, messengerPosition), messengerPosition);
-			worldz.updateMessenger(getMessenger().getId(), name, client.getChannel());
+		if (this.messengerState.isActive()) {
+			World world = Server.getInstance().getWorld(worldId);
+			int messengerId = messengerState.getId();
+			int position = messengerState.getPosition();
+			world.silentJoinMessenger(messengerId, new MessengerCharacter(this, position), position);
+			world.updateMessenger(messengerId, name, client.getChannel());
 		}
 	}
 
@@ -1371,16 +1376,15 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 		enforceMaxHpMp();
 		// saveToDB(true);
-		if (getMessenger() != null) {
-			Server.getInstance().getWorld(worldId).updateMessenger(getMessenger(), getName(), getWorldId(), client.getChannel());
+		if (messengerState.isActive()) {
+			final int messengerId = messengerState.getId();
+			Server.getInstance().getWorld(worldId).updateMessenger(messengerId, getName(), client.getChannel());
 		}
 	}
 
 	public void cancelExpirationTask() {
-		if (expirationSchedule != null) {
-			expirationSchedule.cancel(false);
-			expirationSchedule = null;
-		}
+		TimerManager.cancelSafely(this.expirationSchedule, false);
+		this.expirationSchedule = null;
 	}
 
 	public void expirationTask() {
@@ -1903,12 +1907,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return mesosTraded;
 	}
 
-	public Messenger getMessenger() {
-		return messenger;
-	}
-	
-	public int getMessengerPosition() {
-		return messengerPosition;
+	public MessengerState getMessengerState() {
+		return messengerState;
 	}
 
 	public GuildCharacter getGuildCharacter() {
@@ -2689,8 +2689,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					character.initialSpawnPoint = 0;
 				}
 				character.setPosition(portal.getPosition());
-				int partyid = rs.getInt("party");
-				Party party = Server.getInstance().getWorld(character.worldId).getParty(partyid);
+				int partyId = rs.getInt("party");
+				Party party = Server.getInstance().getWorld(character.worldId).getParty(partyId);
 				if (party != null) {
 					character.partyCharacter = party.getMemberById(character.id);
 					if (character.partyCharacter != null) {
@@ -2698,13 +2698,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					}
 				}
 				
-				int messengerid = rs.getInt("messengerid");
+				int messengerId = rs.getInt("messengerid");
 				int position = rs.getInt("messengerposition");
-				if (messengerid > 0 && position < 4 && position > -1) {
-					Messenger messenger = Server.getInstance().getWorld(character.worldId).getMessenger(messengerid);
+				if (messengerId > 0 && 0 <= position && position < 4) {
+					Messenger messenger = Server.getInstance().getWorld(character.worldId).getMessenger(messengerId);
 					if (messenger != null) {
-						character.messenger = messenger;
-						character.messengerPosition = position;
+						character.messengerState.accept(messenger, position);
 					}
 				}
 			}
@@ -3495,9 +3494,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				ps.setInt(26, -1);
 			}
 			ps.setInt(27, buddylist.getCapacity());
-			if (messenger != null) {
-				ps.setInt(28, messenger.getId());
-				ps.setInt(29, messengerPosition);
+			if (messengerState.isActive()) {
+				ps.setInt(28, messengerState.getId());
+				ps.setInt(29, messengerState.getPosition());
 			} else {
 				ps.setInt(28, 0);
 				ps.setInt(29, 4);
@@ -4064,14 +4063,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 		this.maxmp = mp;
 		recalcLocalStats();
-	}
-
-	public void setMessenger(Messenger messenger) {
-		this.messenger = messenger;
-	}
-
-	public void setMessengerPosition(int position) {
-		this.messengerPosition = position;
 	}
 
 	public void setActiveMinigame(Minigame miniGame) {
