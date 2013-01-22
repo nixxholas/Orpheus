@@ -130,7 +130,7 @@ public class GameClient {
 	public List<GameCharacter> loadCharacters(int serverId) {
 		List<GameCharacter> chars = new ArrayList<GameCharacter>(15);
 		try {
-			for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
+			for (SimpleCharacterInfo cni : loadCharactersInternal(serverId)) {
 				chars.add(GameCharacter.loadFromDb(cni.id, this, false));
 			}
 		} catch (Exception e) {
@@ -140,7 +140,7 @@ public class GameClient {
 
 	public List<String> loadCharacterNames(int serverId) {
 		List<String> chars = new ArrayList<String>(15);
-		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
+		for (SimpleCharacterInfo cni : loadCharactersInternal(serverId)) {
 			chars.add(cni.name);
 		}
 		return chars;
@@ -149,7 +149,7 @@ public class GameClient {
 	public String getFormattedCharacterList(int serverId) {
 		StringBuilder sb = new StringBuilder();
 		int n = 0;
-		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
+		for (SimpleCharacterInfo cni : loadCharactersInternal(serverId)) {
 			sb.append("#L").append(n).append("#").append(cni.name).append("#l\r\n");
 			n++;
 		}
@@ -158,7 +158,7 @@ public class GameClient {
 	
 	public String getCharacterName(int n, int serverId) {
 		int k = 0;
-		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
+		for (SimpleCharacterInfo cni : loadCharactersInternal(serverId)) {
 			if (k == n) {
 				return cni.name;
 			}
@@ -169,7 +169,7 @@ public class GameClient {
 	
 	public int getCharacterId(int n, int serverId) {
 		int k = 0;
-		for (CharacterNameAndId cni : loadCharactersInternal(serverId)) {
+		for (SimpleCharacterInfo cni : loadCharactersInternal(serverId)) {
 			if (k == n) {
 				return cni.id;
 			}
@@ -182,15 +182,15 @@ public class GameClient {
 		return (GameCharacter.getGuildIdById(cid) != 0);
 	}
 	
-	private List<CharacterNameAndId> loadCharactersInternal(int serverId) {
+	private List<SimpleCharacterInfo> loadCharactersInternal(int serverId) {
 		final Connection connection = DatabaseConnection.getConnection();
 
-		List<CharacterNameAndId> chars = new ArrayList<CharacterNameAndId>(15);
+		List<SimpleCharacterInfo> chars = new ArrayList<SimpleCharacterInfo>(15);
 		try (PreparedStatement ps = getSelectCharacters(connection, serverId);
 				ResultSet rs = ps.executeQuery();) {
 			
 			while (rs.next()) {
-				chars.add(new CharacterNameAndId(rs.getInt("id"), rs.getString("name")));
+				chars.add(new SimpleCharacterInfo(rs.getInt("id"), rs.getString("name")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

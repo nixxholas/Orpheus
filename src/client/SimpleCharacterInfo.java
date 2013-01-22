@@ -17,11 +17,11 @@
  */
 package client;
 
-public class CharacterNameAndId {
+public class SimpleCharacterInfo {
 	public final int id;
 	public final String name;
 
-	public CharacterNameAndId(int id, String name) {
+	public SimpleCharacterInfo(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
