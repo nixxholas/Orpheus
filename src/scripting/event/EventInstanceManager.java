@@ -218,7 +218,7 @@ public class EventInstanceManager {
 			ps.setString(1, em.getName());
 			ps.setString(2, getName());
 			ps.setInt(3, chr.getId());
-			ps.setInt(4, chr.getClient().getChannel());
+			ps.setInt(4, chr.getClient().getChannelId());
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException ex) {

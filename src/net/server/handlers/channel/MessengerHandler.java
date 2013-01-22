@@ -82,7 +82,7 @@ public final class MessengerHandler extends AbstractPacketHandler {
 							}
 						} else {
 							if (world.find(input) > -1) {
-								world.messengerInvite(c.getPlayer().getName(), state.getId(), input, c.getChannel());
+								world.messengerInvite(c.getPlayer().getName(), state.getId(), input, c.getChannelId());
 							} else {
 								c.announce(PacketCreator.messengerNote(input, 4, 0));
 							}

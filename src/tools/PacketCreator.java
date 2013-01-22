@@ -965,7 +965,7 @@ public class PacketCreator {
 	public static GamePacket getCharInfo(GameCharacter chr) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.WARP_TO_MAP.getValue());
-		w.writeInt(chr.getClient().getChannel() - 1);
+		w.writeInt(chr.getClient().getChannelId() - 1);
 		w.writeAsByte(1);
 		w.writeAsByte(1);
 		w.writeAsShort(0);
@@ -1059,7 +1059,7 @@ public class PacketCreator {
 	public static GamePacket getWarpToMap(GameMap to, int spawnPoint, GameCharacter chr) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.WARP_TO_MAP.getValue());
-		w.writeInt(chr.getClient().getChannel() - 1);
+		w.writeInt(chr.getClient().getChannelId() - 1);
 		w.writeInt(0);// updated
 		w.writeAsByte(0);// updated
 		w.writeInt(to.getId());
@@ -3557,18 +3557,21 @@ public class PacketCreator {
 					addPartyStatus(w, forChannel, party, false);
 				}
 				break;
+				
 			case JOIN:
 				w.writeAsByte(0xF);
 				w.writeInt(40546);
 				w.writeLengthString(target.getName());
 				addPartyStatus(w, forChannel, party, false);
 				break;
+				
 			case SILENT_UPDATE:
 			case LOG_ONOFF:
 				w.writeAsByte(0x7);
 				w.writeInt(party.getId());
 				addPartyStatus(w, forChannel, party, false);
 				break;
+				
 			case CHANGE_LEADER:
 				w.writeAsByte(0x1B);
 				w.writeInt(target.getId());
@@ -5091,7 +5094,7 @@ public class PacketCreator {
 				final boolean isFull = hm.getFreeSlot() == -1;
 				w.writeAsByte(isFull);
 				GameCharacter chr = c.getChannelServer().getPlayerStorage().getCharacterById(hm.getOwnerId());
-				if ((chr != null) && (c.getChannel() == hm.getChannel())) {
+				if ((chr != null) && (c.getChannelId() == hm.getChannel())) {
 					w.writeAsByte(1);
 				} else {
 					w.writeAsByte(2);

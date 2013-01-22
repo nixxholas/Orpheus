@@ -40,7 +40,7 @@ public class RemoteStoreHandler extends AbstractPacketHandler {
 		GameCharacter chr = c.getPlayer();
 		HiredMerchant hm = getMerchant(c);
 		if (chr.hasMerchant() && hm != null) {
-			if (hm.getChannel() == chr.getClient().getChannel()) {
+			if (hm.getChannel() == chr.getClient().getChannelId()) {
 				hm.setOpen(false);
 				hm.removeAllVisitors("");
 				chr.setHiredMerchant(hm);
@@ -57,7 +57,7 @@ public class RemoteStoreHandler extends AbstractPacketHandler {
 
 	public HiredMerchant getMerchant(GameClient c) {
 		if (c.getPlayer().hasMerchant()) {
-			for (Channel cserv : Server.getInstance().getChannelsFromWorld(c.getWorld())) {
+			for (Channel cserv : Server.getInstance().getChannelsFromWorld(c.getWorldId())) {
 				if (cserv.getHiredMerchants().get(c.getPlayer().getId()) != null) {
 					return cserv.getHiredMerchants().get(c.getPlayer().getId());
 				}

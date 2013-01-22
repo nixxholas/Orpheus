@@ -303,7 +303,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 					
 				case 2: 
 					// Super megaphone
-					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(3, c.getChannel(), medal + player.getName() + " : " + reader.readMapleAsciiString(), (reader.readByte() != 0)));
+					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(3, c.getChannelId(), medal + player.getName() + " : " + reader.readMapleAsciiString(), (reader.readByte() != 0)));
 					break;
 					
 				case 5: 
@@ -337,10 +337,10 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 					}
 					reader.readInt();
 					if (megassenger) {
-						Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(3, c.getChannel(), medal + player.getName() + " : " + builder.toString(), ear));
+						Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(3, c.getChannelId(), medal + player.getName() + " : " + builder.toString(), ear));
 					}
 					if (!TVEffect.isActive()) {
-						new TVEffect(player, victim, messages, tvType, c.getWorld());
+						new TVEffect(player, victim, messages, tvType, c.getWorldId());
 						remove(c, itemId);
 					} else {
 						player.dropMessage(1, "MapleTV is already in use.");
@@ -369,7 +369,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 							return;
 						}
 					}
-					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.itemMegaphone(msg, whisper, c.getChannel(), item));
+					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.itemMegaphone(msg, whisper, c.getChannelId(), item));
 					break;
 					
 				case 7: 
@@ -385,7 +385,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 						msg2[i] = medal + c.getPlayer().getName() + " : " + reader.readMapleAsciiString();
 					}
 					whisper = reader.readByte() == 1;
-					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.getMultiMegaphone(msg2, c.getChannel(), whisper));
+					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.getMultiMegaphone(msg2, c.getChannelId(), whisper));
 					break;
 			}
 			remove(c, itemId);
@@ -518,7 +518,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			for (int i = 0; i < 4; i++) {
 				lines.add(reader.readMapleAsciiString());
 			}
-			Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.getAvatarMega(c.getPlayer(), medal, c.getChannel(), itemId, lines, (reader.readByte() != 0)));
+			Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.getAvatarMega(c.getPlayer(), medal, c.getChannelId(), itemId, lines, (reader.readByte() != 0)));
 			remove(c, itemId);
 		} else if (itemType == 545) { 
 			// MiuMiu's travel store

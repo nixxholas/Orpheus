@@ -35,7 +35,7 @@ public final class PickCharHandler extends AbstractPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		int charId = reader.readInt();
 		byte world = (byte) reader.readInt();// Wuuu? ):
-		c.setWorld(world);
+		c.setWorldId(world);
 		String macs = reader.readMapleAsciiString();
 		c.updateMacs(macs);
 		if (c.hasBannedMac()) {
@@ -43,21 +43,21 @@ public final class PickCharHandler extends AbstractPacketHandler {
 			return;
 		}
 		try {
-			c.setChannel((byte) Randomizer.nextInt(Server.getInstance().getLoad(world).size()));
+			c.setChannelId((byte) Randomizer.nextInt(Server.getInstance().getLoad(world).size()));
 		} catch (Exception e) {
-			c.setChannel((byte) 1);
+			c.setChannelId((byte) 1);
 		}
 		try {
 			if (c.getIdleTask() != null) {
 				c.getIdleTask().cancel(true);
 			}
 			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
-			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
+			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannelId());
 			if (channelServerIP.equals("0.0.0.0")) {
-				String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
+				String[] socket = Server.getInstance().getIP(c.getWorldId(), c.getChannelId()).split(":");
 				c.announce(PacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
 			} else {
-				c.announce(PacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":")[1]), charId));
+				c.announce(PacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(Server.getInstance().getIP(c.getWorldId(), c.getChannelId()).split(":")[1]), charId));
 			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

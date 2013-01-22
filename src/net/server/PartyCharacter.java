@@ -42,7 +42,7 @@ public class PartyCharacter implements Serializable {
 	public PartyCharacter(GameCharacter character) {
 		this.name = character.getName();
 		this.level = character.getLevel();
-		this.channel = character.getClient().getChannel();
+		this.channel = character.getClient().getChannelId();
 		this.world = character.getWorldId();
 		this.id = character.getId();
 		this.jobid = character.getJob().getId();

@@ -101,7 +101,7 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 					byte channel;
 					GameCharacter otherChar = c.getChannelServer().getPlayerStorage().getCharacterByName(addName);
 					if (otherChar != null) {
-						channel = c.getChannel();
+						channel = c.getChannelId();
 						charWithId = new CharacterIdNameBuddyCapacity(otherChar.getId(), otherChar.getName(), otherChar.getBuddylist().getCapacity());
 					} else {
 						channel = world.find(addName);
@@ -110,7 +110,7 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 					if (charWithId != null) {
 						BuddyAddResult buddyAddResult = null;
 						if (channel != -1) {
-							buddyAddResult = world.requestBuddyAdd(addName, c.getChannel(), player.getId(), player.getName());
+							buddyAddResult = world.requestBuddyAdd(addName, c.getChannelId(), player.getId(), player.getName());
 						} else {
 							Connection con = DatabaseConnection.getConnection();
 							try(PreparedStatement ps = getSelectPendingBuddyCount(con, charWithId);
@@ -229,7 +229,7 @@ public class BuddylistModifyHandler extends AbstractPacketHandler {
 	private void notifyRemoteChannel(GameClient c, int remoteChannel, int otherCid, BuddyOperation operation) {
 		GameCharacter player = c.getPlayer();
 		if (remoteChannel != -1) {
-			c.getWorldServer().buddyChanged(otherCid, player.getId(), player.getName(), c.getChannel(), operation);
+			c.getWorldServer().buddyChanged(otherCid, player.getId(), player.getName(), c.getChannelId(), operation);
 		}
 	}
 }

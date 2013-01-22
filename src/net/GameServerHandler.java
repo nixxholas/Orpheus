@@ -93,8 +93,8 @@ public class GameServerHandler extends IoHandlerAdapter {
 		AesCrypto sendCypher = new AesCrypto(key, ivSend, (short) (0xFFFF - ServerConstants.VERSION));
 		AesCrypto recvCypher = new AesCrypto(key, ivRecv, (short) ServerConstants.VERSION);
 		GameClient client = new GameClient(sendCypher, recvCypher, session);
-		client.setWorld(world);
-		client.setChannel(channel);
+		client.setWorldId(world);
+		client.setChannelId(channel);
 		session.write(PacketCreator.getHello(ServerConstants.VERSION, ivSend, ivRecv));
 		session.setAttribute(GameClient.CLIENT_KEY, client);
 	}

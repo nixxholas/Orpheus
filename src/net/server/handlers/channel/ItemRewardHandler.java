@@ -70,7 +70,7 @@ public final class ItemRewardHandler extends AbstractPacketHandler {
 					String msg = reward.notice;
 					msg.replaceAll("/name", c.getPlayer().getName());
 					msg.replaceAll("/item", ii.getName(reward.itemId));
-					Server.getInstance().broadcastMessage(c.getWorld(), PacketCreator.serverNotice(6, msg));
+					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, msg));
 				}
 				break;
 			}

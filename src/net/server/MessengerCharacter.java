@@ -30,7 +30,7 @@ public class MessengerCharacter {
 
 	public MessengerCharacter(GameCharacter character) {
 		this.name = character.getName();
-		this.channel = character.getClient().getChannel();
+		this.channel = character.getClient().getChannelId();
 		this.id = character.getId();
 		this.online = true;
 		this.position = 0;
@@ -38,7 +38,7 @@ public class MessengerCharacter {
 
 	public MessengerCharacter(GameCharacter character, int position) {
 		this.name = character.getName();
-		this.channel = character.getClient().getChannel();
+		this.channel = character.getClient().getChannelId();
 		this.id = character.getId();
 		this.online = true;
 		this.position = position;

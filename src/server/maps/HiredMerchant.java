@@ -67,7 +67,7 @@ public class HiredMerchant extends AbstractGameMapObject {
 		this.setPosition(owner.getPosition());
 		this.start = System.currentTimeMillis();
 		this.ownerId = owner.getId();
-		this.channel = owner.getClient().getChannel();
+		this.channel = owner.getClient().getChannelId();
 		this.world = owner.getWorldId();
 		this.itemId = itemId;
 		this.ownerName = owner.getName();

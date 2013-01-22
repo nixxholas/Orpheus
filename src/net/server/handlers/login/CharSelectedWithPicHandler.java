@@ -52,14 +52,14 @@ public class CharSelectedWithPicHandler extends AbstractPacketHandler {
 					c.getIdleTask().cancel(true);
 				}
 				c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
-				String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannel());
+				String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannelId());
 
 				if (channelServerIP.equals("0.0.0.0")) {
-					String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
+					String[] socket = Server.getInstance().getIP(c.getWorldId(), c.getChannelId()).split(":");
 
 					c.announce(PacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
 				} else {
-					String[] socket = Server.getInstance().getIP(c.getWorld(), c.getChannel()).split(":");
+					String[] socket = Server.getInstance().getIP(c.getWorldId(), c.getChannelId()).split(":");
 					c.announce(PacketCreator.getServerIP(InetAddress.getByName(channelServerIP), Integer.parseInt(socket[1]), charId));
 				}
 			} catch (UnknownHostException e) {

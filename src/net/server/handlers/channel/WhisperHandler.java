@@ -58,7 +58,7 @@ public final class WhisperHandler extends AbstractPacketHandler {
 					GameLogger.printFormatted(GameLogger.PARANOIA_CHAT, "[Whisper] [" + c.getPlayer().getName() + " > " + recipient + "] " + text);
 				}
 				if (text.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
-					player.getClient().announce(PacketCreator.getWhisper(c.getPlayer().getName(), c.getChannel(), text));
+					player.getClient().announce(PacketCreator.getWhisper(c.getPlayer().getName(), c.getChannelId(), text));
 					c.announce(PacketCreator.getWhisperReply(recipient, (byte) 1));
 				} else {
 					player.dropMessage("Your message was too long.");
@@ -66,7 +66,7 @@ public final class WhisperHandler extends AbstractPacketHandler {
 			} else {// not found
 				World world = c.getWorldServer();
 				if (world.isConnected(recipient)) {
-					world.whisper(c.getPlayer().getName(), recipient, c.getChannel(), text);
+					world.whisper(c.getPlayer().getName(), recipient, c.getChannelId(), text);
 					c.announce(PacketCreator.getWhisperReply(recipient, (byte) 1));
 				} else {
 					c.announce(PacketCreator.getWhisperReply(recipient, (byte) 0));

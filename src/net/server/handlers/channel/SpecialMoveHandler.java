@@ -97,7 +97,7 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 			Party p = chr.getParty();
 			if (p != null) {
 				for (PartyCharacter mpc : p.getMembers()) {
-					for (Channel cserv : Server.getInstance().getChannelsFromWorld(c.getWorld())) {
+					for (Channel cserv : Server.getInstance().getChannelsFromWorld(c.getWorldId())) {
 						if (cserv.getPlayerStorage().getCharacterById(mpc.getId()) != null) {
 							cserv.getPlayerStorage().getCharacterById(mpc.getId()).removeAllCooldownsExcept(5121010);
 						}

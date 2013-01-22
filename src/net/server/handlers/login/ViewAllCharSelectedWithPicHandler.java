@@ -41,9 +41,9 @@ public class ViewAllCharSelectedWithPicHandler extends AbstractPacketHandler {
 		String pic = reader.readMapleAsciiString();
 		int charId = reader.readInt();
 		byte world = (byte) reader.readInt();// world
-		c.setWorld(world);
+		c.setWorldId(world);
 		byte channel = (byte) Randomizer.rand(0, Server.getInstance().getWorld(world).getChannels().size());
-		c.setChannel(channel);
+		c.setChannelId(channel);
 		String macs = reader.readMapleAsciiString();
 		c.updateMacs(macs);
 

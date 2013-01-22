@@ -77,7 +77,7 @@ public final class PetLootHandler extends AbstractPacketHandler {
 							return;
 						int partynum = 0;
 						for (PartyCharacter partymem : chr.getParty().getMembers()) {
-							if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId() && partymem.getChannel() == c.getChannel()) {
+							if (partymem.isOnline() && partymem.getMapId() == chr.getMap().getId() && partymem.getChannel() == c.getChannelId()) {
 								partynum++;
 							}
 						}

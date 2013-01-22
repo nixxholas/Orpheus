@@ -53,7 +53,7 @@ public final class ChangeChannelHandler extends AbstractPacketHandler {
 			c.announce(PacketCreator.enableActions());
 			return;
 		}
-		String[] socket = Server.getInstance().getIP(c.getWorld(), channel).split(":");
+		String[] socket = Server.getInstance().getIP(c.getWorldId(), channel).split(":");
 		if (chr.getTrade() != null) {
 			Trade.cancelTrade(c.getPlayer());
 		}
@@ -81,7 +81,7 @@ public final class ChangeChannelHandler extends AbstractPacketHandler {
 		chr.getMap().removePlayer(chr);
 		chr.getClient().getChannelServer().removePlayer(chr);
 		chr.saveToDB(true);
-		server.getLoad(c.getWorld()).get(c.getChannel()).decrementAndGet();
+		server.getLoad(c.getWorldId()).get(c.getChannelId()).decrementAndGet();
 		chr.getClient().updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
 		try {
 			c.announce(PacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));

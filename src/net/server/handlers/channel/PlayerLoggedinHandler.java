@@ -83,7 +83,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 
 		synchronized (this) {
 			if (state == GameClient.LOGIN_SERVER_TRANSITION) {
-				for (String charName : c.loadCharacterNames(c.getWorld())) {
+				for (String charName : c.loadCharacterNames(c.getWorldId())) {
 					for (Channel ch : c.getWorldServer().getChannels()) {
 						if (ch.isConnected(charName)) {
 							StringBuilder sb = new StringBuilder();
@@ -155,12 +155,12 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		player.sendKeymap();
 		player.sendMacros();
 		player.getMap().addPlayer(player);
-		World world = server.getWorld(c.getWorld());
+		World world = server.getWorld(c.getWorldId());
 		world.getPlayerStorage().addPlayer(player);
-		server.getLoad(c.getWorld()).get(c.getChannel()).incrementAndGet();
+		server.getLoad(c.getWorldId()).get(c.getChannelId()).incrementAndGet();
 		int buddyIds[] = player.getBuddylist().getBuddyIds();
-		world.loggedOn(player.getName(), player.getId(), c.getChannel(), buddyIds);
-		for (CharacterIdChannelPair onlineBuddy : server.getWorld(c.getWorld()).multiBuddyFind(player.getId(), buddyIds)) {
+		world.loggedOn(player.getName(), player.getId(), c.getChannelId(), buddyIds);
+		for (CharacterIdChannelPair onlineBuddy : server.getWorld(c.getWorldId()).multiBuddyFind(player.getId(), buddyIds)) {
 			BuddylistEntry ble = player.getBuddylist().get(onlineBuddy.getCharacterId());
 			ble.setChannel(onlineBuddy.getChannel());
 			player.getBuddylist().put(ble);
@@ -183,7 +183,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 				player.resetGuildCharacter();
 				player.setGuildId(0);
 			} else {
-				server.setGuildMemberOnline(player.getGuildCharacter(), true, c.getChannel());
+				server.setGuildMemberOnline(player.getGuildCharacter(), true, c.getChannelId());
 				c.announce(PacketCreator.showGuildInfo(player));
 				int allianceId = player.getGuild().getAllianceId();
 				if (allianceId > 0) {
@@ -207,7 +207,7 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		player.showNote();
 		if (player.getParty() != null) {
 			PartyCharacter pchar = player.getPartyCharacter();
-			pchar.setChannel(c.getChannel());
+			pchar.setChannel(c.getChannelId());
 			pchar.setMapId(player.getMapId());
 			pchar.setOnline(true);
 			world.updateParty(player.getParty().getId(), PartyOperation.LOG_ONOFF, pchar);

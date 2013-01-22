@@ -133,7 +133,7 @@ public class World {
 	}
 
 	public void removePlayer(GameCharacter chr) {
-		channels.get(chr.getClient().getChannel() - 1).removePlayer(chr);
+		channels.get(chr.getClient().getChannelId() - 1).removePlayer(chr);
 		players.removePlayer(chr.getId());
 	}
 
@@ -284,7 +284,7 @@ public class World {
 					character.setParty(party);
 					character.setPartyCharacter(member);
 				}
-				character.getClient().getSession().write(PacketCreator.updateParty(character.getClient().getChannel(), party, operation, target));
+				character.getClient().getSession().write(PacketCreator.updateParty(character.getClient().getChannelId(), party, operation, target));
 			}
 		}
 		
@@ -293,7 +293,7 @@ public class World {
 			case EXPEL:
 				GameCharacter character = getPlayerStorage().getCharacterByName(target.getName());
 				if (character != null) {
-					character.getClient().getSession().write(PacketCreator.updateParty(character.getClient().getChannel(), party, operation, target));
+					character.getClient().getSession().write(PacketCreator.updateParty(character.getClient().getChannelId(), party, operation, target));
 					character.setParty(null);
 					character.setPartyCharacter(null);
 				}
@@ -341,7 +341,7 @@ public class World {
 		byte channel = -1;
 		GameCharacter character = getPlayerStorage().getCharacterByName(name);
 		if (character != null) {
-			channel = character.getClient().getChannel();
+			channel = character.getClient().getChannelId();
 		}
 		return channel;
 	}
@@ -350,7 +350,7 @@ public class World {
 		byte channel = -1;
 		GameCharacter character = getPlayerStorage().getCharacterById(id);
 		if (character != null) {
-			channel = character.getClient().getChannel();
+			channel = character.getClient().getChannelId();
 		}
 		return channel;
 	}

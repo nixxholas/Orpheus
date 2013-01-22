@@ -70,7 +70,7 @@ public final class AllianceOperationHandler extends AbstractPacketHandler {
 				if (channel == -1) {
 					c.getPlayer().dropMessage("The player is not online.");
 				} else {
-					GameCharacter victim = Server.getInstance().getChannel(c.getWorld(), channel).getPlayerStorage().getCharacterByName(charName);
+					GameCharacter victim = Server.getInstance().getChannel(c.getWorldId(), channel).getPlayerStorage().getCharacterByName(charName);
 					if (victim.getGuildId() == 0) {
 						c.getPlayer().dropMessage("The person you are trying to invite does not have a guild.");
 					} else if (victim.getGuildRank() != 1) {

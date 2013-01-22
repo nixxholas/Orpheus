@@ -30,8 +30,8 @@ public final class CharlistRequestHandler extends AbstractPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		reader.readByte();
 		byte world = reader.readByte();
-		c.setWorld(world);
-		c.setChannel((byte) (reader.readByte() + 1));
+		c.setWorldId(world);
+		c.setChannelId((byte) (reader.readByte() + 1));
 		c.sendCharList(world);
 	}
 }

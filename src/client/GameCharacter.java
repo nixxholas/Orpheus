@@ -628,7 +628,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				if (party != null) {
 					partyCharacter.setMapId(to.getId());
 					silentPartyUpdate();
-					client.announce(PacketCreator.updateParty(client.getChannel(), party, PartyOperation.SILENT_UPDATE, null));
+					client.announce(PacketCreator.updateParty(client.getChannelId(), party, PartyOperation.SILENT_UPDATE, null));
 					updatePartyMemberHP();
 				}
 				if (getMap().getHpDecrease() > 0) {
@@ -1069,7 +1069,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			int messengerId = messengerState.getId();
 			int position = messengerState.getPosition();
 			world.silentJoinMessenger(messengerId, new MessengerCharacter(this, position), position);
-			world.updateMessenger(messengerId, name, client.getChannel());
+			world.updateMessenger(messengerId, name, client.getChannelId());
 		}
 	}
 
@@ -1378,7 +1378,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		// saveToDB(true);
 		if (messengerState.isActive()) {
 			final int messengerId = messengerState.getId();
-			Server.getInstance().getWorld(worldId).updateMessenger(messengerId, getName(), client.getChannel());
+			Server.getInstance().getWorld(worldId).updateMessenger(messengerId, getName(), client.getChannelId());
 		}
 	}
 
@@ -3149,7 +3149,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void receivePartyMemberHP() {
 		if (party != null) {
-			byte channel = client.getChannel();
+			byte channel = client.getChannelId();
 			for (PartyCharacter partychar : party.getMembers()) {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(worldId).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());
@@ -4341,7 +4341,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void updatePartyMemberHP() {
 		if (party != null) {
-			byte channel = client.getChannel();
+			byte channel = client.getChannelId();
 			for (PartyCharacter partychar : party.getMembers()) {
 				if (partychar.getMapId() == getMapId() && partychar.getChannel() == channel) {
 					GameCharacter other = Server.getInstance().getWorld(worldId).getChannel(channel).getPlayerStorage().getCharacterByName(partychar.getName());

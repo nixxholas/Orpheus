@@ -77,24 +77,24 @@ public class GameClient {
 	private AesCrypto receive;
 	private IoSession session;
 	private GameCharacter player;
-	private byte channel = 1;
+	private byte channelId = 1;
 	private int accountId = 1;
 	private boolean loggedIn = false;
 	private boolean serverTransition = false;
 	private Calendar birthday = null;
 	private String accountName = null;
-	private byte world;
+	private byte worldId;
 	private long lastPong;
 	private int gmlevel;
 	private Set<String> macs = new HashSet<String>();
 	private Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
 	private ScheduledFuture<?> idleTask = null;
 	private byte characterSlots = 3;
-	private byte loginattempt = 0;
+	private byte loginAttempts = 0;
 	private String pin = null;
-	private int pinattempt = 0;
+	private int pinAttempts = 0;
 	private String pic = null;
-	private int picattempt = 0;
+	private int picAttempts = 0;
 	private byte gender = -1;
 
 	public GameClient(AesCrypto send, AesCrypto receive, IoSession session) {
@@ -351,12 +351,12 @@ public class GameClient {
 	}
 
 	public boolean checkPin(String other) {
-		pinattempt++;
-		if (pinattempt > 5) {
+		pinAttempts++;
+		if (pinAttempts > 5) {
 			getSession().close(true);
 		}
 		if (pin.equals(other)) {
-			pinattempt = 0;
+			pinAttempts = 0;
 			return true;
 		}
 		return false;
@@ -379,20 +379,20 @@ public class GameClient {
 	}
 
 	public boolean checkPic(String other) {
-		picattempt++;
-		if (picattempt > 5) {
+		picAttempts++;
+		if (picAttempts > 5) {
 			getSession().close(true);
 		}
 		if (pic.equals(other)) {
-			picattempt = 0;
+			picAttempts = 0;
 			return true;
 		}
 		return false;
 	}
 
 	public int login(String login, String pwd) {
-		loginattempt++;
-		if (loginattempt > 4) {
+		loginAttempts++;
+		if (loginAttempts > 4) {
 			getSession().close(true);
 		}
 		int loginok = 5;
@@ -472,7 +472,7 @@ public class GameClient {
 		}
 
 		if (loginok == 0) {
-			loginattempt = 0;
+			loginAttempts = 0;
 		}
 		return loginok;
 	}
@@ -661,7 +661,7 @@ public class GameClient {
 	private void removePlayer() {
 		try {
 			getWorldServer().removePlayer(player);// out of channel too.
-			Server.getInstance().getLoad(world).get(channel).decrementAndGet();
+			Server.getInstance().getLoad(worldId).get(channelId).decrementAndGet();
 			if (player.getMap() != null) {
 				player.getMap().removePlayer(player);
 			}
@@ -742,9 +742,9 @@ public class GameClient {
 					worlda.updateParty(player.getParty().getId(), PartyOperation.LOG_ONOFF, chrp);
 				}
 				if (!this.serverTransition && isLoggedIn()) {
-					worlda.loggedOff(player.getName(), player.getId(), channel, player.getBuddylist().getBuddyIds());
+					worlda.loggedOff(player.getName(), player.getId(), channelId, player.getBuddylist().getBuddyIds());
 				} else {
-					worlda.loggedOn(player.getName(), player.getId(), channel, player.getBuddylist().getBuddyIds());
+					worlda.loggedOn(player.getName(), player.getId(), channelId, player.getBuddylist().getBuddyIds());
 				}
 				if (player.getGuildId() > 0) {
 					Server.getInstance().setGuildMemberOnline(player.getGuildCharacter(), false, (byte) -1);
@@ -774,23 +774,23 @@ public class GameClient {
 		this.engines = null;
 		this.send = null;
 		this.receive = null;
-		this.channel = -1;
+		this.channelId = -1;
 	}
 
-	public byte getChannel() {
-		return channel;
+	public byte getChannelId() {
+		return channelId;
 	}
 
 	public Channel getChannelServer() {
-		return Server.getInstance().getChannel(world, channel);
+		return Server.getInstance().getChannel(worldId, channelId);
 	}
 
 	public World getWorldServer() {
-		return Server.getInstance().getWorld(world);
+		return Server.getInstance().getWorld(worldId);
 	}
 
-	public Channel getChannelServer(byte channel) {
-		return Server.getInstance().getChannel(world, channel);
+	public Channel getChannelServer(byte channelId) {
+		return Server.getInstance().getChannel(worldId, channelId);
 	}
 
 	public boolean deleteCharacter(int cid) {
@@ -843,16 +843,16 @@ public class GameClient {
 		this.accountName = a;
 	}
 
-	public void setChannel(byte channel) {
-		this.channel = channel;
+	public void setChannelId(byte channel) {
+		this.channelId = channel;
 	}
 
-	public byte getWorld() {
-		return world;
+	public byte getWorldId() {
+		return worldId;
 	}
 
-	public void setWorld(byte world) {
-		this.world = world;
+	public void setWorldId(byte world) {
+		this.worldId = world;
 	}
 
 	public void pongReceived() {
