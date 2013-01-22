@@ -70,6 +70,39 @@ import tools.GameLogger;
 
 public class GameClient {
 
+	public static enum State {
+		NOT_LOGGED_IN(0),
+		TRANSITION(1),
+		LOGGED_IN(2);
+		
+		private final int code;
+		
+		private State(int code) {
+			this.code = code;
+		}
+		
+		public int getCode() {
+			return this.code;
+		}
+		
+		public boolean is(State other) {
+			return other != null && this.code == other.code;
+		}
+		
+		public static State fromCode(int code) {
+			switch(code) {
+			case 0:
+				return NOT_LOGGED_IN;
+			case 1:
+				return TRANSITION;
+			case 2:
+				return LOGGED_IN;
+			default:
+				return null;
+			}
+		}
+	}
+	
 	private final class ClientTimeoutAction implements Runnable {
 		private final long then;
 
@@ -88,9 +121,6 @@ public class GameClient {
 		}
 	}
 
-	public static final int LOGIN_NOTLOGGEDIN = 0;
-	public static final int LOGIN_SERVER_TRANSITION = 1;
-	public static final int LOGIN_LOGGEDIN = 2;
 	public static final String CLIENT_KEY = "CLIENT";
 	private AesCrypto send;
 	private AesCrypto receive;
@@ -344,11 +374,13 @@ public class GameClient {
 
 	public int finishLogin() {
 		synchronized (GameClient.class) {
-			if (getLoginState() > LOGIN_NOTLOGGEDIN) {
+			final State state = getLoginState();
+			if (state.is(State.NOT_LOGGED_IN)) {
+				updateLoginState(State.LOGGED_IN);
+			} else {
 				loggedIn = false;
 				return 7;
 			}
-			updateLoginState(LOGIN_LOGGEDIN);
 		}
 		return 0;
 	}
@@ -440,7 +472,9 @@ public class GameClient {
 				byte tos = rs.getByte("tos");
 				ps.close();
 				rs.close();
-				if (getLoginState() > LOGIN_NOTLOGGEDIN) { // already loggedin
+				final State loginState = getLoginState();
+				if (!loginState.is(State.NOT_LOGGED_IN)) { 
+					// already loggedin
 					loggedIn = false;
 					loginok = AuthResult.ALREADY_LOGGED_IN;
 				} else if (password.equals(passhash) || checkHash(passhash, "SHA-1", password) || checkHash(passhash, "SHA-512", password + salt)) {
@@ -588,7 +622,7 @@ public class GameClient {
 		this.accountId = id;
 	}
 
-	public void updateLoginState(int newState) {
+	public void updateLoginState(State newState) {
 		Connection connection = DatabaseConnection.getConnection();
 		try (PreparedStatement ps = getUpdateLoginState(connection, newState)) {
 			ps.executeUpdate();
@@ -596,23 +630,23 @@ public class GameClient {
 			e.printStackTrace();
 		}
 		
-		if (newState == LOGIN_NOTLOGGEDIN) {
+		if (newState.is(State.NOT_LOGGED_IN)) {
 			loggedIn = false;
 			serverTransition = false;
 		} else {
-			serverTransition = (newState == LOGIN_SERVER_TRANSITION);
+			serverTransition = newState.is(State.TRANSITION);
 			loggedIn = !serverTransition;
 		}
 	}
 
-	private PreparedStatement getUpdateLoginState(Connection connection, int newState) throws SQLException {
+	private PreparedStatement getUpdateLoginState(Connection connection, State newState) throws SQLException {
 		PreparedStatement ps = connection.prepareStatement("UPDATE `accounts` SET `loggedin` = ?, `lastlogin` = CURRENT_TIMESTAMP() WHERE `id` = ?");
-		ps.setInt(1, newState);
+		ps.setInt(1, newState.getCode());
 		ps.setInt(2, this.accountId);
 		return ps;
 	}
 
-	public int getLoginState() {
+	public State getLoginState() {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement("SELECT `loggedin`, `lastlogin`, UNIX_TIMESTAMP(`birthday`) AS `birthday` FROM `accounts` WHERE `id` = ?");
@@ -628,21 +662,21 @@ public class GameClient {
 			if (blubb > 0) {
 				birthday.setTimeInMillis(blubb * 1000);
 			}
-			int state = rs.getInt("loggedin");
-			if (state == LOGIN_SERVER_TRANSITION) {
+			State state = State.fromCode(rs.getInt("loggedin"));
+			if (state.is(State.TRANSITION)) {
 				if (rs.getTimestamp("lastlogin").getTime() + 30000 < System.currentTimeMillis()) {
-					state = LOGIN_NOTLOGGEDIN;
-					updateLoginState(LOGIN_NOTLOGGEDIN);
+					state = State.NOT_LOGGED_IN;
+					updateLoginState(State.NOT_LOGGED_IN);
 				}
-			} else if (state == LOGIN_LOGGEDIN && player == null) {
-                state = LOGIN_NOTLOGGEDIN;
-                updateLoginState(LOGIN_NOTLOGGEDIN);
+			} else if (state.is(State.LOGGED_IN) && player == null) {
+                state = State.NOT_LOGGED_IN;
+                updateLoginState(State.NOT_LOGGED_IN);
             }  
 			rs.close();
 			ps.close();
-			if (state == LOGIN_LOGGEDIN) {
+			if (state.is(State.LOGGED_IN)) {
 				loggedIn = true;
-			} else if (state == LOGIN_SERVER_TRANSITION) {
+			} else if (state.is(State.TRANSITION)) {
 				ps = connection.prepareStatement("UPDATE `accounts` SET `loggedin` = 0 WHERE `id` = ?");
 				ps.setInt(1, getAccountId());
 				ps.executeUpdate();
@@ -650,6 +684,7 @@ public class GameClient {
 			} else {
 				loggedIn = false;
 			}
+			
 			return state;
 		} catch (SQLException e) {
 			loggedIn = false;
@@ -773,7 +808,7 @@ public class GameClient {
 			session.close(true);
 		}
 		if (!this.serverTransition) {
-			this.updateLoginState(LOGIN_NOTLOGGEDIN);
+			this.updateLoginState(State.NOT_LOGGED_IN);
 		}
 	}
 

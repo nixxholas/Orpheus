@@ -82,7 +82,7 @@ public final class ChangeChannelHandler extends AbstractPacketHandler {
 		chr.getClient().getChannelServer().removePlayer(chr);
 		chr.saveToDB(true);
 		server.getLoad(c.getWorldId()).get(c.getChannelId()).decrementAndGet();
-		chr.getClient().updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+		chr.getClient().updateLoginState(GameClient.State.TRANSITION);
 		try {
 			c.announce(PacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
 		} catch (IOException e) {

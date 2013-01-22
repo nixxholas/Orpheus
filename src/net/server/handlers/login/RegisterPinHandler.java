@@ -34,13 +34,13 @@ public final class RegisterPinHandler extends AbstractPacketHandler {
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
 		byte c2 = reader.readByte();
 		if (c2 == 0) {
-			c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
+			c.updateLoginState(GameClient.State.NOT_LOGGED_IN);
 		} else {
 			String pin = reader.readMapleAsciiString();
 			if (pin != null) {
 				c.setPin(pin);
 				c.announce(PacketCreator.pinRegistered());
-				c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
+				c.updateLoginState(GameClient.State.NOT_LOGGED_IN);
 			}
 		}
 	}

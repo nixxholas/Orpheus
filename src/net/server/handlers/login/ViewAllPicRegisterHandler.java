@@ -54,7 +54,7 @@ public final class ViewAllPicRegisterHandler extends AbstractPacketHandler {
 			if (c.getIdleTask() != null) {
 				c.getIdleTask().cancel(true);
 			}
-			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+			c.updateLoginState(GameClient.State.TRANSITION);
 			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], channel);
 
 			if (channelServerIP.equals("0.0.0.0")) {

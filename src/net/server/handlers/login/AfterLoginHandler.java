@@ -55,7 +55,7 @@ public final class AfterLoginHandler extends AbstractPacketHandler {
 				c.announce(PacketCreator.requestPinAfterFailure());
 			}
 		} else if (c2 == 0 && c3 == 5) {
-			c.updateLoginState(GameClient.LOGIN_NOTLOGGEDIN);
+			c.updateLoginState(GameClient.State.NOT_LOGGED_IN);
 		}
 	}
 }

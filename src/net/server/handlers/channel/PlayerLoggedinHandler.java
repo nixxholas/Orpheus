@@ -77,12 +77,12 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		}
 		c.setPlayer(player);
 		c.setAccountId(player.getAccountId());
-		int state = c.getLoginState();
+		GameClient.State state = c.getLoginState();
 		boolean allowLogin = true;
 		Channel cserv = c.getChannelServer();
 
 		synchronized (this) {
-			if (state == GameClient.LOGIN_SERVER_TRANSITION) {
+			if (state.is(GameClient.State.TRANSITION)) {
 				for (String charName : c.loadCharacterNames(c.getWorldId())) {
 					for (Channel ch : c.getWorldServer().getChannels()) {
 						if (ch.isConnected(charName)) {
@@ -101,12 +101,12 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 				}
 			}
 
-			if (state != GameClient.LOGIN_SERVER_TRANSITION || !allowLogin) {
+			if (!state.is(GameClient.State.TRANSITION) || !allowLogin) {
 				c.setPlayer(null);
 				c.announce(PacketCreator.getAfterLoginError(7));
 				return;
 			}
-			c.updateLoginState(GameClient.LOGIN_LOGGEDIN);
+			c.updateLoginState(GameClient.State.NOT_LOGGED_IN);
 		}
 		cserv.addPlayer(player);
 		List<PlayerBuffValueHolder> buffs = server.getPlayerBuffStorage().getBuffsFromStorage(characterId);

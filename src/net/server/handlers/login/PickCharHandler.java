@@ -51,7 +51,7 @@ public final class PickCharHandler extends AbstractPacketHandler {
 			if (c.getIdleTask() != null) {
 				c.getIdleTask().cancel(true);
 			}
-			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+			c.updateLoginState(GameClient.State.TRANSITION);
 			String channelServerIP = GameClient.getChannelServerIPFromSubnet(c.getSession().getRemoteAddress().toString().replace("/", "").split(":")[0], c.getChannelId());
 			if (channelServerIP.equals("0.0.0.0")) {
 				String[] socket = Server.getInstance().getIP(c.getWorldId(), c.getChannelId()).split(":");

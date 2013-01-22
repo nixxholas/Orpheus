@@ -48,7 +48,7 @@ public final class ChangeMapHandler extends AbstractPacketHandler {
 			chr.saveToDB(true);
 			chr.getCashShop().open(false);
 			c.getChannelServer().removePlayer(chr);
-			c.updateLoginState(GameClient.LOGIN_SERVER_TRANSITION);
+			c.updateLoginState(GameClient.State.TRANSITION);
 			try {
 				c.announce(PacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
 			} catch (UnknownHostException ex) {
