@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcScriptManager;
 import scripting.quest.QuestScriptManager;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class NPCMoreTalkHandler extends AbstractPacketHandler {
+public final class NpcMoreTalkHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
@@ -39,21 +39,21 @@ public final class NPCMoreTalkHandler extends AbstractPacketHandler {
 		if (lastMsg == 2) {
 			if (action != 0) {
 				String returnText = reader.readMapleAsciiString();
-				if (c.getQM() != null) {
-					c.getQM().setGetText(returnText);
-					if (c.getQM().isStart()) {
+				if (c.getQuestManager() != null) {
+					c.getQuestManager().setGetText(returnText);
+					if (c.getQuestManager().isStart()) {
 						QuestScriptManager.getInstance().start(c, action, lastMsg, -1);
 					} else {
 						QuestScriptManager.getInstance().end(c, action, lastMsg, -1);
 					}
 				} else {
-					c.getCM().setGetText(returnText);
-					NPCScriptManager.getInstance().action(c, action, lastMsg, -1);
+					c.getConversationManager().setGetText(returnText);
+					NpcScriptManager.getInstance().action(c, action, lastMsg, -1);
 				}
-			} else if (c.getQM() != null) {
-				c.getQM().dispose();
+			} else if (c.getQuestManager() != null) {
+				c.getQuestManager().dispose();
 			} else {
-				c.getCM().dispose();
+				c.getConversationManager().dispose();
 			}
 		} else {
 			int selection = -1;
@@ -62,14 +62,14 @@ public final class NPCMoreTalkHandler extends AbstractPacketHandler {
 			} else if (reader.available() > 0) {
 				selection = reader.readByte();
 			}
-			if (c.getQM() != null) {
-				if (c.getQM().isStart()) {
+			if (c.getQuestManager() != null) {
+				if (c.getQuestManager().isStart()) {
 					QuestScriptManager.getInstance().start(c, action, lastMsg, selection);
 				} else {
 					QuestScriptManager.getInstance().end(c, action, lastMsg, selection);
 				}
-			} else if (c.getCM() != null) {
-				NPCScriptManager.getInstance().action(c, action, lastMsg, selection);
+			} else if (c.getConversationManager() != null) {
+				NpcScriptManager.getInstance().action(c, action, lastMsg, selection);
 			}
 		}
 	}

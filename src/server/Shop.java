@@ -75,7 +75,7 @@ public class Shop {
 
 	public void sendShop(GameClient c) {
 		c.getPlayer().setShop(this);
-		c.getSession().write(PacketCreator.getNPCShop(c, getNpcId(), items));
+		c.getSession().write(PacketCreator.getNpcShop(c, getNpcId(), items));
 	}
 
 	public void buy(GameClient c, short slot, int itemId, short quantity) {

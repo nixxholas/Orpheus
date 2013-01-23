@@ -28,7 +28,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 public class CustomPacketHandler implements PacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		if (reader.available() > 0 && c.gmLevel() == 4) {
+		if (reader.available() > 0 && c.getGmLevel() == 4) {
 			// w/e
 			c.getSession().write(PacketCreator.customPacket(reader.read((int) reader.available())));
 		}

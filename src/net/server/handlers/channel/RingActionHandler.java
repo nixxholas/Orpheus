@@ -27,7 +27,7 @@ import client.GameCharacter;
 //import tools.DatabaseConnection;
 import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
-//import scripting.npc.NPCScriptManager;
+//import scripting.npc.NpcScriptManager;
 import tools.PacketCreator;
 import tools.Output;
 
@@ -54,7 +54,7 @@ public final class RingActionHandler extends AbstractPacketHandler {
 					c.getPlayer().dropMessage(1, "Your partner is the same gender as you.");
 					return;
 				} // else if (player.isMarried() && partner.isMarried())
-					// NPCScriptManager.getInstance().start(partner.getClient(),
+					// NpcScriptManager.getInstance().start(partner.getClient(),
 					// 9201002, "marriagequestion", player);
 				break;
 			case 1: // Cancel send

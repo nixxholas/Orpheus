@@ -33,18 +33,18 @@ import tools.Output;
  * 
  * @author Matze
  */
-public class NPCScriptManager extends AbstractScriptManager {
-	private Map<GameClient, NPCConversationManager> cms = new HashMap<GameClient, NPCConversationManager>();
-	private Map<GameClient, NPCScript> scripts = new HashMap<GameClient, NPCScript>();
-	private static NPCScriptManager instance = new NPCScriptManager();
+public class NpcScriptManager extends AbstractScriptManager {
+	private Map<GameClient, NpcConversationManager> cms = new HashMap<GameClient, NpcConversationManager>();
+	private Map<GameClient, NpcScript> scripts = new HashMap<GameClient, NpcScript>();
+	private static NpcScriptManager instance = new NpcScriptManager();
 
-	public synchronized static NPCScriptManager getInstance() {
+	public synchronized static NpcScriptManager getInstance() {
 		return instance;
 	}
 
 	public void start(GameClient c, int npc, String filename, GameCharacter chr) {
 		try {
-			NPCConversationManager cm = new NPCConversationManager(c, npc);
+			NpcConversationManager cm = new NpcConversationManager(c, npc);
 			if (cms.containsKey(c)) {
 				Output.print("FUU D:");
 				dispose(c);
@@ -58,12 +58,12 @@ public class NPCScriptManager extends AbstractScriptManager {
 			if (iv == null) {
 				iv = getInvocable("npc/world" + c.getWorldId() + "/" + npc + ".js", c);
 			}
-			if (iv == null || NPCScriptManager.getInstance() == null) {
+			if (iv == null || NpcScriptManager.getInstance() == null) {
 				dispose(c);
 				return;
 			}
 			engine.put("cm", cm);
-			NPCScript ns = iv.getInterface(NPCScript.class);
+			NpcScript ns = iv.getInterface(NpcScript.class);
 			scripts.put(c, ns);
 			if (chr == null) {
 				ns.start();
@@ -85,24 +85,24 @@ public class NPCScriptManager extends AbstractScriptManager {
 	}
 
 	public void action(GameClient c, byte mode, byte type, int selection) {
-		NPCScript ns = scripts.get(c);
+		NpcScript ns = scripts.get(c);
 		if (ns != null) {
 			try {
 				ns.action(mode, type, selection);
 			} catch (UndeclaredThrowableException ute) {
 				ute.printStackTrace();
-				Output.print("Error: NPC " + getCM(c).getNpc() + ". UndeclaredThrowableException.");
+				Output.print("Error: NPC " + getConversationManager(c).getNpc() + ". UndeclaredThrowableException.");
 				dispose(c);
-				notice(c, getCM(c).getNpc());
+				notice(c, getConversationManager(c).getNpc());
 			} catch (Exception e) {
-				Output.print("Error: NPC " + getCM(c).getNpc() + ".");
+				Output.print("Error: NPC " + getConversationManager(c).getNpc() + ".");
 				dispose(c);
-				notice(c, getCM(c).getNpc());
+				notice(c, getConversationManager(c).getNpc());
 			}
 		}
 	}
 
-	public void dispose(NPCConversationManager cm) {
+	public void dispose(NpcConversationManager cm) {
 		GameClient c = cm.getClient();
 		cms.remove(c);
 		scripts.remove(c);
@@ -115,7 +115,7 @@ public class NPCScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public NPCConversationManager getCM(GameClient c) {
+	public NpcConversationManager getConversationManager(GameClient c) {
 		return cms.get(c);
 	}
 

@@ -22,7 +22,8 @@ package scripting.npc;
 
 import client.GameCharacter;
 
-public interface NPCScript {
+public interface NpcScript {
+	
 	public void start();
 
 	public void start(GameCharacter chr);

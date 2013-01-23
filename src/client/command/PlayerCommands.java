@@ -27,7 +27,7 @@ import com.mysql.jdbc.Connection;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import net.server.Channel;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcScriptManager;
 import server.InventoryManipulator;
 import server.MapleStocks;
 import tools.DatabaseConnection;
@@ -158,10 +158,10 @@ public class PlayerCommands extends EnumeratedCommands {
 					chr.message(" " + victim.getLuk() + " Luck");
 					break;
 				case cody:
-					NPCScriptManager.getInstance().start(c, 9200000, null, null);
+					NpcScriptManager.getInstance().start(c, 9200000, null, null);
 					break;
 				case dispose:
-					NPCScriptManager.getInstance().dispose(c);
+					NpcScriptManager.getInstance().dispose(c);
 					c.announce(PacketCreator.enableActions());
 					chr.message("Done.");
 					break;
@@ -170,7 +170,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					chr.updateSingleStat(Stat.HP, 0);
 					break;
 				case fmnpc:
-					NPCScriptManager.getInstance().start(c, 9220020, null, null);
+					NpcScriptManager.getInstance().start(c, 9220020, null, null);
 					break;
 				case gmlist:
 					rs = getGMList();
@@ -213,7 +213,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					}
 					break;
 				case kin:
-					NPCScriptManager.getInstance().start(c, 9900000, null, null);
+					NpcScriptManager.getInstance().start(c, 9900000, null, null);
 					break;
 				case nx:
 					if (ServerConstants.FREE_NX) {

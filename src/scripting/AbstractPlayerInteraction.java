@@ -38,7 +38,7 @@ import net.server.Party;
 import net.server.Server;
 import net.server.guild.Guild;
 import scripting.event.EventManager;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcScriptManager;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.life.LifeFactory;
@@ -116,8 +116,8 @@ public class AbstractPlayerInteraction {
 	}
 
 	public void openNpc(int npcid) {
-		NPCScriptManager.getInstance().dispose(c);
-		NPCScriptManager.getInstance().start(c, npcid, null, null);
+		NpcScriptManager.getInstance().dispose(c);
+		NpcScriptManager.getInstance().start(c, npcid, null, null);
 	}
 
 	public void updateQuest(int questid, String status) {

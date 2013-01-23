@@ -60,7 +60,7 @@ public class ShopFactory {
 		return loadShop(shopId, true);
 	}
 
-	public Shop getShopForNPC(int npcId) {
+	public Shop getShopForNpc(int npcId) {
 		if (npcShops.containsKey(npcId)) {
 			npcShops.get(npcId);
 		}

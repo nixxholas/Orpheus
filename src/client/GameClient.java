@@ -49,8 +49,8 @@ import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.World;
 import net.server.guild.GuildCharacter;
-import scripting.npc.NPCConversationManager;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcConversationManager;
+import scripting.npc.NpcScriptManager;
 import scripting.quest.QuestActionManager;
 import scripting.quest.QuestScriptManager;
 import server.Trade;
@@ -125,26 +125,29 @@ public class GameClient {
 	private AesCrypto send;
 	private AesCrypto receive;
 	private IoSession session;
-	private GameCharacter player;
-	private byte channelId = 1;
+	
 	private int accountId = 1;
 	private boolean loggedIn = false;
 	private boolean serverTransition = false;
-	private Calendar birthday = null;
 	private String accountName = null;
-	private byte worldId;
-	private long lastPong;
+	private Calendar birthday = null;
+	private byte characterSlots = 3;
 	private int gmlevel;
+	private String pin = null;
+	private String pic = null;
+	private byte gender = -1;
+
+	private long lastPong;
 	private Set<String> macs = new HashSet<String>();
+	private byte loginAttempts = 0;
+	private int pinAttempts = 0;
+	private int picAttempts = 0;
+
+	private byte worldId;
+	private byte channelId = 1;
+	private GameCharacter player;
 	private Map<String, ScriptEngine> engines = new HashMap<String, ScriptEngine>();
 	private ScheduledFuture<?> idleTask = null;
-	private byte characterSlots = 3;
-	private byte loginAttempts = 0;
-	private String pin = null;
-	private int pinAttempts = 0;
-	private String pic = null;
-	private int picAttempts = 0;
-	private byte gender = -1;
 
 	public GameClient(AesCrypto send, AesCrypto receive, IoSession session) {
 		this.send = send;
@@ -769,7 +772,7 @@ public class GameClient {
 					worlda.leaveMessenger(state.getId(), messengerplayer);
 					state.reset();
 				}
-				NPCScriptManager npcsm = NPCScriptManager.getInstance();
+				NpcScriptManager npcsm = NpcScriptManager.getInstance();
 				if (npcsm != null) {
 					npcsm.dispose(this);
 				}
@@ -919,7 +922,7 @@ public class GameClient {
 		return Collections.unmodifiableSet(macs);
 	}
 
-	public int gmLevel() {
+	public int getGmLevel() {
 		return this.gmlevel;
 	}
 
@@ -943,12 +946,12 @@ public class GameClient {
 		this.idleTask = idleTask;
 	}
 
-	public NPCConversationManager getCM() {
-		return NPCScriptManager.getInstance().getCM(this);
+	public NpcConversationManager getConversationManager() {
+		return NpcScriptManager.getInstance().getConversationManager(this);
 	}
 
-	public QuestActionManager getQM() {
-		return QuestScriptManager.getInstance().getQM(this);
+	public QuestActionManager getQuestManager() {
+		return QuestScriptManager.getInstance().getQuestManager(this);
 	}
 
 	public boolean acceptTermsOfService() {

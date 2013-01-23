@@ -110,7 +110,7 @@ import server.maps.GameMapItem;
 import server.maps.Mist;
 import server.maps.Reactor;
 import server.maps.Summon;
-import server.maps.PlayerNPCs;
+import server.maps.PlayerNpc;
 import server.movement.LifeMovementFragment;
 import tools.data.output.PacketWriter;
 
@@ -678,7 +678,7 @@ public class PacketCreator {
 		w.writeAsShort(0);
 		w.writeInt(c.getAccountId()); // user id
 		w.writeAsByte(c.getGender());
-		w.writeAsByte((c.gmLevel() > 0)); // admin byte
+		w.writeAsByte((c.getGmLevel() > 0)); // admin byte
 		w.writeAsByte(0);
 		w.writeAsByte(0);
 		w.writeLengthString(c.getAccountName());
@@ -1346,7 +1346,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnNPC(Npc life) {
+	public static GamePacket spawnNpc(Npc life) {
 		PacketWriter w = new PacketWriter(24);
 		w.writeAsShort(SendOpcode.SPAWN_NPC.getValue());
 		w.writeInt(life.getObjectId());
@@ -1365,7 +1365,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnNPCRequestController(Npc life, boolean onMiniMap) {
+	public static GamePacket spawnNpcRequestController(Npc life, boolean onMiniMap) {
 		PacketWriter w = new PacketWriter(23);
 		w.writeAsShort(SendOpcode.SPAWN_NPC_REQUEST_CONTROLLER.getValue());
 		w.writeAsByte(1);
@@ -1391,7 +1391,7 @@ public class PacketCreator {
 	 * @param description - If the NPC has quests, this will be the text of the menu item
 	 * @return 
 	 */
-    public static GamePacket setNPCScriptable(int npcId, String description) {
+    public static GamePacket setNpcScriptable(int npcId, String description) {
         PacketWriter w = new PacketWriter();
         w.writeAsShort(SendOpcode.SET_NPC_SCRIPTABLE.getValue());
         w.writeAsByte(1); // following structure is repeated n times
@@ -1407,7 +1407,7 @@ public class PacketCreator {
 	 * @param entries - a list of pairs of NPC IDs and descriptions.
 	 * @return 
 	 */
-    public static GamePacket setNPCScriptable(List<NpcDescriptionEntry> entries) {
+    public static GamePacket setNpcScriptable(List<NpcDescriptionEntry> entries) {
     	PacketWriter w = new PacketWriter();
     	w.writeAsShort(SendOpcode.SET_NPC_SCRIPTABLE.getValue());
     	w.writeAsByte(entries.size()); // following structure is repeated n times
@@ -2184,7 +2184,7 @@ public class PacketCreator {
 		return (int) (Double.doubleToLongBits(d) >> 48);
 	}
 
-	public static GamePacket getNPCShop(GameClient c, int sid, List<ShopItem> items) {
+	public static GamePacket getNpcShop(GameClient c, int sid, List<ShopItem> items) {
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.OPEN_NPC_SHOP.getValue());
@@ -3089,7 +3089,7 @@ public class PacketCreator {
 	 * @param speaker
 	 * @return
 	 */
-	public static GamePacket getNPCTalk(int npc, byte msgType, String talk, String endBytes, byte speaker) {
+	public static GamePacket getNpcTalk(int npc, byte msgType, String talk, String endBytes, byte speaker) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.NPC_TALK.getValue());
 		w.writeAsByte(4); // ?
@@ -3113,7 +3113,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getNPCTalkStyle(int npc, String talk, int styles[]) {
+	public static GamePacket getNpcTalkStyle(int npc, String talk, int styles[]) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.NPC_TALK.getValue());
 		w.writeAsByte(4); // ?
@@ -3128,7 +3128,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getNPCTalkNum(int npc, String talk, int def, int min, int max) {
+	public static GamePacket getNpcTalkNum(int npc, String talk, int def, int min, int max) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.NPC_TALK.getValue());
 		w.writeAsByte(4); // ?
@@ -3143,7 +3143,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getNPCTalkText(int npc, String talk, String def) {
+	public static GamePacket getNpcTalkText(int npc, String talk, String def) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.NPC_TALK.getValue());
 		w.writeAsByte(4); // Doesn't matter
@@ -4557,7 +4557,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getPlayerNPC(PlayerNPCs npc) {
+	public static GamePacket getPlayerNpc(PlayerNpc npc) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.PLAYER_NPC.getValue());
 		w.writeAsByte(0x01);
@@ -5276,7 +5276,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket spawnPlayerNPC(PlayerNPCs npc) {
+	public static GamePacket spawnPlayerNpc(PlayerNpc npc) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.SPAWN_NPC_REQUEST_CONTROLLER.getValue());
 		w.writeAsByte(1);
@@ -5862,7 +5862,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket removeNPC(int oid) { // Make npc's invisible
+	public static GamePacket removeNpc(int oid) { // Make npc's invisible
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.SPAWN_NPC_REQUEST_CONTROLLER.getValue());
 		w.writeAsByte(0);

@@ -813,7 +813,7 @@ public class GameMap {
 		return Collections.unmodifiableCollection(mapobjects.values());
 	}
 
-	public boolean containsNPC(int npcid) {
+	public boolean containsNpc(int npcid) {
 		if (npcid == 9000066) {
 			return true;
 		}
@@ -1992,7 +1992,7 @@ public class GameMap {
 					clearDrops();
 					timeLimit = 0;
 					if (mapid >= 922240100 && mapid <= 922240119) {
-						toggleHiddenNPC(9001108);
+						toggleHiddenNpc(9001108);
 					}
 					mapMonitor.cancel(true);
 					mapMonitor = null;
@@ -2107,7 +2107,7 @@ public class GameMap {
 		this.eventstarted = event;
 	}
 
-	public String getEventNPC() {
+	public String getEventNpc() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Talk to ");
 		if (mapid == 60000) {
@@ -2124,7 +2124,7 @@ public class GameMap {
 		return sb.toString();
 	}
 
-	public boolean hasEventNPC() {
+	public boolean hasEventNpc() {
 		return this.mapid == 60000 || this.mapid == 104000000 || this.mapid == 200000000 || this.mapid == 220000000;
 	}
 
@@ -2144,7 +2144,7 @@ public class GameMap {
 		return timeMob;
 	}
 
-	public void toggleHiddenNPC(int id) {
+	public void toggleHiddenNpc(int id) {
 		for (GameMapObject obj : mapobjects.values()) {
 			if (obj.getType() == GameMapObjectType.NPC) {
 				Npc npc = (Npc) obj;
@@ -2153,7 +2153,7 @@ public class GameMap {
 					if (!npc.isHidden()) // Should only be hidden upon changing
 											// maps
 					{
-						broadcastMessage(PacketCreator.spawnNPC(npc));
+						broadcastMessage(PacketCreator.spawnNpc(npc));
 					}
 				}
 			}

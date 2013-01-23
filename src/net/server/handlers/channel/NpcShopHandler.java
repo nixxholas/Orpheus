@@ -30,7 +30,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * 
  * @author Matze
  */
-public final class NPCShopHandler extends AbstractPacketHandler {
+public final class NpcShopHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {

@@ -157,7 +157,7 @@ public class Quest {
 	}
 
 	public void start(GameCharacter c, int npc) {
-		if ((autoStart || checkNPCOnMap(c, npc)) && canStart(c, npc)) {
+		if ((autoStart || checkNpcOnMap(c, npc)) && canStart(c, npc)) {
 			for (QuestAction a : startActs) {
 				a.run(c, null);
 			}
@@ -170,7 +170,7 @@ public class Quest {
 	}
 
 	public void complete(GameCharacter c, int npc, Integer selection) {
-		if ((autoPreComplete || checkNPCOnMap(c, npc)) && canComplete(c, npc)) {
+		if ((autoPreComplete || checkNpcOnMap(c, npc)) && canComplete(c, npc)) {
 			/*
 			 * for (QuestAction a : completeActs) { if (!a.check(c)) {
 			 * return; } }
@@ -236,8 +236,8 @@ public class Quest {
 		return relevantMobs;
 	}
 
-	private boolean checkNPCOnMap(GameCharacter player, int npcid) {
-		return player.getMap().containsNPC(npcid);
+	private boolean checkNpcOnMap(GameCharacter player, int npcid) {
+		return player.getMap().containsNpc(npcid);
 	}
 
 	public int getItemAmountNeeded(int itemid) {

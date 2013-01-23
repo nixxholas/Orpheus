@@ -35,7 +35,7 @@ import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.DatabaseConnection;
 
-public final class EnterMTSHandler extends AbstractPacketHandler {
+public final class EnterMtsHandler extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {

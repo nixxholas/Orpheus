@@ -34,28 +34,28 @@ public class Npc extends AbstractLoadedLife {
 	}
 
 	public boolean hasShop() {
-		return ShopFactory.getInstance().getShopForNPC(getId()) != null;
+		return ShopFactory.getInstance().getShopForNpc(getId()) != null;
 	}
 
 	public void sendShop(GameClient c) {
-		ShopFactory.getInstance().getShopForNPC(getId()).sendShop(c);
+		ShopFactory.getInstance().getShopForNpc(getId()).sendShop(c);
 	}
 
 	@Override
 	public void sendSpawnData(GameClient client) {
 		if (!this.isHidden()) {
 			if (this.getId() > 9010010 && this.getId() < 9010014) {
-				client.getSession().write(PacketCreator.spawnNPCRequestController(this, false));
+				client.getSession().write(PacketCreator.spawnNpcRequestController(this, false));
 			} else {
-				client.getSession().write(PacketCreator.spawnNPC(this));
-				client.getSession().write(PacketCreator.spawnNPCRequestController(this, true));
+				client.getSession().write(PacketCreator.spawnNpc(this));
+				client.getSession().write(PacketCreator.spawnNpcRequestController(this, true));
 			}
 		}
 	}
 
 	@Override
 	public void sendDestroyData(GameClient client) {
-		client.getSession().write(PacketCreator.removeNPC(getObjectId()));
+		client.getSession().write(PacketCreator.removeNpc(getObjectId()));
 	}
 
 	@Override

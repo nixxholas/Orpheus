@@ -22,7 +22,7 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcScriptManager;
 import server.ItemInfoProvider;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -46,7 +46,7 @@ public final class RemoteGachaponHandler extends AbstractPacketHandler {
 			} else {
 				npcId = mode == 8 ? 9100109 : 9100117;
 			}
-			NPCScriptManager.getInstance().start(c, npcId, null, null);
+			NpcScriptManager.getInstance().start(c, npcId, null, null);
 		}
 	}
 }

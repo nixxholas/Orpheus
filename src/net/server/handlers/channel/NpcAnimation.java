@@ -22,41 +22,28 @@ package net.server.handlers.channel;
 
 import client.GameClient;
 import net.AbstractPacketHandler;
-import scripting.npc.NPCScriptManager;
-import server.life.Npc;
-import server.maps.GameMapObject;
-import server.maps.PlayerNPCs;
-import tools.PacketCreator;
+import net.SendOpcode;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.data.output.PacketWriter;
 
-public final class NPCTalkHandler extends AbstractPacketHandler {
+public final class NpcAnimation extends AbstractPacketHandler {
 
 	@Override
 	public final void handlePacket(SeekableLittleEndianAccessor reader, GameClient c) {
-		if (!c.getPlayer().isAlive()) {
-			c.announce(PacketCreator.enableActions());
-			return;
-		}
-		int oid = reader.readInt();
-		GameMapObject obj = c.getPlayer().getMap().getMapObject(oid);
-		if (obj instanceof Npc) {
-			Npc npc = (Npc) obj;
-			if (npc.getId() == 9010009) {
-				c.announce(PacketCreator.sendDuey((byte) 8, DueyHandler.loadItems(c.getPlayer())));
-			} else if (npc.hasShop()) {
-				if (c.getPlayer().getShop() != null) {
-					return;
-				}
-				npc.sendShop(c);
-			} else {
-				if (c.getCM() != null || c.getQM() != null) {
-					c.announce(PacketCreator.enableActions());
-					return;
-				}
-				NPCScriptManager.getInstance().start(c, npc.getId(), null, null);
-			}
-		} else if (obj instanceof PlayerNPCs) {
-			NPCScriptManager.getInstance().start(c, ((PlayerNPCs) obj).getId(), null, null);
+		PacketWriter w = new PacketWriter();
+		int length = (int) reader.available();
+		if (length == 6) { 
+			// NPC Talk
+			w.writeAsShort(SendOpcode.NPC_ACTION.getValue());
+			w.writeInt(reader.readInt());
+			w.writeAsShort(reader.readShort());
+			c.announce(w.getPacket());
+		} else if (length > 6) { 
+			// NPC Move
+			byte[] bytes = reader.read(length - 9);
+			w.writeAsShort(SendOpcode.NPC_ACTION.getValue());
+			w.write(bytes);
+			c.announce(w.getPacket());
 		}
 	}
 }

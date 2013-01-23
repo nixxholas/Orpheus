@@ -101,10 +101,10 @@ public final class PacketProcessor {
 		registerHandler(RecvOpcode.STRANGE_DATA, LoginRequiringNoOpHandler.getInstance());
 		registerHandler(RecvOpcode.GENERAL_CHAT, new GeneralChatHandler());
 		registerHandler(RecvOpcode.WHISPER, new WhisperHandler());
-		registerHandler(RecvOpcode.NPC_TALK, new NPCTalkHandler());
-		registerHandler(RecvOpcode.NPC_TALK_MORE, new NPCMoreTalkHandler());
+		registerHandler(RecvOpcode.NPC_TALK, new NpcTalkHandler());
+		registerHandler(RecvOpcode.NPC_TALK_MORE, new NpcMoreTalkHandler());
 		registerHandler(RecvOpcode.QUEST_ACTION, new QuestActionHandler());
-		registerHandler(RecvOpcode.NPC_SHOP, new NPCShopHandler());
+		registerHandler(RecvOpcode.NPC_SHOP, new NpcShopHandler());
 		registerHandler(RecvOpcode.ITEM_SORT, new ItemSortHandler());
 		registerHandler(RecvOpcode.ITEM_MOVE, new ItemMoveHandler());
 		registerHandler(RecvOpcode.MESO_DROP, new MesoDropHandler());
@@ -140,7 +140,7 @@ public final class PacketProcessor {
 		registerHandler(RecvOpcode.DENY_PARTY_REQUEST, new DenyPartyRequestHandler());
 		registerHandler(RecvOpcode.PARTYCHAT, new PartyChatHandler());
 		registerHandler(RecvOpcode.USE_DOOR, new DoorHandler());
-		registerHandler(RecvOpcode.ENTER_MTS, new EnterMTSHandler());
+		registerHandler(RecvOpcode.ENTER_MTS, new EnterMtsHandler());
 		registerHandler(RecvOpcode.ENTER_CASHSHOP, new EnterCashShopHandler());
 		registerHandler(RecvOpcode.DAMAGE_SUMMON, new DamageSummonHandler());
 		registerHandler(RecvOpcode.MOVE_SUMMON, new MoveSummonHandler());
@@ -152,10 +152,10 @@ public final class PacketProcessor {
 		registerHandler(RecvOpcode.DAMAGE_REACTOR, new ReactorHitHandler());
 		registerHandler(RecvOpcode.GUILD_OPERATION, new GuildOperationHandler());
 		registerHandler(RecvOpcode.DENY_GUILD_REQUEST, new DenyGuildRequestHandler());
-		registerHandler(RecvOpcode.BBS_OPERATION, new BBSOperationHandler());
+		registerHandler(RecvOpcode.BBS_OPERATION, new BbsOperationHandler());
 		registerHandler(RecvOpcode.SKILL_EFFECT, new SkillEffectHandler());
 		registerHandler(RecvOpcode.MESSENGER, new MessengerHandler());
-		registerHandler(RecvOpcode.NPC_ACTION, new NPCAnimation());
+		registerHandler(RecvOpcode.NPC_ACTION, new NpcAnimation());
 		registerHandler(RecvOpcode.CHECK_CASH, new TouchingCashShopHandler());
 		registerHandler(RecvOpcode.CASHSHOP_OPERATION, new CashOperationHandler());
 		registerHandler(RecvOpcode.COUPON_CODE, new CouponCodeHandler());
@@ -173,7 +173,7 @@ public final class PacketProcessor {
 		registerHandler(RecvOpcode.NOTE_ACTION, new NoteActionHandler());
 		registerHandler(RecvOpcode.CLOSE_CHALKBOARD, new CloseChalkboardHandler());
 		registerHandler(RecvOpcode.USE_MOUNT_FOOD, new UseMountFoodHandler());
-		registerHandler(RecvOpcode.MTS_OPERATION, new MTSHandler());
+		registerHandler(RecvOpcode.MTS_OPERATION, new MtsHandler());
 		registerHandler(RecvOpcode.RING_ACTION, new RingActionHandler());
 		registerHandler(RecvOpcode.SPOUSE_CHAT, new SpouseChatHandler());
 		registerHandler(RecvOpcode.PET_AUTO_POT, new PetAutoPotHandler());

@@ -34,14 +34,14 @@ import tools.PacketCreator;
  * 
  * @author XoticStory
  */
-public class PlayerNPCs extends AbstractGameMapObject {
+public class PlayerNpc extends AbstractGameMapObject {
 	private Map<Byte, Integer> equips = new HashMap<Byte, Integer>();
 	private int npcId, face, hair;
 	private byte skin;
 	private String name = "";
 	private int FH, RX0, RX1, CY;
 
-	public PlayerNPCs(ResultSet rs) {
+	public PlayerNpc(ResultSet rs) {
 		try {
 			CY = rs.getInt("cy");
 			name = rs.getString("name");
@@ -117,7 +117,7 @@ public class PlayerNPCs extends AbstractGameMapObject {
 
 	@Override
 	public void sendSpawnData(GameClient client) {
-		client.getSession().write(PacketCreator.spawnPlayerNPC(this));
-		client.getSession().write(PacketCreator.getPlayerNPC(this));
+		client.getSession().write(PacketCreator.spawnPlayerNpc(this));
+		client.getSession().write(PacketCreator.getPlayerNpc(this));
 	}
 }

@@ -321,17 +321,17 @@ public class Monster extends AbstractLoadedLife {
 				}
 
 				if (timeMob.id == 9300338 && (reviveMap.getId() >= 922240100 && reviveMap.getId() <= 922240119)) {
-					if (!reviveMap.containsNPC(9001108)) {
-						Npc npc = LifeFactory.getNPC(9001108);
+					if (!reviveMap.containsNpc(9001108)) {
+						Npc npc = LifeFactory.getNpc(9001108);
 						npc.setPosition(new Point(172, 9));
 						npc.setCy(9);
 						npc.setRx0(172 + 50);
 						npc.setRx1(172 - 50);
 						npc.setFh(27);
 						reviveMap.addMapObject(npc);
-						reviveMap.broadcastMessage(PacketCreator.spawnNPC(npc));
+						reviveMap.broadcastMessage(PacketCreator.spawnNpc(npc));
 					} else {
-						reviveMap.toggleHiddenNPC(9001108);
+						reviveMap.toggleHiddenNpc(9001108);
 					}
 				}
 			}

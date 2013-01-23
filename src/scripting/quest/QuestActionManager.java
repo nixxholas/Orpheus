@@ -21,14 +21,14 @@
 package scripting.quest;
 
 import client.GameClient;
-import scripting.npc.NPCConversationManager;
+import scripting.npc.NpcConversationManager;
 import server.quest.Quest;
 
 /**
  * 
  * @author RMZero213
  */
-public class QuestActionManager extends NPCConversationManager {
+public class QuestActionManager extends NpcConversationManager {
 	private boolean start; // this is if the script in question is start or end
 	private int quest;
 

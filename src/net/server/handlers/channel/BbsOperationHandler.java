@@ -32,7 +32,7 @@ import net.AbstractPacketHandler;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-public final class BBSOperationHandler extends AbstractPacketHandler {
+public final class BbsOperationHandler extends AbstractPacketHandler {
 
 	private String correctLength(String in, int maxSize) {
 		return in.length() > maxSize ? in.substring(0, maxSize) : in;

@@ -140,7 +140,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 	}
 
 	public void spawnNpc(int npcId, Point pos) {
-		Npc npc = LifeFactory.getNPC(npcId);
+		Npc npc = LifeFactory.getNpc(npcId);
 		if (npc != null) {
 			npc.setPosition(pos);
 			npc.setCy(pos.y);
@@ -148,7 +148,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 			npc.setRx1(pos.x - 50);
 			npc.setFh(reactor.getMap().getFootholds().findBelow(pos).getId());
 			reactor.getMap().addMapObject(npc);
-			reactor.getMap().broadcastMessage(PacketCreator.spawnNPC(npc));
+			reactor.getMap().broadcastMessage(PacketCreator.spawnNpc(npc));
 		}
 	}
 

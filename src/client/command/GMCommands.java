@@ -32,7 +32,7 @@ import provider.MapleData;
 import provider.MapleDataProviderFactory;
 import net.server.Channel;
 import net.server.Server;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcScriptManager;
 import server.ItemInfoProvider;
 import server.ShopFactory;
 import server.life.LifeFactory;
@@ -151,7 +151,7 @@ public class GMCommands extends EnumeratedCommands {
 				case dispose:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
-						NPCScriptManager.getInstance().dispose(victim.getClient());
+						NpcScriptManager.getInstance().dispose(victim.getClient());
 						victim.getClient().announce(PacketCreator.enableActions());
 						chr.message("Done.");
 					} else {
@@ -428,7 +428,7 @@ public class GMCommands extends EnumeratedCommands {
 					break;
 				case speak:
 					if (sub.length == 2) {
-						NPCScriptManager.getInstance().start(c, Integer.parseInt(sub[1]), null, null);
+						NpcScriptManager.getInstance().start(c, Integer.parseInt(sub[1]), null, null);
 					} else {
 						chr.message("Usage: !speak number");
 					}

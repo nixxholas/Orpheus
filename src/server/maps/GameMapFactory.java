@@ -164,7 +164,7 @@ public class GameMapFactory {
 					ps.setInt(1, omapid);
 					ResultSet rs = ps.executeQuery();
 					while (rs.next()) {
-						map.addMapObject(new PlayerNPCs(rs));
+						map.addMapObject(new PlayerNpc(rs));
 					}
 					rs.close();
 					ps.close();

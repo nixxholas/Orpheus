@@ -21,7 +21,7 @@
 package constants;
 
 // This file is pretty much here to prevent ServerConstants from getting messy.
-public class ScriptableNPCConstants {
+public class ScriptableNpcConstants {
 	// An array of NPC IDs to make scriptable.
 	public static final int[] SCRIPTABLE_NPCS = new int[]{9010000, 1202000};
 	

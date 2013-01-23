@@ -49,6 +49,6 @@ public final class ScriptedItemHandler extends AbstractPacketHandler {
 			return;
 		}
 		ism.getItemScript(c, info.getScript());
-		// NPCScriptManager.getInstance().start(c, info.getNpc(), null, null);
+		// NpcScriptManager.getInstance().start(c, info.getNpc(), null, null);
 	}
 }

@@ -45,7 +45,7 @@ import java.sql.SQLException;
 import java.util.*;
 import net.server.Server;
 
-public final class MTSHandler extends AbstractPacketHandler {
+public final class MtsHandler extends AbstractPacketHandler {
 	
 	private static enum MtsOperationType {
 		INITIATE_SALE(2),

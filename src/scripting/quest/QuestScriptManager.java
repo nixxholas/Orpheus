@@ -46,7 +46,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 
 	public void start(GameClient c, short questid, int npc) {
 		Quest quest = Quest.getInstance(questid);
-		if (!c.getPlayer().getQuest(quest).getCompletionState().equals(QuestCompletionState.NOT_STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
+		if (!c.getPlayer().getQuest(quest).getCompletionState().equals(QuestCompletionState.NOT_STARTED) || !c.getPlayer().getMap().containsNpc(npc)) {
 			dispose(c);
 			return;
 		}
@@ -78,7 +78,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 			try {
 				qs.start(mode, type, selection);
 			} catch (Exception e) {
-				Output.print("Error executing Quest script. (" + c.getQM().getQuest() + ") " + e);
+				Output.print("Error executing Quest script. (" + c.getQuestManager().getQuest() + ") " + e);
 				dispose(c);
 			}
 		}
@@ -86,7 +86,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 
 	public void end(GameClient c, short questid, int npc) {
 		Quest quest = Quest.getInstance(questid);
-		if (!c.getPlayer().getQuest(quest).getCompletionState().equals(QuestCompletionState.STARTED) || !c.getPlayer().getMap().containsNPC(npc)) {
+		if (!c.getPlayer().getQuest(quest).getCompletionState().equals(QuestCompletionState.STARTED) || !c.getPlayer().getMap().containsNpc(npc)) {
 			dispose(c);
 			return;
 		}
@@ -117,7 +117,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 			try {
 				qs.end(mode, type, selection);
 			} catch (Exception e) {
-				Output.print("Error executing Quest script. (" + c.getQM().getQuest() + ") " + e);
+				Output.print("Error executing Quest script. (" + c.getQuestManager().getQuest() + ") " + e);
 				dispose(c);
 			}
 		}
@@ -136,7 +136,7 @@ public class QuestScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public QuestActionManager getQM(GameClient c) {
+	public QuestActionManager getQuestManager(GameClient c) {
 		return qms.get(c);
 	}
 }

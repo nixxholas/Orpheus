@@ -35,7 +35,7 @@ public class ServerConstants {
 	public static final boolean USE_EXTERNAL_COMMAND_LOADER = new Boolean(true); // if true, commands will be loaded externally. (Beginners should set to false)
 	public static final String COMMAND_JAR_PATH = "dist/Commands.jar"; // path to Commands, also supports loading all jars in a directory.
 	public static final boolean USE_PARANOIA = new Boolean(true); // if true, server uses Orpheus' everything logger, Paranoia.
-	public static final boolean MAKE_NPCS_SCRIPTABLE = new Boolean(true); // if true, the server will force NPCs to be scriptable. (Setup in ScriptableNPCConstants)
+	public static final boolean MAKE_NPCS_SCRIPTABLE = new Boolean(true); // if true, the server will force NPCs to be scriptable. (Setup in ScriptableNpcConstants)
 	public static final int MAX_CHAT_MESSAGE_LENGTH = Byte.MAX_VALUE; // the number of characters allowed in chat messages. (fixes DC hax)
 	public static final boolean PAGINATE_HELP = new Boolean(true); // if true, help messages will be displayed in pages.
 	public static final short ENTRIES_PER_PAGE = 8; // the number of entries to display on each page.

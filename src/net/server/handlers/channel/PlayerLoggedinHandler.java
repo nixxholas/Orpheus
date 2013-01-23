@@ -33,7 +33,7 @@ import client.SkillFactory;
 import gm.server.GMServer;
 import java.sql.SQLException;
 import java.util.List;
-import constants.ScriptableNPCConstants;
+import constants.ScriptableNpcConstants;
 import constants.ServerConstants;
 import tools.DatabaseConnection;
 import net.AbstractPacketHandler;
@@ -241,8 +241,8 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
 		player.expirationTask();
 		player.refreshRates();
 		if (ServerConstants.MAKE_NPCS_SCRIPTABLE) {
-			for (int i = 0; i < ScriptableNPCConstants.SCRIPTABLE_NPCS.length; i++) {
-				c.announce(PacketCreator.setNPCScriptable(ScriptableNPCConstants.SCRIPTABLE_NPCS[i], ScriptableNPCConstants.SCRIPTABLE_NPCS_DESC[i]));
+			for (int i = 0; i < ScriptableNpcConstants.SCRIPTABLE_NPCS.length; i++) {
+				c.announce(PacketCreator.setNpcScriptable(ScriptableNpcConstants.SCRIPTABLE_NPCS[i], ScriptableNpcConstants.SCRIPTABLE_NPCS_DESC[i]));
 			}
 		}
 		if (ServerConstants.GREET_PLAYERS_ON_LOGIN && !player.isGM()) {

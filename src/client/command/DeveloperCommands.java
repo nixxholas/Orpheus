@@ -121,7 +121,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					chr.message("Done.");
 					break;
 				case npc:
-					npc = LifeFactory.getNPC(Integer.parseInt(sub[1]));
+					npc = LifeFactory.getNpc(Integer.parseInt(sub[1]));
 					if (npc != null) {
 						npc.setPosition(chr.getPosition());
 						npc.setCy(chr.getPosition().y);
@@ -129,7 +129,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						npc.setRx1(chr.getPosition().x - 50);
 						npc.setFh(chr.getMap().getFootholds().findBelow(c.getPlayer().getPosition()).getId());
 						chr.getMap().addMapObject(npc);
-						chr.getMap().broadcastMessage(PacketCreator.spawnNPC(npc));
+						chr.getMap().broadcastMessage(PacketCreator.spawnNpc(npc));
 					}
 					break;
 				case packet:
@@ -158,9 +158,9 @@ public class DeveloperCommands extends EnumeratedCommands {
 					break;
 				case playernpc:
 					if (sub.length > 2) {
-						chr.playerNPC(c.getChannelServer().getPlayerStorage().getCharacterByName(sub[1]), Integer.parseInt(sub[2]));
+						chr.playerNpc(c.getChannelServer().getPlayerStorage().getCharacterByName(sub[1]), Integer.parseInt(sub[2]));
 					} else if (sub.length == 2) {
-						chr.playerNPC(chr, Integer.parseInt(sub[1]));
+						chr.playerNpc(chr, Integer.parseInt(sub[1]));
 					} else {
 						chr.dropMessage("Usage: !playernpc characterName scriptId || !playernpc scriptId");
 					}
@@ -205,7 +205,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					break;
 				case pnpc:
 					npcId = Integer.parseInt(sub[1]);
-					npc = LifeFactory.getNPC(npcId);
+					npc = LifeFactory.getNpc(npcId);
 					xpos = chr.getPosition().x;
 					ypos = chr.getPosition().y;
 					fh = chr.getMap().getFootholds().findBelow(chr.getPosition()).getId();
@@ -233,7 +233,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 							chr.dropMessage("Failed to save NPC to the database.");
 						}
 						chr.getMap().addMapObject(npc);
-						chr.getMap().broadcastMessage(PacketCreator.spawnNPC(npc));
+						chr.getMap().broadcastMessage(PacketCreator.spawnNpc(npc));
 					} else {
 						chr.dropMessage("You have entered an invalid NPC id.");
 					}

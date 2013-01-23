@@ -87,7 +87,7 @@ import server.maps.GameMapFactory;
 import server.maps.GameMapObject;
 import server.maps.GameMapObjectType;
 import server.maps.Summon;
-import server.maps.PlayerNPCs;
+import server.maps.PlayerNpc;
 import server.maps.SavedLocation;
 import server.maps.SavedLocationType;
 import server.partyquest.MonsterCarnival;
@@ -257,7 +257,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public static GameCharacter getDefault(GameClient c) {
 		GameCharacter ret = new GameCharacter();
 		ret.client = c;
-		ret.gmLevel = c.gmLevel();
+		ret.gmLevel = c.getGmLevel();
 		ret.hp = 50;
 		ret.maxhp = 50;
 		ret.mp = 5;
@@ -2933,7 +2933,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		mount = new Mount(this, id, skillid);
 	}
 
-	public void playerNPC(GameCharacter v, int scriptId) {
+	public void playerNpc(GameCharacter v, int scriptId) {
 		int npcId;
 		try {
 			Connection con = DatabaseConnection.getConnection();
@@ -2976,11 +2976,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				ps.setInt(1, scriptId);
 				rs = ps.executeQuery();
 				rs.next();
-				PlayerNPCs pn = new PlayerNPCs(rs);
+				PlayerNpc pn = new PlayerNpc(rs);
 				for (Channel channel : Server.getInstance().getChannelsFromWorld(worldId)) {
 					GameMap m = channel.getMapFactory().getMap(getMapId());
-					m.broadcastMessage(PacketCreator.spawnPlayerNPC(pn));
-					m.broadcastMessage(PacketCreator.getPlayerNPC(pn));
+					m.broadcastMessage(PacketCreator.spawnPlayerNpc(pn));
+					m.broadcastMessage(PacketCreator.getPlayerNpc(pn));
 					m.addMapObject(pn);
 				}
 			}

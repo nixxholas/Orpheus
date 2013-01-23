@@ -40,7 +40,7 @@ import constants.skills.Aran;
 import java.sql.SQLException;
 import net.AbstractPacketHandler;
 import net.server.Server;
-import scripting.npc.NPCScriptManager;
+import scripting.npc.NpcScriptManager;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
 import server.Shop;
@@ -508,7 +508,7 @@ public final class UseCashItemHandler extends AbstractPacketHandler {
 			ii.getItemEffect(itemId).applyTo(player);
 			remove(c, itemId);
 		} else if (itemType == 533) {
-			NPCScriptManager.getInstance().start(c, 9010009, null, null);
+			NpcScriptManager.getInstance().start(c, 9010009, null, null);
 		} else if (itemType == 537) {
 			player.setChalkboard(reader.readMapleAsciiString());
 			player.getMap().broadcastMessage(PacketCreator.useChalkboard(player, false));

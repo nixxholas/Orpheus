@@ -44,7 +44,7 @@ public class LifeFactory {
 
 	public static AbstractLoadedLife getLife(int id, String type) {
 		if (type.equalsIgnoreCase("n")) {
-			return getNPC(id);
+			return getNpc(id);
 		} else if (type.equalsIgnoreCase("m")) {
 			return getMonster(id);
 		} else {
@@ -153,7 +153,7 @@ public class LifeFactory {
 		}
 	}
 
-	public static Npc getNPC(int nid) {
+	public static Npc getNpc(int nid) {
 		return new Npc(nid, new NpcStats(MapleDataTool.getString(nid + "/name", npcStringData, "MISSINGNO")));
 	}
 

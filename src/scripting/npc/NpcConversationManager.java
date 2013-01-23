@@ -69,12 +69,12 @@ import tools.PacketCreator;
  * 
  * @author Matze
  */
-public class NPCConversationManager extends AbstractPlayerInteraction {
+public class NpcConversationManager extends AbstractPlayerInteraction {
 
 	private int npc;
 	private String getText;
 
-	public NPCConversationManager(GameClient c, int npc) {
+	public NpcConversationManager(GameClient c, int npc) {
 		super(c);
 		this.npc = npc;
 	}
@@ -84,75 +84,75 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void dispose() {
-		NPCScriptManager.getInstance().dispose(this);
+		NpcScriptManager.getInstance().dispose(this);
 	}
 
 	public void sendNext(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "00 01", (byte) 0));
 	}
 
 	public void sendPrev(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "01 00", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "01 00", (byte) 0));
 	}
 
 	public void sendNextPrev(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "01 01", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "01 01", (byte) 0));
 	}
 
 	public void sendOk(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "00 00", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "00 00", (byte) 0));
 	}
 
 	public void sendYesNo(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 1, text, "", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 1, text, "", (byte) 0));
 	}
 
 	public void sendAcceptDecline(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0x0C, text, "", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0x0C, text, "", (byte) 0));
 	}
 
 	public void sendSimple(String text) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 4, text, "", (byte) 0));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 4, text, "", (byte) 0));
 	}
 
 	public void sendNext(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "00 01", speaker));
 	}
 
 	public void sendPrev(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "01 00", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "01 00", speaker));
 	}
 
 	public void sendNextPrev(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "01 01", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "01 01", speaker));
 	}
 
 	public void sendOk(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0, text, "00 00", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0, text, "00 00", speaker));
 	}
 
 	public void sendYesNo(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 1, text, "", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 1, text, "", speaker));
 	}
 
 	public void sendAcceptDecline(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 0x0C, text, "", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 0x0C, text, "", speaker));
 	}
 
 	public void sendSimple(String text, byte speaker) {
-		getClient().announce(PacketCreator.getNPCTalk(npc, (byte) 4, text, "", speaker));
+		getClient().announce(PacketCreator.getNpcTalk(npc, (byte) 4, text, "", speaker));
 	}
 
 	public void sendStyle(String text, int styles[]) {
-		getClient().announce(PacketCreator.getNPCTalkStyle(npc, text, styles));
+		getClient().announce(PacketCreator.getNpcTalkStyle(npc, text, styles));
 	}
 
 	public void sendGetNumber(String text, int def, int min, int max) {
-		getClient().announce(PacketCreator.getNPCTalkNum(npc, text, def, min, max));
+		getClient().announce(PacketCreator.getNpcTalkNum(npc, text, def, min, max));
 	}
 
 	public void sendGetText(String text) {
-		getClient().announce(PacketCreator.getNPCTalkText(npc, text, ""));
+		getClient().announce(PacketCreator.getNpcTalkText(npc, text, ""));
 	}
 
 	/*
