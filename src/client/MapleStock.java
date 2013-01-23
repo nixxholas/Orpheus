@@ -20,33 +20,30 @@
  */
 package client;
 
-import tools.Triplet;
-
 /**
  * @author Aaron Weiss
  */
 public class MapleStock {
 	private String name;
 	private String ticker;
-	private Triplet<Integer, Integer, Integer> data;
-	
+	private StockEntry entry;
 
 	public MapleStock(String ticker, int count, int value, int change) {
-		this(null, ticker, new Triplet<Integer, Integer, Integer>(count, value, change));
+		this(null, ticker, new StockEntry(count, value, change));
 	}
 	
 	public MapleStock(String name, String ticker, int count, int value, int change) {
-		this(name, ticker, new Triplet<Integer, Integer, Integer>(count, value, change));
+		this(name, ticker, new StockEntry(count, value, change));
 	}
 	
-	public MapleStock(String name, String ticker, Triplet<Integer, Integer, Integer> data) {
+	public MapleStock(String name, String ticker, StockEntry entry) {
 		if (name != null) {
 			this.name = name;
 		} else {
 			this.name = "Unknown";
 		}
 		this.ticker = ticker;
-		this.data = data;
+		this.entry = entry;
 	}
 	
 	public String getName() {
@@ -58,31 +55,31 @@ public class MapleStock {
 	}
 	
 	public int getCount() {
-		return data.getLeft();
+		return entry.count;
 	}
 	
 	public int getValue() {
-		return data.getMiddle();
+		return entry.value;
 	}
 	
 	public int getChange() {
-		return data.getRight();
+		return entry.change;
 	}
 	
 	public void update(int change) {
-		this.update(new Triplet<Integer, Integer, Integer>(this.getCount(), this.getValue(), change));
+		this.update(new StockEntry(this.getCount(), this.getValue(), change));
 	}
 	
 	public void update(int value, int change) {
-		this.update(new Triplet<Integer, Integer, Integer>(this.getCount(), value, change));
+		this.update(new StockEntry(this.getCount(), value, change));
 	}
 	
 	public void update(int count, int value, int change) {
-		this.update(new Triplet<Integer, Integer, Integer>(count, value, change));
+		this.update(new StockEntry(count, value, change));
 	}
 	
-	public void update(Triplet<Integer, Integer, Integer> data) {
-		this.data = data;
+	public void update(StockEntry entry) {
+		this.entry = entry;
 	}
 	
 	public boolean equals(Object o) {
