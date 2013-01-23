@@ -131,12 +131,12 @@ public final class GeneralChatHandler extends net.AbstractPacketHandler {
 			}
 			if (!chr.isHidden()) {
 				if (s.length() <= ServerConstants.MAX_CHAT_MESSAGE_LENGTH) {
-					chr.getMap().broadcastMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGmText()), reader.readByte()));
+					chr.getMap().broadcastMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.hasWhiteText()), reader.readByte()));
 				} else {
 					chr.dropMessage("Your message was too long.");
 				}
 			} else {
-				chr.getMap().broadcastGMMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.getGmText()), reader.readByte()));
+				chr.getMap().broadcastGMMessage(PacketCreator.getChatText(chr.getId(), s, (chr.isGM() && chr.hasWhiteText()), reader.readByte()));
 			}
 		}
 	}

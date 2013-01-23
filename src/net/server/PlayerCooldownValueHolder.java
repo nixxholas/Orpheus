@@ -24,12 +24,12 @@ package net.server;
  * 
  * @author Danny
  */
-public class PlayerCoolDownValueHolder {
+public class PlayerCooldownValueHolder {
 	public int skillId;
 	public long startTime;
 	public long length;
 
-	public PlayerCoolDownValueHolder(int skillId, long startTime, long length) {
+	public PlayerCooldownValueHolder(int skillId, long startTime, long length) {
 		this.skillId = skillId;
 		this.startTime = startTime;
 		this.length = length;

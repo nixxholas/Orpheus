@@ -52,7 +52,7 @@ import net.server.Party;
 import net.server.PartyCharacter;
 import net.server.PartyOperation;
 import net.server.PlayerBuffValueHolder;
-import net.server.PlayerCoolDownValueHolder;
+import net.server.PlayerCooldownValueHolder;
 import net.server.PlayerDiseaseValueHolder;
 import net.server.Server;
 import net.server.World;
@@ -200,7 +200,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private EnumMap<BuffStat, BuffStatValueHolder> effects = new EnumMap<BuffStat, BuffStatValueHolder>(BuffStat.class);
 	private Map<Integer, KeyBinding> keymap = new LinkedHashMap<Integer, KeyBinding>();
 	private Map<Integer, Summon> summons = new LinkedHashMap<Integer, Summon>();
-	private Map<Integer, CooldownValueHolder> coolDowns = new LinkedHashMap<Integer, CooldownValueHolder>(50);
+	private Map<Integer, CooldownValueHolder> cooldowns = new LinkedHashMap<Integer, CooldownValueHolder>(50);
 	private EnumMap<Disease, DiseaseValueHolder> diseases = new EnumMap<Disease, DiseaseValueHolder>(Disease.class);
 	private List<Door> doors = new ArrayList<Door>();
 	private ScheduledFuture<?> dragonBloodSchedule;
@@ -293,10 +293,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void addCooldown(int skillId, long startTime, long length, ScheduledFuture<?> timer) {
-		if (this.coolDowns.containsKey(Integer.valueOf(skillId))) {
-			this.coolDowns.remove(skillId);
+		if (this.cooldowns.containsKey(Integer.valueOf(skillId))) {
+			this.cooldowns.remove(skillId);
 		}
-		this.coolDowns.put(Integer.valueOf(skillId), new CooldownValueHolder(skillId, startTime, length, timer));
+		this.cooldowns.put(Integer.valueOf(skillId), new CooldownValueHolder(skillId, startTime, length, timer));
 	}
 
 	public DojoState getDojoState() {
@@ -1368,7 +1368,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void enterHardcore() {
 		this.hardcore = true;
-		saveToDB(true);
+		saveToDb(true);
 	}
 
 	public void equipChanged() {
@@ -1487,12 +1487,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return ret;
 	}
 
-	public List<PlayerCoolDownValueHolder> getAllCooldowns() {
-		List<PlayerCoolDownValueHolder> ret = new ArrayList<PlayerCoolDownValueHolder>();
-		for (CooldownValueHolder mcdvh : coolDowns.values()) {
-			ret.add(new PlayerCoolDownValueHolder(mcdvh.skillId, mcdvh.startTime, mcdvh.length));
+	public List<PlayerCooldownValueHolder> getAllCooldowns() {
+		List<PlayerCooldownValueHolder> result = new ArrayList<PlayerCooldownValueHolder>();
+		for (CooldownValueHolder value : cooldowns.values()) {
+			result.add(new PlayerCooldownValueHolder(value.skillId, value.startTime, value.length));
 		}
-		return ret;
+		return result;
 	}
 
 	public int getAllianceRank() {
@@ -1964,7 +1964,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return 3;
 	}
 
-	public int getNoPets() {
+	public int getPetCount() {
 		int ret = 0;
 		for (int i = 0; i < 3; i++) {
 			if (pets[i] != null) {
@@ -1974,7 +1974,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return ret;
 	}
 
-	public int getNumControlledMonsters() {
+	public int getControlledMonsterCount() {
 		return controlled.size();
 	}
 
@@ -2240,7 +2240,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return worldId;
 	}
 
-	public void giveCoolDowns(final int skillid, long starttime, long length) {
+	public void giveCooldowns(final int skillid, long starttime, long length) {
 		if (skillid == 5221999) {
 			this.battleshipHp = (int) length;
 			addCooldown(skillid, 0, length, null);
@@ -2799,7 +2799,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 					if (skillid != 5221999 && (length + startTime < System.currentTimeMillis())) {
 						continue;
 					}
-					character.giveCoolDowns(skillid, startTime, length);
+					character.giveCooldowns(skillid, startTime, length);
 				}
 				rs.close();
 				ps.close();
@@ -3049,7 +3049,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 		if (isHardcoreMode()) {
 			dead = true;
-			saveToDB(true);
+			saveToDb(true);
 			client.disconnect();
 		}
 		client.announce(PacketCreator.enableActions());
@@ -3224,9 +3224,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void removeAllCooldownsExcept(int id) {
-		for (CooldownValueHolder mcvh : coolDowns.values()) {
-			if (mcvh.skillId != id) {
-				coolDowns.remove(mcvh.skillId);
+		for (CooldownValueHolder value : cooldowns.values()) {
+			if (value.skillId != id) {
+				cooldowns.remove(value.skillId);
 			}
 		}
 	}
@@ -3237,8 +3237,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void removeCooldown(int skillId) {
-		if (this.coolDowns.containsKey(skillId)) {
-			this.coolDowns.remove(skillId);
+		if (this.cooldowns.containsKey(skillId)) {
+			this.cooldowns.remove(skillId);
 		}
 	}
 
@@ -3378,16 +3378,17 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void saveCooldowns() {
-		if (getAllCooldowns().size() > 0) {
+		final List<PlayerCooldownValueHolder> all = getAllCooldowns();
+		if (all.size() > 0) {
 			try {
 				Connection con = DatabaseConnection.getConnection();
 				deleteWhereCharacterId(con, "DELETE FROM `cooldowns` WHERE `charid` = ?");
 				PreparedStatement ps = con.prepareStatement("INSERT INTO `cooldowns` (`charid`, `SkillID`, `StartTime`, `length`) VALUES (?, ?, ?, ?)");
 				ps.setInt(1, getId());
-				for (PlayerCoolDownValueHolder cooling : getAllCooldowns()) {
-					ps.setInt(2, cooling.skillId);
-					ps.setLong(3, cooling.startTime);
-					ps.setLong(4, cooling.length);
+				for (PlayerCooldownValueHolder cooldown : all) {
+					ps.setInt(2, cooldown.skillId);
+					ps.setLong(3, cooldown.startTime);
+					ps.setLong(4, cooldown.length);
 					ps.addBatch();
 				}
 				ps.executeBatch();
@@ -3415,7 +3416,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		savedLocations[SavedLocationType.fromString(type).ordinal()] = new SavedLocation(getMapId(), closest != null ? closest.getId() : 0);
 	}
 
-	public void saveToDB(boolean update) {
+	public void saveToDb(boolean update) {
 		Connection con = DatabaseConnection.getConnection();
 		try {
 			con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
@@ -4127,7 +4128,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (slots <= 96) {
 			inventory[type].setSlotLimit(slots);
 
-			saveToDB(true);
+			saveToDb(true);
 			if (update) {
 				client.announce(PacketCreator.updateInventorySlotLimit(type, slots));
 			}
@@ -4221,11 +4222,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		TimerManager.getInstance().schedule(new DojoForceWarpAction(rightmap), delay); 
 	}
 	
-	public boolean getGmText() {
+	public boolean hasWhiteText() {
 		return whitetext;
 	}
 	
-	public void toggleGmText() {
+	public void toggleWhiteText() {
 		this.whitetext = !this.whitetext;
 	}
 
@@ -4267,9 +4268,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		public final byte skillevel;
 		public final long expiration;
 
-		public SkillEntry(byte skillevel, int masterlevel, long expiration) {
-			this.skillevel = skillevel;
-			this.masterlevel = masterlevel;
+		public SkillEntry(byte level, int masterLevel, long expiration) {
+			this.skillevel = level;
+			this.masterlevel = masterLevel;
 			this.expiration = expiration;
 		}
 
@@ -4280,7 +4281,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public boolean skillisCooling(int skillId) {
-		return coolDowns.containsKey(Integer.valueOf(skillId));
+		return cooldowns.containsKey(Integer.valueOf(skillId));
 	}
 
 	public void startFullnessSchedule(final int decrease, final Pet pet, int petSlot) {
@@ -4289,6 +4290,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (ServerConstants.PETS_NEVER_HUNGRY) {
 			return; 
 		}
+		
 		ScheduledFuture<?> schedule = TimerManager.getInstance().register(
 				new FullnessScheduleAction(pet, decrease), 
 				ServerConstants.PET_FULLNESS_REPEAT_TIME, 
@@ -4297,12 +4299,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		fullnessSchedule[petSlot] = schedule;
 	}
 
-	public void startMapEffect(String msg, int itemId) {
-		startMapEffect(msg, itemId, 30000);
+	public void startMapEffect(String message, int itemId) {
+		startMapEffect(message, itemId, 30000);
 	}
 
-	public void startMapEffect(String msg, int itemId, int duration) {
-		final GameMapEffect mapEffect = new GameMapEffect(msg, itemId);
+	public void startMapEffect(String message, int itemId, int duration) {
+		final GameMapEffect mapEffect = new GameMapEffect(message, itemId);
 		getClient().announce(mapEffect.makeStartData());
 		TimerManager.getInstance().schedule(new MapEffectAction(mapEffect), duration);
 	}

@@ -103,7 +103,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						InventoryManipulator.addById(c, 4001101, (short) 1, chr.getName(), -1, -1);
 						chr.message("You've lost 1,000,000,000 mesos.");
 						chr.message("You now have " + chr.getItemQuantity(4001101, true) + " rice cakes.");
-						chr.saveToDB(true);
+						chr.saveToDb(true);
 					} else {
 						chr.message("You cannot afford a rice cake!");
 					}
@@ -238,7 +238,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					}
 					break;
 				case quit:
-					chr.saveToDB(true);
+					chr.saveToDb(true);
 					c.getSession().close(false);
 					break;
 				case rank:
@@ -278,13 +278,13 @@ public class PlayerCommands extends EnumeratedCommands {
 					if (chr.getLevel() >= chr.getMaxLevel()) {
 						if (sub[1].equalsIgnoreCase("standard") || sub[1].equalsIgnoreCase("beginner")) {
 							chr.rebirthBeginner();
-							chr.saveToDB(true);
+							chr.saveToDb(true);
 						} else if (sub[1].equalsIgnoreCase("cygnus") || sub[1].equalsIgnoreCase("noblesse")) {
 							chr.rebirthNoblesse();
-							chr.saveToDB(true);
+							chr.saveToDb(true);
 						} else if (sub[1].equalsIgnoreCase("aran")) {
 							chr.rebirthAran();
-							chr.saveToDB(true);
+							chr.saveToDb(true);
 						} else {
 							chr.message("Rebirth: ");
 							chr.message("To use this command, follow it with either beginner, noblesse, or aran.");
@@ -297,7 +297,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					chr.message("You have " + chr.getRebirths() + " rebirths.");
 					break;
 				case save:
-					chr.saveToDB(true);
+					chr.saveToDb(true);
 					chr.dropMessage("Done.");
 					break;
 				case sell:
@@ -307,7 +307,7 @@ public class PlayerCommands extends EnumeratedCommands {
 							chr.gainMeso(1000000000, false); // Gains 1,000,000,000 mesos.
 							chr.message("You've gained 1,000,000,000 mesos.");
 							chr.message("You now have " + chr.getItemQuantity(4001101, true) + " rice cakes.");
-							chr.saveToDB(true);
+							chr.saveToDb(true);
 						} else {
 							chr.message("You don't have enough room to sell a rice cake!");
 						}

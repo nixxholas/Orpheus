@@ -74,7 +74,7 @@ import server.maps.GameMapObjectType;
 import server.maps.Mist;
 import server.maps.Summon;
 import server.maps.SummonMovementType;
-import net.server.PlayerCoolDownValueHolder;
+import net.server.PlayerCooldownValueHolder;
 import tools.ArrayMap;
 import tools.PacketCreator;
 import constants.skills.Fighter;
@@ -739,7 +739,7 @@ public class StatEffect {
 			Mist mist = new Mist(bounds, applyfrom, this);
 			applyfrom.getMap().spawnMist(mist, getDuration(), sourceid != Shadower.SMOKE_SCREEN, false);
 		} else if (isTimeLeap()) { // Time Leap
-			for (PlayerCoolDownValueHolder i : applyto.getAllCooldowns()) {
+			for (PlayerCooldownValueHolder i : applyto.getAllCooldowns()) {
 				if (i.skillId != Buccaneer.TIME_LEAP) {
 					applyto.removeCooldown(i.skillId);
 				}
@@ -760,7 +760,7 @@ public class StatEffect {
 						affectedp.add(affected);
 					}
 					if (isTimeLeap()) {
-						for (PlayerCoolDownValueHolder i : affected.getAllCooldowns()) {
+						for (PlayerCooldownValueHolder i : affected.getAllCooldowns()) {
 							affected.removeCooldown(i.skillId);
 						}
 					}
@@ -930,7 +930,7 @@ public class StatEffect {
 				List<BuffStatDelta> stat = Collections.singletonList(new BuffStatDelta(BuffStat.MORPH, getMorph(applyto)));
 				mbuff = PacketCreator.giveForeignBuff(applyto.getId(), stat);
 			} else if (isTimeLeap()) {
-				for (PlayerCoolDownValueHolder i : applyto.getAllCooldowns()) {
+				for (PlayerCooldownValueHolder i : applyto.getAllCooldowns()) {
 					if (i.skillId != Buccaneer.TIME_LEAP) {
 						applyto.removeCooldown(i.skillId);
 					}

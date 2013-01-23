@@ -45,7 +45,7 @@ public final class ChangeMapHandler extends AbstractPacketHandler {
 		if (reader.available() == 0) { 
 			// Cash Shop :)
 			String[] socket = c.getChannelServer().getIP().split(":");
-			chr.saveToDB(true);
+			chr.saveToDb(true);
 			chr.getCashShop().open(false);
 			c.getChannelServer().removePlayer(chr);
 			c.updateLoginState(GameClient.State.TRANSITION);

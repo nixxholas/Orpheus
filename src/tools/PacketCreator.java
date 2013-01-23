@@ -77,7 +77,7 @@ import net.server.handlers.channel.SummonDamageHandler.SummonAttackEntry;
 import net.server.Party;
 import net.server.PartyCharacter;
 import net.server.PartyOperation;
-import net.server.PlayerCoolDownValueHolder;
+import net.server.PlayerCooldownValueHolder;
 import net.server.Server;
 import net.server.guild.Alliance;
 import net.server.guild.Guild;
@@ -485,7 +485,7 @@ public class PacketCreator {
 			}
 		}
 		w.writeAsShort(chr.getAllCooldowns().size());
-		for (PlayerCoolDownValueHolder cooling : chr.getAllCooldowns()) {
+		for (PlayerCooldownValueHolder cooling : chr.getAllCooldowns()) {
 			w.writeInt(cooling.skillId);
 			int timeLeft = (int) (cooling.length + cooling.startTime - System.currentTimeMillis());
 			w.writeAsShort(timeLeft / 1000);

@@ -80,7 +80,7 @@ public final class ChangeChannelHandler extends AbstractPacketHandler {
 		chr.getInventory(InventoryType.EQUIPPED).checked(false); // test
 		chr.getMap().removePlayer(chr);
 		chr.getClient().getChannelServer().removePlayer(chr);
-		chr.saveToDB(true);
+		chr.saveToDb(true);
 		server.getLoad(c.getWorldId()).get(c.getChannelId()).decrementAndGet();
 		chr.getClient().updateLoginState(GameClient.State.TRANSITION);
 		try {

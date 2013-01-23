@@ -179,7 +179,7 @@ public class EventManager {
 		try {
 			for (Channel chan : Server.getInstance().getAllChannels()) {
             	for (GameCharacter players : chan.getPlayerStorage().getAllCharacters()) {
-            		players.saveToDB(true);
+            		players.saveToDb(true);
             	}
         	}
 		} catch (Exception e) {

@@ -45,7 +45,7 @@ public class EnterCashShopHandler extends AbstractPacketHandler {
 			player.cancelBuffEffects();
 			player.cancelExpirationTask();
 			c.announce(PacketCreator.openCashShop(c, false));
-			player.saveToDB(true);
+			player.saveToDb(true);
 			player.getCashShop().open(true);
 			player.getMap().removePlayer(player);
 			c.announce(PacketCreator.showCashInventory(c));

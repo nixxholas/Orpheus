@@ -737,7 +737,7 @@ public class GameClient {
 		try {
 			if (player != null && isLoggedIn()) {
 				removePlayer();
-				player.saveToDB(true);
+				player.saveToDb(true);
 
 				World worlda = getWorldServer();
 				player.saveCooldowns();

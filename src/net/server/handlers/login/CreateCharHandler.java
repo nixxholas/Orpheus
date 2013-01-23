@@ -102,7 +102,7 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 		IItem eq_weapon = ItemInfoProvider.getInstance().getEquipById(weapon);
 		eq_weapon.setSlot((byte) -11);
 		equip.addFromDB(eq_weapon.copy());
-		newchar.saveToDB(false);
+		newchar.saveToDb(false);
 		c.announce(PacketCreator.addNewCharEntry(newchar));
 	}
 }

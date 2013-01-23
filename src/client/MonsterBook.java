@@ -52,7 +52,7 @@ public final class MonsterBook {
 		c.getSession().write(PacketCreator.addCard(false, cardid, 1));
 		c.getSession().write(PacketCreator.showGainCard());
 		calculateLevel();
-		c.getPlayer().saveToDB(true);
+		c.getPlayer().saveToDb(true);
 	}
 
 	private void calculateLevel() {

@@ -364,7 +364,7 @@ public class GMCommands extends EnumeratedCommands {
 				case saveall:
 					for (Channel chan : Server.getInstance().getAllChannels()) {
 		                for (GameCharacter plyrs : chan.getPlayerStorage().getAllCharacters()) {
-		                    plyrs.saveToDB(true);
+		                    plyrs.saveToDb(true);
 		                }
 		            }
 		            chr.message("Save Complete.");
@@ -434,8 +434,8 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					break;
 				case texttype:
-					chr.toggleGmText();
-					chr.message("Your chat messages are now " + (chr.getGmText() ? "white." : "black."));
+					chr.toggleWhiteText();
+					chr.message("Your chat messages are now " + (chr.hasWhiteText() ? "white." : "black."));
 					break;
 				case unban:
 					try {

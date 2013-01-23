@@ -45,7 +45,7 @@ public final class PetFoodHandler extends AbstractPacketHandler {
 		}
 		abm.spam(2);
 		abm.setTimestamp(1, reader.readInt());
-		if (chr.getNoPets() == 0) {
+		if (chr.getPetCount() == 0) {
 			c.getSession().write(PacketCreator.enableActions());
 			return;
 		}

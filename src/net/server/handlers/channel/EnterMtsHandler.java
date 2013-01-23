@@ -54,7 +54,7 @@ public final class EnterMtsHandler extends AbstractPacketHandler {
 		} else {
 			Server.getInstance().getPlayerBuffStorage().addBuffsToStorage(chr.getId(), chr.getAllBuffs());
 			chr.cancelExpirationTask();
-			chr.saveToDB(true);
+			chr.saveToDb(true);
 			chr.getMap().removePlayer(c.getPlayer());
 			try {
 				c.announce(PacketCreator.openCashShop(c, true));
