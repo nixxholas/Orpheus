@@ -969,9 +969,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		getMap().broadcastMessage(this, PacketCreator.showForeignEffect(getId(), 8), false);
 	}
 
-	public void changeKeybinding(int key, KeyBinding keybinding) {
-		if (keybinding.getType() != 0) {
-			keymap.put(Integer.valueOf(key), keybinding);
+	public void changeKeyBinding(int key, KeyBinding binding) {
+		if (binding.type != 0) {
+			keymap.put(Integer.valueOf(key), binding);
 		} else {
 			keymap.remove(Integer.valueOf(key));
 		}
@@ -3570,10 +3570,13 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			deleteWhereCharacterId(con, "DELETE FROM `keymap` WHERE `characterid` = ?");
 			ps = con.prepareStatement("INSERT INTO `keymap` (`characterid,` `key`, `type`, `action`) VALUES (?, ?, ?, ?)");
 			ps.setInt(1, id);
-			for (Entry<Integer, KeyBinding> keybinding : keymap.entrySet()) {
-				ps.setInt(2, keybinding.getKey().intValue());
-				ps.setInt(3, keybinding.getValue().getType());
-				ps.setInt(4, keybinding.getValue().getAction());
+			for (Entry<Integer, KeyBinding> entry : keymap.entrySet()) {
+				final Integer keyId = entry.getKey();
+				ps.setInt(2, keyId.intValue());
+				
+				final KeyBinding binding = entry.getValue();
+				ps.setInt(3, binding.type);
+				ps.setInt(4, binding.action);
 				ps.addBatch();
 			}
 			ps.executeBatch();

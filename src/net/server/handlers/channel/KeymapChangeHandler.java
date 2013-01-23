@@ -42,7 +42,7 @@ public final class KeymapChangeHandler extends AbstractPacketHandler {
 				if (skill != null && c.getPlayer().getSkillLevel(skill) < 1) {
 					continue;
 				}
-				c.getPlayer().changeKeybinding(key, new KeyBinding(type, action));
+				c.getPlayer().changeKeyBinding(key, new KeyBinding(type, action));
 			}
 		}
 	}

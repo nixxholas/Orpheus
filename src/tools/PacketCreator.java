@@ -3224,15 +3224,15 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket getKeymap(Map<Integer, KeyBinding> keybindings) {
+	public static GamePacket getKeymap(Map<Integer, KeyBinding> bindings) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.KEYMAP.getValue());
 		w.writeAsByte(0);
 		for (int x = 0; x < 90; x++) {
-			KeyBinding binding = keybindings.get(Integer.valueOf(x));
+			KeyBinding binding = bindings.get(Integer.valueOf(x));
 			if (binding != null) {
-				w.writeAsByte(binding.getType());
-				w.writeInt(binding.getAction());
+				w.writeAsByte(binding.type);
+				w.writeInt(binding.action);
 			} else {
 				w.writeAsByte(0);
 				w.writeInt(0);

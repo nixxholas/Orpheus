@@ -18,18 +18,12 @@
 package client;
 
 public class KeyBinding {
-	private int type, action;
+	
+	public final int type;
+	public final int action;
 
 	public KeyBinding(int type, int action) {
 		this.type = type;
 		this.action = action;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public int getAction() {
-		return action;
 	}
 }
