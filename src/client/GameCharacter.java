@@ -125,6 +125,9 @@ import constants.skills.ThunderBreaker;
 
 public class GameCharacter extends AbstractAnimatedGameMapObject {
 
+	private static String[] ariantRoomLeader = new String[3];
+	private static int[] ariantRoomSlot = new int[3];
+
 	private byte worldId;
 	private int accountId, id;
 	private String name;
@@ -157,6 +160,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int vanquisherStage, vanquisherKills;
 	private int allowWarpToId;
 	private RateInfo rateInfo = new RateInfo();
+	private RingsInfo rings = new RingsInfo();
 	private MinigameStats omokStats, matchingCardStats;
 	private DojoState dojoState = new DojoState();
 	private int married;
@@ -214,11 +218,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	// private NumberFormat nf = new DecimalFormat("#,###,###,###");
 	private ArrayList<Integer> excluded = new ArrayList<Integer>();
 	private MonsterBook monsterBook;
-	private List<Ring> crushRings = new ArrayList<Ring>();
-	private List<Ring> friendshipRings = new ArrayList<Ring>();
-	private Ring marriageRing;
-	private static String[] ariantRoomLeader = new String[3];
-	private static int[] ariantRoomSlot = new int[3];
 	private CashShop cashshop;
 	private long portaldelay = 0, lastCombo = 0;
 	private short comboCount = 0;
@@ -302,29 +301,11 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public DojoState getDojoState() {
 		return this.dojoState;
 	}
+
+	public RingsInfo getRingsInfo() {
+		return this.rings;
+	}
 	
-	public void addCrushRing(Ring r) {
-		crushRings.add(r);
-	}
-
-	public Ring getRingById(int id) {
-		for (Ring ring : getCrushRings()) {
-			if (ring.getRingId() == id) {
-				return ring;
-			}
-		}
-		for (Ring ring : getFriendshipRings()) {
-			if (ring.getRingId() == id) {
-				return ring;
-			}
-		}
-		if (getMarriageRing().getRingId() == id) {
-			return getMarriageRing();
-		}
-
-		return null;
-	}
-
 	public void addDoor(Door door) {
 		doors.add(door);
 	}
@@ -335,10 +316,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void addFame(int famechange) {
 		this.fame += famechange;
-	}
-
-	public void addFriendshipRing(Ring r) {
-		friendshipRings.add(r);
 	}
 
 	public void addHP(int delta) {
@@ -1610,11 +1587,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return Collections.unmodifiableCollection(controlled);
 	}
 
-	public List<Ring> getCrushRings() {
-		Collections.sort(crushRings);
-		return crushRings;
-	}
-
 	public int getCurrentMaxHp() {
 		return localMaxHp;
 	}
@@ -1679,10 +1651,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return familyId;
 	}
 
-	public List<Ring> getFriendshipRings() {
-		Collections.sort(friendshipRings);
-		return friendshipRings;
-	}
 
 	public int getGender() {
 		return gender;
@@ -1868,9 +1836,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return markedMonster;
 	}
 
-	public Ring getMarriageRing() {
-		return marriageRing;
-	}
 
 	public int getMarried() {
 		return married;
@@ -2643,9 +2608,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 						}
 						
 						if (ring.getItemId() > 1112012) {
-							character.addFriendshipRing(ring);
+							character.rings.addFriendshipRing(ring);
 						} else {
-							character.addCrushRing(ring);
+							character.rings.addCrushRing(ring);
 						}
 					}
 				}
@@ -2668,9 +2633,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 						}
 						
 						if (ring.getItemId() > 1112012) {
-							character.addFriendshipRing(ring);
+							character.rings.addFriendshipRing(ring);
 						} else {
-							character.addCrushRing(ring);
+							character.rings.addCrushRing(ring);
 						}
 					}
 				}
@@ -2740,7 +2705,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			ps.close();
 			character.cashshop = new CashShop(character.accountId, character.id, character.getJobType());
 			character.autoban = new AutobanManager(character);
-			character.marriageRing = null; // for now
+			character.rings.setMarriageRing(null); // for now
 			ps = connection.prepareStatement("SELECT `name`, `level` FROM `characters` WHERE `accountid` = ? AND `id` != ? ORDER BY `level` DESC LIMIT 1");
 			ps.setInt(1, character.accountId);
 			ps.setInt(2, characterId);

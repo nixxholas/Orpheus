@@ -232,7 +232,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccountId()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(toCharge, -ring.getPrice());
-					chr.addCrushRing(Ring.loadFromDb(ringid));
+					chr.getRingsInfo().addCrushRing(Ring.loadFromDb(ringid));
 					try {
 						chr.sendNote(partner.getName(), text, (byte) 1);
 					} catch (SQLException ex) {
@@ -276,7 +276,7 @@ public final class CashOperationHandler extends AbstractPacketHandler {
 					c.announce(PacketCreator.showBoughtCashItem(item, c.getAccountId()));
 					cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
 					cs.gainCash(payment, -ring.getPrice());
-					chr.addFriendshipRing(Ring.loadFromDb(ringid));
+					chr.getRingsInfo().addFriendshipRing(Ring.loadFromDb(ringid));
 					try {
 						chr.sendNote(partner.getName(), text, (byte) 1);
 					} catch (SQLException ex) {

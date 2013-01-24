@@ -58,6 +58,7 @@ import client.Mount;
 import client.Pet;
 import client.QuestStatus;
 import client.Ring;
+import client.RingsInfo;
 import client.Stat;
 import client.StatDelta;
 import client.SkillMacro;
@@ -1991,9 +1992,9 @@ public class PacketCreator {
 	private static void addRingLook(PacketWriter w, GameCharacter chr, boolean crush) {
 		List<Ring> rings;
 		if (crush) {
-			rings = chr.getCrushRings();
+			rings = chr.getRingsInfo().getCrushRings();
 		} else {
-			rings = chr.getFriendshipRings();
+			rings = chr.getRingsInfo().getFriendshipRings();
 		}
 		boolean yes = false;
 		for (Ring ring : rings) {
@@ -2015,16 +2016,17 @@ public class PacketCreator {
 	}
 
 	private static void addMarriageRingLook(PacketWriter w, GameCharacter chr) {
-		final boolean hasMarriageRing = chr.getMarriageRing() != null;
-		if (hasMarriageRing && !chr.getMarriageRing().isEquipped()) {
+		final RingsInfo rings = chr.getRingsInfo();
+		final boolean hasMarriageRing = rings.getMarriageRing() != null;
+		if (hasMarriageRing && !rings.getMarriageRing().isEquipped()) {
 			w.writeAsByte(0);
 			return;
 		}
 		w.writeAsByte(hasMarriageRing);
 		if (hasMarriageRing) {
 			w.writeInt(chr.getId());
-			w.writeInt(chr.getMarriageRing().getPartnerChrId());
-			w.writeInt(chr.getMarriageRing().getRingId());
+			w.writeInt(rings.getMarriageRing().getPartnerChrId());
+			w.writeInt(rings.getMarriageRing().getRingId());
 		}
 	}
 
@@ -2551,7 +2553,7 @@ public class PacketCreator {
 		w.writeAsShort(chr.getJob().getId());
 		w.writeAsShort(chr.getFame());
 		
-		final boolean hasMarriageRing = chr.getMarriageRing() != null;
+		final boolean hasMarriageRing = chr.getRingsInfo().getMarriageRing() != null;
 		w.writeAsByte(hasMarriageRing);
 		
 		String guildName = "";
@@ -6664,8 +6666,10 @@ public class PacketCreator {
 	}
 
 	private static void addRingInfo(PacketWriter w, GameCharacter chr) {
-		w.writeAsShort(chr.getCrushRings().size());
-		for (Ring ring : chr.getCrushRings()) {
+		// TODO: Make serialization method for rings?
+		final RingsInfo rings = chr.getRingsInfo();
+		w.writeAsShort(rings.getCrushRings().size());
+		for (Ring ring : rings.getCrushRings()) {
 			w.writeInt(ring.getPartnerChrId());
 			w.writePaddedString(ring.getPartnerName(), 13);
 			w.writeInt(ring.getRingId());
@@ -6673,8 +6677,8 @@ public class PacketCreator {
 			w.writeInt(ring.getPartnerRingId());
 			w.writeInt(0);
 		}
-		w.writeAsShort(chr.getFriendshipRings().size());
-		for (Ring ring : chr.getFriendshipRings()) {
+		w.writeAsShort(rings.getFriendshipRings().size());
+		for (Ring ring : rings.getFriendshipRings()) {
 			w.writeInt(ring.getPartnerChrId());
 			w.writePaddedString(ring.getPartnerName(), 13);
 			w.writeInt(ring.getRingId());
@@ -6683,17 +6687,17 @@ public class PacketCreator {
 			w.writeInt(0);
 			w.writeInt(ring.getItemId());
 		}
-		w.writeAsShort(chr.getMarriageRing() != null ? 1 : 0);
+		w.writeAsShort(rings.getMarriageRing() != null ? 1 : 0);
 		int marriageId = 30000;
-		if (chr.getMarriageRing() != null) {
+		if (rings.getMarriageRing() != null) {
 			w.writeInt(marriageId);
 			w.writeInt(chr.getId());
-			w.writeInt(chr.getMarriageRing().getPartnerChrId());
+			w.writeInt(rings.getMarriageRing().getPartnerChrId());
 			w.writeAsShort(3);
-			w.writeInt(chr.getMarriageRing().getRingId());
-			w.writeInt(chr.getMarriageRing().getPartnerRingId());
+			w.writeInt(rings.getMarriageRing().getRingId());
+			w.writeInt(rings.getMarriageRing().getPartnerRingId());
 			w.writePaddedString(chr.getName(), 13);
-			w.writePaddedString(chr.getMarriageRing().getPartnerName(), 13);
+			w.writePaddedString(rings.getMarriageRing().getPartnerName(), 13);
 		}
 	}
 

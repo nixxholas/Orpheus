@@ -40,6 +40,7 @@ import tools.Output;
  * @author Matze
  */
 public class InventoryManipulator {
+	
 	public static boolean addRing(GameCharacter chr, int itemId, int ringId) {
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		InventoryType type = ii.getInventoryType(itemId);
@@ -335,96 +336,99 @@ public class InventoryManipulator {
 	}
 
 	public static void equip(GameClient c, byte src, byte dst) {
-		Equip source = (Equip) c.getPlayer().getInventory(InventoryType.EQUIP).getItem(src);
-		Equip target = (Equip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(dst);
-		if (source == null || !ItemInfoProvider.getInstance().canWearEquipment(c.getPlayer(), source)) {
+		final GameCharacter player = c.getPlayer();
+		Equip source = (Equip) player.getInventory(InventoryType.EQUIP).getItem(src);
+		Equip target = (Equip) player.getInventory(InventoryType.EQUIPPED).getItem(dst);
+		if (source == null || !ItemInfoProvider.getInstance().canWearEquipment(player, source)) {
 			c.announce(PacketCreator.enableActions());
 			return;
-		} else if ((((source.getItemId() >= 1902000 && source.getItemId() <= 1902002) || source.getItemId() == 1912000) && c.getPlayer().isCygnus()) || ((source.getItemId() >= 1902005 && source.getItemId() <= 1902007) || source.getItemId() == 1912005) && !c.getPlayer().isCygnus()) {// Adventurer
-																																																																							// taming
-																																																																							// equipment
+		} else if ((((source.getItemId() >= 1902000 && source.getItemId() <= 1902002) || source.getItemId() == 1912000) && player.isCygnus()) || ((source.getItemId() >= 1902005 && source.getItemId() <= 1902007) || source.getItemId() == 1912005) && !player.isCygnus()) {
+			// Adventurer taming equipment
 			return;
 		}
 		if (ItemInfoProvider.getInstance().isUntradeableOnEquip(source.getItemId())) {
 			source.setFlag((byte) ItemConstants.UNTRADEABLE);
 		}
 		if (source.getRingId() > -1) {
-			c.getPlayer().getRingById(source.getRingId()).equip();
+			player.getRingsInfo().getRingById(source.getRingId()).equip();
 		}
-		if (dst == -6) { // unequip the overall
-			IItem top = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -5);
+		if (dst == -6) { 
+			// unequip the overall
+			IItem top = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -5);
 			if (top != null && ItemConstants.isOverall(top.getItemId())) {
-				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
+				if (player.getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
-				unequip(c, (byte) -5, c.getPlayer().getInventory(InventoryType.EQUIP).getNextFreeSlot());
+				unequip(c, (byte) -5, player.getInventory(InventoryType.EQUIP).getNextFreeSlot());
 			}
 		} else if (dst == -5) {
-			final IItem bottom = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -6);
+			final IItem bottom = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -6);
 			if (bottom != null && ItemConstants.isOverall(source.getItemId())) {
-				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
+				if (player.getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
-				unequip(c, (byte) -6, c.getPlayer().getInventory(InventoryType.EQUIP).getNextFreeSlot());
+				unequip(c, (byte) -6, player.getInventory(InventoryType.EQUIP).getNextFreeSlot());
 			}
-		} else if (dst == -10) {// check if weapon is two-handed
-			IItem weapon = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
+		} else if (dst == -10) {
+			// check if weapon is two-handed
+			IItem weapon = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
 			if (weapon != null && ItemInfoProvider.getInstance().isTwoHanded(weapon.getItemId())) {
-				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
+				if (player.getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
-				unequip(c, (byte) -11, c.getPlayer().getInventory(InventoryType.EQUIP).getNextFreeSlot());
+				unequip(c, (byte) -11, player.getInventory(InventoryType.EQUIP).getNextFreeSlot());
 			}
 		} else if (dst == -11) {
-			IItem shield = c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem((byte) -10);
+			IItem shield = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -10);
 			if (shield != null && ItemInfoProvider.getInstance().isTwoHanded(source.getItemId())) {
-				if (c.getPlayer().getInventory(InventoryType.EQUIP).isFull()) {
+				if (player.getInventory(InventoryType.EQUIP).isFull()) {
 					c.announce(PacketCreator.getInventoryFull());
 					c.announce(PacketCreator.getShowInventoryFull());
 					return;
 				}
-				unequip(c, (byte) -10, c.getPlayer().getInventory(InventoryType.EQUIP).getNextFreeSlot());
+				unequip(c, (byte) -10, player.getInventory(InventoryType.EQUIP).getNextFreeSlot());
 			}
 		}
 		if (dst == -18) {
-			if (c.getPlayer().getMount() != null) {
-				c.getPlayer().getMount().setItemId(source.getItemId());
+			if (player.getMount() != null) {
+				player.getMount().setItemId(source.getItemId());
 			}
 		}
 		if (source.getItemId() == 1122017) {
-			c.getPlayer().equipPendantOfSpirit();
+			player.equipPendantOfSpirit();
 		}
 		
 		// 1112413, 1112414, 1112405 (Lilin's Ring)
-		source = (Equip) c.getPlayer().getInventory(InventoryType.EQUIP).getItem(src);
-		target = (Equip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(dst);
-		c.getPlayer().getInventory(InventoryType.EQUIP).removeSlot(src);
+		source = (Equip) player.getInventory(InventoryType.EQUIP).getItem(src);
+		target = (Equip) player.getInventory(InventoryType.EQUIPPED).getItem(dst);
+		player.getInventory(InventoryType.EQUIP).removeSlot(src);
 		if (target != null) {
-			c.getPlayer().getInventory(InventoryType.EQUIPPED).removeSlot(dst);
+			player.getInventory(InventoryType.EQUIPPED).removeSlot(dst);
 		}
 		source.setSlot(dst);
-		c.getPlayer().getInventory(InventoryType.EQUIPPED).addFromDB(source);
+		player.getInventory(InventoryType.EQUIPPED).addFromDB(source);
 		if (target != null) {
 			target.setSlot(src);
-			c.getPlayer().getInventory(InventoryType.EQUIP).addFromDB(target);
+			player.getInventory(InventoryType.EQUIP).addFromDB(target);
 		}
-		if (c.getPlayer().getBuffedValue(BuffStat.BOOSTER) != null && ItemConstants.isWeapon(source.getItemId())) {
-			c.getPlayer().cancelBuffStats(BuffStat.BOOSTER);
+		if (player.getBuffedValue(BuffStat.BOOSTER) != null && ItemConstants.isWeapon(source.getItemId())) {
+			player.cancelBuffStats(BuffStat.BOOSTER);
 		}
 		c.announce(PacketCreator.moveInventoryItem(InventoryType.EQUIP, src, dst, (byte) 2));
-		c.getPlayer().forceUpdateItem(InventoryType.EQUIPPED, source);
-		c.getPlayer().equipChanged();
+		player.forceUpdateItem(InventoryType.EQUIPPED, source);
+		player.equipChanged();
 	}
 
 	public static void unequip(GameClient c, byte src, byte dst) {
-		Equip source = (Equip) c.getPlayer().getInventory(InventoryType.EQUIPPED).getItem(src);
-		Equip target = (Equip) c.getPlayer().getInventory(InventoryType.EQUIP).getItem(dst);
+		final GameCharacter player = c.getPlayer();
+		Equip source = (Equip) player.getInventory(InventoryType.EQUIPPED).getItem(src);
+		Equip target = (Equip) player.getInventory(InventoryType.EQUIP).getItem(dst);
 		if (dst < 0) {
 			Output.print("Unequipping to negative slot.");
 		}
@@ -436,23 +440,23 @@ public class InventoryManipulator {
 			return;
 		}
 		if (source.getItemId() == 1122017) {
-			c.getPlayer().unequipPendantOfSpirit();
+			player.unequipPendantOfSpirit();
 		}
 		if (source.getRingId() > -1) {
-			c.getPlayer().getRingById(source.getRingId()).unequip();
+			player.getRingsInfo().getRingById(source.getRingId()).unequip();
 		}
-		c.getPlayer().getInventory(InventoryType.EQUIPPED).removeSlot(src);
+		player.getInventory(InventoryType.EQUIPPED).removeSlot(src);
 		if (target != null) {
-			c.getPlayer().getInventory(InventoryType.EQUIP).removeSlot(dst);
+			player.getInventory(InventoryType.EQUIP).removeSlot(dst);
 		}
 		source.setSlot(dst);
-		c.getPlayer().getInventory(InventoryType.EQUIP).addFromDB(source);
+		player.getInventory(InventoryType.EQUIP).addFromDB(source);
 		if (target != null) {
 			target.setSlot(src);
-			c.getPlayer().getInventory(InventoryType.EQUIPPED).addFromDB(target);
+			player.getInventory(InventoryType.EQUIPPED).addFromDB(target);
 		}
 		c.announce(PacketCreator.moveInventoryItem(InventoryType.EQUIP, src, dst, (byte) 1));
-		c.getPlayer().equipChanged();
+		player.equipChanged();
 	}
 
 	public static void drop(GameClient c, InventoryType type, byte src, short quantity) {
