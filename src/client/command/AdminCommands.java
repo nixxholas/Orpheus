@@ -47,6 +47,7 @@ public class AdminCommands extends EnumeratedCommands {
 				default:
 					// chr.yellowMessage("Command: " + heading + sub[0] + ": does not exist.");
 					return false;
+					
 				case clearlogs:
 					if (ParanoiaConstants.ALLOW_CLEARLOGS_COMMAND) {
 						if (ParanoiaConstants.PARANOIA_CONSOLE_LOGGER) GameLogger.clearLog(GameLogger.PARANOIA_CONSOLE);
@@ -57,6 +58,7 @@ public class AdminCommands extends EnumeratedCommands {
 						chr.dropMessage("Paranoia Log Clearing is forbidden by the server.");
 					}
 					break;
+					
 				case help:
 					if (sub.length > 1) {
 						if (sub[1].equalsIgnoreCase("admin")) {
@@ -72,6 +74,7 @@ public class AdminCommands extends EnumeratedCommands {
 					} else {
 						return false;
 					}
+					
 				case setgmlevel:
 					victim = c.getChannelServer().getPlayerStorage().getCharacterByName(sub[1]);
 					victim.saveToDb(true);

@@ -56,6 +56,7 @@ public class DonorCommands extends EnumeratedCommands {
 				default:
 					// chr.yellowMessage("Command: " + heading + sub[0] + ": does not exist.");
 					return false;
+					
 				case donor:
 					chr.setHp(30000);
 					chr.setMaxHp(30000);
@@ -67,6 +68,7 @@ public class DonorCommands extends EnumeratedCommands {
 					chr.updateSingleStat(Stat.MAXMP, 30000);
 					chr.message("Who's awesome? You're awesome!");
 					break;
+					
 				case heal:
 					chr.setHp(chr.getMaxHp());
 					chr.setMp(chr.getMaxMp());
@@ -74,6 +76,7 @@ public class DonorCommands extends EnumeratedCommands {
 					chr.updateSingleStat(Stat.MP, chr.getMaxMp());
 					chr.message("Healed for free. Thanks for your donation!");
 					break;
+					
 				case help:
 					if (sub.length > 1) {
 						if (sub[1].equalsIgnoreCase("donor")) {
@@ -89,6 +92,7 @@ public class DonorCommands extends EnumeratedCommands {
 					} else {
 						return false;
 					}
+					
 				case itemvac:
 					List<GameMapObject> items = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.ITEM));
 					for (GameMapObject item : items) {

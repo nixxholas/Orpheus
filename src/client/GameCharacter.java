@@ -3801,30 +3801,55 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		cal.setTimeZone(TimeZone.getTimeZone("GMT-8"));
 		World world = Server.getInstance().getWorld(worldId);
 		int hr = cal.get(Calendar.HOUR_OF_DAY);
-		if ((haveItem(5360001) && hr > 6 && hr < 12) || (haveItem(5360002) && hr > 9 && hr < 15) || (haveItem(536000) && hr > 12 && hr < 18) || (haveItem(5360004) && hr > 15 && hr < 21) || (haveItem(536000) && hr > 18) || (haveItem(5360006) && hr < 5) || (haveItem(5360007) && hr > 2 && hr < 6) || (haveItem(5360008) && hr >= 6 && hr < 11)) {
-			drop = 2 * world.getDropRate();
-			meso = 2 * world.getMesoRate();
-		} else {
-			drop = world.getDropRate();
-			meso = world.getMesoRate();
+		
+		final WorldRateInfo worldRates = world.getRates();
+		drop = worldRates.drop();
+		meso = worldRates.meso();
+
+		if (
+				(haveItem(5360001) && hr > 6 && hr < 12) 
+				|| (haveItem(5360002) && hr > 9 && hr < 15) 
+				|| (haveItem(536000) && hr > 12 && hr < 18) 
+				|| (haveItem(5360004) && hr > 15 && hr < 21) 
+				|| (haveItem(536000) && hr > 18) 
+				|| (haveItem(5360006) && hr < 5) 
+				|| (haveItem(5360007) && hr > 2 && hr < 6) 
+				|| (haveItem(5360008) && hr >= 6 && hr < 11)) {
+			
+			drop *= 2;
+			meso *= 2;
 		}
-		if ((haveItem(5211000) && hr > 17 && hr < 21) || (haveItem(5211014) && hr > 6 && hr < 12) || (haveItem(5211015) && hr > 9 && hr < 15) || (haveItem(5211016) && hr > 12 && hr < 18) || (haveItem(5211017) && hr > 15 && hr < 21) || (haveItem(5211018) && hr > 14) || (haveItem(5211039) && hr < 5) || (haveItem(5211042) && hr > 2 && hr < 8) || (haveItem(5211045) && hr > 5 && hr < 11) || haveItem(5211048)) {
+
+		if (
+				(haveItem(5211000) && hr > 17 && hr < 21) 
+				|| (haveItem(5211014) && hr > 6 && hr < 12) 
+				|| (haveItem(5211015) && hr > 9 && hr < 15) 
+				|| (haveItem(5211016) && hr > 12 && hr < 18) 
+				|| (haveItem(5211017) && hr > 15 && hr < 21) 
+				|| (haveItem(5211018) && hr > 14) 
+				|| (haveItem(5211039) && hr < 5) 
+				|| (haveItem(5211042) && hr > 2 && hr < 8) 
+				|| (haveItem(5211045) && hr > 5 && hr < 11) 
+				|| haveItem(5211048)) {
+			
 			if (isBeginnerJob() && ServerConstants.BEGINNERS_USE_GMS_RATES) {
 				exp = 2;
 			} else {
-				exp = 2 * world.getExpRate();
+				exp = 2 * worldRates.exp();
 			}
 		} else {
 			if (isBeginnerJob() && ServerConstants.BEGINNERS_USE_GMS_RATES) {
 				exp = 1;
 			} else {
-				exp = world.getExpRate();
+				exp = worldRates.exp();
 			}
 		}
+		
 		if (isHardcoreMode()) {
 			exp *= 2;
 			meso *= 2;
 		}
+		
 		this.rateInfo = new RateInfo(exp, meso, drop);
 	}
 

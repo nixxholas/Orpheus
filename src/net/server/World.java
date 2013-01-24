@@ -26,6 +26,8 @@ import client.BuddyList.BuddyOperation;
 import client.BuddylistEntry;
 import client.GameCharacter;
 import client.Family;
+import client.WorldRateInfo;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ import tools.Output;
 public class World {
 
 	private byte id, flag;
-	private int exprate, droprate, mesorate, bossdroprate;
+	private WorldRateInfo rates;
 	private String eventmsg;
 	private List<Channel> channels = new ArrayList<Channel>();
 	private Map<Integer, Party> parties = new HashMap<Integer, Party>();
@@ -64,10 +66,7 @@ public class World {
 		this.id = world;
 		this.flag = flag;
 		this.eventmsg = eventmsg;
-		this.exprate = exprate;
-		this.droprate = droprate;
-		this.mesorate = mesorate;
-		this.bossdroprate = bossdroprate;
+		this.rates = new WorldRateInfo(exprate, mesorate, droprate, bossdroprate);
 		runningPartyId.set(1);
 		runningMessengerId.set(1);
 	}
@@ -99,52 +98,28 @@ public class World {
 	public String getEventMessage() {
 		return eventmsg;
 	}
-
-	public int getExpRate() {
-		return exprate;
-	}
-
-	public void setExpRate(int exp) {
-		this.exprate = exp;
-	}
-
-	public int getDropRate() {
-		return droprate;
-	}
-
-	public void setDropRate(int drop) {
-		this.droprate = drop;
-	}
-
-	public int getMesoRate() {
-		return mesorate;
-	}
-
-	public void setMesoRate(int meso) {
-		this.mesorate = meso;
-	}
-
-	public int getBossDropRate() {
-		return bossdroprate;
+	
+	public WorldRateInfo getRates() {
+		return this.rates;
 	}
 
 	public PlayerStorage getPlayerStorage() {
 		return players;
 	}
 
-	public void removePlayer(GameCharacter chr) {
-		channels.get(chr.getClient().getChannelId() - 1).removePlayer(chr);
-		players.removePlayer(chr.getId());
+	public void removePlayer(GameCharacter player) {
+		channels.get(player.getClient().getChannelId() - 1).removePlayer(player);
+		players.removePlayer(player.getId());
 	}
 
 	public byte getId() {
 		return id;
 	}
 
-	public void addFamily(int id, Family f) {
+	public void addFamily(int id, Family family) {
 		synchronized (families) {
 			if (!families.containsKey(id)) {
-				families.put(id, f);
+				families.put(id, family);
 			}
 		}
 	}
@@ -158,30 +133,30 @@ public class World {
 		}
 	}
 
-	public Guild getGuild(GuildCharacter mgc) {
-		int gid = mgc.getGuildId();
+	public Guild getGuild(GuildCharacter member) {
+		int gid = member.getGuildId();
 		Guild g = null;
-		g = Server.getInstance().getGuild(gid, mgc);
+		g = Server.getInstance().getGuild(gid, member);
 		if (gsStore.get(gid) == null) {
 			gsStore.put(gid, new GuildSummary(g));
 		}
 		return g;
 	}
 
-	public GuildSummary getGuildSummary(int gid) {
-		if (gsStore.containsKey(gid)) {
-			return gsStore.get(gid);
+	public GuildSummary getGuildSummary(int guildId) {
+		if (gsStore.containsKey(guildId)) {
+			return gsStore.get(guildId);
 		} else {
-			Guild g = Server.getInstance().getGuild(gid, null);
+			Guild g = Server.getInstance().getGuild(guildId, null);
 			if (g != null) {
-				gsStore.put(gid, new GuildSummary(g));
+				gsStore.put(guildId, new GuildSummary(g));
 			}
-			return gsStore.get(gid);
+			return gsStore.get(guildId);
 		}
 	}
 
-	public void updateGuildSummary(int gid, GuildSummary mgs) {
-		gsStore.put(gid, mgs);
+	public void updateGuildSummary(int guildId, GuildSummary summary) {
+		gsStore.put(guildId, summary);
 	}
 
 	public void reloadGuildSummary() {
@@ -197,20 +172,20 @@ public class World {
 		}
 	}
 
-	public void setGuildAndRank(List<Integer> cids, int guildid, int rank, int exception) {
-		for (int cid : cids) {
-			if (cid != exception) {
-				setGuildAndRank(cid, guildid, rank);
+	public void setGuildAndRank(List<Integer> targetIds, int guildId, int rank, int sourceCharacterId) {
+		for (int targetId : targetIds) {
+			if (targetId != sourceCharacterId) {
+				setGuildAndRank(targetId, guildId, rank);
 			}
 		}
 	}
 
-	public void setOfflineGuildStatus(int guildid, byte guildrank, int cid) {
+	public void setOfflineGuildStatus(int guildId, byte rank, int characterId) {
 		try {
 			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("UPDATE characters SET guildid = ?, guildrank = ? WHERE id = ?");
-			ps.setInt(1, guildid);
-			ps.setInt(2, guildrank);
-			ps.setInt(3, cid);
+			ps.setInt(1, guildId);
+			ps.setInt(2, rank);
+			ps.setInt(3, characterId);
 			ps.execute();
 			ps.close();
 			ps = null;

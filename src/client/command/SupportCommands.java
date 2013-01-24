@@ -59,13 +59,16 @@ public class SupportCommands extends EnumeratedCommands {
 				default:
 					// chr.yellowMessage("Command: " + heading + sub[0] + ": does not exist.");
 					return false;
+					
 				case announce:
 					String message = joinStringFrom(sub, 1);
 					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, chr.getName() + " (" + UserRank.getById(chr.getGmLevel()).toString() + "): " + joinStringFrom(sub, 1)));
 					break;
+					
 				case cleardrops:
 					chr.getMap().clearDrops(chr);
 					break;
+					
 				case help:
 					if (sub.length > 1) {
 						if (sub[1].equalsIgnoreCase("support")) {
@@ -81,10 +84,12 @@ public class SupportCommands extends EnumeratedCommands {
 					} else {
 						return false;
 					}
+					
 				case hide:
 					chr.setHidden(true);
 					chr.message("You're now invisible.");
 					break;
+					
 				case item:
 					int itemId = Integer.parseInt(sub[1]);
 					short quantity = 1;
@@ -99,6 +104,7 @@ public class SupportCommands extends EnumeratedCommands {
 					}
 					InventoryManipulator.addById(c, itemId, quantity, chr.getName(), petid, -1);
 					break;
+					
 				case job:
 					if (sub.length >= 2) {
 						chr.changeJob(Job.getById(Integer.parseInt(sub[1])));
@@ -106,9 +112,11 @@ public class SupportCommands extends EnumeratedCommands {
 					} else {
 						chr.message("Usage: !job number");
 					}
+					
 				case mesos:
 					chr.gainMeso(Integer.parseInt(sub[1]), true);
 					break;
+					
 				case online:
 					for (Channel ch : serv.getChannelsFromWorld(c.getWorldId())) {
 						String s = "Characters Online (Channel " + ch.getId() + " Online: " + ch.getPlayerStorage().getAllCharacters().size() + ") : ";
@@ -120,6 +128,7 @@ public class SupportCommands extends EnumeratedCommands {
 						}
 					}
 					break;
+					
 				case search:
 					try {
 						BufferedReader dis = new BufferedReader(new InputStreamReader(new URL("http://www.mapletip.com/search_java.php?search_value=" + joinStringFrom(sub, 2).replace(" ", "%20") + "&check=true").openConnection().getInputStream()));
@@ -134,12 +143,15 @@ public class SupportCommands extends EnumeratedCommands {
 							}
 						}
 						dis.close();
-					} catch (Exception e) {}
+					} catch (Exception e) {						
+					}
 					break;
+					
 				case show:
 					chr.setHidden(false);
 					chr.message("You're now visible.");
 					break;
+					
 				case warp:
 					try {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -149,6 +161,7 @@ public class SupportCommands extends EnumeratedCommands {
 						chr.message("Usage: !warp playerName");
 					}
 					break;
+					
 				case warphere:
 					try {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -158,6 +171,7 @@ public class SupportCommands extends EnumeratedCommands {
 						chr.message("Usage: !warphere playerName");
 					}
 					break;
+					
 				case whereami:
 					chr.dropMessage("You're at Map " + chr.getMapId());
 					break;

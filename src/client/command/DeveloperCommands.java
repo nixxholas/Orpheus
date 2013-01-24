@@ -68,6 +68,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 				default:
 					// chr.yellowMessage("Command: " + heading + sub[0] + ": does not exist.");
 					return false;
+					
 				case coords:
 		            xpos = chr.getPosition().x;
 		            ypos = chr.getPosition().y;
@@ -75,25 +76,29 @@ public class DeveloperCommands extends EnumeratedCommands {
 		            chr.dropMessage("Position: (" + xpos + ", " + ypos + ")");
 		            chr.dropMessage("Foothold ID: " + fh);
 		            break;
+		            
 				case droprate:
-					c.getWorldServer().setDropRate(Integer.parseInt(sub[1]));
+					c.getWorldServer().getRates().drop(Integer.parseInt(sub[1]));
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.refreshRates();
 					}
 					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The drop rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
+					
 				case exprate:
-					c.getWorldServer().setExpRate(Integer.parseInt(sub[1]));
+					c.getWorldServer().getRates().exp(Integer.parseInt(sub[1]));
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.refreshRates();
 					}
 					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The experience rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
+					
 				case gc:
 		            System.gc();
 					break;
+					
 				case help:
 					if (sub.length > 1) {
 						if (sub[1].equalsIgnoreCase("dev")) {
@@ -109,17 +114,20 @@ public class DeveloperCommands extends EnumeratedCommands {
 					} else {
 						return false;
 					}
+					
 				case horntail:
 					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8810026), chr.getPosition());
 					break;
+					
 				case mesorate:
-					c.getWorldServer().setMesoRate(Integer.parseInt(sub[1]));
+					c.getWorldServer().getRates().meso(Integer.parseInt(sub[1]));
 					for (GameCharacter character : c.getWorldServer().getPlayerStorage().getAllCharacters()) {
 						character.refreshRates();
 					}
 					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(1, "[Notice] The meso rate has changed to " + sub[1] + "."));
 					chr.message("Done.");
 					break;
+					
 				case npc:
 					npc = LifeFactory.getNpc(Integer.parseInt(sub[1]));
 					if (npc != null) {
@@ -132,9 +140,11 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.getMap().broadcastMessage(PacketCreator.spawnNpc(npc));
 					}
 					break;
+					
 				case packet:
 					chr.getMap().broadcastMessage(PacketCreator.customPacket(joinStringFrom(sub, 1)));
 					break;
+					
 				case paranoia:
 					if (ParanoiaConstants.ALLOW_QUERY_COMMAND) {
 						if (sub.length > 1) {
@@ -153,9 +163,11 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.dropMessage("Paranoia Information Querying is forbidden by the server.");
 					}
 					break;
+					
 				case pinkbean:
 					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8820009), chr.getPosition());
 					break;
+					
 				case playernpc:
 					if (sub.length > 2) {
 						chr.playerNpc(c.getChannelServer().getPlayerStorage().getCharacterByName(sub[1]), Integer.parseInt(sub[2]));
@@ -164,6 +176,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 					} else {
 						chr.dropMessage("Usage: !playernpc characterName scriptId || !playernpc scriptId");
 					}
+					
 				case pmob:
 					npcId = Integer.parseInt(sub[1]);
 					mobTime = Integer.parseInt(sub[2]);
@@ -203,6 +216,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.dropMessage("You have entered an invalid mob ID.");
 					}
 					break;
+					
 				case pnpc:
 					npcId = Integer.parseInt(sub[1]);
 					npc = LifeFactory.getNpc(npcId);
@@ -238,6 +252,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.dropMessage("You have entered an invalid NPC id.");
 					}
 					break;
+					
 				case reloadblacklist:
 					if (ServerConstants.USE_PARANOIA && ParanoiaConstants.ENABLE_BLACKLISTING && ParanoiaConstants.ALLOW_RELOADBLACKLIST_COMMAND) {
 						BlacklistHandler.reloadBlacklist();
@@ -246,8 +261,9 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.dropMessage("Blacklisting is disabled on the server.");
 					} else if (!ParanoiaConstants.ALLOW_RELOADBLACKLIST_COMMAND) {
 						chr.dropMessage("Reloading blacklist is forbidden by the server.");
-					}
+					}					
 					break;
+					
 				case say:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -257,6 +273,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.message("Usage: !say playerName multi-word message");
 					}
 					break;
+					
 				case shutdown:
 					if (sub.length == 2) {
 						int time = 60000;
@@ -270,6 +287,7 @@ public class DeveloperCommands extends EnumeratedCommands {
 						chr.message("Usage: !shutdown time || !shutdown now");
 					}
 					break;
+					
 				case sql:
 					if (sub[1] == "true") {
 						String name = sub[1];
@@ -297,9 +315,11 @@ public class DeveloperCommands extends EnumeratedCommands {
 						}
 					}
 					break;
+					
 				case updaterankings:
 					updateRankings();
 					break;
+					
 				case zakum:
 					chr.getMap().spawnFakeMonsterOnGroundBelow(LifeFactory.getMonster(8800000), chr.getPosition());
 					for (int x = 8800003; x < 8800011; x++) {

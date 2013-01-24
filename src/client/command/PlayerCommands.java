@@ -42,6 +42,7 @@ import client.Job;
 import client.UserRank;
 import client.Stat;
 import client.MapleStock;
+import client.WorldRateInfo;
 
 /**
  * @author Aaron Weiss
@@ -62,6 +63,7 @@ public class PlayerCommands extends EnumeratedCommands {
 				default:
 					// chr.yellowMessage("Command: " + heading + sub[0] + ": does not exist.");
 					return false;
+					
 				case afk:
 					if (sub.length == 1) {
 						chr.setChalkboard("Away!");
@@ -70,10 +72,12 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.setChalkboard(message);
 					}
 					break;
+					
 				case back:
 					chr.setChalkboard("");
 					chr.dropMessage("Welcome back!");
 					break;
+					
 				case birthday:
 					if (sub.length >= 2) {
 						try {
@@ -93,9 +97,11 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.dropMessage("To use, proceed the command by your birthday in either YYYY-MM-DD or MM-DD-YYYY format.");
 					}
 					break;
+					
 				case bugs:
 					chr.dropMessage("Report bugs at https://github.com/aaronweiss74/Orpheus/issues");
 					break;
+					
 				case buy:
 					if (chr.getMeso() > 999999999) { // Has 999,999,999 mesos.
 						chr.gainMeso(-1000000000, false); // Lose 1,000,000,000
@@ -108,6 +114,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.message("You cannot afford a rice cake!");
 					}
 					break;
+					
 				case checkgm:
 					if (sub.length > 1) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -116,6 +123,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					}
 					chr.message(victim.getName() + ((victim.isGM()) ? " is a GM." : " is not a GM."));
 					break;
+					
 				case checkrebirths:
 					if (sub.length > 1) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -124,6 +132,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					}
 					chr.message(victim.getName() + " has " + victim.getRebirths() + " rebirths.");
 					break;
+					
 				case checkrank:
 					if (sub.length > 1) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -132,6 +141,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					}
 					chr.message(victim.getName() + " is rank " + victim.getRank() + ".");
 					break;
+					
 				case checkstaffrank:
 					if (sub.length > 1) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -140,6 +150,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					}
 					chr.message(victim.getName() + " is " + UserRank.getById(victim.getGmLevel()).toStringWithArticle());
 					break;
+					
 				case checkstats:
 					if (sub.length > 1) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -157,21 +168,26 @@ public class PlayerCommands extends EnumeratedCommands {
 					chr.message(" " + victim.getInt() + " Intellect");
 					chr.message(" " + victim.getLuk() + " Luck");
 					break;
+					
 				case cody:
 					NpcScriptManager.getInstance().start(c, 9200000, null, null);
 					break;
+					
 				case dispose:
 					NpcScriptManager.getInstance().dispose(c);
 					c.announce(PacketCreator.enableActions());
 					chr.message("Done.");
 					break;
+					
 				case emo:
 					chr.setHp(0);
 					chr.updateSingleStat(Stat.HP, 0);
 					break;
+					
 				case fmnpc:
 					NpcScriptManager.getInstance().start(c, 9220020, null, null);
 					break;
+					
 				case gmlist:
 					rs = getGMList();
 					chr.dropMessage("GM List");
@@ -182,6 +198,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					} catch (SQLException e) {
 					}
 					break;
+					
 				case hardcore:
 					if (ServerConstants.ENABLE_HARDCORE_MODE) {
 						chr.enterHardcore();
@@ -190,6 +207,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.dropMessage("Hardcore Mode is disabled by the server. Sorry!");
 					}
 					break;
+					
 				case heal:
 					cost = ((chr.getMaxHp() / 4) * (chr.getMaxHp() / 4));
 					if (chr.getMeso() >= cost && chr.getHp() < chr.getMaxHp()) {
@@ -205,6 +223,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.message("You cannot afford to heal. You need " + readableCost + " mesos.");
 					}
 					break;
+					
 				case help:
 					if (sub.length >= 2 && ServerConstants.PAGINATE_HELP) {
 						getHelp(Integer.parseInt(sub[1]), chr);
@@ -212,9 +231,11 @@ public class PlayerCommands extends EnumeratedCommands {
 						getHelp(chr);
 					}
 					break;
+					
 				case kin:
 					NpcScriptManager.getInstance().start(c, 9900000, null, null);
 					break;
+					
 				case nx:
 					if (ServerConstants.FREE_NX) {
 						if (chr.getCashShop().getCash(1) + 100000 <= Integer.MAX_VALUE) {
@@ -235,15 +256,18 @@ public class PlayerCommands extends EnumeratedCommands {
 							readableCost = readableCost.replaceAll("(\\d)(?=(\\d{3})+$)", "$1,");
 							chr.message("You cannot afford to heal. You need " + readableCost + " mesos.");
 						}
-					}
+					}					
 					break;
+					
 				case quit:
 					chr.saveToDb(true);
 					c.getSession().close(false);
 					break;
+					
 				case rank:
 					chr.message("You are rank " + chr.getRank() + ".");
 					break;
+					
 				case rankings:
 					if (sub.length > 1) {
 						rs = getRankings(Boolean.parseBoolean(sub[1]));
@@ -269,11 +293,14 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.dropMessage("Note: [H] means Hardcore Character, [HD] means Dead Hardcore Character.");
 					}
 					break;
+					
 				case rates:
 					chr.dropMessage(ServerConstants.SERVER_NAME + " Rates");
-					chr.dropMessage("Experience: x" + chr.getClient().getWorldServer().getExpRate());
-					chr.dropMessage("Mesos: x" + chr.getClient().getWorldServer().getMesoRate());
-					chr.dropMessage("Drop: x" + chr.getClient().getWorldServer().getDropRate());
+					final WorldRateInfo rates = chr.getClient().getWorldServer().getRates();
+					chr.dropMessage("Experience: x" + rates.exp());
+					chr.dropMessage("Mesos: x" + rates.meso());
+					chr.dropMessage("Drop: x" + rates.drop());
+					
 				case rebirth:
 					if (chr.getLevel() >= chr.getMaxLevel()) {
 						if (sub[1].equalsIgnoreCase("standard") || sub[1].equalsIgnoreCase("beginner")) {
@@ -293,13 +320,16 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.message("You must be level " + chr.getMaxLevel() + " to do this!");
 					}
 					break;
+					
 				case rebirths:
 					chr.message("You have " + chr.getRebirths() + " rebirths.");
 					break;
+					
 				case save:
 					chr.saveToDb(true);
 					chr.dropMessage("Done.");
 					break;
+					
 				case sell:
 					if (chr.haveItem(4001101)) {
 						if (chr.getMeso() <= (Integer.MAX_VALUE - 1000000000)) { // Has less than 1,147,483,647 mesos.
@@ -315,6 +345,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.message("You don't have any rice cakes!");
 					}
 					break;
+					
 				case stat:
 					if (sub.length >= 3) {
 						String stat = sub[1];
@@ -370,6 +401,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.message(" Example: @stat dex 5");
 					}
 					break;
+					
 				case stats:
 					chr.message(chr.getName() + "'s Stats:");
 					chr.message(" Level " + chr.getLevel() + " " + chr.getJob().toString());
@@ -382,6 +414,7 @@ public class PlayerCommands extends EnumeratedCommands {
 					chr.message(" " + chr.getInt() + " Intellect");
 					chr.message(" " + chr.getLuk() + " Luck");
 					break;
+					
 				case stocks:
 					if (ServerConstants.USE_MAPLE_STOCKS && ServerConstants.ALLOW_STOCKS_COMMAND) {
 						try {
@@ -469,6 +502,7 @@ public class PlayerCommands extends EnumeratedCommands {
 						chr.message("Remote stock management is forbidden by the server.");
 					}
 					break;
+					
 				case version:
 					chr.message(ServerConstants.SERVER_NAME + " (Orpheus " + ServerConstants.ORPHEUS_VERSION + ")");
 					break;

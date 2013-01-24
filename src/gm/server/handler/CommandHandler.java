@@ -45,35 +45,38 @@ public class CommandHandler implements GMPacketHandler {
 				}
 				break;
 			}
+			
 			case 1: {// server message
 				for (World world : Server.getInstance().getWorlds()) {
 					world.setServerMessage(reader.readMapleAsciiString());
 				}
 				break;
 			}
+			
 			case 2: {
 				Server server = Server.getInstance();
-				byte worldid = reader.readByte();
-				if (worldid >= server.getWorlds().size()) {
+				byte worldId = reader.readByte();
+				if (worldId >= server.getWorlds().size()) {
 					session.write(GMPacketCreator.commandResponse((byte) 2));
 					return;// incorrect world
 				}
-				World world = server.getWorld(worldid);
+				World world = server.getWorld(worldId);
 				switch (reader.readByte()) {
 					case 0:
-						world.setExpRate(reader.readByte());
+						world.getRates().exp(reader.readByte());
 						break;
 					case 1:
-						world.setDropRate(reader.readByte());
+						world.getRates().drop(reader.readByte());
 						break;
 					case 2:
-						world.setMesoRate(reader.readByte());
+						world.getRates().meso(reader.readByte());
 						break;
 				}
 				for (GameCharacter chr : world.getPlayerStorage().getAllCharacters()) {
 					chr.refreshRates();
 				}
 			}
+			
 			case 3: {
 				String user = reader.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
@@ -86,6 +89,7 @@ public class CommandHandler implements GMPacketHandler {
 				session.write(GMPacketCreator.commandResponse((byte) 0));
 				break;
 			}
+			
 			case 4: {
 				String user = reader.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
@@ -100,6 +104,7 @@ public class CommandHandler implements GMPacketHandler {
 				session.write(GMPacketCreator.commandResponse((byte) 0));
 				break;
 			}
+			
 			case 5: {
 				String user = reader.readMapleAsciiString();
 				for (World world : Server.getInstance().getWorlds()) {
@@ -112,9 +117,11 @@ public class CommandHandler implements GMPacketHandler {
 				}
 				session.write(GMPacketCreator.commandResponse((byte) 0));
 			}
+			
 			case 7: {
 				Server.getInstance().shutdown(false).run();
 			}
+			
 			case 8: {
 				Server.getInstance().shutdown(true).run();
 			}

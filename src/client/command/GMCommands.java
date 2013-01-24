@@ -74,6 +74,7 @@ public class GMCommands extends EnumeratedCommands {
 				default:
 					// chr.yellowMessage("Command: " + heading + sub[0] + ": does not exist.");
 					return false;
+					
 				case ap:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -86,6 +87,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !ap number || !ap playerName number");
 					}
 					break;
+					
 				case ban:
 					if (sub.length >= 3) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -106,6 +108,7 @@ public class GMCommands extends EnumeratedCommands {
 					} else {
 						chr.dropMessage("Usage: !ban playerName reason");
 					}
+					
 				case blacklist:
 					if (ParanoiaConstants.ALLOW_BLACKLIST_COMMAND && ParanoiaConstants.ENABLE_BLACKLISTING) {
 						if (sub.length >= 2) {
@@ -125,6 +128,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.dropMessage("Blacklisting users is forbidden by the server.");
 					}
 					break;
+					
 				case buff:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -141,6 +145,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !buff || !buff playerName");
 					}
 					break;
+					
 				case dc:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -148,6 +153,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !dc playerName");
 					}
 					break;
+					
 				case dispose:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -158,6 +164,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !dispose playerName");
 					}
 					break;
+					
 				case drop:
 					int itemId = Integer.parseInt(sub[1]);
 					short quantity = 1;
@@ -173,6 +180,7 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					c.getPlayer().getMap().spawnItemDrop(c.getPlayer(), c.getPlayer(), toDrop, c.getPlayer().getPosition(), true, true);
 					break;
+					
 				case fame:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -185,9 +193,11 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !fame number || !fame playerName number");
 					}
 					break;
+					
 				case gmshop:
 					ShopFactory.getInstance().getShop(1337).sendShop(c);
 					break;
+					
 				case heal:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -198,6 +208,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !heal || !heal playerName");
 					}
 					break;
+					
 				case help:
 					if (sub.length > 1) {
 						if (sub[1].equalsIgnoreCase("gm")) {
@@ -213,6 +224,7 @@ public class GMCommands extends EnumeratedCommands {
 					} else {
 						return false;
 					}
+					
 				case job:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -225,6 +237,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !job number || !job playerName number");
 					}
 					break;
+					
 				case kill:
 					if (sub.length == 2) {
 						cserv.getPlayerStorage().getCharacterByName(sub[1]).setHpMp(0);
@@ -232,6 +245,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !kill playerName");
 					}
 					break;
+					
 				case killall:
 					List<GameMapObject> monsters = chr.getMap().getMapObjectsInRange(chr.getPosition(), Double.POSITIVE_INFINITY, Arrays.asList(GameMapObjectType.MONSTER));
 					GameMap map = chr.getMap();
@@ -242,6 +256,7 @@ public class GMCommands extends EnumeratedCommands {
 					}
 					chr.message("Killed " + monsters.size() + " monsters.");
 					break;
+					
 				case level:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -258,6 +273,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !level number || !level playerName number");
 					}
 					break;
+					
 				case levelup:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -268,6 +284,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !levelup || !levelup playerName");
 					}
 					break;
+					
 				case map:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -278,6 +295,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !map number || !map playerName number");
 					}
 					break;
+					
 				case maxskills:
 					if (sub.length == 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]); 
@@ -306,6 +324,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !maxskills || !maxskills playerName");
 					}
 					break;
+					
 				case maxstats:
 					if (sub.length == 2) {
 						final String[] s = {"setall", sub[1], String.valueOf(Short.MAX_VALUE)};
@@ -334,6 +353,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !maxstats || !maxstats playerName");
 					}
 					break;
+					
 				case mesos:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -344,9 +364,11 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !mesos number || !mesos playerName number");
 					}
 					break;
+					
 				case pap:
 					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8500001), chr.getPosition());
 					break;
+					
 				case popup:
 					if (sub.length >= 3) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -355,12 +377,15 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !popup playerName message");
 					}
 					break;
+					
 				case pianus:
 					chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(8510000), chr.getPosition());
 					break;
+					
 				case notice:
 					Server.getInstance().broadcastMessage(c.getWorldId(), PacketCreator.serverNotice(6, "[Notice] " + joinStringFrom(sub, 1)));
 					break;
+					
 				case saveall:
 					for (Channel chan : Server.getInstance().getAllChannels()) {
 		                for (GameCharacter plyrs : chan.getPlayerStorage().getAllCharacters()) {
@@ -369,9 +394,11 @@ public class GMCommands extends EnumeratedCommands {
 		            }
 		            chr.message("Save Complete.");
 					break;
+					
 				case servermessage:
 					c.getWorldServer().setServerMessage(joinStringFrom(sub, 1));
 					break;
+					
 				case setall:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -398,6 +425,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !setall number || !setall playerName number");
 					}
 					break;
+					
 				case shop:
 					if (sub.length == 2) {
 						ShopFactory.getInstance().getShop(Integer.parseInt(sub[1])).sendShop(c);
@@ -405,6 +433,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !shop number");
 					}
 					break;
+					
 				case sp:
 					if (sub.length > 2) {
 						victim = cserv.getPlayerStorage().getCharacterByName(sub[1]);
@@ -417,6 +446,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !ap number || !ap playerName number");
 					}
 					break;
+					
 				case spawn:
 					if (sub.length > 2) {
 						for (int i = 0; i < Integer.parseInt(sub[2]); i++) {
@@ -426,6 +456,7 @@ public class GMCommands extends EnumeratedCommands {
 						chr.getMap().spawnMonsterOnGroudBelow(LifeFactory.getMonster(Integer.parseInt(sub[1])), chr.getPosition());
 					}
 					break;
+					
 				case speak:
 					if (sub.length == 2) {
 						NpcScriptManager.getInstance().start(c, Integer.parseInt(sub[1]), null, null);
@@ -433,10 +464,12 @@ public class GMCommands extends EnumeratedCommands {
 						chr.message("Usage: !speak number");
 					}
 					break;
+					
 				case texttype:
 					chr.toggleWhiteText();
 					chr.message("Your chat messages are now " + (chr.hasWhiteText() ? "white." : "black."));
 					break;
+					
 				case unban:
 					try {
 						PreparedStatement p = DatabaseConnection.getConnection().prepareStatement("UPDATE `accounts` SET `banned` = -1 WHERE `id` = " + GameCharacter.getIdByName(sub[1]));
