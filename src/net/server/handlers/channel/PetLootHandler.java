@@ -33,7 +33,7 @@ import client.InventoryType;
 import net.server.PartyCharacter;
 import scripting.item.ItemScriptManager;
 import server.ItemInfoProvider;
-import server.ItemInfoProvider.scriptedItem;
+import server.ItemInfoProvider.ScriptedItem;
 
 /**
  * @author TheRamon
@@ -121,10 +121,10 @@ public final class PetLootHandler extends AbstractPacketHandler {
 					}
 				} else if (mapitem.getItem().getItemId() / 10000 == 243) {
 					ItemInfoProvider ii = ItemInfoProvider.getInstance();
-					scriptedItem info = ii.getScriptedItemInfo(mapitem.getItem().getItemId());
-					if (info.runOnPickup()) {
+					ScriptedItem info = ii.getScriptedItemInfo(mapitem.getItem().getItemId());
+					if (info.runOnPickup) {
 						ItemScriptManager ism = ItemScriptManager.getInstance();
-						String scriptName = info.getScript();
+						String scriptName = info.script;
 						if (ism.scriptExists(scriptName))
 							ism.getItemScript(c, scriptName);
 

@@ -25,7 +25,7 @@ import client.IItem;
 import net.AbstractPacketHandler;
 import scripting.item.ItemScriptManager;
 import server.ItemInfoProvider;
-import server.ItemInfoProvider.scriptedItem;
+import server.ItemInfoProvider.ScriptedItem;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -40,15 +40,15 @@ public final class ScriptedItemHandler extends AbstractPacketHandler {
 		reader.readInt(); // trash stamp (thx rmzero)
 		byte itemSlot = (byte) reader.readShort(); // item sl0t (thx rmzero)
 		int itemId = reader.readInt(); // itemId
-		scriptedItem info = ii.getScriptedItemInfo(itemId);
+		ScriptedItem info = ii.getScriptedItemInfo(itemId);
 		if (info == null)
 			return;
 		ItemScriptManager ism = ItemScriptManager.getInstance();
 		IItem item = c.getPlayer().getInventory(ii.getInventoryType(itemId)).getItem(itemSlot);
-		if (item == null || item.getItemId() != itemId || item.getQuantity() < 1 || !ism.scriptExists(info.getScript())) {
+		if (item == null || item.getItemId() != itemId || item.getQuantity() < 1 || !ism.scriptExists(info.script)) {
 			return;
 		}
-		ism.getItemScript(c, info.getScript());
+		ism.getItemScript(c, info.script);
 		// NpcScriptManager.getInstance().start(c, info.getNpc(), null, null);
 	}
 }

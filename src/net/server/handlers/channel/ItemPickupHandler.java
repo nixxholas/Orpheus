@@ -29,7 +29,7 @@ import net.AbstractPacketHandler;
 import scripting.item.ItemScriptManager;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.ItemInfoProvider.scriptedItem;
+import server.ItemInfoProvider.ScriptedItem;
 import server.maps.GameMapItem;
 import server.maps.GameMapObject;
 import tools.PacketCreator;
@@ -121,10 +121,10 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
 						}
 					} else if (mapitem.getItem().getItemId() / 10000 == 243) {
 						ItemInfoProvider ii = ItemInfoProvider.getInstance();
-						scriptedItem info = ii.getScriptedItemInfo(mapitem.getItem().getItemId());
-						if (info.runOnPickup()) {
+						ScriptedItem info = ii.getScriptedItemInfo(mapitem.getItem().getItemId());
+						if (info.runOnPickup) {
 							ItemScriptManager ism = ItemScriptManager.getInstance();
-							String scriptName = info.getScript();
+							String scriptName = info.script;
 							if (ism.scriptExists(scriptName))
 								ism.getItemScript(c, scriptName);
 

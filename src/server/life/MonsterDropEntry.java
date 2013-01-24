@@ -29,26 +29,26 @@ import tools.Randomizer;
 
 public final class MonsterDropEntry {
 	
-	public final short QuestId;
-	public final int ItemId; 
-	public final int Chance;
+	public final short questId;
+	public final int itemId; 
+	public final int chance;
 
-	private final int Minimum;
-	private final int Maximum;
+	private final int minimum;
+	private final int maximum;
 
 	public MonsterDropEntry(int itemId, int chance, int minimum, int maximum, short questId) {
-		this.ItemId = itemId;
-		this.Chance = chance;
-		this.QuestId = questId;
-		this.Minimum = minimum;
-		this.Maximum = maximum;
+		this.itemId = itemId;
+		this.chance = chance;
+		this.questId = questId;
+		this.minimum = minimum;
+		this.maximum = maximum;
 	}
 	
 	public int getRandomQuantity() {
-		if (this.Maximum == 1) {
+		if (this.maximum == 1) {
 			return 1;
 		} else {
-			return Randomizer.nextInt(this.Maximum - this.Minimum) + this.Minimum;
+			return Randomizer.nextInt(this.maximum - this.minimum) + this.minimum;
 		}
 	}
 }

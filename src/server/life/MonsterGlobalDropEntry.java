@@ -28,28 +28,28 @@ import tools.Randomizer;
  */
 public class MonsterGlobalDropEntry {
 
-	public final byte DropType;
-	public final int ItemId;
-	public final int Chance;
-	public final short QuestId;
+	public final byte dropType;
+	public final int itemId;
+	public final int chance;
+	public final short questId;
 
-	private final int Minimum;
-	private final int Maximum;
+	private final int minimum;
+	private final int maximum;
 
 	public MonsterGlobalDropEntry(int itemId, int chance, int continent, byte dropType, int minimum, int maximum, short questId) {
-		this.ItemId = itemId;
-		this.Chance = chance;
-		this.DropType = dropType;
-		this.QuestId = questId;
-		this.Minimum = minimum;
-		this.Maximum = maximum;
+		this.itemId = itemId;
+		this.chance = chance;
+		this.dropType = dropType;
+		this.questId = questId;
+		this.minimum = minimum;
+		this.maximum = maximum;
 	}
 		
 	public int getRandomQuantity() {
-		if (this.Maximum == 1) {
+		if (this.maximum == 1) {
 			return 1;
 		} else {
-			return Randomizer.nextInt(this.Maximum - this.Minimum) + this.Minimum;
+			return Randomizer.nextInt(this.maximum - this.minimum) + this.minimum;
 		}
 	}
 }

@@ -89,7 +89,7 @@ import server.CashShop.CashItemFactory;
 import server.CashShop.SpecialCashItem;
 import server.DueyPackages;
 import server.GiftEntry;
-import server.MTSItemInfo;
+import server.MtsItemInfo;
 import server.BuffStatDelta;
 import server.ItemInfoProvider;
 import server.Minigame;
@@ -5364,7 +5364,7 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket sendMts(List<MTSItemInfo> items, int tab, int type, int page, int pages) {
+	public static GamePacket sendMts(List<MtsItemInfo> items, int tab, int type, int page, int pages) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.MTS_OPERATION.getValue());
 		w.writeAsByte(0x15); // operation
@@ -5376,7 +5376,7 @@ public class PacketCreator {
 		w.writeAsByte(1);
 		w.writeAsByte(1);
 		for (int i = 0; i < items.size(); i++) {
-			MTSItemInfo item = items.get(i);
+			MtsItemInfo item = items.get(i);
 			addItemInfo(w, item.getItem(), true);
 			w.writeInt(item.getID()); // id
 			w.writeInt(item.getTaxes()); // this + below = price
@@ -5522,13 +5522,13 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket notYetSoldInv(List<MTSItemInfo> items) {
+	public static GamePacket notYetSoldInv(List<MtsItemInfo> items) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.MTS_OPERATION.getValue());
 		w.writeAsByte(0x23);
 		w.writeInt(items.size());
 		if (!items.isEmpty()) {
-			for (MTSItemInfo item : items) {
+			for (MtsItemInfo item : items) {
 				addItemInfo(w, item.getItem(), true);
 				w.writeInt(item.getID()); // id
 				w.writeInt(item.getTaxes()); // this + below = price
@@ -5550,13 +5550,13 @@ public class PacketCreator {
 		return w.getPacket();
 	}
 
-	public static GamePacket transferInventory(List<MTSItemInfo> items) {
+	public static GamePacket transferInventory(List<MtsItemInfo> items) {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.MTS_OPERATION.getValue());
 		w.writeAsByte(0x21);
 		w.writeInt(items.size());
 		if (!items.isEmpty()) {
-			for (MTSItemInfo item : items) {
+			for (MtsItemInfo item : items) {
 				addItemInfo(w, item.getItem(), true);
 				w.writeInt(item.getID()); // id
 				w.writeInt(item.getTaxes()); // taxes

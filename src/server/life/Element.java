@@ -21,7 +21,6 @@
 package server.life;
 
 public enum Element {
-	// TODO: A better name for this class would be ElementEffectiveness
 	NEUTRAL,
 	FIRE, 
 	ICE, 

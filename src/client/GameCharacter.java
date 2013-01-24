@@ -518,22 +518,22 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (watk == 0) {
 			maxBaseDamage = 1;
 		} else {
-			IItem weapon_item = getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
-			if (weapon_item != null) {
-				WeaponType weapon = ItemInfoProvider.getInstance().getWeaponType(weapon_item.getItemId());
+			IItem item = getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
+			if (item != null) {
+				WeaponType type = ItemInfoProvider.getInstance().getWeaponType(item.getItemId());
 				int mainstat;
 				int secondarystat;
-				if (weapon == WeaponType.BOW || weapon == WeaponType.CROSSBOW) {
+				if (type == WeaponType.BOW || type == WeaponType.CROSSBOW) {
 					mainstat = localDex;
 					secondarystat = localStr;
-				} else if ((getJob().isA(Job.THIEF) || getJob().isA(Job.NIGHTWALKER1)) && (weapon == WeaponType.CLAW || weapon == WeaponType.DAGGER)) {
+				} else if ((getJob().isA(Job.THIEF) || getJob().isA(Job.NIGHTWALKER1)) && (type == WeaponType.CLAW || type == WeaponType.DAGGER)) {
 					mainstat = localLuk;
 					secondarystat = localDex + localStr;
 				} else {
 					mainstat = localStr;
 					secondarystat = localDex;
 				}
-				maxBaseDamage = (int) (((weapon.getMaxDamageMultiplier() * mainstat + secondarystat) / 100.0) * watk) + 10;
+				maxBaseDamage = (int) (((type.getMaxDamageMultiplier() * mainstat + secondarystat) / 100.0) * watk) + 10;
 			} else {
 				maxBaseDamage = 0;
 			}

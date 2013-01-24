@@ -34,7 +34,7 @@ import net.server.Channel;
 import server.ItemNameEntry;
 import server.InventoryManipulator;
 import server.ItemInfoProvider;
-import server.MTSItemInfo;
+import server.MtsItemInfo;
 import tools.PacketCreator;
 import tools.Output;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -670,8 +670,8 @@ public final class MtsHandler extends AbstractPacketHandler {
 		return ps;
 	}
 
-	public List<MTSItemInfo> getNotYetSold(int cid) {
-		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
+	public List<MtsItemInfo> getNotYetSold(int cid) {
+		List<MtsItemInfo> items = new ArrayList<MtsItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -683,7 +683,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 				if (rs.getInt("type") != 1) {
 					Item i = new Item(rs.getInt("itemid"), (byte) 0, (short) rs.getInt("quantity"));
 					i.setOwner(rs.getString("owner"));
-					items.add(new MTSItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				} else {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"), -1);
 					equip.setOwner(rs.getString("owner"));
@@ -707,7 +707,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 					equip.setUpgradeSlots((byte) rs.getInt("upgradeslots"));
 					equip.setLevel((byte) rs.getInt("level"));
 					equip.setFlag((byte) rs.getInt("flag"));
-					items.add(new MTSItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				}
 			}
 			rs.close();
@@ -718,7 +718,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 	}
 
 	public GamePacket getCart(int cid) {
-		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
+		List<MtsItemInfo> items = new ArrayList<MtsItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -735,7 +735,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 					if (rse.getInt("type") != 1) {
 						Item i = new Item(rse.getInt("itemid"), (byte) 0, (short) rse.getInt("quantity"));
 						i.setOwner(rse.getString("owner"));
-						items.add(new MTSItemInfo((IItem) i, rse.getInt("price"), rse.getInt("id"), rse.getInt("seller"), rse.getString("sellername"), rse.getString("sell_ends")));
+						items.add(new MtsItemInfo((IItem) i, rse.getInt("price"), rse.getInt("id"), rse.getInt("seller"), rse.getString("sellername"), rse.getString("sell_ends")));
 					} else {
 						Equip equip = new Equip(rse.getInt("itemid"), (byte) rse.getInt("position"), -1);
 						equip.setOwner(rse.getString("owner"));
@@ -759,7 +759,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 						equip.setUpgradeSlots((byte) rse.getInt("upgradeslots"));
 						equip.setLevel((byte) rse.getInt("level"));
 						equip.setFlag((byte) rs.getInt("flag"));
-						items.add(new MTSItemInfo((IItem) equip, rse.getInt("price"), rse.getInt("id"), rse.getInt("seller"), rse.getString("sellername"), rse.getString("sell_ends")));
+						items.add(new MtsItemInfo((IItem) equip, rse.getInt("price"), rse.getInt("id"), rse.getInt("seller"), rse.getString("sellername"), rse.getString("sell_ends")));
 					}
 				}
 				pse.close();
@@ -782,8 +782,8 @@ public final class MtsHandler extends AbstractPacketHandler {
 		return PacketCreator.sendMts(items, 4, 0, 0, pages);
 	}
 
-	public List<MTSItemInfo> getTransfer(int cid) {
-		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
+	public List<MtsItemInfo> getTransfer(int cid) {
+		List<MtsItemInfo> items = new ArrayList<MtsItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -795,7 +795,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 				if (rs.getInt("type") != 1) {
 					Item i = new Item(rs.getInt("itemid"), (byte) 0, (short) rs.getInt("quantity"));
 					i.setOwner(rs.getString("owner"));
-					items.add(new MTSItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				} else {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"), -1);
 					equip.setOwner(rs.getString("owner"));
@@ -819,7 +819,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 					equip.setUpgradeSlots((byte) rs.getInt("upgradeslots"));
 					equip.setLevel((byte) rs.getInt("level"));
 					equip.setFlag((byte) rs.getInt("flag"));
-					items.add(new MTSItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				}
 			}
 			rs.close();
@@ -837,7 +837,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 	}
 	
 	private static GamePacket getMts(int tab, int type, int page) {
-		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
+		List<MtsItemInfo> items = new ArrayList<MtsItemInfo>();
 		Connection con = DatabaseConnection.getConnection();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -860,7 +860,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 				if (rs.getInt("type") != 1) {
 					Item i = new Item(rs.getInt("itemid"), (byte) 0, (short) rs.getInt("quantity"));
 					i.setOwner(rs.getString("owner"));
-					items.add(new MTSItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				} else {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"), -1);
 					equip.setOwner(rs.getString("owner"));
@@ -884,7 +884,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 					equip.setUpgradeSlots((byte) rs.getInt("upgradeslots"));
 					equip.setLevel((byte) rs.getInt("level"));
 					equip.setFlag((byte) rs.getInt("flag"));
-					items.add(new MTSItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				}
 			}
 			rs.close();
@@ -917,7 +917,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 		String search = state.getSearch();
 		int page = state.getCurrentPage();
 		
-		List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
+		List<MtsItemInfo> items = new ArrayList<MtsItemInfo>();
 		ItemInfoProvider ii = ItemInfoProvider.getInstance();
 		String listaitems = "";
 		if (cOi != 0) {
@@ -961,7 +961,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 				if (rs.getInt("type") != 1) {
 					Item i = new Item(rs.getInt("itemid"), (byte) 0, (short) rs.getInt("quantity"));
 					i.setOwner(rs.getString("owner"));
-					items.add(new MTSItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) i, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				} else {
 					Equip equip = new Equip(rs.getInt("itemid"), (byte) rs.getInt("position"), -1);
 					equip.setOwner(rs.getString("owner"));
@@ -985,7 +985,7 @@ public final class MtsHandler extends AbstractPacketHandler {
 					equip.setUpgradeSlots((byte) rs.getInt("upgradeslots"));
 					equip.setLevel((byte) rs.getInt("level"));
 					equip.setFlag((byte) rs.getInt("flag"));
-					items.add(new MTSItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
+					items.add(new MtsItemInfo((IItem) equip, rs.getInt("price"), rs.getInt("id"), rs.getInt("seller"), rs.getString("sellername"), rs.getString("sell_ends")));
 				}
 			}
 			rs.close();

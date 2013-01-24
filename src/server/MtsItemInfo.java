@@ -27,14 +27,14 @@ import client.IItem;
  * 
  * @author Traitor
  */
-public class MTSItemInfo {
+public class MtsItemInfo {
 	private int price;
 	private IItem item;
 	private String seller;
 	private int id;
 	private int year, month, day = 1;
 
-	public MTSItemInfo(IItem item, int price, int id, int cid, String seller, String date) {
+	public MtsItemInfo(IItem item, int price, int id, int cid, String seller, String date) {
 		this.item = item;
 		this.price = price;
 		this.seller = seller;

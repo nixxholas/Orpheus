@@ -70,7 +70,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 		} else {
 			IItem weapon = player.getInventory(InventoryType.EQUIPPED).getItem((byte) -11);
 			WeaponType type = ItemInfoProvider.getInstance().getWeaponType(weapon.getItemId());
-			if (type == WeaponType.NOT_A_WEAPON) {
+			if (type == null) {
 				return;
 			}
 			int projectile = 0;

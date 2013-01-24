@@ -62,27 +62,27 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 	public void dropItems(boolean meso, int mesoChance, int minMeso, int maxMeso, int minItems) {
 		List<ReactorDropEntry> chances = getDropChances();
 		List<ReactorDropEntry> items = new LinkedList<ReactorDropEntry>();
-		int numItems = 0;
+		int itemCount = 0;
 		if (meso && Math.random() < (1 / (double) mesoChance)) {
 			items.add(new ReactorDropEntry(0, mesoChance));
 		}
 		Iterator<ReactorDropEntry> iter = chances.iterator();
 		while (iter.hasNext()) {
 			ReactorDropEntry d = iter.next();
-			if (Math.random() < (1 / (double) d.Chance)) {
-				numItems++;
+			if (Math.random() < (1 / (double) d.chance)) {
+				itemCount++;
 				items.add(d);
 			}
 		}
 		while (items.size() < minItems) {
 			items.add(new ReactorDropEntry(0, mesoChance));
-			numItems++;
+			itemCount++;
 		}
 		java.util.Collections.shuffle(items);
 		final Point dropPos = reactor.getPosition();
-		dropPos.x -= (12 * numItems);
-		for (ReactorDropEntry d : items) {
-			if (d.ItemId == 0) {
+		dropPos.x -= (12 * itemCount);
+		for (ReactorDropEntry entry : items) {
+			if (entry.itemId == 0) {
 				int range = maxMeso - minMeso;
 				int displayDrop = (int) (Math.random() * range) + minMeso;
 				int mesoDrop = (displayDrop * client.getWorldServer().getMesoRate());
@@ -90,11 +90,11 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
 			} else {
 				IItem drop;
 				ItemInfoProvider ii = ItemInfoProvider.getInstance();
-				if (ii.getInventoryType(d.ItemId) != InventoryType.EQUIP) {
+				if (ii.getInventoryType(entry.itemId) != InventoryType.EQUIP) {
 					// TODO: So if it's not an equip, you always drop only one? So cheap!
-					drop = new Item(d.ItemId, (byte) 0, (short) 1);
+					drop = new Item(entry.itemId, (byte) 0, (short) 1);
 				} else {
-					drop = ii.randomizeStats((Equip) ii.getEquipById(d.ItemId));
+					drop = ii.randomizeStats((Equip) ii.getEquipById(entry.itemId));
 				}
 				reactor.getMap().spawnItemDrop(reactor, getPlayer(), drop, dropPos, false, true);
 			}

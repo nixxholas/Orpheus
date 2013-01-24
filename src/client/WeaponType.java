@@ -19,31 +19,47 @@ package client;
 
 public enum WeaponType {
 	
-	NOT_A_WEAPON(0), 
-	AXE1H(4.4), 
-	AXE2H(4.8), 
-	BLUNT1H(4.4), 
-	BLUNT2H(4.8), 
-	BOW(3.4), 
-	CLAW(3.6), 
-	CROSSBOW(3.6), 
-	DAGGER(4), 
-	GUN(3.6), 
-	KNUCKLE(4.8), 
-	POLE_ARM(5.0), 
-	SPEAR(5.0), 
-	STAFF(3.6), 
-	SWORD1H(4.0), 
-	SWORD2H(4.6), 
-	WAND(3.6);
+	SWORD1H(30, 4.0), 
+	AXE1H(31, 4.4), 
+	BLUNT1H(32, 4.4), 
+	DAGGER(33, 4),
+	// 34 - not a weapon
+	// 35 - not a weapon
+	// 36 - not a weapon
+	WAND(37, 3.6),
+	STAFF(38, 3.6),
+	// 39 - not a weapon
+	SWORD2H(40, 4.6), 
+	AXE2H(41, 4.8), 
+	BLUNT2H(42, 4.8), 
+	SPEAR(43, 5.0), 
+	POLE_ARM(44, 5.0), 
+	BOW(45, 3.4), 
+	CROSSBOW(46, 3.6), 
+	CLAW(47, 3.6), 
+	KNUCKLE(48, 4.8), 
+	GUN(49, 3.6), 
+	;
 	
+	private final int partialId;
 	private final double damageMultiplier;
 
-	private WeaponType(double maxDamageMultiplier) {
+	private WeaponType(int code, double maxDamageMultiplier) {
+		this.partialId = code;
 		this.damageMultiplier = maxDamageMultiplier;
 	}
 
 	public double getMaxDamageMultiplier() {
 		return damageMultiplier;
+	}
+	
+	public static WeaponType fromPartialId(int partialId) {
+		for (WeaponType type : WeaponType.values()) {
+			if (type.partialId == partialId) {
+				return type;
+			}
+		}
+		
+		return null;
 	}
 }

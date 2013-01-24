@@ -204,7 +204,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         if (Math.random() < 0.3 && steal.getEffect(player.getSkillLevel(steal)).makeChanceResult()) { //Else it drops too many cool stuff :(
                             List<MonsterDropEntry> toSteals = MonsterInfoProvider.getInstance().retrieveDrop(monster.getId());
                             Collections.shuffle(toSteals);
-                            int toSteal = toSteals.get(rand(0, (toSteals.size() - 1))).ItemId;
+                            int toSteal = toSteals.get(rand(0, (toSteals.size() - 1))).itemId;
                             ItemInfoProvider ii = ItemInfoProvider.getInstance();
                             IItem item = null;
                             if (ItemConstants.getInventoryType(toSteal).equals(InventoryType.EQUIP)) {

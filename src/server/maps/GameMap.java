@@ -376,13 +376,13 @@ public class GameMap {
 
 		Collections.shuffle(dropEntry);
 		for (final MonsterDropEntry de : dropEntry) {
-			if (Randomizer.nextInt(999999) < de.Chance * rate) {
+			if (Randomizer.nextInt(999999) < de.chance * rate) {
 				if (droptype == 3) {
 					pos.x = (int) (mobpos + (d % 2 == 0 ? (40 * (d + 1) / 2) : -(40 * (d / 2))));
 				} else {
 					pos.x = (int) (mobpos + ((d % 2 == 0) ? (25 * (d + 1) / 2) : -(25 * (d / 2))));
 				}
-				if (de.ItemId == 0) { // meso
+				if (de.itemId == 0) { // meso
 					int mesos = de.getRandomQuantity();
 
 					if (mesos > 0) {
@@ -392,12 +392,12 @@ public class GameMap {
 						spawnMesoDrop((int) (mesos * chr.rates().meso()), calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype);
 					}
 				} else {
-					if (ItemConstants.getInventoryType(de.ItemId) == InventoryType.EQUIP) {
-						idrop = ii.randomizeStats((Equip) ii.getEquipById(de.ItemId));
+					if (ItemConstants.getInventoryType(de.itemId) == InventoryType.EQUIP) {
+						idrop = ii.randomizeStats((Equip) ii.getEquipById(de.itemId));
 					} else {
-						idrop = new Item(de.ItemId, (byte) 0, (short) de.getRandomQuantity());
+						idrop = new Item(de.itemId, (byte) 0, (short) de.getRandomQuantity());
 					}
-					spawnDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.QuestId);
+					spawnDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.questId);
 				}
 				d++;
 			}
@@ -405,21 +405,21 @@ public class GameMap {
 		final List<MonsterGlobalDropEntry> globalEntry = mi.getGlobalDrop();
 		// Global Drops
 		for (final MonsterGlobalDropEntry de : globalEntry) {
-			if (Randomizer.nextInt(999999) < de.Chance) {
+			if (Randomizer.nextInt(999999) < de.chance) {
 				if (droptype == 3) {
 					pos.x = (int) (mobpos + (d % 2 == 0 ? (40 * (d + 1) / 2) : -(40 * (d / 2))));
 				} else {
 					pos.x = (int) (mobpos + ((d % 2 == 0) ? (25 * (d + 1) / 2) : -(25 * (d / 2))));
 				}
-				if (de.ItemId == 0) {
+				if (de.itemId == 0) {
 					// chr.getCashShop().gainCash(1, 80);
 				} else {
-					if (ItemConstants.getInventoryType(de.ItemId) == InventoryType.EQUIP) {
-						idrop = ii.randomizeStats((Equip) ii.getEquipById(de.ItemId));
+					if (ItemConstants.getInventoryType(de.itemId) == InventoryType.EQUIP) {
+						idrop = ii.randomizeStats((Equip) ii.getEquipById(de.itemId));
 					} else {
-						idrop = new Item(de.ItemId, (byte) 0, (short) de.getRandomQuantity());
+						idrop = new Item(de.itemId, (byte) 0, (short) de.getRandomQuantity());
 					}
-					spawnDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.QuestId);
+					spawnDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.questId);
 					d++;
 				}
 			}
