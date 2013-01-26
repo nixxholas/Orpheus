@@ -429,7 +429,7 @@ public class PacketCreator {
 
 	private static void addInventoryInfo(PacketWriter w, GameCharacter chr) {
 		for (byte i = 1; i <= 5; i++) {
-			w.writeAsByte(chr.getInventory(InventoryType.fromByte(i)).getSlotLimit());
+			w.writeAsByte(chr.getInventory(InventoryType.fromByte(i)).getCapacity());
 		}
 		w.write(new byte[] {0, (byte) 0x40, (byte) 0xE0, (byte) 0xFD, (byte) 0x3B, (byte) 0x37, (byte) 0x4F, 1});
 		Inventory iv = chr.getInventory(InventoryType.EQUIPPED);

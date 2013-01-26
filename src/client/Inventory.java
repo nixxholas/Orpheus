@@ -32,36 +32,27 @@ import java.util.Map;
  */
 public class Inventory implements Iterable<IItem> {
 	
-	private Map<Byte, IItem> inventory = new LinkedHashMap<Byte, IItem>();
-	private byte slotLimit;
+	private Map<Byte, IItem> items = new LinkedHashMap<Byte, IItem>();
+	private byte capacity;
 	private InventoryType type;
 	private boolean checked = false;
 
-	public Inventory(InventoryType type, byte slotLimit) {
-		this.inventory = new LinkedHashMap<Byte, IItem>();
+	public Inventory(InventoryType type, byte capacity) {
+		this.items = new LinkedHashMap<Byte, IItem>();
 		this.type = type;
-		this.slotLimit = slotLimit;
+		this.capacity = capacity;
 	}
 
-	public boolean isExtendableInventory() { 
-		// not sure about cash, basing this on the previous one.
-		return !(type.equals(InventoryType.UNDEFINED) || type.equals(InventoryType.EQUIPPED) || type.equals(InventoryType.CASH));
+	public byte getCapacity() {
+		return capacity;
 	}
 
-	public boolean isEquipInventory() {
-		return type.equals(InventoryType.EQUIP) || type.equals(InventoryType.EQUIPPED);
-	}
-
-	public byte getSlotLimit() {
-		return slotLimit;
-	}
-
-	public void setSlotLimit(int newLimit) {
-		slotLimit = (byte) newLimit;
+	public void setCapacity(int capacity) {
+		this.capacity = (byte) capacity;
 	}
 
 	public IItem findById(int itemId) {
-		for (IItem item : inventory.values()) {
+		for (IItem item : items.values()) {
 			if (item.getItemId() == itemId) {
 				return item;
 			}
@@ -71,7 +62,7 @@ public class Inventory implements Iterable<IItem> {
 
 	public int countById(int itemId) {
 		int possesed = 0;
-		for (IItem item : inventory.values()) {
+		for (IItem item : items.values()) {
 			if (item.getItemId() == itemId) {
 				possesed += item.getQuantity();
 			}
@@ -81,7 +72,7 @@ public class Inventory implements Iterable<IItem> {
 
 	public List<IItem> listById(int itemId) {
 		List<IItem> ret = new ArrayList<IItem>();
-		for (IItem item : inventory.values()) {
+		for (IItem item : items.values()) {
 			if (item.getItemId() == itemId) {
 				ret.add(item);
 			}
@@ -93,7 +84,7 @@ public class Inventory implements Iterable<IItem> {
 	}
 
 	public Collection<IItem> list() {
-		return inventory.values();
+		return items.values();
 	}
 
 	public byte addItem(IItem item) {
@@ -101,7 +92,7 @@ public class Inventory implements Iterable<IItem> {
 		if (slotId < 0) {
 			return -1;
 		}
-		inventory.put(slotId, item);
+		items.put(slotId, item);
 		item.setSlot(slotId);
 		return slotId;
 	}
@@ -110,19 +101,19 @@ public class Inventory implements Iterable<IItem> {
 		if (item.getSlot() < 0 && !this.type.equals(InventoryType.EQUIPPED)) {
 			throw new RuntimeException("Item with negative position in non-equipped inventory?");
 		}
-		inventory.put(item.getSlot(), item);
+		items.put(item.getSlot(), item);
 	}
 
 	public void move(byte sourceSlot, byte targetSlot, short slotMax) {
-		Item source = (Item) inventory.get(sourceSlot);
-		Item target = (Item) inventory.get(targetSlot);
+		Item source = (Item) items.get(sourceSlot);
+		Item target = (Item) items.get(targetSlot);
 		if (source == null) {
 			throw new RuntimeException("Trying to move empty slot");
 		}
 		if (target == null) {
 			source.setSlot(targetSlot);
-			inventory.put(targetSlot, source);
-			inventory.remove(sourceSlot);
+			items.put(targetSlot, source);
+			items.remove(sourceSlot);
 		} else if (target.getItemId() == source.getItemId() && !ItemConstants.isRechargable(source.getItemId())) {
 			if (type.asByte() == InventoryType.EQUIP.asByte()) {
 				swap(target, source);
@@ -133,7 +124,7 @@ public class Inventory implements Iterable<IItem> {
 				target.setQuantity(slotMax);
 			} else {
 				target.setQuantity((short) (source.getQuantity() + target.getQuantity()));
-				inventory.remove(sourceSlot);
+				items.remove(sourceSlot);
 			}
 		} else {
 			swap(target, source);
@@ -141,17 +132,17 @@ public class Inventory implements Iterable<IItem> {
 	}
 
 	private void swap(IItem source, IItem target) {
-		inventory.remove(source.getSlot());
-		inventory.remove(target.getSlot());
+		items.remove(source.getSlot());
+		items.remove(target.getSlot());
 		byte swapPos = source.getSlot();
 		source.setSlot(target.getSlot());
 		target.setSlot(swapPos);
-		inventory.put(source.getSlot(), source);
-		inventory.put(target.getSlot(), target);
+		items.put(source.getSlot(), source);
+		items.put(target.getSlot(), target);
 	}
 
 	public IItem getItem(byte slot) {
-		return inventory.get(slot);
+		return items.get(slot);
 	}
 
 	public void removeItem(byte slot) {
@@ -159,7 +150,7 @@ public class Inventory implements Iterable<IItem> {
 	}
 
 	public void removeItem(byte slot, short quantity, boolean allowZero) {
-		IItem item = inventory.get(slot);
+		IItem item = items.get(slot);
 		if (item == null) {
 			// TODO: is it ok not to throw an exception here?
 			return;
@@ -174,23 +165,23 @@ public class Inventory implements Iterable<IItem> {
 	}
 
 	public void removeSlot(byte slot) {
-		inventory.remove(slot);
+		items.remove(slot);
 	}
 
 	public boolean isFull() {
-		return inventory.size() >= slotLimit;
+		return items.size() >= capacity;
 	}
 
 	public boolean isFull(int margin) {
-		return inventory.size() + margin >= slotLimit;
+		return items.size() + margin >= capacity;
 	}
 
 	public byte getNextFreeSlot() {
 		if (isFull()) {
 			return -1;
 		}
-		for (byte i = 1; i <= slotLimit; i++) {
-			if (!inventory.keySet().contains(i)) {
+		for (byte i = 1; i <= capacity; i++) {
+			if (!items.keySet().contains(i)) {
 				return i;
 			}
 		}
@@ -202,8 +193,8 @@ public class Inventory implements Iterable<IItem> {
 			return 0;
 		}
 		byte free = 0;
-		for (byte i = 1; i <= slotLimit; i++) {
-			if (!inventory.keySet().contains(i)) {
+		for (byte i = 1; i <= capacity; i++) {
+			if (!items.keySet().contains(i)) {
 				free++;
 			}
 		}
@@ -216,7 +207,7 @@ public class Inventory implements Iterable<IItem> {
 
 	@Override
 	public Iterator<IItem> iterator() {
-		return Collections.unmodifiableCollection(inventory.values()).iterator();
+		return Collections.unmodifiableCollection(items.values()).iterator();
 	}
 
 	public Collection<Inventory> allInventories() {
@@ -226,7 +217,7 @@ public class Inventory implements Iterable<IItem> {
 	public IItem findByCashId(int cashId) {
 		boolean isRing = false;
 		IEquip equip = null;
-		for (IItem item : inventory.values()) {
+		for (IItem item : items.values()) {
 			if (item.getType() == IItem.EQUIP) {
 				equip = (IEquip) item;
 				isRing = equip.getRingId() > -1;

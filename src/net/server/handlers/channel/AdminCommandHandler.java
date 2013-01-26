@@ -73,7 +73,7 @@ public final class AdminCommandHandler extends AbstractPacketHandler {
 				
 				// TODO: This for loop is equivalent to checking for a first item and removing it.
 				// You sure you wanna return in the end?				
-				for (byte i = 0; i < in.getSlotLimit(); i++) {
+				for (byte i = 0; i < in.getCapacity(); i++) {
 					final IItem item = in.getItem(i);
 					if (item != null) {
 						InventoryManipulator.removeFromSlot(c, type, i, item.getQuantity(), false);

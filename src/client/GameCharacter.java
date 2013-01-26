@@ -271,10 +271,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		ret.accountId = c.getAccountId();
 		ret.buddylist = new BuddyList(20);
 		ret.mount = null;
-		ret.getInventory(InventoryType.EQUIP).setSlotLimit(24);
-		ret.getInventory(InventoryType.USE).setSlotLimit(24);
-		ret.getInventory(InventoryType.SETUP).setSlotLimit(24);
-		ret.getInventory(InventoryType.ETC).setSlotLimit(24);
+		ret.getInventory(InventoryType.EQUIP).setCapacity(24);
+		ret.getInventory(InventoryType.USE).setCapacity(24);
+		ret.getInventory(InventoryType.SETUP).setCapacity(24);
+		ret.getInventory(InventoryType.ETC).setCapacity(24);
 		int[] key = {18, 65, 2, 23, 3, 4, 5, 6, 16, 17, 19, 25, 26, 27, 31, 34, 35, 37, 38, 40, 43, 44, 45, 46, 50, 56, 59, 60, 61, 62, 63, 64, 57, 48, 29, 7, 24, 33, 41, 39};
 		int[] type = {4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 4, 4, 5, 6, 6, 6, 6, 6, 6, 5, 4, 5, 4, 4, 4, 4, 4};
 		int[] action = {0, 106, 10, 1, 12, 13, 18, 24, 8, 5, 4, 19, 14, 15, 2, 17, 11, 3, 20, 16, 9, 50, 51, 6, 7, 53, 100, 101, 102, 103, 104, 105, 54, 22, 52, 21, 25, 26, 23, 27};
@@ -2589,10 +2589,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			}
 			int buddyCapacity = rs.getInt("buddyCapacity");
 			character.buddylist = new BuddyList(buddyCapacity);
-			character.getInventory(InventoryType.EQUIP).setSlotLimit(rs.getByte("equipslots"));
-			character.getInventory(InventoryType.USE).setSlotLimit(rs.getByte("useslots"));
-			character.getInventory(InventoryType.SETUP).setSlotLimit(rs.getByte("setupslots"));
-			character.getInventory(InventoryType.ETC).setSlotLimit(rs.getByte("etcslots"));
+			character.getInventory(InventoryType.EQUIP).setCapacity(rs.getByte("equipslots"));
+			character.getInventory(InventoryType.USE).setCapacity(rs.getByte("useslots"));
+			character.getInventory(InventoryType.SETUP).setCapacity(rs.getByte("setupslots"));
+			character.getInventory(InventoryType.ETC).setCapacity(rs.getByte("etcslots"));
 			
 			final boolean loadOnlyEquips = !forChannelServer;
 			final List<ItemInventoryEntry> loadedItems = ItemFactory.INVENTORY.loadItems(character.id, loadOnlyEquips);
@@ -4106,7 +4106,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public byte getSlots(int type) {
-		return type == InventoryType.CASH.asByte() ? 96 : inventory[type].getSlotLimit();
+		return type == InventoryType.CASH.asByte() ? 96 : inventory[type].getCapacity();
 	}
 
 	public boolean gainSlots(int type, int slots) {
@@ -4114,9 +4114,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public boolean gainSlots(int type, int slots, boolean update) {
-		slots += inventory[type].getSlotLimit();
+		slots += inventory[type].getCapacity();
 		if (slots <= 96) {
-			inventory[type].setSlotLimit(slots);
+			inventory[type].setCapacity(slots);
 
 			saveToDb(true);
 			if (update) {

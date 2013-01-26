@@ -88,7 +88,7 @@ public final class RangedAttackHandler extends AbstractDealDamageHandler {
 				bulletCount *= 2;
 			}
 			Inventory inv = player.getInventory(InventoryType.USE);
-			for (byte i = 0; i < inv.getSlotLimit(); i++) {
+			for (byte i = 0; i < inv.getCapacity(); i++) {
 				IItem item = inv.getItem(i);
 				if (item != null) {
 					int id = item.getItemId();
