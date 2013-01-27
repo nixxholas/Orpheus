@@ -72,7 +72,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 	 * @param times
 	 *            The number of times to write.
 	 */
-	public void write0(int times) {
+	public void writeZero(int times) {
 		for (int i = 0; i < times; i++)
 			bos.writeByte((byte) 0);
 	}

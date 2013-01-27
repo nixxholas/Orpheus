@@ -669,11 +669,12 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter(17);
 		w.writeAsShort(SendOpcode.LOGIN_STATUS.getValue());
 		w.writeAsByte(2);
-		w.write0(5);
+		w.writeZero(5);
 		w.writeAsByte(reason);
-		w.writeLong(timestampTill); // Tempban date is handled as a 64-bit
-										// long, number of 100NS intervals since
-										// 1/1/1601. Lulz.
+		
+		// Tempban date is handled as a 64-bit long, number of 100NS intervals since 1/1/1601. Lulz.
+		// TS NOTE: Also known as FILETIME date format. You niblet
+		w.writeLong(timestampTill); 
 
 		return w.getPacket();
 	}
@@ -1169,15 +1170,17 @@ public class PacketCreator {
 		w.writeAsByte(0x0A); // v83
 		w.writeAsByte(summon.getSkillLevel());
 		w.writeVector(summon.getPosition());
-		w.write0(3);
-		w.writeAsByte(summon.getMovementType().getValue()); // 0 = don't move, 1 =
-															// follow (4th mage
-															// summons?), 2/4 =
-															// only tele follow,
-															// 3 = bird follow
-		w.writeAsByte(!summon.isPuppet()); // 0 and the summon can't attack
-												// - but puppets don't attack
-												// with 1 either ^.-
+		w.writeZero(3);
+		
+		// 0 = don't move
+		// 1 = follow (4th mage summons?)
+		// 2/4 = only tele follow
+		// 3 = bird follow
+		w.writeAsByte(summon.getMovementType().getValue()); 
+		
+		// 0 and the summon can't attack - but puppets don't attack with 1 either ^.-
+		w.writeAsByte(!summon.isPuppet()); 
+		
 		w.writeAsByte(!animated);
 		return w.getPacket();
 	}
@@ -1520,9 +1523,9 @@ public class PacketCreator {
 		w.writeInt(life.getObjectId());
 		w.writeAsByte(life.getController() == null ? 5 : 1);
 		w.writeInt(life.getId());
-		w.write0(15);
+		w.writeZero(15);
 		w.writeAsByte(0x88);
-		w.write0(6);
+		w.writeZero(6);
 		w.writeVector(life.getPosition());
 		w.writeAsByte(life.getStance());
 		w.writeAsShort(0); // Origin FH //life.getStartFh()
@@ -1558,9 +1561,9 @@ public class PacketCreator {
 		w.writeInt(life.getObjectId());
 		w.writeAsByte(5);
 		w.writeInt(life.getId());
-		w.write0(15);
+		w.writeZero(15);
 		w.writeAsByte(0x88);
-		w.write0(6);
+		w.writeZero(6);
 		w.writeVector(life.getPosition());
 		w.writeAsByte(life.getStance());
 		w.writeAsShort(0);// life.getStartFh()
@@ -1589,9 +1592,9 @@ public class PacketCreator {
 		w.writeInt(life.getObjectId());
 		w.writeAsByte(5);
 		w.writeInt(life.getId());
-		w.write0(15);
+		w.writeZero(15);
 		w.writeAsByte(0x88);
-		w.write0(6);
+		w.writeZero(6);
 		w.writeVector(life.getPosition());
 		w.writeAsByte(life.getStance());
 		w.writeAsShort(0);// life.getStartFh()
@@ -1924,11 +1927,11 @@ public class PacketCreator {
 		}
 		w.writeInt((int) (buffmask & 0xffffffffL));
 		int CHAR_MAGIC_SPAWN = Randomizer.nextInt();
-		w.write0(6);
+		w.writeZero(6);
 		w.writeInt(CHAR_MAGIC_SPAWN);
-		w.write0(11);
+		w.writeZero(11);
 		w.writeInt(CHAR_MAGIC_SPAWN);// v74
-		w.write0(11);
+		w.writeZero(11);
 		w.writeInt(CHAR_MAGIC_SPAWN);
 		w.writeAsShort(0);
 		w.writeAsByte(0);
@@ -1940,13 +1943,13 @@ public class PacketCreator {
 			w.writeLong(0);
 		}
 		w.writeInt(CHAR_MAGIC_SPAWN);
-		w.write0(9);
+		w.writeZero(9);
 		w.writeInt(CHAR_MAGIC_SPAWN);
 		w.writeAsShort(0);
 		w.writeInt(0); // actually not 0, why is it 0 then?
-		w.write0(10);
+		w.writeZero(10);
 		w.writeInt(CHAR_MAGIC_SPAWN);
-		w.write0(13);
+		w.writeZero(13);
 		w.writeInt(CHAR_MAGIC_SPAWN);
 		w.writeAsShort(0);
 		w.writeAsByte(0);
@@ -1998,7 +2001,7 @@ public class PacketCreator {
 		addRingLook(w, chr, true);
 		addRingLook(w, chr, false);
 		addMarriageRingLook(w, chr);
-		w.write0(3);
+		w.writeZero(3);
 		w.writeAsByte(chr.getTeam());
 		return w.getPacket();
 	}
@@ -2681,7 +2684,7 @@ public class PacketCreator {
 		w.writeInt(statups.get(0).delta);
 
 		if (special) {
-			w.write0(3);
+			w.writeZero(3);
 		}
 		return w.getPacket();
 	}
@@ -4286,7 +4289,7 @@ public class PacketCreator {
 		w.writeAsShort(SendOpcode.SHOW_MAGNET.getValue());
 		w.writeInt(mobid);
 		w.writeAsByte(success);
-		w.write0(10); // Mmmk
+		w.writeZero(10); // Mmmk
 		return w.getPacket();
 	}
 
@@ -5001,8 +5004,9 @@ public class PacketCreator {
 
 		switch (op) {
 			case 0x24:
-				w.write0(8);
+				w.writeZero(8);
 				break;
+				
 			default:
 				w.writeAsByte(0);
 				break;
@@ -5017,7 +5021,7 @@ public class PacketCreator {
 		w.writeAsByte(0x23);
 		w.writeInt(9030000); // Fredrick
 		w.writeInt(32272); // id
-		w.write0(5);
+		w.writeZero(5);
 		w.writeInt(chr.getMerchantMeso());
 		w.writeAsByte(0);
 		try {
@@ -5029,7 +5033,7 @@ public class PacketCreator {
 			}
 		} catch (SQLException e) {
 		}
-		w.write0(3);
+		w.writeZero(3);
 		return w.getPacket();
 	}
 
@@ -5341,10 +5345,10 @@ public class PacketCreator {
 		for (BuffStatDelta stat : statups) {
 			w.writeInt(stat.delta);
 			w.writeInt(buffid);
-			w.write0(5);
+			w.writeZero(5);
 			w.writeAsShort(duration);
 		}
-		w.write0(3);
+		w.writeZero(3);
 		return w.getPacket();
 	}
 
@@ -5357,7 +5361,7 @@ public class PacketCreator {
 		for (BuffStatDelta statup : statups) {
 			w.writeInt(statup.delta);
 			w.writeInt(buffid);
-			w.write0(5);
+			w.writeZero(5);
 			w.writeAsShort(time);
 		}
 		w.writeAsShort(0);
@@ -5408,7 +5412,7 @@ public class PacketCreator {
 			// char name
 			w.writeLengthString(item.getSeller());
 			
-			w.write0(28);
+			w.writeZero(28);
 		}
 		w.writeAsByte(1);
 		return w.getPacket();
@@ -5588,11 +5592,12 @@ public class PacketCreator {
 				w.writeInt(getQuestTimestamp(item.getEndingDate()));
 
 				// account name (what was nexon thinking?)
-				w.writeLengthString(item.getSeller()); 
+				w.writeLengthString(item.getSeller());
+				
 				// char name
 				w.writeLengthString(item.getSeller());
 				
-				w.write0(28);
+				w.writeZero(28);
 			}
 		}
 		w.writeAsByte(0xD0 + items.size());
@@ -5627,7 +5632,7 @@ public class PacketCreator {
 	public static GamePacket enableCSUse() {
 		PacketWriter w = new PacketWriter();
 		w.writeAsByte(0x12);
-		w.write0(6);
+		w.writeZero(6);
 		return w.getPacket();
 	}
 
@@ -6782,7 +6787,7 @@ public class PacketCreator {
 		PacketWriter w = new PacketWriter();
 		w.writeAsShort(SendOpcode.ROLL_SNOWBALL.getValue());
 		if (entermap) {
-			w.write0(21);
+			w.writeZero(21);
 		} else {
 			// 0 = move, 1 = roll, 2 is down disappear, 3 is up disappear
 			w.writeAsByte(type);
@@ -7091,7 +7096,7 @@ public class PacketCreator {
 				w.writeInt(sci.getModifier());
 				w.writeAsByte(sci.getInfo());
 			}
-			w.write0(121);
+			w.writeZero(121);
 
 			for (int i = 1; i <= 8; i++) {
 				for (int j = 0; j < 2; j++) {
@@ -7247,7 +7252,7 @@ public class PacketCreator {
 	public static GamePacket showInventoryFull() {
 		PacketWriter w = new PacketWriter(8);
 		w.writeAsShort(SendOpcode.SOMETHING_WITH_INVENTORY.getValue());
-		w.write0(6);
+		w.writeZero(6);
 		return w.getPacket();
 	}
 
