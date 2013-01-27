@@ -239,36 +239,39 @@ public class PacketCreator {
 	}
 
 	private static void addCharEquips(PacketWriter w, GameCharacter chr) {
-		Inventory equip = chr.getInventory(InventoryType.EQUIPPED);
-		Collection<IItem> ii = ItemInfoProvider.getInstance().canWearEquipment(chr, equip.list());
-		Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
-		Map<Byte, Integer> maskedEquip = new LinkedHashMap<Byte, Integer>();
-		for (IItem item : ii) {
+		Inventory inventory = chr.getInventory(InventoryType.EQUIPPED);
+		Collection<IItem> wearable = ItemInfoProvider.getInstance().canWearEquipment(chr, inventory.list());
+		Map<Byte, Integer> equips = new LinkedHashMap<Byte, Integer>();
+		Map<Byte, Integer> maskedEquips = new LinkedHashMap<Byte, Integer>();
+		for (IItem item : wearable) {
 			byte pos = (byte) (item.getSlot() * -1);
-			if (pos < 100 && myEquip.get(pos) == null) {
-				myEquip.put(pos, item.getItemId());
+			if (pos < 100 && equips.get(pos) == null) {
+				equips.put(pos, item.getItemId());
 			} else if (pos > 100 && pos != 111) { 
 				// don't ask. o.o
 				pos -= 100;
-				if (myEquip.get(pos) != null) {
-					maskedEquip.put(pos, myEquip.get(pos));
+				if (equips.get(pos) != null) {
+					maskedEquips.put(pos, equips.get(pos));
 				}
-				myEquip.put(pos, item.getItemId());
-			} else if (myEquip.get(pos) != null) {
-				maskedEquip.put(pos, item.getItemId());
+				equips.put(pos, item.getItemId());
+			} else if (equips.get(pos) != null) {
+				maskedEquips.put(pos, item.getItemId());
 			}
 		}
-		for (Entry<Byte, Integer> entry : myEquip.entrySet()) {
+		
+		for (Entry<Byte, Integer> entry : equips.entrySet()) {
 			w.writeAsByte(entry.getKey());
 			w.writeInt(entry.getValue());
 		}
 		w.writeAsByte(0xFF);
-		for (Entry<Byte, Integer> entry : maskedEquip.entrySet()) {
+		
+		for (Entry<Byte, Integer> entry : maskedEquips.entrySet()) {
 			w.writeAsByte(entry.getKey());
 			w.writeInt(entry.getValue());
 		}
 		w.writeAsByte(0xFF);
-		IItem cWeapon = equip.getItem((byte) -111);
+		
+		IItem cWeapon = inventory.getItem((byte) -111);
 		w.writeInt(cWeapon != null ? cWeapon.getItemId() : 0);
 		for (int i = 0; i < 3; i++) {
 			if (chr.getPet(i) != null) {
@@ -279,27 +282,35 @@ public class PacketCreator {
 		}
 	}
 
-	private static void addCharEntry(PacketWriter w, GameCharacter chr, boolean viewAll) {
-		addCharStats(w, chr);
-		addCharLook(w, chr, false);
+	private static void addCharEntry(PacketWriter w, GameCharacter character, boolean viewAll) {
+		addCharStats(w, character);
+		addCharLook(w, character, false);
 		if (!viewAll) {
 			w.writeAsByte(0);
 		}
-		if (chr.isGM()) {
+		
+		boolean showWorldRank = false;
+		
+		// Don't display world rank info for GM characters.
+		showWorldRank = !character.isGM();
+		
+		if (!showWorldRank) {
 			w.writeAsByte(0);
-			return;
+		} else {
+			w.writeAsByte(1);
+			
+			w.writeInt(character.getRank());
+			w.writeInt(character.getRankMove()); 
+			
+			w.writeInt(character.getJobRank()); 
+			w.writeInt(character.getJobRankMove());
 		}
-		// world rank enabled (next 4 ints are not sent if disabled) Short??
-		w.writeAsByte(1); 
-		w.writeInt(chr.getRank()); // world rank
-		w.writeInt(chr.getRankMove()); // move (negative is downwards)
-		w.writeInt(chr.getJobRank()); // job rank
-		w.writeInt(chr.getJobRankMove()); // move (negative is downwards)
 	}
 
-	private static void addQuestInfo(PacketWriter w, GameCharacter chr) {
-		w.writeAsShort(chr.getStartedQuestsSize());
-		for (QuestStatus q : chr.getStartedQuests()) {
+	private static void addQuestInfo(PacketWriter w, GameCharacter character) {
+		w.writeAsShort(character.getStartedQuestsSize());
+		
+		for (QuestStatus q : character.getStartedQuests()) {
 			w.writeAsShort(q.getQuest().getId());
 			w.writeLengthString(q.getQuestData());
 			if (q.getQuest().getInfoNumber() > 0) {
@@ -307,10 +318,13 @@ public class PacketCreator {
 				w.writeLengthString(Integer.toString(q.getMedalProgress()));
 			}
 		}
-		List<QuestStatus> completed = chr.getCompletedQuests();
+		
+		List<QuestStatus> completed = character.getCompletedQuests();
 		w.writeAsShort(completed.size());
 		for (QuestStatus q : completed) {
 			w.writeAsShort(q.getQuest().getId());
+			
+			// TODO: What the fuck.
 			int time = getQuestTimestamp(q.getCompletionTime());
 			w.writeInt(time);
 			w.writeInt(time);
@@ -5384,14 +5398,17 @@ public class PacketCreator {
 			w.writeInt(item.getTaxes()); // this + below = price
 			w.writeInt(item.getPrice()); // price
 			w.writeLong(0);
+			
+			// TODO: WHAT?
 			w.writeInt(getQuestTimestamp(item.getEndingDate()));
-			w.writeLengthString(item.getSeller()); // account name (what
-															// was nexon
-															// thinking?)
-			w.writeLengthString(item.getSeller()); // char name
-			for (int j = 0; j < 28; j++) {
-				w.writeAsByte(0);
-			}
+			
+			// account name (what was nexon thinking?)
+			w.writeLengthString(item.getSeller()); 
+
+			// char name
+			w.writeLengthString(item.getSeller());
+			
+			w.write0(28);
 		}
 		w.writeAsByte(1);
 		return w.getPacket();
@@ -5536,6 +5553,8 @@ public class PacketCreator {
 				w.writeInt(item.getTaxes()); // this + below = price
 				w.writeInt(item.getPrice()); // price
 				w.writeLong(0);
+				
+				// TODO: what the fuck?
 				w.writeInt(getQuestTimestamp(item.getEndingDate()));
 				
 				// account name (what was nexon thinking?)
@@ -5564,15 +5583,16 @@ public class PacketCreator {
 				w.writeInt(item.getTaxes()); // taxes
 				w.writeInt(item.getPrice()); // price
 				w.writeLong(0);
+				
+				// TODO: ... what!
 				w.writeInt(getQuestTimestamp(item.getEndingDate()));
 
 				// account name (what was nexon thinking?)
 				w.writeLengthString(item.getSeller()); 
 				// char name
 				w.writeLengthString(item.getSeller());
-				for (int i = 0; i < 28; i++) {
-					w.writeAsByte(0);
-				}
+				
+				w.write0(28);
 			}
 		}
 		w.writeAsByte(0xD0 + items.size());
@@ -6432,8 +6452,12 @@ public class PacketCreator {
 					w.writeAsByte(0);
 				}
 				w.writeInt(dp.getMesos());
+				
+				// TODO: what the fuck!
 				w.writeLong(getQuestTimestamp(dp.sentTimeInMilliseconds()));
-				w.writeLong(0); // Contains message o____o.
+				
+				// Contains message o____o.
+				w.writeLong(0); 
 				for (int i = 0; i < 48; i++) {
 					w.writeInt(Randomizer.nextInt(Integer.MAX_VALUE));
 				}

@@ -4133,8 +4133,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.shop = shop;
 	}
 
-	public void setSlot(int slotid) {
-		slots = slotid;
+	public void setSlot(int slotId) {
+		slots = slotId;
 	}
 	
 	public void setStat(Stat stat, int value) {
