@@ -5652,7 +5652,7 @@ public class PacketCreator {
 		w.writeAsByte(MTSmapCSchannel); // 0: mts 1: map 2: cs
 		w.writeInt(mapid); // -1 if mts, cs
 		if (MTSmapCSchannel == 1) {
-			w.write(new byte[8]);
+			w.writeZero(8);
 		}
 		return w.getPacket();
 	}

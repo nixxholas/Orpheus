@@ -36,25 +36,41 @@ public class MapScriptMethods extends AbstractPlayerInteraction {
 	String rewardstring = " title has been rewarded. Please see NPC Dalair to receive your Medal.";
 
 	public void displayAranIntro() {
+		final int gender = c.getPlayer().getGender();
+		String path;
+		boolean lockUi = false;
 		switch (c.getPlayer().getMapId()) {
 			case 914090010:
-				lockUI();
-				c.announce(PacketCreator.showIntro("Effect/Direction1.img/aranTutorial/Scene0"));
+				lockUi = true;
+				path = "Effect/Direction1.img/aranTutorial/Scene0";
 				break;
+				
 			case 914090011:
-				c.announce(PacketCreator.showIntro("Effect/Direction1.img/aranTutorial/Scene1" + c.getPlayer().getGender()));
+				path = "Effect/Direction1.img/aranTutorial/Scene1" + gender;
 				break;
+				
 			case 914090012:
-				c.announce(PacketCreator.showIntro("Effect/Direction1.img/aranTutorial/Scene2" + c.getPlayer().getGender()));
+				path = "Effect/Direction1.img/aranTutorial/Scene2" + gender;
 				break;
+				
 			case 914090013:
-				c.announce(PacketCreator.showIntro("Effect/Direction1.img/aranTutorial/Scene3"));
+				path = "Effect/Direction1.img/aranTutorial/Scene3";
 				break;
+				
 			case 914090100:
-				lockUI();
-				c.announce(PacketCreator.showIntro("Effect/Direction1.img/aranTutorial/HandedPoleArm" + c.getPlayer().getGender()));
+				lockUi = true;
+				path = "Effect/Direction1.img/aranTutorial/HandedPoleArm" + gender;
 				break;
+				
+			default:
+				throw new RuntimeException("Unknown Aran intro map.");
 		}
+
+		if (lockUi) {
+			lockUI();
+		}
+		
+		c.announce(PacketCreator.showIntro(path));
 	}
 
 	public void arriveIceCave() {
@@ -69,22 +85,39 @@ public class MapScriptMethods extends AbstractPlayerInteraction {
 	}
 
 	public void startExplorerExperience() {
-		if (c.getPlayer().getMapId() == 1020100) // Swordman
-		{
-			c.announce(PacketCreator.showIntro("Effect/Direction3.img/swordman/Scene" + c.getPlayer().getGender()));
-		} else if (c.getPlayer().getMapId() == 1020200) // Magician
-		{
-			c.announce(PacketCreator.showIntro("Effect/Direction3.img/magician/Scene" + c.getPlayer().getGender()));
-		} else if (c.getPlayer().getMapId() == 1020300) // Archer
-		{
-			c.announce(PacketCreator.showIntro("Effect/Direction3.img/archer/Scene" + c.getPlayer().getGender()));
-		} else if (c.getPlayer().getMapId() == 1020400) // Rogue
-		{
-			c.announce(PacketCreator.showIntro("Effect/Direction3.img/rogue/Scene" + c.getPlayer().getGender()));
-		} else if (c.getPlayer().getMapId() == 1020500) // Pirate
-		{
-			c.announce(PacketCreator.showIntro("Effect/Direction3.img/pirate/Scene" + c.getPlayer().getGender()));
+		final int gender = c.getPlayer().getGender();
+		String path;
+		switch (c.getPlayer().getMapId()) {
+		case 1020100:
+			// Swordman
+			path = "Effect/Direction3.img/swordman/Scene" + gender;
+			break;
+
+		case 1020200:
+			// Magician
+			path = "Effect/Direction3.img/magician/Scene" + gender;
+			break;
+
+		case 1020300:
+			// Archer
+			path = "Effect/Direction3.img/archer/Scene" + gender;
+			break;
+
+		case 1020400:
+			// Rogue
+			path = "Effect/Direction3.img/rogue/Scene" + gender;
+			break;
+
+		case 1020500:
+			// Pirate
+			path = "Effect/Direction3.img/pirate/Scene" + gender;
+			break;
+
+		default:
+			throw new RuntimeException("Unknown adventurer intro map.");
 		}
+		
+		c.announce(PacketCreator.showIntro(path));
 	}
 
 	public void enterRien() {

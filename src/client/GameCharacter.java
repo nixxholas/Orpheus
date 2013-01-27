@@ -1736,7 +1736,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public static String getNameById(int id) {
 		try {
-			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT name FROM characters WHERE id = ?");
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement("SELECT `name` FROM `characters` WHERE `id` = ?");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {

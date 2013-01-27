@@ -68,8 +68,8 @@ public class RescueGaga extends MapleEvents {
 			case 2:
 				skillid = 10001014;
 		}
-		long expiration = (System.currentTimeMillis() + (long) (3600 * 24 * 20 * 1000));// 20
-																						// days
+		// 20 days
+		long expiration = (System.currentTimeMillis() + (long) (3600 * 24 * 20 * 1000));
 		if (completed < 20) {
 			chr.changeSkillLevel(SkillFactory.getSkill(skillid), (byte) 1, 1, expiration);
 			chr.changeSkillLevel(SkillFactory.getSkill(skillid + 1), (byte) 1, 1, expiration);
