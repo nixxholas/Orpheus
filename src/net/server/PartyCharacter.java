@@ -22,6 +22,9 @@ package net.server;
 
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.List;
+
+import server.maps.Door;
 import client.Job;
 import client.GameCharacter;
 
@@ -57,10 +60,11 @@ public class PartyCharacter implements Serializable {
 		
 		this.level = character.getLevel();
 		
-		if (character.getDoors().size() > 0) {
-			this.doorTown = character.getDoors().get(0).getTown().getId();
-			this.doorTarget = character.getDoors().get(0).getTarget().getId();
-			this.doorPosition = character.getDoors().get(0).getTargetPosition();
+		final List<Door> doors = character.getDoorState().getDoors();
+		if (doors.size() > 0) {
+			this.doorTown = doors.get(0).getTown().getId();
+			this.doorTarget = doors.get(0).getTarget().getId();
+			this.doorPosition = doors.get(0).getTargetPosition();
 		}
 	}
 

@@ -30,8 +30,8 @@ import server.ItemInfoProvider;
 import tools.PacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.GameCharacter;
-import client.ISkill;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import tools.Randomizer;
 
 public final class SkillBookHandler extends AbstractPacketHandler {

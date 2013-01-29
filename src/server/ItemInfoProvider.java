@@ -36,7 +36,8 @@ import client.Inventory;
 import client.InventoryType;
 import client.Job;
 import client.WeaponType;
-import client.SkillFactory;
+import client.skills.SkillFactory;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

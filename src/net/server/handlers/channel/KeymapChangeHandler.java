@@ -20,10 +20,10 @@
  */
 package net.server.handlers.channel;
 
-import client.ISkill;
 import client.GameClient;
 import client.KeyBinding;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 

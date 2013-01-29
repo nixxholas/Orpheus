@@ -22,7 +22,8 @@ package client.status;
 
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
-import client.ISkill;
+
+import client.skills.ISkill;
 import server.life.MobSkill;
 import tools.ArrayMap;
 

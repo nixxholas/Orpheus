@@ -44,14 +44,14 @@ import tools.DatabaseConnection;
 import tools.GameLogger;
 import tools.PacketCreator;
 import client.IItem;
-import client.ISkill;
 import client.Item;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
 import client.Job;
 import client.Stat;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 
 /**
  * @author Aaron Weiss

@@ -20,11 +20,11 @@
  */
 package net.server.handlers.channel;
 
-import client.ISkill;
 import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.GameClient;
-import client.SkillFactory;
 import net.GamePacket;
 import server.AttackInfo;
 import server.StatEffect;

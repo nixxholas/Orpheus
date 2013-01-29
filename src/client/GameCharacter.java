@@ -100,6 +100,14 @@ import tools.Output;
 import tools.Pair;
 import tools.Randomizer;
 import client.autoban.AutobanManager;
+import client.skills.BattleshipState;
+import client.skills.BeholderState;
+import client.skills.BerserkState;
+import client.skills.MarkedMonsterState;
+import client.skills.MysticDoorState;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
+import client.skills.SkillMacro;
 import constants.ExpTable;
 import constants.ItemConstants;
 import constants.ServerConstants;
@@ -141,6 +149,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private int initialSpawnPoint;
 	private int mapId;
 	private int gender;
+	private SkinColor skinColor = SkinColor.NORMAL;
 	private int chair;
 	private int itemEffect;
 	private int guildId, guildRank, allianceRank;
@@ -153,8 +162,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private Family family;
 	private int familyId;
 	private int bookCover;
-	private int markedMonster = 0;
-	private int battleshipHp = 0;
 	private int mesosTraded = 0;
 	private int possibleReports = 10;
 	private int vanquisherStage, vanquisherKills;
@@ -167,7 +174,12 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private long lastUsedCashItem, lastHealed;
 	private transient int localMaxHp, localMaxMp, localStr, localDex, localLuk, localInt;
 	private transient int magic, watk;
-	private boolean hidden, canDoor = true, Berserk, hasMerchant;
+	private boolean hidden, hasMerchant;
+	private MarkedMonsterState markedMonsterState = new MarkedMonsterState();
+	private BattleshipState battleshipState = new BattleshipState();
+	private MysticDoorState mysticDoorState = new MysticDoorState();
+	private BerserkState berserkState = new BerserkState();
+	private BeholderState beholderState = new BeholderState();
 	private LinkedCharacterInfo linkedCharacter = null;
 	private String chalktext;
 	private MtsState mtsState = new MtsState();
@@ -190,7 +202,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private Pet[] pets = new Pet[3];
 	private PlayerShop playerShop = null;
 	private Shop shop = null;
-	private SkinColor skinColor = SkinColor.NORMAL;
 	private Storage storage = null;
 	private Trade trade = null;
 	private SavedLocation[] savedLocations;
@@ -206,12 +217,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private Map<Integer, Summon> summons = new LinkedHashMap<Integer, Summon>();
 	private Map<Integer, CooldownValueHolder> cooldowns = new LinkedHashMap<Integer, CooldownValueHolder>(50);
 	private EnumMap<Disease, DiseaseValueHolder> diseases = new EnumMap<Disease, DiseaseValueHolder>(Disease.class);
-	private List<Door> doors = new ArrayList<Door>();
 	private ScheduledFuture<?> dragonBloodSchedule;
-	private ScheduledFuture<?> mapTimeLimitTask = null;
-	private ScheduledFuture<?>[] fullnessSchedule = new ScheduledFuture<?>[3];
 	private ScheduledFuture<?> hpDecreaseTask;
-	private ScheduledFuture<?> beholderHealingSchedule, beholderBuffSchedule, berserkSchedule;
+	private ScheduledFuture<?>[] fullnessSchedule = new ScheduledFuture<?>[3];
+	private ScheduledFuture<?> mapTimeLimitTask = null;
 	private ScheduledFuture<?> expirationSchedule;
 	private ScheduledFuture<?> recoverySchedule;
 	private List<ScheduledFuture<?>> timers = new ArrayList<ScheduledFuture<?>>();
@@ -226,8 +235,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private AutobanManager autoban;
 	private MapleStockPortfolio stockPortfolio;
 	private boolean isbanned = false;
-	private ScheduledFuture<?> pendantSchedule = null; // 1122017
-	private byte pendantExp = 0, lastMobCount = 0;
+	private PendantState pendantState = new PendantState();
+	private byte lastMobCount = 0;
 	private TeleportRockInfo teleportRocks = new TeleportRockInfo();
 	private Map<String, MapleEvents> events = new LinkedHashMap<String, MapleEvents>();
 	private PartyQuest partyQuest = null;
@@ -304,10 +313,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public RingsInfo getRingsInfo() {
 		return this.rings;
-	}
-	
-	public void addDoor(Door door) {
-		doors.add(door);
 	}
 
 	public void addExcluded(int x) {
@@ -586,6 +591,85 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		this.effects.clear();
 	}
 
+	private final class DragonBloodAction implements Runnable {
+		private final StatEffect bloodEffect;
+
+		private DragonBloodAction(StatEffect bloodEffect) {
+			this.bloodEffect = bloodEffect;
+		}
+
+		@Override
+		public void run() {
+			addHP(-bloodEffect.getX());
+			client.announce(PacketCreator.showOwnBuffEffect(bloodEffect.getSourceId(), 5));
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBuffeffect(getId(), bloodEffect.getSourceId(), 5), false);
+			checkBerserk();
+		}
+	}
+
+	private final class HpRecoveryAction implements Runnable {
+		private final byte heal;
+
+		private HpRecoveryAction(byte heal) {
+			this.heal = heal;
+		}
+
+		@Override
+		public void run() {
+			addHP(heal);
+			client.announce(PacketCreator.showOwnRecovery(heal));
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.showRecovery(id, heal), false);
+		}
+	}
+
+	private final class BeholderHexAction implements Runnable {
+		private final StatEffect buffEffect;
+
+		private BeholderHexAction(StatEffect buffEffect) {
+			this.buffEffect = buffEffect;
+		}
+
+		@Override
+		public void run() {
+			buffEffect.applyTo(GameCharacter.this);
+			client.announce(PacketCreator.showOwnBuffEffect(DarkKnight.BEHOLDER, 2));
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.summonSkill(getId(), DarkKnight.BEHOLDER, (int) (Math.random() * 3) + 6), true);
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBuffeffect(getId(), DarkKnight.BEHOLDER, 2), false);
+		}
+	}
+
+	private final class BeholderAuraAction implements Runnable {
+		private final StatEffect healEffect;
+
+		private BeholderAuraAction(StatEffect healEffect) {
+			this.healEffect = healEffect;
+		}
+
+		@Override
+		public void run() {
+			addHP(healEffect.getHp());
+			client.announce(PacketCreator.showOwnBuffEffect(DarkKnight.BEHOLDER, 2));
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.summonSkill(getId(), DarkKnight.BEHOLDER, 5), true);
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.showOwnBuffEffect(DarkKnight.BEHOLDER, 2), false);
+		}
+	}
+
+	private final class BerserkEffectAction implements Runnable {
+		private final int level;
+		private final boolean active;
+
+		private BerserkEffectAction(boolean active, int level) {
+			this.level = level;
+			this.active = active;
+		}
+
+		@Override
+		public void run() {
+			client.announce(PacketCreator.showOwnBerserk(level, active));
+			getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBerserk(getId(), level, active), false);
+		}
+	}
+
 	private final class ChangeMapAction implements Runnable {
 		private final Point pos;
 		private final GameMap to;
@@ -680,12 +764,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	private final class PendantHourlyAction implements Runnable {
 		@Override
 		public void run() {
-			if (pendantExp < 3) {
-				pendantExp++;
-				message("Pendant of the Spirit has been equipped for " + pendantExp + " hour(s), you will now receive " + pendantExp + "0% bonus exp.");
-			} else {
-				pendantSchedule.cancel(false);
-			}
+			final int multiplier = pendantState.getMultiplier();
+			message("Pendant of the Spirit has been equipped for " + multiplier + " hour(s), you will now receive " + multiplier + "0% bonus exp.");
 		}
 	}
 
@@ -780,19 +860,20 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 		deregisterBuffStats(buffstats);
 		if (effect.isMagicDoor()) {
-			if (!getDoors().isEmpty()) {
-				Door door = getDoors().iterator().next();
+			final List<Door> doors = this.getDoorState().getDoors();
+			if (!doors.isEmpty()) {
+				Door door = doors.iterator().next();
 				for (GameCharacter chr : door.getTarget().getCharacters()) {
 					door.sendDestroyData(chr.client);
 				}
 				for (GameCharacter chr : door.getTown().getCharacters()) {
 					door.sendDestroyData(chr.client);
 				}
-				for (Door destroyDoor : getDoors()) {
+				for (Door destroyDoor : doors) {
 					door.getTarget().removeMapObject(destroyDoor);
 					door.getTown().removeMapObject(destroyDoor);
 				}
-				clearDoors();
+				this.mysticDoorState.clearDoors();
 				silentPartyUpdate();
 			}
 		}
@@ -822,6 +903,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
+	public MysticDoorState getDoorState() {
+		return this.mysticDoorState;
+	}
+	
 	public void setHidden(boolean hidden) {
 		if (isGM()) {
 			this.hidden = hidden;
@@ -887,10 +972,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 
 		return getIdByName(name) < 0 && !name.toLowerCase().contains("gm") && Pattern.compile("[a-zA-Z0-9_-]{3,12}").matcher(name).matches();
-	}
-
-	public boolean canDoor() {
-		return canDoor;
 	}
 
 	public void changeJob(Job newJob) {
@@ -1019,26 +1100,23 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void checkBerserk() {
-		if (berserkSchedule != null) {
-			berserkSchedule.cancel(false);
-		}
-		final GameCharacter chr = this;
+		this.berserkState.reset();
+
 		if (job.equals(Job.DARKKNIGHT)) {
 			ISkill BerserkX = SkillFactory.getSkill(DarkKnight.BERSERK);
-			final int skilllevel = getSkillLevel(BerserkX);
-			if (skilllevel > 0) {
-				Berserk = chr.getHp() * 100 / chr.getMaxHp() < BerserkX.getEffect(skilllevel).getX();
-				berserkSchedule = TimerManager.getInstance().register(new Runnable() {
-
-					@Override
-					public void run() {
-						client.announce(PacketCreator.showOwnBerserk(skilllevel, Berserk));
-						getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBerserk(getId(), skilllevel, Berserk), false);
-					}
-				}, 5000, 3000);
+			final int level = getSkillLevel(BerserkX);
+			if (level > 0) {
+				final int berserkActivationLevel = BerserkX.getEffect(level).getX();
+				final boolean active = this.getCurrentHpRatio() < berserkActivationLevel;
+				final BerserkEffectAction action = new BerserkEffectAction(active, level);
+				this.berserkState.activate(action);
 			}
 		}
 	}
+
+	public double getCurrentHpRatio() {
+		return this.getHp() * 100.0 / this.getMaxHp();		
+	}	
 
 	public void checkMessenger() {
 		if (this.messengerState.isActive()) {
@@ -1060,10 +1138,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
-	public void clearDoors() {
-		doors.clear();
-	}
-
 	public void clearSavedLocation(SavedLocationType type) {
 		savedLocations[type.ordinal()] = null;
 	}
@@ -1078,10 +1152,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return inventory[ItemInfoProvider.getInstance().getInventoryType(itemid).ordinal()].countById(itemid);
 	}
 
-	public void decreaseBattleshipHp(int decrease) {
-		this.battleshipHp -= decrease;
-		if (battleshipHp <= 0) {
-			this.battleshipHp = 0;
+	public void decreaseBattleshipHp(int amount) {
+		final int hp = this.battleshipState.decreaseHp(amount);
+		if (hp <= 0) {
 			ISkill battleship = SkillFactory.getSkill(Corsair.BATTLE_SHIP);
 			int cooldown = battleship.getEffect(getSkillLevel(battleship)).getCooldown();
 			announce(PacketCreator.skillCooldown(Corsair.BATTLE_SHIP, cooldown));
@@ -1089,8 +1162,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			removeCooldown(5221999);
 			cancelEffectFromBuffStat(BuffStat.MONSTER_RIDING);
 		} else {
-			announce(PacketCreator.skillCooldown(5221999, battleshipHp / 10)); // :D
-			addCooldown(5221999, 0, battleshipHp, null);
+			announce(PacketCreator.skillCooldown(5221999, hp / 10)); // :D
+			addCooldown(5221999, 0, hp, null);
 		}
 	}
 
@@ -1152,14 +1225,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 							summons.remove(summonId);
 						}
 						if (summon.getSkill() == DarkKnight.BEHOLDER) {
-							if (beholderHealingSchedule != null) {
-								beholderHealingSchedule.cancel(false);
-								beholderHealingSchedule = null;
-							}
-							if (beholderBuffSchedule != null) {
-								beholderBuffSchedule.cancel(false);
-								beholderBuffSchedule = null;
-							}
+							this.beholderState.reset();
 						}
 					} else if (stat == BuffStat.DRAGONBLOOD) {
 						dragonBloodSchedule.cancel(false);
@@ -1173,17 +1239,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 				}
 			}
 		}
-	}
-
-	public void disableDoor() {
-		canDoor = false;
-		TimerManager.getInstance().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				canDoor = true;
-			}
-		}, 5000);
 	}
 
 	public void disbandGuild() {
@@ -1401,7 +1456,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void gainExp(int gain, boolean show, boolean inChat, boolean white) {
-		int equip = (gain / 10) * pendantExp;
+		int equip = (gain / 10) * pendantState.getMultiplier();
 		int total = gain + equip;
 
 		if (level < getMaxLevel()) {
@@ -1486,10 +1541,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public static int getAriantSlotsRoom(int room) {
 		return ariantRoomSlot[room];
-	}
-
-	public int getBattleshipHp() {
-		return battleshipHp;
 	}
 
 	public BuddyList getBuddylist() {
@@ -1603,9 +1654,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		return rebirths;
 	}
 
-	public List<Door> getDoors() {
-		return new ArrayList<Door>(doors);
-	}
 
 	public int getEnergyBar() {
 		return energybar;
@@ -1830,10 +1878,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 			return map.getId();
 		}
 		return mapId;
-	}
-
-	public int getMarkedMonster() {
-		return markedMonster;
 	}
 
 
@@ -2207,7 +2251,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 
 	public void giveCooldowns(final int skillid, long starttime, long length) {
 		if (skillid == 5221999) {
-			this.battleshipHp = (int) length;
+			this.battleshipState.setHp((int) length);
 			addCooldown(skillid, 0, length, null);
 		} else {
 			int time = (int) ((length + starttime) - System.currentTimeMillis());
@@ -3024,16 +3068,7 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		if (dragonBloodSchedule != null) {
 			dragonBloodSchedule.cancel(false);
 		}
-		dragonBloodSchedule = TimerManager.getInstance().register(new Runnable() {
-
-			@Override
-			public void run() {
-				addHP(-bloodEffect.getX());
-				client.announce(PacketCreator.showOwnBuffEffect(bloodEffect.getSourceId(), 5));
-				getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBuffeffect(getId(), bloodEffect.getSourceId(), 5), false);
-				checkBerserk();
-			}
-		}, 4000, 4000);
+		dragonBloodSchedule = TimerManager.getInstance().register(new DragonBloodAction(bloodEffect), 4000, 4000);
 	}
 
 	private void recalcLocalStats() {
@@ -3132,55 +3167,25 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		} else if (effect.isBerserk()) {
 			checkBerserk();
 		} else if (effect.isBeholder()) {
-			final int beholder = DarkKnight.BEHOLDER;
-			if (beholderHealingSchedule != null) {
-				beholderHealingSchedule.cancel(false);
-			}
-			if (beholderBuffSchedule != null) {
-				beholderBuffSchedule.cancel(false);
-			}
+			this.beholderState.reset();
+
 			ISkill bHealing = SkillFactory.getSkill(DarkKnight.AURA_OF_BEHOLDER);
 			int bHealingLvl = getSkillLevel(bHealing);
 			if (bHealingLvl > 0) {
 				final StatEffect healEffect = bHealing.getEffect(bHealingLvl);
-				int healInterval = healEffect.getX() * 1000;
-				beholderHealingSchedule = TimerManager.getInstance().register(new Runnable() {
-
-					@Override
-					public void run() {
-						addHP(healEffect.getHp());
-						client.announce(PacketCreator.showOwnBuffEffect(beholder, 2));
-						getMap().broadcastMessage(GameCharacter.this, PacketCreator.summonSkill(getId(), beholder, 5), true);
-						getMap().broadcastMessage(GameCharacter.this, PacketCreator.showOwnBuffEffect(beholder, 2), false);
-					}
-				}, healInterval, healInterval);
+				int interval = healEffect.getX() * 1000;
+				this.beholderState.activateAura(new BeholderAuraAction(healEffect), interval);
 			}
+
 			ISkill bBuff = SkillFactory.getSkill(DarkKnight.HEX_OF_BEHOLDER);
 			if (getSkillLevel(bBuff) > 0) {
 				final StatEffect buffEffect = bBuff.getEffect(getSkillLevel(bBuff));
-				int buffInterval = buffEffect.getX() * 1000;
-				beholderBuffSchedule = TimerManager.getInstance().register(new Runnable() {
-					
-					@Override
-					public void run() {
-						buffEffect.applyTo(GameCharacter.this);
-						client.announce(PacketCreator.showOwnBuffEffect(beholder, 2));
-						getMap().broadcastMessage(GameCharacter.this, PacketCreator.summonSkill(getId(), beholder, (int) (Math.random() * 3) + 6), true);
-						getMap().broadcastMessage(GameCharacter.this, PacketCreator.showBuffeffect(getId(), beholder, 2), false);
-					}
-				}, buffInterval, buffInterval);
+				int hexInterval = buffEffect.getX() * 1000;
+				this.beholderState.activateHex(new BeholderHexAction(buffEffect), hexInterval);
 			}
 		} else if (effect.isRecovery()) {
 			final byte heal = (byte) effect.getX();
-			recoverySchedule = TimerManager.getInstance().register(new Runnable() {
-
-				@Override
-				public void run() {
-					addHP(heal);
-					client.announce(PacketCreator.showOwnRecovery(heal));
-					getMap().broadcastMessage(GameCharacter.this, PacketCreator.showRecovery(id, heal), false);
-				}
-			}, 5000, 5000);
+			recoverySchedule = TimerManager.getInstance().register(new HpRecoveryAction(heal), 5000, 5000);
 		}
 		for (BuffStatDelta statup : effect.getStatups()) {
 			effects.put(statup.stat, new BuffStatValueHolder(effect, starttime, schedule, statup.delta));
@@ -3196,6 +3201,10 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		}
 	}
 
+	public MarkedMonsterState getMarkedMonsterState() {
+		return this.markedMonsterState;
+	}
+	
 	public static void removeAriantRoom(int room) {
 		ariantRoomLeader[room] = "";
 		ariantRoomSlot[room] = 0;
@@ -3285,7 +3294,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void resetBattleshipHp() {
-		this.battleshipHp = 4000 * getSkillLevel(SkillFactory.getSkill(Corsair.BATTLE_SHIP)) + ((getLevel() - 120) * 2000);
+		final byte skillLevel = getSkillLevel(SkillFactory.getSkill(Corsair.BATTLE_SHIP));
+		final int characterLevel = getLevel();
+		this.battleshipState.resetHp(skillLevel, characterLevel);
 	}
 
 	public void resetEnteredScript() {
@@ -3760,9 +3771,9 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public static void setAriantSlotRoom(int room, int slot) {
 		ariantRoomSlot[room] = slot;
 	}
-
-	public void setBattleshipHp(int battleshipHp) {
-		this.battleshipHp = battleshipHp;
+	
+	public BattleshipState getBattleshipState() {
+		return this.battleshipState;
 	}
 
 	public void setBuddyCapacity(int capacity) {
@@ -4027,9 +4038,6 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 		recalcLocalStats();
 	}
 
-	public void setMarkedMonster(int markedMonster) {
-		this.markedMonster = markedMonster;
-	}
 
 	public void setMaxHp(int hp) {
 		this.maxhp = hp;
@@ -4628,15 +4636,13 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	}
 
 	public void equipPendantOfSpirit() {
-		if (pendantSchedule == null) {
-			pendantSchedule = TimerManager.getInstance().register(new PendantHourlyAction(), 3600000); // 1 hour
-		}
+		// 1122017
+		this.pendantState.activate(new PendantHourlyAction());
 	}
 
 	public void unequipPendantOfSpirit() {
-		TimerManager.cancelSafely(this.pendantSchedule, false);
-		pendantSchedule = null;
-		pendantExp = 0;
+		// 1122017
+		this.pendantState.reset();
 	}
 
 	public void increaseEquipExp(int mobexp) {
@@ -4676,9 +4682,8 @@ public class GameCharacter extends AbstractAnimatedGameMapObject {
 	public final void empty() {
 		TimerManager.cancelSafely(this.dragonBloodSchedule, false);
 		TimerManager.cancelSafely(this.hpDecreaseTask, false);
-		TimerManager.cancelSafely(this.beholderHealingSchedule, false);
-		TimerManager.cancelSafely(this.beholderBuffSchedule, false);
-		TimerManager.cancelSafely(this.berserkSchedule, false);
+		this.beholderState.reset();
+		this.berserkState.reset();
 		TimerManager.cancelSafely(this.recoverySchedule, false);
 
 		this.cancelExpirationTask();

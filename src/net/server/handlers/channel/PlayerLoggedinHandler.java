@@ -29,7 +29,7 @@ import client.GameClient;
 import client.Family;
 import client.InventoryType;
 import client.LinkedCharacterInfo;
-import client.SkillFactory;
+import client.skills.SkillFactory;
 import gm.server.GMServer;
 import java.sql.SQLException;
 import java.util.List;

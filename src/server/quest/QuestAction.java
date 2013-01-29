@@ -22,14 +22,14 @@ package server.quest;
 
 import java.util.HashMap;
 import java.util.Map;
-import client.ISkill;
 import client.GameCharacter;
 import client.InventoryType;
 import client.Job;
 import client.QuestCompletionState;
 import client.QuestStatus;
 import client.Stat;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import constants.ItemConstants;
 import constants.ServerConstants;
 import provider.MapleData;

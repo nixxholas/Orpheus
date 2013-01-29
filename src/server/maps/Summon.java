@@ -23,7 +23,7 @@ package server.maps;
 import java.awt.Point;
 import client.GameCharacter;
 import client.GameClient;
-import client.SkillFactory;
+import client.skills.SkillFactory;
 import tools.PacketCreator;
 
 /**

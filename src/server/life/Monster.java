@@ -20,7 +20,6 @@
  */
 package server.life;
 
-import client.ISkill;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +33,8 @@ import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.Job;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import java.awt.Point;

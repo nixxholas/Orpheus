@@ -22,12 +22,12 @@ package net.server.handlers.channel;
 
 import java.awt.Point;
 import java.util.concurrent.ScheduledFuture;
-import client.ISkill;
 import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.GameClient;
 import client.Stat;
-import client.SkillFactory;
 import constants.skills.Brawler;
 import constants.skills.Buccaneer;
 import constants.skills.Corsair;
@@ -121,7 +121,7 @@ public final class SpecialMoveHandler extends AbstractPacketHandler {
 			pos = new Point(reader.readShort(), reader.readShort());
 		}
 		if (chr.isAlive()) {
-			if (skill.getId() != Priest.MYSTIC_DOOR || chr.canDoor()) {
+			if (skill.getId() != Priest.MYSTIC_DOOR || chr.getDoorState().canDoor()) {
 				skill.getEffect(skillLevel).applyTo(c.getPlayer(), pos);
 			} else {
 				chr.message("Please wait 5 seconds before casting Mystic Door again");

@@ -29,7 +29,8 @@ import client.IItem;
 import client.InventoryType;
 import client.Pet;
 import client.PetDataFactory;
-import client.SkillFactory;
+import client.skills.SkillFactory;
+
 import java.sql.SQLException;
 import tools.DatabaseConnection;
 import net.AbstractPacketHandler;

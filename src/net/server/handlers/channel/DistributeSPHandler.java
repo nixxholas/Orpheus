@@ -20,11 +20,11 @@
  */
 package net.server.handlers.channel;
 
-import client.ISkill;
 import client.GameCharacter;
 import client.GameClient;
 import client.Stat;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import constants.skills.Aran;
 import net.AbstractPacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;

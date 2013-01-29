@@ -21,13 +21,13 @@
 package net.server.handlers.channel;
 
 import client.DojoState;
-import client.ISkill;
 import client.Item;
 import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
 import client.InventoryType;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.status.MonsterStatus;
 import constants.skills.Corsair;
 import java.awt.Point;

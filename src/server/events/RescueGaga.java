@@ -21,7 +21,7 @@
 package server.events;
 
 import client.GameCharacter;
-import client.SkillFactory;
+import client.skills.SkillFactory;
 
 /**
  * 

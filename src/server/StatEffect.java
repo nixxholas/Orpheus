@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import client.IItem;
-import client.ISkill;
 import client.BuffStat;
 import client.GameCharacter;
 import client.Disease;
@@ -40,7 +39,8 @@ import client.Job;
 import client.Mount;
 import client.Stat;
 import client.StatDelta;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import constants.ItemConstants;
@@ -726,14 +726,14 @@ public class StatEffect {
 			Point doorPosition = new Point(applyto.getPosition());
 			Door door = new Door(applyto, doorPosition);
 			applyto.getMap().spawnDoor(door);
-			applyto.addDoor(door);
+			applyto.getDoorState().addDoor(door);
 			door = new Door(door);
-			applyto.addDoor(door);
+			applyto.getDoorState().addDoor(door);
 			door.getTown().spawnDoor(door);
 			if (applyto.getParty() != null) {// update town doors
 				applyto.silentPartyUpdate();
 			}
-			applyto.disableDoor();
+			applyto.getDoorState().disableDoor();
 		} else if (isMist()) {
 			Rectangle bounds = calculateBoundingBox(applyfrom.getPosition(), applyfrom.isFacingLeft());
 			Mist mist = new Mist(bounds, applyfrom, this);
@@ -820,7 +820,7 @@ public class StatEffect {
 			}
 		}
 		if (sourceid == Corsair.BATTLE_SHIP)
-			chr.announce(PacketCreator.skillCooldown(5221999, chr.getBattleshipHp()));
+			chr.announce(PacketCreator.skillCooldown(5221999, chr.getBattleshipState().getHp()));
 	}
 
 	public final void applyComboBuff(final GameCharacter applyto, int combo) {
@@ -915,7 +915,7 @@ public class StatEffect {
 				mbuff = PacketCreator.showMonsterRiding(applyto.getId(), givemount);
 				localDuration = duration;
 				if (sourceid == Corsair.BATTLE_SHIP) {// hp
-					if (applyto.getBattleshipHp() == 0)
+					if (applyto.getBattleshipState().getHp() == 0)
 						applyto.resetBattleshipHp();
 				}
 			} else if (isShadowPartner()) {
@@ -946,7 +946,7 @@ public class StatEffect {
 			if (mbuff != null)
 				applyto.getMap().broadcastMessage(applyto, mbuff, false);
 			if (sourceid == Corsair.BATTLE_SHIP)
-				applyto.announce(PacketCreator.skillCooldown(5221999, applyto.getBattleshipHp() / 10));
+				applyto.announce(PacketCreator.skillCooldown(5221999, applyto.getBattleshipState().getHp() / 10));
 		}
 	}
 

@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import client.SkillFactory;
+import client.skills.SkillFactory;
 import constants.skills.Bishop;
 import constants.skills.Bowmaster;
 import constants.skills.Corsair;

@@ -25,7 +25,7 @@ import server.quest.Quest;
 import tools.PacketCreator;
 import client.GameClient;
 import client.QuestStatus;
-import client.SkillFactory;
+import client.skills.SkillFactory;
 
 public class MapScriptMethods extends AbstractPlayerInteraction {
 

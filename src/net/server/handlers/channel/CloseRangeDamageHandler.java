@@ -20,14 +20,14 @@
  */
 package net.server.handlers.channel;
 
-import client.ISkill;
 import client.BuffStat;
 import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.GameClient;
 import client.Job;
 import client.Stat;
-import client.SkillFactory;
 import constants.skills.Crusader;
 import constants.skills.DawnWarrior;
 import constants.skills.DragonKnight;

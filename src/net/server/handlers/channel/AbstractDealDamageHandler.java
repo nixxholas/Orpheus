@@ -26,14 +26,14 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import client.ISkill;
 import client.Item;
 import client.BuffStat;
 import client.GameCharacter;
 import client.InventoryType;
 import client.Job;
 import client.Stat;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import constants.ItemConstants;
@@ -220,7 +220,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                     } else if (attack.skill.id == ILArchMage.ICE_DEMON) {
                         monster.setTempEffectiveness(Element.FIRE, ElementalEffectiveness.WEAK, SkillFactory.getSkill(ILArchMage.ICE_DEMON).getEffect(player.getSkillLevel(SkillFactory.getSkill(ILArchMage.ICE_DEMON))).getDuration() * 1000);
                     } else if (attack.skill.id == Outlaw.HOMING_BEACON || attack.skill.id == Corsair.BULLSEYE) {
-                        player.setMarkedMonster(monster.getObjectId());
+                        player.getMarkedMonsterState().setMonster(monster.getObjectId());
                         player.announce(PacketCreator.giveBuff(1, attack.skill.id, Collections.singletonList(new BuffStatDelta(BuffStat.HOMING_BEACON, monster.getObjectId()))));
                     }
                     if (player.getBuffedValue(BuffStat.HAMSTRING) != null) {

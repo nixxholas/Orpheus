@@ -23,7 +23,7 @@ package net.server.handlers.channel;
 import client.BuffStat;
 import client.GameCharacter;
 import client.GameClient;
-import client.SkillFactory;
+import client.skills.SkillFactory;
 import net.AbstractPacketHandler;
 import server.maps.Summon;
 import tools.PacketCreator;

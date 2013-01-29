@@ -5,9 +5,9 @@ import java.util.Map;
 
 import server.partyquest.Pyramid;
 import client.GameCharacter;
-import client.ISkill;
-import client.SkillFactory;
 import client.autoban.AutobanType;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 
 public class AttackInfo {
 

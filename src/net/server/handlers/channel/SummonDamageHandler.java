@@ -22,10 +22,10 @@ package net.server.handlers.channel;
 
 import java.util.ArrayList;
 import java.util.List;
-import client.ISkill;
 import client.GameCharacter;
 import client.GameClient;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.status.MonsterStatusEffect;
 import net.AbstractPacketHandler;
 import server.StatEffect;

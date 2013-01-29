@@ -21,8 +21,8 @@
 package net.server;
 
 import client.GameCharacter;
-import client.SkillFactory;
 import client.command.external.CommandLoader;
+import client.skills.SkillFactory;
 import constants.ParanoiaConstants;
 import constants.ServerConstants;
 import gm.GMPacketCreator;

@@ -21,15 +21,15 @@
 package net.server.handlers.channel;
 
 import client.IItem;
-import client.ISkill;
 import client.BuffStat;
 import client.GameCharacter;
 import client.GameCharacter.CancelCooldownAction;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import client.GameClient;
 import client.Inventory;
 import client.InventoryType;
 import client.WeaponType;
-import client.SkillFactory;
 import constants.ItemConstants;
 import constants.ServerConstants;
 import constants.skills.Aran;

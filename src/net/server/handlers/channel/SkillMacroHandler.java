@@ -21,7 +21,7 @@
 package net.server.handlers.channel;
 
 import client.GameClient;
-import client.SkillMacro;
+import client.skills.SkillMacro;
 import tools.data.input.SeekableLittleEndianAccessor;
 import net.AbstractPacketHandler;
 

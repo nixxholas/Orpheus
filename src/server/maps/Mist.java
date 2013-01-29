@@ -20,10 +20,11 @@
  */
 package server.maps;
 
-import client.ISkill;
 import client.GameCharacter;
 import client.GameClient;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
+
 import java.awt.Point;
 import java.awt.Rectangle;
 import net.GamePacket;

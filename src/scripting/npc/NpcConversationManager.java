@@ -22,7 +22,6 @@ package scripting.npc;
 
 import client.Equip;
 import client.IItem;
-import client.ISkill;
 import client.ItemFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +35,8 @@ import client.Job;
 import client.Pet;
 import client.SkinColor;
 import client.Stat;
-import client.SkillFactory;
+import client.skills.ISkill;
+import client.skills.SkillFactory;
 import tools.Randomizer;
 import java.io.File;
 import java.sql.SQLException;
